@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Hyperion</string>
+    <string name="home_screen">Home</string>
+    <string name="settings_screen">Settings</string>
+    <string name="apply">Apply</string>
+    <string name="theme">Theme</string>
+    <string name="theme_setting_description">Hyperion appearance</string>
+    <string name="subscriptions_screen">Subscriptions</string>
+    <string name="search">Search</string>
+    <string name="download">Download</string>
+    <string name="share">Share</string>
+    <string name="todo">TODO</string>
+    <string name="dislike">Dislike</string>
+    <string name="like">Like</string>
+    <string name="library">Library</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="views">views</string>
+</resources>
