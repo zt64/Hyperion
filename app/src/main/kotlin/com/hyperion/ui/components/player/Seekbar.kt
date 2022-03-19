@@ -29,7 +29,7 @@ fun Seekbar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = DateUtils.formatElapsedTime(player.currentPosition),
+                text = DateUtils.formatElapsedTime(player.currentPosition / 1000),
                 style = MaterialTheme.typography.labelMedium
             )
             Slider(
@@ -39,7 +39,7 @@ fun Seekbar(
                 onValueChange = { player.seekTo(it.toLong()) }
             )
             Text(
-                text = DateUtils.formatElapsedTime(player.duration),
+                text = DateUtils.formatElapsedTime(player.duration / 1000),
                 style = MaterialTheme.typography.labelMedium
             )
         }
