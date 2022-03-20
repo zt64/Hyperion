@@ -1,7 +1,7 @@
 val pagingVersion = "3.1.0"
-val accompanistVersion = "0.23.0"
 val composeVersion = "1.1.1"
 val ktorVersion = "1.6.7"
+val accompanistVersion = "0.24.4-alpha"
 
 plugins {
     id("com.android.application")
@@ -71,15 +71,16 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.2.0-alpha05")
     implementation("androidx.paging:paging-compose:1.0.0-alpha14")
 
-    // accompanist dependencies
-    implementation("com.google.accompanist:accompanist-systemuicontroller:${accompanistVersion}")
+    // accompanist
+    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
 
     // compose destinations
     implementation("io.github.raamcosta.compose-destinations:core:1.3.4-beta")
     ksp("io.github.raamcosta.compose-destinations:ksp:1.3.4-beta")
 
     // other dependencies
-    implementation("com.google.code.gson:gson:2.9.0")
     implementation("io.coil-kt:coil-compose:2.0.0-rc01")
     implementation("com.google.android.exoplayer:exoplayer:2.17.1")
 
@@ -89,12 +90,13 @@ dependencies {
     implementation("io.ktor:ktor-client-gson:$ktorVersion")
     implementation("io.ktor:ktor-client-serialization:$ktorVersion")
 
-    implementation("com.google.android.gms:play-services-auth:20.1.0")
+    // hilt
     implementation("com.google.dagger:hilt-android:2.41")
-    kapt("com.google.dagger:hilt-android-compiler:2.41")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    kapt("com.google.dagger:hilt-android-compiler:2.41")
 
-    implementation("pub.devrel:easypermissions:3.0.0")
+    // Google & Youtube auth
+    implementation("com.google.android.gms:play-services-auth:20.1.0")
     implementation("com.google.api-client:google-api-client-android:1.33.2") {
         exclude("org.apache.httpcomponents")
     }
