@@ -11,8 +11,8 @@ lateinit var sharedPreferences: SharedPreferences
 
 class Preference<T>(
     private val key: String,
-    private val defaultValue: T,
-    private val getter: SharedPreferences.(key: String, defaultValue: T) -> T?,
+    defaultValue: T,
+    getter: SharedPreferences.(key: String, defaultValue: T) -> T?,
     private val setter: SharedPreferences.Editor.(key: String, newValue: T) -> Unit
 ) {
     @Suppress("RedundantSetter")
