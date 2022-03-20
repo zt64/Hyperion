@@ -1,6 +1,5 @@
 package com.hyperion
 
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.animation.AccelerateInterpolator
@@ -15,10 +14,6 @@ import com.hyperion.ui.components.HyperionScaffold
 import com.hyperion.ui.theme.HyperionTheme
 import com.hyperion.ui.theme.Theme
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
-
-@HiltAndroidApp
-class App : Application()
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
