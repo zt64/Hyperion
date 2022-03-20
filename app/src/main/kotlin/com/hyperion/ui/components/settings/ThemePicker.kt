@@ -20,7 +20,7 @@ import com.hyperion.ui.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThemeDialog(
+fun ThemePicker(
     onDismissRequest: () -> Unit,
     onConfirm: (Theme) -> Unit
 ) {

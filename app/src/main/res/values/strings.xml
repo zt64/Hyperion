@@ -12,7 +12,9 @@
     <string name="todo">TODO</string>
     <string name="dislike">Dislike</string>
     <string name="like">Like</string>
-    <string name="library">Library</string>
+    <string name="library_screen">Library</string>
     <string name="subscribe">Subscribe</string>
     <string name="views">views</string>
+    <string name="download_location">Download location</string>
+    <string name="github">GitHub</string>
 </resources>
