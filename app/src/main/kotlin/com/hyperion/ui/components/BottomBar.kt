@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -18,7 +17,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.hyperion.R
 import com.hyperion.ui.screens.destinations.HomeScreenDestination
 import com.hyperion.ui.screens.destinations.LibraryScreenDestination
-import com.hyperion.ui.screens.destinations.SettingsScreenDestination
 import com.hyperion.ui.screens.destinations.SubscriptionsScreenDestination
 import com.hyperion.ui.screens.navDestination
 import com.ramcosta.composedestinations.navigation.navigateTo
@@ -31,8 +29,7 @@ private enum class BottomBarDestination(
 ) {
     Home(HomeScreenDestination, Icons.Default.Home, R.string.home_screen),
     Subscriptions(SubscriptionsScreenDestination, Icons.Default.List, R.string.subscriptions_screen),
-    Library(LibraryScreenDestination, Icons.Default.VideoLibrary, R.string.library),
-    Settings(SettingsScreenDestination, Icons.Default.Settings, R.string.settings_screen)
+    Library(LibraryScreenDestination, Icons.Default.VideoLibrary, R.string.library_screen),
 }
 
 @Composable
@@ -51,10 +48,6 @@ fun BottomBar(
                     navController.navigateTo(destination.direction) {
                         restoreState = true
                         launchSingleTop = true
-
-                        popUpTo(HomeScreenDestination.route) {
-                            saveState = true
-                        }
                     }
                 }
             )
