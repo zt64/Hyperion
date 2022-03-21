@@ -77,7 +77,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
 
     // compose destinations
-    implementation("io.github.raamcosta.compose-destinations:core:1.3.4-beta")
+    implementation("io.github.raamcosta.compose-destinations:animations-core:1.3.4-beta")
     ksp("io.github.raamcosta.compose-destinations:ksp:1.3.4-beta")
 
     // other dependencies

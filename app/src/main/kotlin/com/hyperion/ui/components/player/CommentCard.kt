@@ -13,7 +13,9 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentCard(
-
+    onLike: () -> Unit,
+    onDislike: () -> Unit,
+    onReply: () -> Unit
 ) {
     ElevatedCard {
         Column(
@@ -26,7 +28,6 @@ fun CommentCard(
                 Icon(
                     modifier = Modifier.size(36.dp),
                     imageVector = Icons.Default.AccountCircle,
-                    tint = MaterialTheme.colorScheme.onSurface,
                     contentDescription = null
                 )
 
@@ -45,7 +46,6 @@ fun CommentCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
-                        tint = MaterialTheme.colorScheme.onSurface,
                         contentDescription = null
                     )
                 }

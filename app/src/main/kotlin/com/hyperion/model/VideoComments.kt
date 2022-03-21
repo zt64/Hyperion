@@ -1,33 +1,27 @@
 package com.hyperion.model
 
 data class VideoComments(
-    val commentCount: String,
+    val commentCount: Int?,
     val comments: List<Comment>,
-    val continuation: String,
+    val continuation: String?,
     val videoId: String
 ) {
     data class Comment(
         val author: String,
         val authorId: String,
-        val authorIsChannelOwner: String,
+        val authorIsChannelOwner: Boolean,
         val authorThumbnails: List<AuthorThumbnail>,
         val authorUrl: String,
         val commentId: String,
         val content: String,
         val contentHtml: String,
         val creatorHeart: CreatorHeart,
-        val isEdited: String,
-        val likeCount: String,
-        val published: String,
+        val isEdited: Boolean,
+        val likeCount: Int,
+        val published: Long,
         val publishedText: String,
         val replies: Replies
     ) {
-        data class AuthorThumbnail(
-            val height: String,
-            val url: String,
-            val width: String
-        )
-
         data class CreatorHeart(
             val creatorName: String,
             val creatorThumbnail: String
@@ -35,7 +29,7 @@ data class VideoComments(
 
         data class Replies(
             val continuation: String,
-            val replyCount: String
+            val replyCount: Int
         )
     }
 }

@@ -1,6 +1,9 @@
 package com.hyperion.ui.components
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
@@ -36,21 +39,32 @@ private enum class BottomBarDestination(
 fun BottomBar(
     navController: NavController
 ) {
-    NavigationBar {
-        val currentDestination = navController.currentBackStackEntryAsState().value?.navDestination
+    val currentDestination = navController.currentBackStackEntryAsState().value?.navDestination
 
-        BottomBarDestination.values().forEach { destination ->
-            NavigationBarItem(
-                selected = currentDestination == destination.direction,
-                icon = { Icon(destination.icon, stringResource(destination.label)) },
-                label = { Text(stringResource(destination.label)) },
-                onClick = {
-                    navController.navigateTo(destination.direction) {
-                        restoreState = true
-                        launchSingleTop = true
+    AnimatedVisibility(
+        visible = when (currentDestination) {
+            is HomeScreenDestination,
+            is SubscriptionsScreenDestination,
+            is LibraryScreenDestination -> true
+            else -> false
+        },
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        NavigationBar {
+            BottomBarDestination.values().forEach { destination ->
+                NavigationBarItem(
+                    selected = currentDestination == destination.direction,
+                    icon = { Icon(destination.icon, stringResource(destination.label)) },
+                    label = { Text(stringResource(destination.label)) },
+                    onClick = {
+                        navController.navigateTo(destination.direction) {
+                            restoreState = true
+                            launchSingleTop = true
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }

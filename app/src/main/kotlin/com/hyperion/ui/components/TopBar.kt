@@ -14,10 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.hyperion.ui.screens.destinations.ChannelScreenDestination
-import com.hyperion.ui.screens.destinations.HomeScreenDestination
-import com.hyperion.ui.screens.destinations.PlayerScreenDestination
-import com.hyperion.ui.screens.destinations.SettingsScreenDestination
+import com.hyperion.ui.screens.destinations.*
 import com.hyperion.ui.screens.navDestination
 import com.hyperion.util.title
 import com.ramcosta.composedestinations.navigation.navigateTo
@@ -35,7 +32,14 @@ fun TopBar(
     ) {
         SmallTopAppBar(
             navigationIcon = {
-                if (currentDestination == ChannelScreenDestination) {
+                if (
+                    when (currentDestination) {
+                        HomeScreenDestination,
+                        SubscriptionsScreenDestination,
+                        LibraryScreenDestination -> false
+                        else -> true
+                    }
+                ) {
                     IconButton(
                         onClick = { navController.popBackStack() }
                     ) {

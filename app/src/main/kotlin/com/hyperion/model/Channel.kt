@@ -19,9 +19,9 @@ data class Channel(
     val totalViews: Long
 ) {
     data class AuthorBanner(
+        val width: Int,
         val height: Int,
-        val url: String,
-        val width: Int
+        val url: String
     )
 
     data class LatestVideo(
@@ -30,15 +30,15 @@ data class Channel(
         val authorUrl: String,
         val description: String,
         val descriptionHtml: String,
-        val lengthSeconds: String,
-        val paid: String,
-        val premium: String,
-        val published: String,
+        val lengthSeconds: Int,
+        val paid: Boolean,
+        val premium: Boolean,
+        val published: Long,
         val publishedText: String,
         val title: String,
         val videoId: String,
         val videoThumbnails: List<VideoThumbnail>,
-        val viewCount: Int
+        val viewCount: Long
     )
 
     data class RelatedChannel(

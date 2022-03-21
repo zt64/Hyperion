@@ -1,6 +1,5 @@
 package com.hyperion.ui.components.player
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,14 +14,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
 import com.hyperion.model.Video
+import com.hyperion.util.toCompact
 
 @Composable
 fun VideoActions(
-    video: Video
+    video: Video,
+    onLike: () -> Unit,
+    onDislike: () -> Unit,
+    onShare: () -> Unit,
+    onDownload: () -> Unit
 ) = Row(
     modifier = Modifier.fillMaxWidth(),
     horizontalArrangement = Arrangement.SpaceAround
@@ -30,18 +33,17 @@ fun VideoActions(
     CompositionLocalProvider(
         LocalContentColor provides MaterialTheme.colorScheme.onBackground
     ) {
-        val context = LocalContext.current
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             IconButton(
-                onClick = {  /* TODO */ }
+                onClick = onLike
             ) {
                 Icon(imageVector = Icons.Default.ThumbUp, contentDescription = stringResource(R.string.like))
             }
+
             Text(
-                text = video.likeCount.toString(),
+                text = video.likeCount.toCompact(),
                 style = MaterialTheme.typography.labelMedium
             )
         }
@@ -50,7 +52,7 @@ fun VideoActions(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             IconButton(
-                onClick = {  /* TODO */ }
+                onClick = onDislike
             ) {
                 Icon(imageVector = Icons.Default.ThumbDown, contentDescription = stringResource(R.string.dislike))
             }
@@ -65,17 +67,7 @@ fun VideoActions(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             IconButton(
-                onClick = {
-                    val shareIntent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        type = "text/plain"
-
-                        putExtra(Intent.EXTRA_TEXT, video.hlsUrl)
-                        putExtra(Intent.EXTRA_TITLE, video.title)
-                    }
-
-                    context.startActivity(Intent.createChooser(shareIntent, null))
-                }
+                onClick = onShare
             ) {
                 Icon(imageVector = Icons.Default.Share, contentDescription = stringResource(R.string.share))
             }
@@ -90,9 +82,7 @@ fun VideoActions(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             IconButton(
-                onClick = {
-                    /* TODO: Download video */
-                }
+                onClick = onDownload
             ) {
                 Icon(imageVector = Icons.Default.Download, contentDescription = stringResource(R.string.download))
             }
