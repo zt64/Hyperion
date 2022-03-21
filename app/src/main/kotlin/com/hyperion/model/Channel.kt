@@ -1,5 +1,9 @@
 package com.hyperion.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Channel(
     val allowedRegions: List<String>,
     val author: String,
@@ -17,13 +21,15 @@ data class Channel(
     val relatedChannels: List<RelatedChannel>,
     val subCount: Int,
     val totalViews: Long
-) {
+) : Parcelable {
+    @Parcelize
     data class AuthorBanner(
         val width: Int,
         val height: Int,
         val url: String
-    )
+    ) : Parcelable
 
+    @Parcelize
     data class LatestVideo(
         val author: String,
         val authorId: String,
@@ -39,12 +45,13 @@ data class Channel(
         val videoId: String,
         val videoThumbnails: List<VideoThumbnail>,
         val viewCount: Long
-    )
+    ) : Parcelable
 
+    @Parcelize
     data class RelatedChannel(
         val author: String,
         val authorId: String,
         val authorThumbnails: List<AuthorThumbnail>,
         val authorUrl: String
-    )
+    ) : Parcelable
 }
