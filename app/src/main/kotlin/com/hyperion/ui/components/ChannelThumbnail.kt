@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.RenderVectorGroup
@@ -14,17 +15,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.hyperion.util.InvidiousApi
+import com.hyperion.network.service.InvidiousService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun ChannelThumbnail(
     modifier: Modifier = Modifier,
     authorId: String,
 ) {
-    var avatarUrl by remember { mutableStateOf<String?>(null) }
+    var avatarUrl by rememberSaveable { mutableStateOf<String?>(null) }
 
     LaunchedEffect(Unit) {
-        avatarUrl = InvidiousApi.getChannel(authorId).authorThumbnails.last().url
+        launch(Dispatchers.IO) {
+            avatarUrl = InvidiousService.getChannel(authorId).authorThumbnails.last().url
+        }
     }
 
     AsyncImage(
