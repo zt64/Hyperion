@@ -1,6 +1,5 @@
 package com.hyperion.ui.components
 
-import android.icu.text.NumberFormat
 import android.text.format.DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.hyperion.model.TrendingVideo
+import com.hyperion.util.toCompact
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,7 +30,7 @@ fun VideoCard(
     ) {
         Box {
             AsyncImage(
-                modifier = Modifier.aspectRatio(16f/9f),
+                modifier = Modifier.aspectRatio(16f / 9f),
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(video.videoThumbnails.first { it.quality == "medium" }.url)
                     .crossfade(true)
@@ -69,7 +69,7 @@ fun VideoCard(
                 Text(
                     text = buildString {
                         append("${video.author} - ")
-                        append("${NumberFormat.getInstance().format(video.viewCount)} views - ")
+                        append("${video.viewCount.toCompact()} views - ")
                         append(video.publishedText)
                     },
                     style = MaterialTheme.typography.labelSmall
