@@ -59,8 +59,12 @@ fun BottomBar(
                     label = { Text(stringResource(destination.label)) },
                     onClick = {
                         navController.navigateTo(destination.direction) {
-                            restoreState = true
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+
                             launchSingleTop = true
+                            restoreState = true
                         }
                     }
                 )

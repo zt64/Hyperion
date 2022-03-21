@@ -23,6 +23,10 @@ class MainViewModel @Inject constructor() : ViewModel() {
     var state by mutableStateOf<State>(State.Loading)
         private set
 
+    init {
+        fetchTrending()
+    }
+
     fun fetchTrending() {
         state = State.Loading
 

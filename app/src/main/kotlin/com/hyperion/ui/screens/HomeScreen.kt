@@ -49,10 +49,6 @@ fun HomeScreen(
 ) {
     val state = viewModel.state
 
-    LaunchedEffect(Unit) {
-        viewModel.fetchTrending()
-    }
-
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
