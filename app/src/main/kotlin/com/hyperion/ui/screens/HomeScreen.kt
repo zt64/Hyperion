@@ -68,7 +68,7 @@ fun HomeScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                    .padding(horizontal = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (state is MainViewModel.State.Loaded) {
