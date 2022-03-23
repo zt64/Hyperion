@@ -6,7 +6,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Subscriptions
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -25,13 +25,13 @@ import com.hyperion.ui.screens.navDestination
 import com.ramcosta.composedestinations.navigation.navigateTo
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 
-private enum class BottomBarDestination(
+enum class NavigationBarDestination(
     val direction: DirectionDestinationSpec,
     val icon: ImageVector,
     @StringRes val label: Int
 ) {
     Home(HomeScreenDestination, Icons.Default.Home, R.string.home_screen),
-    Subscriptions(SubscriptionsScreenDestination, Icons.Default.List, R.string.subscriptions_screen),
+    Subscriptions(SubscriptionsScreenDestination, Icons.Default.Subscriptions, R.string.subscriptions_screen),
     Library(LibraryScreenDestination, Icons.Default.VideoLibrary, R.string.library_screen),
 }
 
@@ -52,7 +52,7 @@ fun BottomBar(
         exit = fadeOut()
     ) {
         NavigationBar {
-            BottomBarDestination.values().forEach { destination ->
+            NavigationBarDestination.values().forEach { destination ->
                 NavigationBarItem(
                     selected = currentDestination == destination.direction,
                     icon = { Icon(destination.icon, stringResource(destination.label)) },
