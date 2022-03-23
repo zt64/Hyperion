@@ -1,6 +1,6 @@
 val pagingVersion = "3.1.0"
 val composeVersion = "1.1.1"
-val ktorVersion = "1.6.7"
+val ktorVersion = "1.6.8"
 val accompanistVersion = "0.24.4-alpha"
 
 plugins {
@@ -77,11 +77,11 @@ dependencies {
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
 
     // compose destinations
-    implementation("io.github.raamcosta.compose-destinations:animations-core:1.3.4-beta")
-    ksp("io.github.raamcosta.compose-destinations:ksp:1.3.4-beta")
+    implementation("io.github.raamcosta.compose-destinations:animations-core:1.3.5-beta")
+    ksp("io.github.raamcosta.compose-destinations:ksp:1.3.5-beta")
 
     // other dependencies
-    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
+    implementation("io.coil-kt:coil-compose:2.0.0-rc02")
     implementation("com.google.android.exoplayer:exoplayer:2.17.1")
 
     // ktor
