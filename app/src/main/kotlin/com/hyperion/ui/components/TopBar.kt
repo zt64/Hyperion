@@ -26,7 +26,11 @@ fun TopBar(
     val currentDestination = navController.currentBackStackEntryAsState().value?.navDestination ?: HomeScreenDestination
 
     AnimatedVisibility(
-        visible = currentDestination !is PlayerScreenDestination,
+        visible = when (currentDestination) {
+            is PlayerScreenDestination,
+            is IntroScreenDestination -> false
+            else -> true
+        },
         enter = expandVertically(expandFrom = Alignment.CenterVertically) + fadeIn(),
         exit = shrinkVertically(shrinkTowards = Alignment.CenterVertically) + fadeOut()
     ) {

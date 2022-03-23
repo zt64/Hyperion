@@ -26,6 +26,7 @@ import com.google.api.services.youtube.YouTubeScopes
 import com.hyperion.R
 import com.hyperion.preferences.Prefs
 import com.hyperion.ui.components.ListItem
+import com.hyperion.ui.components.NavigationDestination
 import com.hyperion.ui.components.settings.ThemePicker
 import com.hyperion.ui.viewmodel.SettingsViewModel
 import com.hyperion.util.AuthResultContract
@@ -141,6 +142,34 @@ fun SettingsScreen(
             }
         )
 
+        var showStartScreenDropdown by remember { mutableStateOf(false) }
+        ListItem(
+            modifier = Modifier.clickable { showStartScreenDropdown = true },
+            icon = { Icon(imageVector = Icons.Default.Start, contentDescription = "Start screen setting") },
+            text = { Text(stringResource(R.string.start_screen)) },
+            trailing = {
+                Box {
+                    FilledTonalButton(
+                        onClick = { showStartScreenDropdown = true }
+                    ) {
+                        Text(Prefs.startScreen.name)
+                    }
+
+                    DropdownMenu(
+                        expanded = showStartScreenDropdown,
+                        onDismissRequest = { showStartScreenDropdown = false }
+                    ) {
+                        NavigationDestination.values().forEach { destination ->
+                            DropdownMenuItem(
+                                text = { Text(destination.name) },
+                                onClick = { Prefs.startScreen = destination }
+                            )
+                        }
+                    }
+                }
+            }
+        )
+
         ListItem(
             modifier = Modifier.clickable { directoryChooser.launch(null) },
             icon = { Icon(imageVector = Icons.Default.Download, contentDescription = "Download Setting") },
@@ -149,7 +178,7 @@ fun SettingsScreen(
         )
 
         ListItem(
-            modifier = Modifier.clickable {  },
+            modifier = Modifier.clickable { },
             icon = { Icon(imageVector = Icons.Default.Api, contentDescription = "Invidious API Instance Setting") },
             text = { Text("Invidious instance") },
             secondaryText = { Text("Some url") }

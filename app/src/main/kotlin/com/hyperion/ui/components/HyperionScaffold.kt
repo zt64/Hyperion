@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.hyperion.R
 import com.hyperion.preferences.Prefs
 import com.hyperion.ui.screens.NavGraphs
 import com.hyperion.ui.screens.navDestination
@@ -48,13 +49,11 @@ fun HyperionScaffold() {
         ) {
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 NavigationRail(
-                    header = {
-                        Icon(painterResource(id = com.hyperion.R.drawable.ic_launcher_foreground), null)
-                    },
+                    header = { Icon(painterResource(R.drawable.ic_launcher_foreground), null) },
                     content = {
                         val currentDestination = navController.currentBackStackEntryAsState().value?.navDestination
 
-                        NavigationBarDestination.values().forEach { destination ->
+                        NavigationDestination.values().forEach { destination ->
                             NavigationRailItem(
                                 selected = currentDestination == destination.direction,
                                 icon = { Icon(destination.icon, stringResource(destination.label)) },
@@ -77,6 +76,7 @@ fun HyperionScaffold() {
 
             DestinationsNavHost(
                 navController = navController,
+                startRoute = Prefs.startScreen.direction,
                 navGraph = if (Prefs.firstLaunch) NavGraphs.intro else NavGraphs.root,
                 engine = navHostEngine
             )

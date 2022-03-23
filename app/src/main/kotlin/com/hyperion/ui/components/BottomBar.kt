@@ -25,7 +25,7 @@ import com.hyperion.ui.screens.navDestination
 import com.ramcosta.composedestinations.navigation.navigateTo
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 
-enum class NavigationBarDestination(
+enum class NavigationDestination(
     val direction: DirectionDestinationSpec,
     val icon: ImageVector,
     @StringRes val label: Int
@@ -52,7 +52,7 @@ fun BottomBar(
         exit = fadeOut()
     ) {
         NavigationBar {
-            NavigationBarDestination.values().forEach { destination ->
+            NavigationDestination.values().forEach { destination ->
                 NavigationBarItem(
                     selected = currentDestination == destination.direction,
                     icon = { Icon(destination.icon, stringResource(destination.label)) },
