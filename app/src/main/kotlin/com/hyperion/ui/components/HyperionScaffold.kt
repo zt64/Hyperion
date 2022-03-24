@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -18,6 +20,7 @@ import com.google.accompanist.navigation.material.ExperimentalMaterialNavigation
 import com.hyperion.R
 import com.hyperion.preferences.Prefs
 import com.hyperion.ui.screens.NavGraphs
+import com.hyperion.ui.screens.destinations.IntroScreenDestination
 import com.hyperion.ui.screens.navDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
@@ -47,6 +50,8 @@ fun HyperionScaffold() {
         Row(
             modifier = Modifier.padding(paddingValues)
         ) {
+            val startScreen by rememberUpdatedState(newValue = Prefs.startScreen)
+
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 NavigationRail(
                     header = { Icon(painterResource(R.drawable.ic_launcher_foreground), null) },
@@ -76,7 +81,7 @@ fun HyperionScaffold() {
 
             DestinationsNavHost(
                 navController = navController,
-                startRoute = Prefs.startScreen.direction,
+                startRoute = if (Prefs.firstLaunch) IntroScreenDestination else startScreen.direction,
                 navGraph = if (Prefs.firstLaunch) NavGraphs.intro else NavGraphs.root,
                 engine = navHostEngine
             )
