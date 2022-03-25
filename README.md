@@ -14,7 +14,7 @@ A modern front-end for YouTube built using Kotlin compose, with Material You the
 
 ## Screenshots
 
-![Home](assets/home.jpg) ![Player](assets/player.jpg) ![Settings](assets/settings.jpg)
+<img src="assets/home.jpg" width=400 alt="Home" /> <img src="assets/player.jpg" width=400 alt="Player" />  <img src="assets/settings.jpg" width=400 alt="settings" /> 
 ## License
 Hyperion is licensed under the GNU General Public License
 
