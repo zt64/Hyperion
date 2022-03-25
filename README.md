@@ -4,13 +4,17 @@
 [![forks - Hyperion](https://img.shields.io/github/forks/zt64/Hyperion?style=social)](https://github.com/zt64/Hyperion)
 
 # Hyperion
+<img src="https://github.com/zt64/Hyperion/raw/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="Hyperion icon" width="200"/>
 A modern front-end for YouTube built using Kotlin compose, with Material You theming and many more features.
 
 **NOTE**: Hyperion is not anywhere near stable release. Features may be broken or out-right missing.
 
-# Socials
-Discord: https://discord.gg/nsvwH5xDQM
+## Socials
+- Discord: https://discord.gg/nsvwH5xDQM
 
+## Screenshots
+
+<img src="assets/home.jpg" width=350 alt="Home" /> <img src="assets/player.jpg" width=350 alt="Player" />  <img src="assets/settings.jpg" width=350 alt="settings" /> 
 ## License
 Hyperion is licensed under the GNU General Public License
 
