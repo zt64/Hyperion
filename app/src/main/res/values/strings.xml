@@ -56,8 +56,6 @@
     <string name="todo">TODO</string>
     <string name="subscribe">Subscribe</string>
     <string name="thumbnail">Thumbnail</string>
-    <string name="author">Author</string>
-    <string name="post_date">Date posted</string>
     <string name="compact">Compact</string>
     <string name="large">Large</string>
     <string name="url">URL</string>

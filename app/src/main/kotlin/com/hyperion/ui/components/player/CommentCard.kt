@@ -8,9 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.hyperion.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,9 +32,9 @@ fun CommentCard(
                 )
 
                 Column {
-                    Text(stringResource(R.string.author))
+                    Text("Comment Author")
                     Text(
-                        text = stringResource(R.string.post_date),
+                        text = "Date posted",
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
