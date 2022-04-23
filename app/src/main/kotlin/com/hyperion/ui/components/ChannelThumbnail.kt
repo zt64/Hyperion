@@ -35,7 +35,6 @@ fun ChannelThumbnail(
     AsyncImage(
         modifier = Modifier
             .clip(CircleShape)
-            .size(36.dp)
             .then(modifier),
         model = ImageRequest.Builder(LocalContext.current)
             .data(avatarUrl)
