@@ -39,7 +39,7 @@ fun ThemePicker(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            theme.displayName,
+                            theme.toDisplayName(),
                             style = MaterialTheme.typography.labelLarge
                         )
 

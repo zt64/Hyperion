@@ -25,6 +25,7 @@ import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.YouTubeScopes
 import com.hyperion.R
 import com.hyperion.preferences.Prefs
+import com.hyperion.preferences.VideoCardStyle
 import com.hyperion.ui.components.ListItem
 import com.hyperion.ui.components.NavigationDestination
 import com.hyperion.ui.components.settings.ThemePicker
@@ -43,14 +44,17 @@ fun SettingsScreen(
     val context = LocalContext.current
     val signInRequestCode = 1
 
+    val signInFailed = stringResource(R.string.login_failed)
+    val appName = stringResource(R.string.app_name)
+
     val authResultLauncher =
         rememberLauncherForActivityResult(contract = AuthResultContract()) { task ->
             try {
                 val account = task?.getResult(ApiException::class.java)
 
-                if (account == null) {
-                    Toast.makeText(context, "Google sign in failed", Toast.LENGTH_LONG).show()
-                } else {
+                if (account == null)
+                    Toast.makeText(context, signInFailed, Toast.LENGTH_LONG).show()
+                else {
                     coroutineScope.launch(Dispatchers.IO) {
                         val transport = NetHttpTransport()
                         val jsonFactory = GsonFactory()
@@ -61,12 +65,12 @@ fun SettingsScreen(
                                 .setSelectedAccountName(account.account!!.name)
 
                         val youtubeService = YouTube.Builder(transport, jsonFactory, credential)
-                            .setApplicationName("Hyperion")
+                            .setApplicationName(appName)
                             .build()
                     }
                 }
             } catch (e: ApiException) {
-                Toast.makeText(context, "Google sign in failed", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, signInFailed, Toast.LENGTH_LONG).show()
             }
         }
 
@@ -80,7 +84,7 @@ fun SettingsScreen(
             modifier = Modifier.fillMaxWidth(),
             onClick = { authResultLauncher.launch(signInRequestCode) }
         ) {
-            Text("Sign-in to Google")
+            Text(stringResource(R.string.login_google))
         }
 
         if (viewModel.showThemePicker) {
@@ -108,7 +112,7 @@ fun SettingsScreen(
                 FilledTonalButton(
                     onClick = viewModel::showThemePicker
                 ) {
-                    Text(Prefs.theme.displayName)
+                    Text(Prefs.theme.toDisplayName())
                 }
             }
         )
@@ -122,21 +126,25 @@ fun SettingsScreen(
                     contentDescription = null
                 )
             },
-            text = { Text("Video card style") },
+            text = { Text(stringResource(R.string.style_video_card)) },
             trailing = {
                 Box {
                     FilledTonalButton(
                         onClick = { showVideoCardStyleDropdown = true }
                     ) {
-                        Text(Prefs.videoCardStyle.displayName)
+                        Text(Prefs.videoCardStyle.toDisplayName())
                     }
 
                     DropdownMenu(
                         expanded = showVideoCardStyleDropdown,
                         onDismissRequest = { showVideoCardStyleDropdown = false }
                     ) {
-                        DropdownMenuItem(text = { Text("Large") }, onClick = { /*TODO*/ })
-                        DropdownMenuItem(text = { Text("Compact") }, onClick = { /*TODO*/ })
+                        VideoCardStyle.values().forEach {
+                            DropdownMenuItem(
+                                text = { Text(it.toDisplayName()) },
+                                onClick = { /*TODO*/ }
+                            )
+                        }
                     }
                 }
             }
@@ -145,7 +153,12 @@ fun SettingsScreen(
         var showStartScreenDropdown by remember { mutableStateOf(false) }
         ListItem(
             modifier = Modifier.clickable { showStartScreenDropdown = true },
-            icon = { Icon(imageVector = Icons.Default.Start, contentDescription = "Start screen setting") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Start,
+                    contentDescription = stringResource(R.string.desc_start_screen_setting)
+                )
+            },
             text = { Text(stringResource(R.string.start_screen)) },
             trailing = {
                 Box {
@@ -172,16 +185,26 @@ fun SettingsScreen(
 
         ListItem(
             modifier = Modifier.clickable { directoryChooser.launch(null) },
-            icon = { Icon(imageVector = Icons.Default.Download, contentDescription = "Download Setting") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Download,
+                    contentDescription = stringResource(R.string.desc_download_setting)
+                )
+            },
             text = { Text(stringResource(R.string.download_location)) },
             secondaryText = { Text(Prefs.downloadDirectory) }
         )
 
         ListItem(
             modifier = Modifier.clickable { },
-            icon = { Icon(imageVector = Icons.Default.Api, contentDescription = "Invidious API Instance Setting") },
-            text = { Text("Invidious instance") },
-            secondaryText = { Text("Some url") }
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Api,
+                    contentDescription = stringResource(R.string.desc_invidious_setting)
+                )
+            },
+            text = { Text(stringResource(R.string.invidious_instance)) },
+            secondaryText = { Text(stringResource(R.string.url)) }
         )
 
         Divider()

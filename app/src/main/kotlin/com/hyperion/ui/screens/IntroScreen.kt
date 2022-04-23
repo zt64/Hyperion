@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
 import com.hyperion.preferences.Prefs
@@ -33,7 +34,7 @@ fun IntroScreen() {
         )
 
         Text(
-            text = "Thanks for installing Hyperion! Currently only the basic features are implemented, but more are sure to come!",
+            text = stringResource(R.string.app_welcome),
             style = MaterialTheme.typography.bodyLarge
         )
 
@@ -45,14 +46,14 @@ fun IntroScreen() {
                 enabled = false,
                 onClick = { /*TODO*/ }
             ) {
-                Text("Login to Google")
+                Text(stringResource(R.string.login_google))
             }
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { Prefs.firstLaunch = false }
             ) {
-                Text("Continue without login")
+                Text(stringResource(R.string.login_skip))
             }
         }
     }

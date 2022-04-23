@@ -124,9 +124,9 @@ fun PlayerScreen(
                         )
 
                         Text(
-                            text = "${
-                                NumberFormat.getInstance().format(viewModel.video!!.viewCount.toInt())
-                            } ${stringResource(R.string.views)} - ${viewModel.video!!.publishedText}",
+                            text = NumberFormat.getInstance()
+                                .format(viewModel.video!!.viewCount.toInt()) +
+                                    " ${stringResource(R.string.views)} - ${viewModel.video!!.publishedText}",
                             style = MaterialTheme.typography.labelMedium
                         )
 
@@ -171,7 +171,7 @@ fun PlayerScreen(
                             Column {
                                 Text(viewModel.video!!.author)
                                 Text(
-                                    text = "${viewModel.video!!.subCountText} subscribers",
+                                    text = "${viewModel.video!!.subCountText} ${stringResource(R.string.subscribers)}",
                                     style = MaterialTheme.typography.labelSmall
                                 )
                             }
@@ -242,7 +242,10 @@ private fun PlayerControls(
                     expanded = false,
                     onDismissRequest = { /*TODO*/ }
                 ) {
-                    DropdownMenuItem(text = { Text("Speed") }, onClick = { /*TODO*/ })
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.speed_modifier)) },
+                        onClick = { /*TODO*/ }
+                    )
                 }
             }
         }

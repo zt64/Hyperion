@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,6 +31,7 @@ import coil.request.ImageRequest
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.hyperion.R
 import com.hyperion.ui.components.VideoCard
 import com.hyperion.ui.screens.destinations.ChannelScreenDestination
 import com.hyperion.ui.screens.destinations.PlayerScreenDestination
@@ -75,8 +77,20 @@ fun HomeScreen(
                     items(state.videos) { trendingVideo ->
                         VideoCard(
                             video = trendingVideo,
-                            onClick = { navController.navigateTo(PlayerScreenDestination(trendingVideo.videoId)) },
-                            onChannelClick = { navController.navigateTo(ChannelScreenDestination(trendingVideo.authorId)) }
+                            onClick = {
+                                navController.navigateTo(
+                                    PlayerScreenDestination(
+                                        trendingVideo.videoId
+                                    )
+                                )
+                            },
+                            onChannelClick = {
+                                navController.navigateTo(
+                                    ChannelScreenDestination(
+                                        trendingVideo.authorId
+                                    )
+                                )
+                            }
                         )
                     }
                 }
@@ -156,11 +170,17 @@ private fun Player(
                     Spacer(Modifier.weight(1f, true))
 
                     IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Play")
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = stringResource(R.string.play)
+                        )
                     }
 
                     IconButton(onClick = onExpand) {
-                        Icon(imageVector = Icons.Default.Fullscreen, contentDescription = "Fullscreen")
+                        Icon(
+                            imageVector = Icons.Default.Fullscreen,
+                            contentDescription = stringResource(R.string.fullscreen)
+                        )
                     }
                 }
             }

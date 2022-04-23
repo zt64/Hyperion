@@ -1,21 +1,65 @@
 <resources>
     <string name="app_name">Hyperion</string>
+    <string name="app_welcome">Thanks for installing Hyperion! Currently only the basic features are implemented, but more are sure to come!</string>
+
+    <!-- Screens -->
     <string name="home_screen">Home</string>
     <string name="settings_screen">Settings</string>
-    <string name="apply">Apply</string>
-    <string name="theme">Theme</string>
-    <string name="theme_setting_description">Hyperion appearance</string>
     <string name="subscriptions_screen">Feed</string>
+    <string name="library_screen">Library</string>
+    <string name="videos_screen">Videos</string>
+    <string name="playlists_screen">Playlists</string>
+
+    <!-- Settings -->
+    <string name="start_screen">Start screen</string>
+    <string name="download_location">Download location</string>
+    <string name="invidious_instance">Invidious API instance</string>
+
+    <!-- Accounts -->
+    <string name="login_google">Login with Google</string>
+    <string name="login_skip">Continue without login</string>
+    <string name="login_failed">Login failed!</string>
+
+    <!-- Video controls -->
+    <string name="speed_modifier">Speed</string>
+    <string name="dislike">Dislike</string>
+    <string name="like">Like</string>
+    <string name="play">Play</string>
+    <string name="fullscreen">Fullscreen</string>
+
+    <!-- Theming -->
+    <string name="theme">Theme</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="style_video_card">Video card style</string>
+    <string name="theme_setting_description">Hyperion appearance</string>
+
+    <!-- External -->
+    <string name="github" translatable="false">GitHub</string>
+
+    <!-- Fragments -->
+    <string name="views">views</string>
+    <string name="subscribers">subscribers</string>
+
+    <!-- Content Descriptions (do not fit anywhere else) -->
+    <string name="desc_download_setting">Download Setting</string>
+    <string name="desc_start_screen_setting">Start screen setting</string>
+    <string name="desc_invidious_setting">Invidious API Instance Setting</string>
+
+    <!-- Other -->
+    <string name="go_back">Back</string>
+    <string name="apply">Apply</string>
     <string name="search">Search</string>
     <string name="download">Download</string>
     <string name="share">Share</string>
     <string name="todo">TODO</string>
-    <string name="dislike">Dislike</string>
-    <string name="like">Like</string>
-    <string name="library_screen">Library</string>
     <string name="subscribe">Subscribe</string>
-    <string name="views">views</string>
-    <string name="download_location">Download location</string>
-    <string name="github">GitHub</string>
-    <string name="start_screen">Start screen</string>
+    <string name="thumbnail">Thumbnail</string>
+    <string name="author">Author</string>
+    <string name="post_date">Date posted</string>
+    <string name="compact">Compact</string>
+    <string name="large">Large</string>
+    <string name="url">URL</string>
+    <string name="region">Region</string>
 </resources>

@@ -1,11 +1,21 @@
 package com.hyperion.preferences
 
 import android.os.Environment
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.hyperion.R
 import com.hyperion.ui.components.NavigationDestination
 import com.hyperion.ui.theme.Theme
 
-enum class VideoCardStyle(val displayName: String) {
-    COMPACT("Compact"), LARGE("Large")
+enum class VideoCardStyle {
+    COMPACT,
+    LARGE;
+
+    @Composable
+    fun toDisplayName(): String = when (this) {
+        COMPACT -> stringResource(R.string.compact)
+        LARGE -> stringResource(R.string.large)
+    }
 }
 
 object Prefs {

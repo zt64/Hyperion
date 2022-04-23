@@ -3,7 +3,6 @@
  * Licensed under the Open Software License version 3.0
  */
 
-
 package com.hyperion.ui.theme
 
 import android.os.Build
@@ -13,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.hyperion.R
 
 private val LightColorScheme = lightColorScheme()
 private val DarkColorScheme = darkColorScheme()
@@ -60,8 +61,15 @@ fun HyperionTheme(
     )
 }
 
-enum class Theme(val displayName: String) {
-    SYSTEM("System"),
-    LIGHT("Light"),
-    DARK("Dark");
+enum class Theme {
+    SYSTEM,
+    LIGHT,
+    DARK;
+
+    @Composable
+    fun toDisplayName(): String = when (this) {
+        SYSTEM -> stringResource(R.string.theme_system)
+        LIGHT -> stringResource(R.string.theme_light)
+        DARK -> stringResource(R.string.theme_dark)
+    }
 }

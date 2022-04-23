@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.hyperion.R
 import com.hyperion.ui.screens.destinations.*
 import com.hyperion.ui.screens.navDestination
 import com.hyperion.util.title
@@ -23,7 +24,8 @@ import com.ramcosta.composedestinations.navigation.navigateTo
 fun TopBar(
     navController: NavController
 ) {
-    val currentDestination = navController.currentBackStackEntryAsState().value?.navDestination ?: HomeScreenDestination
+    val currentDestination =
+        navController.currentBackStackEntryAsState().value?.navDestination ?: HomeScreenDestination
 
     AnimatedVisibility(
         visible = when (currentDestination) {
@@ -47,7 +49,10 @@ fun TopBar(
                     IconButton(
                         onClick = { navController.popBackStack() }
                     ) {
-                        Icon(imageVector = Icons.Default.NavigateBefore, contentDescription = "Back")
+                        Icon(
+                            imageVector = Icons.Default.NavigateBefore,
+                            contentDescription = stringResource(R.string.go_back)
+                        )
                     }
                 }
             },
@@ -56,18 +61,22 @@ fun TopBar(
             },
             actions = {
                 IconButton(
-                    onClick = {
-
-                    }
+                    onClick = { /*TODO*/ }
                 ) {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = stringResource(R.string.search)
+                    )
                 }
 
                 if (currentDestination != SettingsScreenDestination) {
                     IconButton(
                         onClick = { navController.navigateTo(SettingsScreenDestination) }
                     ) {
-                        Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = stringResource(R.string.settings_screen)
+                        )
                     }
                 }
             }

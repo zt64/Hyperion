@@ -10,8 +10,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.android.exoplayer2.Player
+import com.hyperion.R
 
 @Composable
 fun Seekbar(
@@ -45,7 +47,10 @@ fun Seekbar(
                 onValueChangeFinished = { player.seekTo(position) }
             )
             IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Default.Fullscreen, contentDescription = "Fullscreen")
+                Icon(
+                    imageVector = Icons.Default.Fullscreen,
+                    contentDescription = stringResource(R.string.fullscreen)
+                )
             }
         }
     }

@@ -83,11 +83,11 @@ fun ChannelScreen(
                                 style = MaterialTheme.typography.titleMedium
                             )
                             Text(
-                                text = "${channel!!.subCount.toCompact()} subscribers",
+                                text = "${channel!!.subCount.toCompact()} ${stringResource(R.string.subscribers)}",
                                 style = MaterialTheme.typography.labelSmall
                             )
                             Text(
-                                text = "${channel!!.totalViews.toCompact()} views",
+                                text = "${channel!!.totalViews.toCompact()} ${stringResource(R.string.views)}",
                                 style = MaterialTheme.typography.labelSmall
                             )
                         }
@@ -108,9 +108,9 @@ fun ChannelScreen(
             var selectedTabIndex by remember { mutableStateOf(0) }
 
             val tabs = mapOf(
-                "Home" to Icons.Default.Home,
-                "Videos" to Icons.Default.VideoLibrary,
-                "Playlists" to Icons.Default.ViewList
+                stringResource(R.string.home_screen) to Icons.Default.Home,
+                stringResource(R.string.videos_screen) to Icons.Default.VideoLibrary,
+                stringResource(R.string.playlists_screen) to Icons.Default.ViewList
             )
 
             TabRow(
@@ -143,7 +143,7 @@ fun ChannelScreen(
                             .data(video.videoThumbnails.first { it.quality == "medium" }.url)
                             .crossfade(true)
                             .build(),
-                        contentDescription = "Thumbnail"
+                        contentDescription = stringResource(R.string.thumbnail)
                     )
 
                     Text(
@@ -171,7 +171,8 @@ fun ChannelScreen(
 
                         Text(
                             text = buildString {
-                                append("${video.viewCount.toCompact()} views - ")
+                                append(video.viewCount.toCompact())
+                                append(" ${stringResource(R.string.views)} - ")
                                 append(video.publishedText)
                             },
                             style = MaterialTheme.typography.labelSmall

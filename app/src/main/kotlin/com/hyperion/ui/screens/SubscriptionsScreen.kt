@@ -10,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.hyperion.R
 import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
@@ -26,7 +28,7 @@ fun SubscriptionsScreen() {
                 imageVector = Icons.Default.Construction,
                 contentDescription = null
             )
-            Text("Incomplete")
+            Text(stringResource(R.string.todo))
         }
     }
 }

@@ -24,7 +24,7 @@ fun RegionDialog(
     var selectedRegion by remember { mutableStateOf(Locale.US) }
 
     AlertDialog(
-        title = { Text("Region") },
+        title = { Text(stringResource(R.string.region)) },
         text = {
             LazyColumn(
                 modifier = Modifier.heightIn(max = 350.dp)
