@@ -80,6 +80,7 @@ fun HyperionScaffold() {
             }
 
             DestinationsNavHost(
+                modifier = Modifier.fillMaxSize(),
                 navController = navController,
                 startRoute = if (Prefs.firstLaunch) IntroScreenDestination else startScreen.direction,
                 navGraph = if (Prefs.firstLaunch) NavGraphs.intro else NavGraphs.root,
