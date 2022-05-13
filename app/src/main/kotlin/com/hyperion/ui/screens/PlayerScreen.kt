@@ -155,8 +155,14 @@ fun PlayerScreen(
                             ) {
                                 ChannelThumbnail(url = viewModel.video!!.author.avatarUrl!!)
 
-                                Column {
-                                    Text(viewModel.video!!.author.name!!)
+                                Column(
+                                    modifier = Modifier.weight(1f, true)
+                                ) {
+                                    Text(
+                                        text = viewModel.video!!.author.name!!,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
 
                                     viewModel.video!!.author.subscriberText?.let { subscriberText ->
                                         Text(
@@ -165,8 +171,6 @@ fun PlayerScreen(
                                         )
                                     }
                                 }
-
-                                Spacer(modifier = Modifier.weight(1f, true))
 
                                 FilledTonalButton(
                                     onClick = viewModel::subscribe

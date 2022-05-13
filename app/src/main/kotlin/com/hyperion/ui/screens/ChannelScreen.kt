@@ -88,7 +88,9 @@ fun ChannelScreen(
                                     contentDescription = null
                                 )
 
-                                Column {
+                                Column(
+                                    modifier = Modifier.weight(1f, true)
+                                ) {
                                     Text(
                                         text = channel.name,
                                         style = MaterialTheme.typography.titleMedium
@@ -101,8 +103,6 @@ fun ChannelScreen(
                                         )
                                     }
                                 }
-
-                                Spacer(modifier = Modifier.weight(1f, true))
 
                                 FilledTonalButton(
                                     onClick = { /* TODO */ }
