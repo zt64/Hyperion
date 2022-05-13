@@ -93,10 +93,13 @@ fun ChannelScreen(
                                         text = channel.name,
                                         style = MaterialTheme.typography.titleMedium
                                     )
-                                    Text(
-                                        text = channel.subscriberText,
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
+
+                                    channel.subscriberText?.let { subscriberText ->
+                                        Text(
+                                            text = subscriberText,
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    }
                                 }
 
                                 Spacer(modifier = Modifier.weight(1f, true))

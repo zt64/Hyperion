@@ -4,7 +4,7 @@ data class DomainChannel(
     val id: String,
     val name: String,
     val description: String,
-    val subscriberText: String,
+    val subscriberText: String?,
     val avatar: String,
     val banner: String,
     val videos: List<DomainVideoPartial>

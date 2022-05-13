@@ -157,10 +157,13 @@ fun PlayerScreen(
 
                                 Column {
                                     Text(viewModel.video!!.author.name!!)
-                                    Text(
-                                        text = viewModel.video!!.author.subscriberText!!,
-                                        style = MaterialTheme.typography.labelSmall
-                                    )
+
+                                    viewModel.video!!.author.subscriberText?.let { subscriberText ->
+                                        Text(
+                                            text = subscriberText,
+                                            style = MaterialTheme.typography.labelSmall
+                                        )
+                                    }
                                 }
 
                                 Spacer(modifier = Modifier.weight(1f, true))

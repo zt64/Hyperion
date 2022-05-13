@@ -75,9 +75,9 @@ data class ApiChannel(
                                             data class GridChannelRenderer(
                                                 val channelId: String,
                                                 val navigationEndpoint: NavigationEndpoint,
-                                                val shortSubscriberCountText: ShortSubscriberCountText,
+                                                val shortSubscriberCountText: ShortSubscriberCountText? = null,
                                                 val shortVideoCountText: ShortVideoCountText,
-                                                val subscriberCountText: SubscriberCountText,
+                                                val subscriberCountText: SubscriberCountText? = null,
                                                 val thumbnail: Thumbnail,
                                                 val title: Title,
                                                 val videoCountText: VideoCountText
@@ -197,7 +197,7 @@ data class ApiChannel(
                                             @Serializable
                                             data class Metadata(
                                                 val joinDateText: String,
-                                                val subscriberCountText: String,
+                                                val subscriberCountText: String? = null,
                                                 val videosCountText: String
                                             )
                                         }
