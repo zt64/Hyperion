@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +26,7 @@ import com.hyperion.ui.screens.destinations.PlayerScreenDestination
 import com.hyperion.ui.viewmodel.MainViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.navigateTo
+import com.ramcosta.composedestinations.navigation.navigate
 
 @RootNavGraph(start = true)
 @Destination
@@ -66,8 +64,8 @@ fun HomeScreen(
 
                 VideoCard(
                     video = video,
-                    onClick = { navController.navigateTo(PlayerScreenDestination(video.id)) },
-                    onChannelClick = { navController.navigateTo(ChannelScreenDestination(video.author!!.id)) }
+                    onClick = { navController.navigate(PlayerScreenDestination(video.id)) },
+                    onChannelClick = { navController.navigate(ChannelScreenDestination(video.author!!.id)) }
                 )
             }
 

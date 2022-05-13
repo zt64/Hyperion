@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hyperion.R
 import com.hyperion.preferences.Prefs
-import com.hyperion.ui.components.ListItem
 import com.hyperion.ui.components.NavigationDestination
+import com.hyperion.ui.components.settings.SettingItem
 import com.hyperion.ui.components.settings.ThemePicker
 import com.hyperion.ui.viewmodel.SettingsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -47,7 +47,7 @@ fun SettingsScreen(
             if (uri != null) Prefs.downloadDirectory = uri.toString()
         }
 
-        ListItem(
+        SettingItem(
             modifier = Modifier.clickable { viewModel.showThemePicker() },
             icon = {
                 Icon(
@@ -67,7 +67,7 @@ fun SettingsScreen(
         )
 
         var showVideoCardStyleDropdown by remember { mutableStateOf(false) }
-        ListItem(
+        SettingItem(
             modifier = Modifier.clickable { showVideoCardStyleDropdown = true },
             icon = {
                 Icon(
@@ -96,7 +96,7 @@ fun SettingsScreen(
         )
 
         var showStartScreenDropdown by remember { mutableStateOf(false) }
-        ListItem(
+        SettingItem(
             modifier = Modifier.clickable { showStartScreenDropdown = true },
             icon = { Icon(imageVector = Icons.Default.Start, contentDescription = null) },
             text = { Text(stringResource(R.string.start_screen)) },
@@ -123,7 +123,7 @@ fun SettingsScreen(
             }
         )
 
-        ListItem(
+        SettingItem(
             modifier = Modifier.clickable { directoryChooser.launch(null) },
             icon = { Icon(imageVector = Icons.Default.Download, contentDescription = "Download Setting") },
             text = { Text(stringResource(R.string.download_location)) },
@@ -132,7 +132,7 @@ fun SettingsScreen(
 
         Divider()
 
-        ListItem(
+        SettingItem(
             modifier = Modifier.clickable { viewModel.openGitHub() },
             icon = {
                 Icon(
