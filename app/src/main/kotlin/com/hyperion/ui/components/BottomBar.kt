@@ -18,11 +18,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.hyperion.R
+import com.hyperion.ui.screens.appDestination
 import com.hyperion.ui.screens.destinations.HomeScreenDestination
 import com.hyperion.ui.screens.destinations.LibraryScreenDestination
 import com.hyperion.ui.screens.destinations.SubscriptionsScreenDestination
-import com.hyperion.ui.screens.navDestination
-import com.ramcosta.composedestinations.navigation.navigateTo
+import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 
 enum class NavigationDestination(
@@ -30,7 +30,7 @@ enum class NavigationDestination(
     val icon: ImageVector,
     @StringRes val label: Int
 ) {
-    Home(HomeScreenDestination, Icons.Default.Home, R.string.home_screen),
+    Home(HomeScreenDestination, Icons.Default.Home, R.string.home),
     Subscriptions(SubscriptionsScreenDestination, Icons.Default.Subscriptions, R.string.subscriptions_screen),
     Library(LibraryScreenDestination, Icons.Default.VideoLibrary, R.string.library_screen),
 }
@@ -39,7 +39,7 @@ enum class NavigationDestination(
 fun BottomBar(
     navController: NavController
 ) {
-    val currentDestination = navController.currentBackStackEntryAsState().value?.navDestination
+    val currentDestination = navController.currentBackStackEntryAsState().value?.appDestination()
 
     AnimatedVisibility(
         visible = when (currentDestination) {
@@ -58,7 +58,7 @@ fun BottomBar(
                     icon = { Icon(destination.icon, stringResource(destination.label)) },
                     label = { Text(stringResource(destination.label)) },
                     onClick = {
-                        navController.navigateTo(destination.direction) {
+                        navController.navigate(destination.direction) {
                             popUpTo(navController.graph.startDestinationId) {
                                 saveState = true
                             }

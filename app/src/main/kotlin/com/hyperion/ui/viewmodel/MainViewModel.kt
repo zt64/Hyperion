@@ -1,39 +1,34 @@
 package com.hyperion.ui.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hyperion.model.TrendingVideo
-import com.hyperion.network.service.InvidiousService
+import androidx.paging.*
+import com.hyperion.domain.model.DomainVideoPartial
+import com.hyperion.domain.repository.InnerTubeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor() : ViewModel() {
-    sealed class State {
-        class Loaded(val videos: List<TrendingVideo>) : State()
-        object Loading : State()
+class MainViewModel @Inject constructor(
+    private val repository: InnerTubeRepository
+) : ViewModel() {
+    val videos = Pager(PagingConfig(10)) {
+        object : PagingSource<String, DomainVideoPartial>() {
+            override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainVideoPartial> {
+                return try {
+                    val trendingVideosResponse = repository.getTrendingVideos(params.key)
 
-        val isLoading get() = this is Loading
-    }
+                    LoadResult.Page(
+                        data = trendingVideosResponse.videos,
+                        prevKey = null,
+                        nextKey = trendingVideosResponse.continuation
+                    )
+                } catch (e: Exception) {
+                    LoadResult.Error(e)
+                }
+            }
 
-    var state by mutableStateOf<State>(State.Loading)
-        private set
-
-    init {
-        fetchTrending()
-    }
-
-    fun fetchTrending() {
-        state = State.Loading
-
-        viewModelScope.launch {
-            val trendingVideos = InvidiousService.getTrending()
-
-            state = State.Loaded(trendingVideos)
+            override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
         }
-    }
+    }.flow.cachedIn(viewModelScope)
 }

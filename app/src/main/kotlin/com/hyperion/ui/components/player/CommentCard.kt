@@ -9,10 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.hyperion.domain.model.DomainComment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentCard(
+    comment: DomainComment,
     onLike: () -> Unit,
     onDislike: () -> Unit,
     onReply: () -> Unit
@@ -52,7 +54,7 @@ fun CommentCard(
             }
 
             Text(
-                text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sem metus, accumsan eu euismod nec, malesuada id lectus.",
+                text = comment.content,
                 style = MaterialTheme.typography.bodyMedium
             )
         }

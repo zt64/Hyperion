@@ -1,32 +1,22 @@
 package com.hyperion.ui.screens
 
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Fullscreen
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.rememberSwipeableState
-import androidx.compose.material.swipeable
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -35,133 +25,65 @@ import com.hyperion.ui.screens.destinations.ChannelScreenDestination
 import com.hyperion.ui.screens.destinations.PlayerScreenDestination
 import com.hyperion.ui.viewmodel.MainViewModel
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.navigateTo
-import kotlin.math.roundToInt
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.navigate
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
-@Destination(
-    start = true
-)
+@RootNavGraph(start = true)
+@Destination
 @Composable
 fun HomeScreen(
     navController: NavController,
     viewModel: MainViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state
+    val videoListItems = viewModel.videos.collectAsLazyPagingItems()
+    val refreshState = rememberSwipeRefreshState(videoListItems.loadState.refresh == LoadState.Loading)
 
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        SwipeRefresh(
-            state = rememberSwipeRefreshState(viewModel.state.isLoading),
-            onRefresh = viewModel::fetchTrending,
-            indicator = { state, trigger ->
-                SwipeRefreshIndicator(
-                    state = state,
-                    refreshTriggerDistance = trigger,
-                    scale = true,
-                    backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-            }
-        ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 14.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                if (state is MainViewModel.State.Loaded) {
-                    items(state.videos) { trendingVideo ->
-                        VideoCard(
-                            video = trendingVideo,
-                            onClick = { navController.navigateTo(PlayerScreenDestination(trendingVideo.videoId)) },
-                            onChannelClick = { navController.navigateTo(ChannelScreenDestination(trendingVideo.authorId)) }
-                        )
-                    }
-                }
-            }
+    SwipeRefresh(
+        state = refreshState,
+        onRefresh = videoListItems::refresh,
+        indicator = { state, trigger ->
+            SwipeRefreshIndicator(
+                state = state,
+                refreshTriggerDistance = trigger,
+                scale = true,
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            )
         }
-
-//        Player(
-//            modifier = Modifier.align(Alignment.BottomCenter),
-//            onExpand = {
-//
-//            }
-//        )
-    }
-}
-
-private enum class PlayerState {
-    EXPANDED, COLLAPSED
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-private fun Player(
-    modifier: Modifier = Modifier,
-    onExpand: () -> Unit
-) {
-    BoxWithConstraints {
-        val fullHeight = constraints.maxHeight.toFloat()
-
-        var height by remember { mutableStateOf(0f) }
-        val swipeableState = rememberSwipeableState(initialValue = PlayerState.EXPANDED)
-        val anchors = mapOf(
-            fullHeight - height to PlayerState.COLLAPSED,
-            fullHeight / 2 to PlayerState.EXPANDED
-        )
-
-        Surface(
-            modifier = modifier
-                .offset { IntOffset(0, swipeableState.offset.value.roundToInt()) }
-                .onGloballyPositioned {
-                    height = it.size.height.toFloat()
-                }
-                .swipeable(
-                    state = swipeableState,
-                    anchors = anchors,
-                    orientation = Orientation.Vertical
-                ),
-            shadowElevation = 2.dp
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 14.dp),
+            contentPadding = PaddingValues(bottom = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Row(
-                modifier = Modifier.height(IntrinsicSize.Min),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                AsyncImage(
-                    modifier = Modifier.fillMaxHeight(),
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data("https://s1.best-wallpaper.net/wallpaper/m/1703/Capybara-close-up-face_m.webp")
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = null
+            items(videoListItems) { video ->
+                if (video == null) return@items
+
+                VideoCard(
+                    video = video,
+                    onClick = { navController.navigate(PlayerScreenDestination(video.id)) },
+                    onChannelClick = { navController.navigate(ChannelScreenDestination(video.author!!.id)) }
                 )
+            }
 
-                Row(
-                    modifier = Modifier.padding(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = "Video Title",
-                            style = MaterialTheme.typography.titleSmall
-                        )
-                        Text(
-                            text = "3:23 / 8:30",
-                            style = MaterialTheme.typography.labelSmall
-                        )
+            videoListItems.loadState.apply {
+                when (append) {
+                    is LoadState.Loading -> {
+                        item {
+                            CircularProgressIndicator(modifier = Modifier.padding(4.dp))
+                        }
                     }
+                    is LoadState.Error -> {
+                        item {
+                            (append as LoadState.Error).error.printStackTrace()
 
-                    Spacer(Modifier.weight(1f, true))
-
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.Default.PlayArrow, contentDescription = "Play")
+                            Text("An error has occurred")
+                        }
                     }
-
-                    IconButton(onClick = onExpand) {
-                        Icon(imageVector = Icons.Default.Fullscreen, contentDescription = "Fullscreen")
-                    }
+                    else -> Unit
                 }
             }
         }
