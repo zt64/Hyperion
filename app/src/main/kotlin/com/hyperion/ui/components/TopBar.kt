@@ -53,7 +53,7 @@ fun TopBar(
                 currentDestination.title?.let { Text(stringResource(id = it)) }
             },
             actions = {
-                if (currentDestination != SearchScreenDestination) {
+                if (currentDestination != SearchScreenDestination && currentDestination != SettingsScreenDestination) {
                     IconButton(
                         onClick = { navController.navigate(SearchScreenDestination) }
                     ) {
