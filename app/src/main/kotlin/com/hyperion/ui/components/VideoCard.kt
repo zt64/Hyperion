@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -11,15 +12,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.ExperimentalUnitApi
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.hyperion.R
 import com.hyperion.domain.model.DomainVideoPartial
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalUnitApi::class)
 @Composable
 fun VideoCard(
     video: DomainVideoPartial,
@@ -39,8 +46,7 @@ fun VideoCard(
                             .data(video.thumbnailUrl)
                             .crossfade(true)
                             .build(),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.thumbnail)
                     )
 
                     if (video.timestamp != null) {
@@ -56,18 +62,21 @@ fun VideoCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     ChannelThumbnail(
-                        modifier = Modifier.clickable(onClick = onChannelClick),
+                        modifier = Modifier
+                            .clickable(onClick = onChannelClick)
+                            .size(36.dp),
                         url = video.author!!.avatarUrl!!
                     )
 
                     Column {
                         Text(
                             text = video.title,
-                            style = MaterialTheme.typography.titleMedium,
-                            maxLines = 2
+                            style = MaterialTheme.typography.labelLarge,
+                            maxLines = 2,
                         )
 
                         Text(
+                            modifier = Modifier.padding(top = 4.dp),
                             text = video.subtitle,
                             style = MaterialTheme.typography.labelSmall
                         )
@@ -89,7 +98,7 @@ fun VideoCard(
                                 .data(video.thumbnailUrl)
                                 .crossfade(true)
                                 .build(),
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.thumbnail)
                         )
 
                         if (video.timestamp != null) {
@@ -104,11 +113,11 @@ fun VideoCard(
                         modifier = Modifier
                             .heightIn(min = 70.dp)
                             .padding(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         Text(
                             text = video.title,
-                            style = MaterialTheme.typography.titleSmall
+                            style = MaterialTheme.typography.labelMedium
                         )
 
                         Text(
@@ -121,7 +130,9 @@ fun VideoCard(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             ChannelThumbnail(
-                                modifier = Modifier.clickable(onClick = onChannelClick),
+                                modifier = Modifier
+                                    .clickable(onClick = onChannelClick)
+                                    .size(28.dp),
                                 url = video.author!!.avatarUrl!!
                             )
 
