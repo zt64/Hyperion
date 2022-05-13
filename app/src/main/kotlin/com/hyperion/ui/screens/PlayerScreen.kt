@@ -1,45 +1,42 @@
 package com.hyperion.ui.screens
 
-import android.icu.text.NumberFormat
+import android.text.format.DateUtils
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.RenderVectorGroup
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.hyperion.R
-import com.hyperion.ui.components.player.Seekbar
+import com.hyperion.ui.components.ChannelThumbnail
 import com.hyperion.ui.components.player.VideoActions
-import com.hyperion.ui.screens.destinations.HomeScreenDestination
+import com.hyperion.ui.screens.destinations.ChannelScreenDestination
 import com.hyperion.ui.viewmodel.PlayerViewModel
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+@OptIn(ExperimentalFoundationApi::class)
 @Destination(
     deepLinks = [
         DeepLink(uriPattern = "https://youtu.be/{videoId}"),
@@ -54,15 +51,8 @@ fun PlayerScreen(
     viewModel: PlayerViewModel = hiltViewModel(),
     videoId: String
 ) {
-    val context = LocalContext.current
-
     LaunchedEffect(Unit) {
-        viewModel.fetchVideo(videoId)
-    }
-
-    if (viewModel.video != null) {
-        viewModel.player.addMediaItem(MediaItem.fromUri(viewModel.video!!.formatStreams.last().url))
-        viewModel.player.prepare()
+        viewModel.getVideo(videoId)
     }
 
     Column(
@@ -72,139 +62,154 @@ fun PlayerScreen(
             var showControls by remember { mutableStateOf(false) }
             val configuration = LocalConfiguration.current
 
-            DisposableEffect(
-                AndroidView(
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onTap = { showControls = !showControls },
-                                onDoubleTap = { offset ->
-                                    if (offset.x > configuration.screenWidthDp / 2) viewModel.player.seekForward()
-                                    else viewModel.player.seekBack()
-                                }
-                            )
-                        },
-                    factory = {
-                        StyledPlayerView(context).apply {
-                            resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
-                            useController = false
-                            player = viewModel.player
-                        }
+            AndroidView(
+                modifier = Modifier
+                    .aspectRatio(16f / 9f)
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onTap = { showControls = !showControls },
+                            onDoubleTap = { offset ->
+                                if (offset.x > configuration.screenWidthDp / 2) viewModel.player.seekForward()
+                                else viewModel.player.seekBack()
+                            }
+                        )
+                    },
+                factory = { context ->
+                    StyledPlayerView(context).apply {
+                        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH
+                        useController = true
+                        player = viewModel.player
                     }
-                )
-            ) {
-                onDispose(viewModel.player::release)
-            }
-
-            PlayerControls(
-                modifier = Modifier.matchParentSize(),
-                visible = showControls,
-                player = viewModel.player,
-                isPlaying = viewModel.player.isPlaying,
-                onMinimize = { navigator.navigate(HomeScreenDestination) },
-                onPlayPause = viewModel::playPause
+                }
             )
+
+//            PlayerControls(
+//                modifier = Modifier.matchParentSize(),
+//                visible = showControls,
+//                player = viewModel.player,
+//                isPlaying = viewModel.player.isPlaying,
+//                onMinimize = { navigator.navigate(HomeScreenDestination) },
+//                onPlayPause = viewModel::playPause
+//            )
         }
 
-        if (viewModel.video != null) {
-            LazyColumn(
-                modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                item {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        var expandedDescription by remember { mutableStateOf(false) }
+        when (viewModel.state) {
+            PlayerViewModel.State.Loaded -> {
+                // TODO: Move to view model in the future
+                DisposableEffect(viewModel.video) {
+                    val streams = viewModel.video!!.streams
 
-                        Text(
-                            text = viewModel.video!!.title,
-                            style = MaterialTheme.typography.titleMedium
-                        )
+                    val mediaItem = MediaItem.Builder()
+                        .setUri(viewModel.video!!.streams.last().url)
+                    viewModel.player.setMediaItem(MediaItem.fromUri(viewModel.video!!.streams.last().url))
 
-                        Text(
-                            text = "${
-                                NumberFormat.getInstance().format(viewModel.video!!.viewCount.toInt())
-                            } ${stringResource(R.string.views)} - ${viewModel.video!!.publishedText}",
-                            style = MaterialTheme.typography.labelMedium
-                        )
+//                    val factory = ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory())
+//                    val videoItem = factory.createMediaSource(MediaItem.fromUri(streams.filterIsInstance<DomainStream.Video>().first().url))
+//                    val soundItem = factory.createMediaSource(MediaItem.fromUri(streams.filterIsInstance<DomainStream.Audio>().first().url))
+//                    val mergedSource = MergingMediaSource(true, true, videoItem, soundItem)
+//
+//                    viewModel.player.setMediaSource(mergedSource)
 
-                        VideoActions(
-                            video = viewModel.video!!,
-                            onLike = viewModel::like,
-                            onDislike = viewModel::dislike,
-                            onShare = viewModel::shareVideo,
-                            onDownload = viewModel::download
-                        )
+                    viewModel.player.prepare()
+                    viewModel.player.playWhenReady = true
 
-                        Divider()
+                    onDispose(viewModel.player::release)
+                }
 
-                        Row(
-                            modifier = Modifier.clickable { viewModel.viewChannel() },
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                LazyColumn(
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    item {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .size(36.dp),
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(viewModel.video!!.authorThumbnails.last().url)
-                                    .crossfade(true)
-                                    .build(),
-                                placeholder = Icons.Default.AccountCircle.let { icon ->
-                                    rememberVectorPainter(
-                                        defaultWidth = icon.defaultWidth,
-                                        defaultHeight = icon.defaultHeight,
-                                        viewportWidth = icon.viewportWidth,
-                                        viewportHeight = icon.viewportHeight,
-                                        name = icon.name,
-                                        tintColor = MaterialTheme.colorScheme.onSurface,
-                                        tintBlendMode = icon.tintBlendMode,
-                                        content = { _, _ -> RenderVectorGroup(icon.root) }
-                                    )
-                                },
-                                contentDescription = null
+                            var expandedDescription by remember { mutableStateOf(false) }
+
+                            Text(
+                                text = viewModel.video!!.title,
+                                style = MaterialTheme.typography.titleMedium
                             )
 
-                            Column {
-                                Text(viewModel.video!!.author)
-                                Text(
-                                    text = "${viewModel.video!!.subCountText} subscribers",
-                                    style = MaterialTheme.typography.labelSmall
-                                )
-                            }
+                            Text(
+                                text = viewModel.video!!.subtitle,
+                                style = MaterialTheme.typography.labelMedium
+                            )
 
-                            Spacer(modifier = Modifier.weight(1f, true))
+                            VideoActions(
+                                video = viewModel.video!!,
+                                onLike = {  },
+                                onDislike = {  },
+                                onShare = viewModel::shareVideo,
+                                onDownload = { }
+                            )
 
-                            FilledTonalButton(
-                                onClick = viewModel::subscribe
+                            Divider()
+
+                            Row(
+                                modifier = Modifier.clickable {
+                                    navigator.navigate(ChannelScreenDestination(viewModel.video!!.author.id))
+                                },
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(stringResource(R.string.subscribe))
+                                ChannelThumbnail(url = viewModel.video!!.author.avatarUrl!!)
+
+                                Column {
+                                    Text(viewModel.video!!.author.name!!)
+                                    Text(
+                                        text = viewModel.video!!.author.subscriberText!!,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.weight(1f, true))
+
+                                FilledTonalButton(
+                                    onClick = viewModel::subscribe
+                                ) {
+                                    Text(stringResource(R.string.subscribe))
+                                }
                             }
+
+                            Divider()
+
+                            Text(
+                                modifier = Modifier
+                                    .clickable { expandedDescription = !expandedDescription }
+                                    .animateContentSize(animationSpec = tween()),
+                                text = viewModel.video!!.description,
+                                style = MaterialTheme.typography.bodyMedium,
+                                maxLines = if (expandedDescription) Int.MAX_VALUE else 5,
+                                overflow = TextOverflow.Ellipsis
+                            )
+
+                            Divider()
                         }
+                    }
 
-                        Divider()
-
+                    item {
                         Text(
-                            modifier = Modifier
-                                .clickable { expandedDescription = !expandedDescription }
-                                .animateContentSize(animationSpec = tween()),
-                            text = viewModel.video!!.description,
-                            style = MaterialTheme.typography.bodyMedium,
-                            maxLines = if (expandedDescription) Int.MAX_VALUE else 5,
-                            overflow = TextOverflow.Ellipsis
+                            text = "Comments",
+                            style = MaterialTheme.typography.titleMedium
                         )
+                    }
 
-                        Divider()
+                    stickyHeader {
+                        Text(
+                            text = "Related videos",
+                            style = MaterialTheme.typography.titleMedium
+                        )
                     }
                 }
             }
+            PlayerViewModel.State.Loading -> {}
+            PlayerViewModel.State.Error -> {}
         }
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun PlayerControls(
     modifier: Modifier,
@@ -213,16 +218,23 @@ private fun PlayerControls(
     isPlaying: Boolean,
     onMinimize: () -> Unit,
     onPlayPause: () -> Unit
-) = Box(
-    modifier = modifier
+) = AnimatedVisibility(
+    modifier = modifier,
+    visible = visible,
+    enter = fadeIn(),
+    exit = fadeOut()
 ) {
-    AnimatedVisibility(
-        modifier = Modifier.align(Alignment.TopCenter),
-        visible = visible,
-        enter = slideInVertically() + fadeIn(),
-        exit = slideOutVertically() + fadeOut()
+    Box(
+        modifier = modifier.background(MaterialTheme.colorScheme.surface.copy(alpha = 0.4f))
     ) {
-        Row {
+        Row(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .animateEnterExit(
+                    enter = slideInVertically(),
+                    exit = slideOutVertically()
+                )
+        ) {
             IconButton(
                 onClick = onMinimize
             ) {
@@ -246,15 +258,10 @@ private fun PlayerControls(
                 }
             }
         }
-    }
 
-    AnimatedVisibility(
-        modifier = Modifier.align(Alignment.Center),
-        visible = visible,
-        enter = fadeIn(),
-        exit = fadeOut()
-    ) {
-        Row {
+        Row(
+            modifier = Modifier.align(Alignment.Center)
+        ) {
             IconButton(
                 onClick = onPlayPause
             ) {
@@ -264,17 +271,40 @@ private fun PlayerControls(
                 )
             }
         }
-    }
 
-    AnimatedVisibility(
-        modifier = Modifier.align(Alignment.BottomCenter),
-        visible = visible,
-        enter = slideInVertically { it / 2 } + fadeIn(),
-        exit = slideOutVertically { it / 2 } + fadeOut()
-    ) {
-        Seekbar(
-            modifier = Modifier.fillMaxWidth(),
-            player = player
-        )
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(8.dp)
+                .animateEnterExit(
+                    enter = slideInVertically { it / 2 },
+                    exit = slideOutVertically { it / 2 }
+                ),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            var position by remember { mutableStateOf(0L) }
+
+            Text(
+                text = buildString {
+                    append(DateUtils.formatElapsedTime(player.currentPosition / 1000))
+                    append(" / ")
+                    append(DateUtils.formatElapsedTime(player.duration / 1000))
+                },
+                style = MaterialTheme.typography.labelMedium
+            )
+
+            Slider(
+                modifier = Modifier.weight(1f, true),
+                value = player.currentPosition.toFloat(),
+                valueRange = if (player.duration == C.TIME_UNSET) 0f..0f else 0f..player.duration.toFloat(),
+                onValueChange = { position = it.toLong() },
+                onValueChangeFinished = { player.seekTo(position) }
+            )
+
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(imageVector = Icons.Default.Fullscreen, contentDescription = "Fullscreen")
+            }
+        }
     }
 }

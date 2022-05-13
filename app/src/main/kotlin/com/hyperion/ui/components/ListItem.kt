@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 
+// TODO: Switch to custom implementation and remove dependency on Material 2
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListItem(

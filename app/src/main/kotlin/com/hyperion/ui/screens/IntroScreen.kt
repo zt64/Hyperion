@@ -13,11 +13,15 @@ import androidx.compose.ui.unit.dp
 import com.hyperion.R
 import com.hyperion.preferences.Prefs
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.NavGraph
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 
-@Destination(
-    start = true,
-    navGraph = "intro"
-)
+@RootNavGraph
+@NavGraph
+annotation class IntroNavGraph(val start: Boolean = false)
+
+@IntroNavGraph(start = true)
+@Destination
 @Composable
 fun IntroScreen() {
     Column(

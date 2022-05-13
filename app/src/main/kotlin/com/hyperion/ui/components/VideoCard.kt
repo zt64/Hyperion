@@ -2,8 +2,6 @@ package com.hyperion.ui.components
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.text.format.DateUtils
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ElevatedCard
@@ -13,20 +11,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.hyperion.model.TrendingVideo
-import com.hyperion.util.toCompact
+import com.hyperion.domain.model.DomainVideoPartial
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VideoCard(
+    video: DomainVideoPartial,
     onChannelClick: () -> Unit,
     onClick: () -> Unit,
-    video: TrendingVideo
 ) {
     ElevatedCard(
         modifier = Modifier.clickable(onClick = onClick)
@@ -38,22 +36,19 @@ fun VideoCard(
                     AsyncImage(
                         modifier = Modifier.aspectRatio(16f / 9f),
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(video.videoThumbnails.first { it.quality == "medium" }.url)
+                            .data(video.thumbnailUrl)
                             .crossfade(true)
                             .build(),
-                        contentDescription = "Thumbnail"
+                        contentScale = ContentScale.Crop,
+                        contentDescription = null
                     )
 
-                    Text(
-                        modifier = Modifier
-                            .align(Alignment.BottomEnd)
-                            .padding(6.dp)
-                            .background(MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.3f))
-                            .padding(2.dp),
-                        text = DateUtils.formatElapsedTime(video.lengthSeconds.toLong()),
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer
-                    )
+                    if (video.timestamp != null) {
+                        Timestamp(
+                            modifier = Modifier.align(Alignment.BottomEnd),
+                            text = video.timestamp
+                        )
+                    }
                 }
 
                 Row(
@@ -62,7 +57,7 @@ fun VideoCard(
                 ) {
                     ChannelThumbnail(
                         modifier = Modifier.clickable(onClick = onChannelClick),
-                        authorId = video.authorId
+                        url = video.author!!.avatarUrl!!
                     )
 
                     Column {
@@ -73,11 +68,7 @@ fun VideoCard(
                         )
 
                         Text(
-                            text = buildString {
-                                append("${video.author} - ")
-                                append("${video.viewCount.toCompact()} views - ")
-                                append(video.publishedText)
-                            },
+                            text = video.subtitle,
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
@@ -95,22 +86,18 @@ fun VideoCard(
                         AsyncImage(
                             modifier = Modifier.fillMaxHeight(),
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(video.videoThumbnails.first { it.quality == "medium" }.url)
+                                .data(video.thumbnailUrl)
                                 .crossfade(true)
                                 .build(),
-                            contentDescription = "Thumbnail"
+                            contentDescription = null
                         )
 
-                        Text(
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(6.dp)
-                                .background(MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.4f))
-                                .padding(2.dp),
-                            text = DateUtils.formatElapsedTime(video.lengthSeconds.toLong()),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onTertiaryContainer
-                        )
+                        if (video.timestamp != null) {
+                            Timestamp(
+                                modifier = Modifier.align(Alignment.BottomEnd),
+                                text = video.timestamp
+                            )
+                        }
                     }
 
                     Column(
@@ -125,10 +112,7 @@ fun VideoCard(
                         )
 
                         Text(
-                            text = buildString {
-                                append("${video.viewCount.toCompact()} views - ")
-                                append(video.publishedText)
-                            },
+                            text = video.subtitle,
                             style = MaterialTheme.typography.labelSmall
                         )
 
@@ -138,11 +122,11 @@ fun VideoCard(
                         ) {
                             ChannelThumbnail(
                                 modifier = Modifier.clickable(onClick = onChannelClick),
-                                authorId = video.authorId
+                                url = video.author!!.avatarUrl!!
                             )
 
                             Text(
-                                text = video.author,
+                                text = video.subtitle,
                                 style = MaterialTheme.typography.labelSmall
                             )
                         }

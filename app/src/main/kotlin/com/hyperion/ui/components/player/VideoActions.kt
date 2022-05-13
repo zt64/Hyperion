@@ -16,12 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
-import com.hyperion.model.Video
-import com.hyperion.util.toCompact
+import com.hyperion.domain.model.DomainVideo
 
 @Composable
 fun VideoActions(
-    video: Video,
+    video: DomainVideo,
     onLike: () -> Unit,
     onDislike: () -> Unit,
     onShare: () -> Unit,
@@ -43,7 +42,7 @@ fun VideoActions(
             }
 
             Text(
-                text = video.likeCount.toCompact(),
+                text = video.likesText,
                 style = MaterialTheme.typography.labelMedium
             )
         }
@@ -58,7 +57,7 @@ fun VideoActions(
             }
 
             Text(
-                text = stringResource(R.string.todo),
+                text = video.dislikes.toString(),
                 style = MaterialTheme.typography.labelMedium
             )
         }
