@@ -31,8 +31,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: 506998
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
-      - name: Commit to main
+          
+      - name: GitHub is so dumb i just cant
+        run: |
+          sudo chmod -R ugo+rwX .
+          
+      - name: Merge
         run: |
           git checkout main
+          git add *
           git merge l10n
           git push
