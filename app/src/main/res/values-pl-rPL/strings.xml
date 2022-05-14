@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Hyperion</string>
-    <string name="home">Home</string>
-    <string name="settings_screen">Settings</string>
-    <string name="apply">Apply</string>
-    <string name="theme">Theme</string>
-    <string name="theme_setting_description">Hyperion appearance</string>
-    <string name="subscriptions_screen">Feed</string>
-    <string name="download">Download</string>
-    <string name="share">Share</string>
-    <string name="todo">TODO</string>
-    <string name="dislike">Dislike</string>
-    <string name="like">Like</string>
-    <string name="library_screen">Library</string>
-    <string name="subscribe">Subscribe</string>
-    <string name="views">views</string>
-    <string name="download_location">Download location</string>
-    <string name="start_screen">Start screen</string>
-    <string name="thumbnail">Thumbnail</string>
-    <string name="videos">Videos</string>
-    <string name="playlists">Playlists</string>
-    <string name="search">Search</string>
-    <string name="error">Error</string>
+    <string name="home_screen">Strona główna</string>
+    <string name="settings_screen">Ustawienia</string>
+    <string name="apply">Zastosuj</string>
+    <string name="theme">Motyw</string>
+    <string name="theme_setting_description">Wygląd Hyperiona</string>
+    <string name="subscriptions_screen">Subskrypcje</string>
+    <string name="search">Szukaj</string>
+    <string name="download">Pobierz</string>
+    <string name="share">Udostępnij</string>
+    <string name="todo">Do zrobienia</string>
+    <string name="dislike">Nie podoba mi się</string>
+    <string name="like">Lubię to</string>
+    <string name="library_screen">Biblioteka</string>
+    <string name="subscribe">Subskrybuj</string>
+    <string name="views">wyświetlenia</string>
+    <string name="download_location">Folder pobierania</string>
+    <string name="github">Github</string>
+    <string name="start_screen">Strona startowa</string>
 </resources>
