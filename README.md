@@ -1,22 +1,41 @@
-[![zt64 - Hyperion](https://img.shields.io/static/v1?label=zt64&message=Hyperion&color=teal&logo=github)](https://github.com/zt64/Hyperion "Go to GitHub repo")
-[![Discord - Hyperion](https://img.shields.io/discord/952784045702537246?color=teal&label=Hyperion&logo=Discord&logoColor=white)](https://discord.gg/nsvwH5xDQM "Join our discord server")
-[![Crowdin](https://badges.crowdin.net/hyperion-app/localized.svg)](https://crowdin.com/project/hyperion-app)
-[![stars - Hyperion](https://img.shields.io/github/stars/zt64/Hyperion?style=social)](https://github.com/zt64/Hyperion)
-[![forks - Hyperion](https://img.shields.io/github/forks/zt64/Hyperion?style=social)](https://github.com/zt64/Hyperion)
+<div align="center">
+  <img src="assets/logo.png" width=250>
 
-# Hyperion
-<img src="https://github.com/zt64/Hyperion/raw/main/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="Hyperion icon" width="200"/>
-A modern front-end for YouTube built using Kotlin compose, with Material You theming and many more features.
+## Hyperion
 
-**NOTE**: Hyperion is not anywhere near stable release. Features may be broken or out-right missing.
+A modern alternate YouTube front-end for Android
 
-## Socials
-- Discord: https://discord.gg/nsvwH5xDQM
+  <br>
 
-## Screenshots
+[![zt64 - Hyperion](https://img.shields.io/static/v1?label=zt64&message=Hyperion&color=teal&logo=github&style=for-the-badge)](https://github.com/zt64/Hyperion "Go to GitHub repo")
+[![Discord - Hyperion](https://img.shields.io/discord/952784045702537246?color=teal&label=Hyperion&logo=Discord&logoColor=white&style=for-the-badge)](https://discord.gg/nsvwH5xDQM "Join our discord server")
+[![stars - Hyperion](https://img.shields.io/github/stars/zt64/Hyperion?style=for-the-badge)](https://github.com/zt64/Hyperion)
+[![forks - Hyperion](https://img.shields.io/github/forks/zt64/Hyperion?style=for-the-badge)](https://github.com/zt64/Hyperion)
 
-<img src="assets/home.jpg" width=350 alt="Home" /> <img src="assets/player.jpg" width=350 alt="Player" />  <img src="assets/settings.jpg" width=350 alt="settings" /> 
+  <hr>
+</div>
+
+## Features
+
+- Material You support
+- Return Youtube Dislikes
+- Ad removal
+- More to come:
+    - Google account login
+    - Sponsorblock
+    - Custom themes
+
+## Installation
+
+Install by downloading actions artifact and extracting, then installing the `app-debug.apk`. GitHub
+releases will be added once Hyperion is in a more stable state.
+
+## Acknowledgements
+
+- [Return Youtube Dislikes](https://github.com/Anarios/return-youtube-dislike)
+
 ## License
+
 Hyperion is licensed under the GNU General Public License
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg?style=for-the-badge)](https://www.gnu.org/licenses/gpl-3.0)
