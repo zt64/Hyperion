@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Hyperion</string>
-    <string name="home">Home</string>
-    <string name="settings_screen">Settings</string>
-    <string name="apply">Apply</string>
-    <string name="theme">Theme</string>
-    <string name="theme_setting_description">Hyperion appearance</string>
-    <string name="subscriptions_screen">Feed</string>
-    <string name="download">Download</string>
-    <string name="share">Share</string>
-    <string name="todo">TODO</string>
-    <string name="dislike">Dislike</string>
-    <string name="like">Like</string>
-    <string name="library_screen">Library</string>
-    <string name="subscribe">Subscribe</string>
-    <string name="views">views</string>
-    <string name="download_location">Download location</string>
-    <string name="start_screen">Start screen</string>
-    <string name="thumbnail">Thumbnail</string>
-    <string name="videos">Videos</string>
-    <string name="playlists">Playlists</string>
-    <string name="search">Search</string>
-    <string name="error">Error</string>
+    <string name="home_screen">Anasayfa</string>
+    <string name="settings_screen">Ayarlar</string>
+    <string name="apply">Uygula</string>
+    <string name="theme">Tema</string>
+    <string name="theme_setting_description">Hyperion Görünümü</string>
+    <string name="subscriptions_screen">Akış</string>
+    <string name="search">Ara</string>
+    <string name="download">İndir</string>
+    <string name="share">Paylaş</string>
+    <string name="todo">Yapılacaklar</string>
+    <string name="dislike">Beğenme</string>
+    <string name="like">Beğen</string>
+    <string name="library_screen">Kitaplık</string>
+    <string name="subscribe">Abone Ol</string>
+    <string name="views">görüntülenme</string>
+    <string name="download_location">İndirme konumu</string>
+    <string name="github">GitHub</string>
+    <string name="start_screen">Başlangıç ekranı</string>
 </resources>
