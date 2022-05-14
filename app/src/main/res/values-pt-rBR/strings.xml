@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Hyperion</string>
-    <string name="home">Home</string>
-    <string name="settings_screen">Settings</string>
-    <string name="apply">Apply</string>
-    <string name="theme">Theme</string>
-    <string name="theme_setting_description">Hyperion appearance</string>
-    <string name="subscriptions_screen">Feed</string>
-    <string name="download">Download</string>
-    <string name="share">Share</string>
-    <string name="todo">TODO</string>
-    <string name="dislike">Dislike</string>
-    <string name="like">Like</string>
-    <string name="library_screen">Library</string>
-    <string name="subscribe">Subscribe</string>
-    <string name="views">views</string>
-    <string name="download_location">Download location</string>
-    <string name="start_screen">Start screen</string>
-    <string name="thumbnail">Thumbnail</string>
-    <string name="videos">Videos</string>
-    <string name="playlists">Playlists</string>
-    <string name="search">Search</string>
-    <string name="error">Error</string>
+    <string name="home_screen">Início</string>
+    <string name="settings_screen">Configurações</string>
+    <string name="apply">Aplicar</string>
+    <string name="theme">Tema</string>
+    <string name="theme_setting_description">Aparência do Hyperion</string>
+    <string name="subscriptions_screen">Inscrições</string>
+    <string name="search">Pesquisa</string>
+    <string name="download">Baixar</string>
+    <string name="share">Compartilhar</string>
+    <string name="todo">A FAZER</string>
+    <string name="dislike">Não gostei</string>
+    <string name="like">Gostei</string>
+    <string name="library_screen">Biblioteca</string>
+    <string name="subscribe">Inscrever-se</string>
+    <string name="views">visualizações</string>
+    <string name="download_location">Local de download</string>
+    <string name="github">GitHub</string>
+    <string name="start_screen">Tela inicial</string>
 </resources>
