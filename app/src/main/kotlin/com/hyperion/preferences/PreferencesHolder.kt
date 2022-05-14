@@ -14,4 +14,6 @@ object Prefs {
     var downloadDirectory by stringPreference("download_directory", Environment.DIRECTORY_DOWNLOADS)
     var videoCardStyle by enumPreference("video_card_style", VideoCardStyle.LARGE)
     var startScreen by enumPreference("start_screen", NavigationDestination.Home)
+    var materialYou by booleanPreference("material_you", true)
+    var blackBackground by booleanPreference("black_background", false)
 }

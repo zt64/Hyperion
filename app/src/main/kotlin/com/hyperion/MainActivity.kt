@@ -42,7 +42,9 @@ class MainActivity @Inject constructor() : ComponentActivity() {
 
         setContent {
             HyperionTheme(
-                isDarkTheme = Prefs.theme == Theme.SYSTEM && isSystemInDarkTheme() || Prefs.theme == Theme.DARK
+                isBlack = Prefs.blackBackground,
+                isDarkTheme = Prefs.theme == Theme.SYSTEM && isSystemInDarkTheme() || Prefs.theme == Theme.DARK,
+                isDynamicColor = Prefs.materialYou
             ) {
                 HyperionScaffold()
             }

@@ -18,7 +18,7 @@ class ChannelViewModel @Inject constructor(
     sealed class State {
         class Loaded(val channel: DomainChannel) : State()
         object Loading : State()
-        object Error : State()
+        class Error(val error: Exception) : State()
 
         val isLoading get() = this is Loading
     }
@@ -31,7 +31,7 @@ class ChannelViewModel @Inject constructor(
             try {
                 state = State.Loaded(repository.getChannel(id))
             } catch (e: Exception) {
-                state = State.Error
+                state = State.Error(e)
                 e.printStackTrace()
             }
         }

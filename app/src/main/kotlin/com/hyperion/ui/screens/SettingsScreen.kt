@@ -33,7 +33,7 @@ fun SettingsScreen(
     Column(
         modifier = Modifier
             .verticalScroll(state = rememberScrollState())
-            .padding(horizontal = 14.dp, vertical = 8.dp),
+            .padding(horizontal = 14.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         if (viewModel.showThemePicker) {
@@ -43,9 +43,29 @@ fun SettingsScreen(
             )
         }
 
-        val directoryChooser = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
-            if (uri != null) Prefs.downloadDirectory = uri.toString()
-        }
+
+
+        SettingItem(
+            modifier = Modifier.clickable { Prefs.materialYou = !Prefs.materialYou },
+            text = { Text("Material You") },
+            trailing = {
+                Switch(checked = Prefs.materialYou, onCheckedChange = { Prefs.materialYou = it })
+            }
+        )
+
+        SettingItem(
+            modifier = Modifier.clickable(enabled = !Prefs.materialYou) {
+                Prefs.blackBackground = !Prefs.blackBackground
+            },
+            text = { Text(stringResource(R.string.black_background)) },
+            trailing = {
+                Switch(
+                    enabled = !Prefs.materialYou,
+                    checked = Prefs.blackBackground,
+                    onCheckedChange = { Prefs.blackBackground = it }
+                )
+            }
+        )
 
         SettingItem(
             modifier = Modifier.clickable { viewModel.showThemePicker() },
@@ -123,9 +143,17 @@ fun SettingsScreen(
             }
         )
 
+        val directoryChooser = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+            if (uri != null) Prefs.downloadDirectory = uri.toString()
+        }
         SettingItem(
             modifier = Modifier.clickable { directoryChooser.launch(null) },
-            icon = { Icon(imageVector = Icons.Default.Download, contentDescription = "Download Setting") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Download,
+                    contentDescription = stringResource(R.string.download_location)
+                )
+            },
             text = { Text(stringResource(R.string.download_location)) },
             secondaryText = { Text(Prefs.downloadDirectory) }
         )
