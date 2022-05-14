@@ -2,6 +2,7 @@ package com.hyperion.di
 
 import com.hyperion.domain.repository.InnerTubeRepository
 import com.hyperion.network.service.InnerTubeService
+import com.hyperion.network.service.RYDService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +15,7 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideInnerTubeRepository(
-        innerTubeService: InnerTubeService
-    ) = InnerTubeRepository(innerTubeService)
+        innerTubeService: InnerTubeService,
+        rydService: RYDService
+    ) = InnerTubeRepository(innerTubeService, rydService)
 }

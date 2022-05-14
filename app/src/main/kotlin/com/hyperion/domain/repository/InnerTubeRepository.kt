@@ -6,11 +6,15 @@ import com.hyperion.domain.model.DomainTrending
 import com.hyperion.domain.model.DomainVideo
 import com.hyperion.network.dto.ApiFormat
 import com.hyperion.network.service.InnerTubeService
+import com.hyperion.network.service.RYDService
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import javax.inject.Inject
 
-class InnerTubeRepository @Inject constructor(private val service: InnerTubeService) {
+class InnerTubeRepository @Inject constructor(
+    private val service: InnerTubeService,
+    private val rydService: RYDService
+) {
     suspend fun getTrendingVideos(continuation: String? = null): DomainTrending {
         val trending = service.getTrending(continuation)
 
@@ -51,7 +55,7 @@ class InnerTubeRepository @Inject constructor(private val service: InnerTubeServ
             likesText = next.contents.singleColumnWatchNextResults.results.results.contents[0].slimVideoMetadataSectionRenderer!!.contents[1]
                 .elementRenderer.newElement.type.componentType.model.videoActionBarModel!!.buttons[0].likeButton!!.buttonData.defaultButton.title,
             // TODO: Fetch from RYD API
-            dislikes = 0,
+            dislikes = rydService.getVotes(id).dislikes,
             streams = player.streamingData.formats.map(ApiFormat::toDomain),
             author = DomainChannelPartial(
                 id = player.videoDetails.channelId,
