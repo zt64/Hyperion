@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Hyperion</string>
-    <string name="home">Home</string>
-    <string name="settings_screen">Settings</string>
-    <string name="apply">Apply</string>
-    <string name="theme">Theme</string>
-    <string name="theme_setting_description">Hyperion appearance</string>
+    <string name="home_screen">Home</string>
+    <string name="settings_screen">Impostazioni</string>
+    <string name="apply">Applica</string>
+    <string name="theme">Tema</string>
+    <string name="theme_setting_description">Aspetto di Hyperion</string>
     <string name="subscriptions_screen">Feed</string>
-    <string name="download">Download</string>
-    <string name="share">Share</string>
-    <string name="todo">TODO</string>
-    <string name="dislike">Dislike</string>
-    <string name="like">Like</string>
-    <string name="library_screen">Library</string>
-    <string name="subscribe">Subscribe</string>
-    <string name="views">views</string>
-    <string name="download_location">Download location</string>
-    <string name="start_screen">Start screen</string>
-    <string name="thumbnail">Thumbnail</string>
-    <string name="videos">Videos</string>
-    <string name="playlists">Playlists</string>
-    <string name="search">Search</string>
-    <string name="error">Error</string>
+    <string name="search">Cerca</string>
+    <string name="download">Scarica</string>
+    <string name="share">Condividi</string>
+    <string name="todo">DA FARE</string>
+    <string name="dislike">Non mi piace</string>
+    <string name="like">Mi piace</string>
+    <string name="library_screen">Raccolta</string>
+    <string name="subscribe">Iscriviti</string>
+    <string name="views">visualizzazioni</string>
+    <string name="download_location">Percorso di download</string>
+    <string name="github">GitHub</string>
+    <string name="start_screen">Schermata iniziale</string>
 </resources>
