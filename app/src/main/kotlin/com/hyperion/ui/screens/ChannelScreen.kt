@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Home
@@ -174,15 +175,41 @@ fun ChannelScreen(
             }
             ChannelViewModel.State.Loading -> {
                 Box(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
             }
-            ChannelViewModel.State.Error -> {
-                Icon(imageVector = Icons.Default.Error, contentDescription = stringResource(R.string.error))
+            is ChannelViewModel.State.Error -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        modifier = Modifier.size(36.dp),
+                        imageVector = Icons.Default.Error,
+                        contentDescription = stringResource(R.string.error)
+                    )
+
+                    Text(
+                        text = stringResource(R.string.error_occurred),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    state.error.localizedMessage?.let {
+                        SelectionContainer {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                }
             }
         }
     }
