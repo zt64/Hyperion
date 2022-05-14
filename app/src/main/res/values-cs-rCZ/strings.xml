@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hyperion</string>
+    <string name="home">Home</string>
+    <string name="settings_screen">Nastavení</string>
+    <string name="apply">Použít</string>
+    <string name="theme">Téma</string>
+    <string name="theme_setting_description">Vzhled Hyperionu</string>
+    <string name="subscriptions_screen">Kanál</string>
+    <string name="download">Stáhnout</string>
+    <string name="share">Sdílet</string>
+    <string name="todo">V přípravě</string>
+    <string name="dislike">Nelíbí se mi</string>
+    <string name="like">Líbí se mi</string>
+    <string name="library_screen">Knihovna</string>
+    <string name="subscribe">Odebírat</string>
+    <string name="views">zobrazení</string>
+    <string name="download_location">Umístění stahování</string>
+    <string name="start_screen">Úvodní obrazovka</string>
+    <string name="thumbnail">Thumbnail</string>
+    <string name="videos">Videos</string>
+    <string name="playlists">Playlists</string>
+    <string name="search">Hledat</string>
+    <string name="error">Error</string>
+</resources>

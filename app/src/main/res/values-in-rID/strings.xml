@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hyperion</string>
+    <string name="home">Home</string>
+    <string name="settings_screen">Pengaturan</string>
+    <string name="apply">Terapkan</string>
+    <string name="theme">Tema</string>
+    <string name="theme_setting_description">Penampilan Hypertion</string>
+    <string name="subscriptions_screen">Feed</string>
+    <string name="download">Unduh</string>
+    <string name="share">Bagikan</string>
+    <string name="todo">HAL YANG AKAN DILAKUKAN</string>
+    <string name="dislike">Tidak suka</string>
+    <string name="like">Suka</string>
+    <string name="library_screen">Koleksi</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="views">ditonton</string>
+    <string name="download_location">Lokasi unduhan</string>
+    <string name="start_screen">Layar utama</string>
+    <string name="thumbnail">Thumbnail</string>
+    <string name="videos">Videos</string>
+    <string name="playlists">Playlists</string>
+    <string name="search">Telusuri</string>
+    <string name="error">Error</string>
+</resources>

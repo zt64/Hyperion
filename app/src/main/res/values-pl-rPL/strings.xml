@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hyperion</string>
+    <string name="home">Home</string>
+    <string name="settings_screen">Ustawienia</string>
+    <string name="apply">Zastosuj</string>
+    <string name="theme">Motyw</string>
+    <string name="theme_setting_description">Wygląd Hyperiona</string>
+    <string name="subscriptions_screen">Subskrypcje</string>
+    <string name="download">Pobierz</string>
+    <string name="share">Udostępnij</string>
+    <string name="todo">Do zrobienia</string>
+    <string name="dislike">Nie podoba mi się</string>
+    <string name="like">Lubię to</string>
+    <string name="library_screen">Biblioteka</string>
+    <string name="subscribe">Subskrybuj</string>
+    <string name="views">wyświetlenia</string>
+    <string name="download_location">Folder pobierania</string>
+    <string name="start_screen">Strona startowa</string>
+    <string name="thumbnail">Thumbnail</string>
+    <string name="videos">Videos</string>
+    <string name="playlists">Playlists</string>
+    <string name="search">Szukaj</string>
+    <string name="error">Error</string>
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hyperion</string>
+    <string name="home">Home</string>
+    <string name="settings_screen">Поставки</string>
+    <string name="apply">Примени</string>
+    <string name="theme">Тема</string>
+    <string name="theme_setting_description">Изгледа на Хиперион</string>
+    <string name="subscriptions_screen">Претплатници</string>
+    <string name="download">Симни</string>
+    <string name="share">Сподели</string>
+    <string name="todo">Да се направи</string>
+    <string name="dislike">Не им се допаѓа</string>
+    <string name="like">Допаѓа</string>
+    <string name="library_screen">Библиотеки</string>
+    <string name="subscribe">Претплати</string>
+    <string name="views">гледишта</string>
+    <string name="download_location">Локација на симнати фајлови</string>
+    <string name="start_screen">Почетна страна</string>
+    <string name="thumbnail">Thumbnail</string>
+    <string name="videos">Videos</string>
+    <string name="playlists">Playlists</string>
+    <string name="search">Пребарај</string>
+    <string name="error">Error</string>
+</resources>

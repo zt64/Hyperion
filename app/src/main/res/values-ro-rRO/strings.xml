@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hyperion</string>
+    <string name="home">Home</string>
+    <string name="settings_screen">Setări</string>
+    <string name="apply">Aplicare</string>
+    <string name="theme">Temă</string>
+    <string name="theme_setting_description">Aspect Hyperion</string>
+    <string name="subscriptions_screen">Noutăți</string>
+    <string name="download">Descărcare</string>
+    <string name="share">Distribuiți</string>
+    <string name="todo">De făcut</string>
+    <string name="dislike">Dislike</string>
+    <string name="like">Like</string>
+    <string name="library_screen">Bibliotecă</string>
+    <string name="subscribe">Abonare</string>
+    <string name="views">vizualizări</string>
+    <string name="download_location">Locaţia de descărcare</string>
+    <string name="start_screen">Ecranul de pornire</string>
+    <string name="thumbnail">Thumbnail</string>
+    <string name="videos">Videos</string>
+    <string name="playlists">Playlists</string>
+    <string name="search">Căutare</string>
+    <string name="error">Error</string>
+</resources>

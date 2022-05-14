@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hyperion</string>
+    <string name="home">Home</string>
+    <string name="settings_screen">الإعدادات</string>
+    <string name="apply">تطبيق</string>
+    <string name="theme">سمات الشاشة</string>
+    <string name="theme_setting_description">مظهر التطبيق</string>
+    <string name="subscriptions_screen">التحديثات</string>
+    <string name="download">تحميل</string>
+    <string name="share">مشاركة</string>
+    <string name="todo">للتنفيذ</string>
+    <string name="dislike">لم يعجبني</string>
+    <string name="like">أعجبني</string>
+    <string name="library_screen">المكتبة</string>
+    <string name="subscribe">إشترِك</string>
+    <string name="views">المشاهدات</string>
+    <string name="download_location">موقع التحميل</string>
+    <string name="start_screen">شاشة البداية</string>
+    <string name="thumbnail">Thumbnail</string>
+    <string name="videos">Videos</string>
+    <string name="playlists">Playlists</string>
+    <string name="search">بحث</string>
+    <string name="error">Error</string>
+</resources>

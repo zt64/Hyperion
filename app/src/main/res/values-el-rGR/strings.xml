@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hyperion</string>
+    <string name="home">Home</string>
+    <string name="settings_screen">Ρυθμίσεις</string>
+    <string name="apply">Εφαρμογή</string>
+    <string name="theme">Θέμα</string>
+    <string name="theme_setting_description">Εμφάνιση του Hyperion</string>
+    <string name="subscriptions_screen">Ροή</string>
+    <string name="download">Λήψη</string>
+    <string name="share">Κοινοποίηση</string>
+    <string name="todo">To-Do</string>
+    <string name="dislike">Δεν μου αρέσει</string>
+    <string name="like">Μου αρέσει</string>
+    <string name="library_screen">Βιβλιοθήκη</string>
+    <string name="subscribe">Εγγραφή</string>
+    <string name="views">Προβολές</string>
+    <string name="download_location">Τοποθεσία Λήψης</string>
+    <string name="start_screen">Αρχική Οθόνη</string>
+    <string name="thumbnail">Thumbnail</string>
+    <string name="videos">Videos</string>
+    <string name="playlists">Playlists</string>
+    <string name="search">Αναζήτηση</string>
+    <string name="error">Error</string>
+</resources>
