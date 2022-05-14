@@ -7,6 +7,8 @@ on:
     paths:
       - 'app/src/main/res/values/strings.xml'
       - '.github/workflows/crowdin.yml'
+  schedule:
+    - cron: "0 17 * * 6" # weekly
   workflow_dispatch:
 
 jobs:
@@ -25,8 +27,12 @@ jobs:
           push_translations: true
           create_pull_request: false
           localization_branch_name: l10n
-          commit_message: 'chore(i18n): sync crowdin translations [skip ci]'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CROWDIN_PROJECT_ID: 506998
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
+      - name: Commit to main
+        run: |
+          git checkout main
+          git merge l10n
+          git push
