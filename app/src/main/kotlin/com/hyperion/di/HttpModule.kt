@@ -26,6 +26,8 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideHttpClient(json: Json) = HttpClient(Android) {
+        BrowserUserAgent()
+
         install(ContentNegotiation) {
             json(json)
         }
