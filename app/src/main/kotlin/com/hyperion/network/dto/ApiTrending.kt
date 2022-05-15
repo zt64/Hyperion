@@ -14,13 +14,13 @@ data class ApiTrending(
             @Serializable
             data class Tab(val tabRenderer: TabRenderer) {
                 @Serializable
-                data class TabRenderer(val content: TabContent? = null)
+                data class TabRenderer(val content: TabContent? = null) {
+                    @Serializable
+                    data class TabContent(val sectionListRenderer: SectionList)
+                }
             }
         }
     }
-
-    @Serializable
-    data class TabContent(val sectionListRenderer: SectionList)
 
     @Serializable
     data class ContinuationContents(val sectionListContinuation: SectionList)
@@ -43,29 +43,20 @@ data class ApiTrending(
     @Serializable
     data class ApiVideoContext(
         val channelThumbnail: ApiChannelThumbnail,
-        val headline: Headline,
+        val headline: ApiText,
         val isWatched: Boolean,
-        val publishedTimeText: PublishedTimeText,
+        val publishedTimeText: ApiText,
         val shortBylineText: ShortBylineText,
-        val shortViewCountText: ShortViewCountText? = null,
-        val lengthText: LengthText,
-        val thumbnail: Thumbnail,
+        val shortViewCountText: ApiText? = null,
+        val lengthText: ApiText,
+        val thumbnail: ApiThumbnail,
         val videoId: String
     ) {
         @Serializable
         data class ApiChannelThumbnail(val channelThumbnailWithLinkRenderer: ChannelThumbnailWithLinkRenderer) {
             @Serializable
-            data class ChannelThumbnailWithLinkRenderer(val thumbnail: Thumbnail)
+            data class ChannelThumbnailWithLinkRenderer(val thumbnail: ApiThumbnail)
         }
-
-        @Serializable
-        data class Headline(val runs: TextRuns)
-
-        @Serializable
-        data class PublishedTimeText(val runs: TextRuns)
-
-        @Serializable
-        data class LengthText(val runs: TextRuns)
 
         @Serializable
         data class ShortBylineText(val runs: List<Run>) {
@@ -77,25 +68,9 @@ data class ApiTrending(
                 @Serializable
                 data class NavigationEndpoint(val browseEndpoint: BrowseEndpoint) {
                     @Serializable
-                    data class BrowseEndpoint(
-                        val browseId: String,
-                        val canonicalBaseUrl: String
-                    )
+                    data class BrowseEndpoint(val browseId: String)
                 }
             }
-        }
-
-        @Serializable
-        data class ShortViewCountText(val runs: TextRuns)
-
-        @Serializable
-        data class Thumbnail(val thumbnails: List<Thumbnail>) {
-            @Serializable
-            data class Thumbnail(
-                val width: Int,
-                val height: Int,
-                val url: String
-            )
         }
     }
 }

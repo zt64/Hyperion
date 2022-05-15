@@ -52,16 +52,9 @@ data class ApiNext(val contents: Contents) {
             ) {
                 @Serializable
                 data class SubtitleData(
-                    val viewCount: ViewCount,
-                    val viewCountEntity: ViewCountEntity,
+                    val viewCount: Title,
                     val viewCountLength: Int
-                ) {
-                    @Serializable
-                    data class ViewCount(val content: String)
-
-                    @Serializable
-                    data class ViewCountEntity(val key: String)
-                }
+                )
 
                 @Serializable
                 data class Title(val content: String)

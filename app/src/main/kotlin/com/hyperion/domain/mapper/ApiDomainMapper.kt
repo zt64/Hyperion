@@ -4,7 +4,10 @@ import com.hyperion.domain.model.DomainChannel
 import com.hyperion.domain.model.DomainChannelPartial
 import com.hyperion.domain.model.DomainStream
 import com.hyperion.domain.model.DomainVideoPartial
-import com.hyperion.network.dto.*
+import com.hyperion.network.dto.ApiChannel
+import com.hyperion.network.dto.ApiChannelVideo
+import com.hyperion.network.dto.ApiFormat
+import com.hyperion.network.dto.ApiTrending
 
 fun ApiChannel.toDomain(): DomainChannel {
     val channelProfile = channelHeaderModal.channelProfile
@@ -36,14 +39,14 @@ fun ApiChannelVideo.toDomain() = DomainVideoPartial(
 
 fun ApiTrending.ApiVideoContext.toDomain() = DomainVideoPartial(
     id = videoId,
-    title = headline.runs.value,
+    title = headline.toString(),
     subtitle = buildString {
         append("${shortBylineText.runs[0].text} - ")
-        shortViewCountText?.let { append("${it.runs.value} - ") }
-        append(publishedTimeText.runs.value)
+        shortViewCountText?.let { append("$it - ") }
+        append(publishedTimeText.toString())
     },
     thumbnailUrl = thumbnail.thumbnails.last().url,
-    timestamp = lengthText.runs.value,
+    timestamp = lengthText.toString(),
     author = DomainChannelPartial(
         id = shortBylineText.runs[0].navigationEndpoint.browseEndpoint.browseId,
         avatarUrl = channelThumbnail.channelThumbnailWithLinkRenderer.thumbnail.thumbnails[0].url

@@ -4,12 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ApiContinuation(
-    val nextContinuationData: NextContinuation? = null,
-    val reloadContinuationData: ReloadContinuationData? = null
+    val nextContinuationData: Continuation? = null,
+    val reloadContinuationData: Continuation? = null
 ) {
     @Serializable
-    data class NextContinuation(val continuation: String)
-
-    @Serializable
-    data class ReloadContinuationData(val continuation: String)
+    data class Continuation(val continuation: String)
 }

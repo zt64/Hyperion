@@ -33,19 +33,9 @@ data class ApiPlayer(
         val isPrivate: Boolean,
         val lengthSeconds: String,
         val shortDescription: String,
-        val thumbnail: Thumbnail,
+        val thumbnail: ApiThumbnail,
         val title: String,
         val videoId: String,
         val viewCount: String
-    ) {
-        @Serializable
-        data class Thumbnail(val thumbnails: List<Thumbnail>) {
-            @Serializable
-            data class Thumbnail(
-                val width: Int,
-                val height: Int,
-                val url: String,
-            )
-        }
-    }
+    )
 }
