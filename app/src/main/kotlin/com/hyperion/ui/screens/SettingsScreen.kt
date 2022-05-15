@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.hyperion.R
 import com.hyperion.preferences.Prefs
+import com.hyperion.preferences.VideoCardStyle
 import com.hyperion.ui.components.NavigationDestination
 import com.hyperion.ui.components.settings.SettingItem
 import com.hyperion.ui.components.settings.ThemePicker
@@ -42,8 +43,6 @@ fun SettingsScreen(
                 onConfirm = viewModel::setTheme
             )
         }
-
-
 
         SettingItem(
             modifier = Modifier.clickable { Prefs.materialYou = !Prefs.materialYou },
@@ -108,8 +107,15 @@ fun SettingsScreen(
                         expanded = showVideoCardStyleDropdown,
                         onDismissRequest = { showVideoCardStyleDropdown = false }
                     ) {
-                        DropdownMenuItem(text = { Text("Large") }, onClick = { /*TODO*/ })
-                        DropdownMenuItem(text = { Text("Compact") }, onClick = { /*TODO*/ })
+                        VideoCardStyle.values().forEach { style ->
+                            DropdownMenuItem(
+                                text = { Text(style.displayName) },
+                                onClick = {
+                                    Prefs.videoCardStyle = style
+                                    showVideoCardStyleDropdown = false
+                                }
+                            )
+                        }
                     }
                 }
             }

@@ -2,7 +2,6 @@ package com.hyperion.ui.screens
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -27,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.hyperion.R
-import com.hyperion.ui.components.Timestamp
+import com.hyperion.ui.components.VideoCard
 import com.hyperion.ui.screens.destinations.PlayerScreenDestination
 import com.hyperion.ui.viewmodel.ChannelViewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -43,7 +41,7 @@ enum class ChannelTab(
     Playlists(R.string.playlists, Icons.Default.ViewList)
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Destination
 @Composable
 fun ChannelScreen(
@@ -63,21 +61,31 @@ fun ChannelScreen(
         when (state) {
             is ChannelViewModel.State.Loaded -> {
                 var selectedTab by remember { mutableStateOf(ChannelTab.Home) }
-                val channel = state.channel
 
                 LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(bottom = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    val channel = state.channel
+
                     item {
                         Column {
                             AsyncImage(
-                                modifier = Modifier.fillMaxWidth(),
-                                model = channel.banner,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                                    .clip(MaterialTheme.shapes.medium),
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(channel.banner)
+                                    .crossfade(true)
+                                    .build(),
                                 contentDescription = null
                             )
 
                             Row(
-                                modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp),
+                                modifier = Modifier.padding(top = 14.dp, start = 8.dp, end = 8.dp),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -124,48 +132,11 @@ fun ChannelScreen(
                     when (selectedTab) {
                         ChannelTab.Home -> {
                             items(channel.videos) { video ->
-                                ElevatedCard(
-                                    modifier = Modifier
-                                        .padding(horizontal = 14.dp)
-                                        .clickable { navigator.navigate(PlayerScreenDestination(video.id)) }
-                                ) {
-                                    Box {
-                                        AsyncImage(
-                                            modifier = Modifier.aspectRatio(16f / 9f),
-                                            model = ImageRequest.Builder(LocalContext.current)
-                                                .data(video.thumbnailUrl)
-                                                .crossfade(true)
-                                                .build(),
-                                            contentScale = ContentScale.Crop,
-                                            contentDescription = null
-                                        )
-
-                                        if (video.timestamp != null) {
-                                            Timestamp(
-                                                modifier = Modifier.align(Alignment.BottomEnd),
-                                                text = video.timestamp
-                                            )
-                                        }
-                                    }
-
-                                    Row(
-                                        modifier = Modifier.padding(8.dp),
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        Column {
-                                            Text(
-                                                text = video.title,
-                                                style = MaterialTheme.typography.titleMedium,
-                                                maxLines = 2
-                                            )
-
-                                            Text(
-                                                text = video.subtitle,
-                                                style = MaterialTheme.typography.labelSmall
-                                            )
-                                        }
-                                    }
-                                }
+                                VideoCard(
+                                    modifier = Modifier.padding(horizontal = 14.dp),
+                                    video = video,
+                                    onClick = { navigator.navigate(PlayerScreenDestination(video.id)) }
+                                )
                             }
                         }
                         ChannelTab.Videos -> Unit
@@ -216,7 +187,7 @@ fun ChannelScreen(
 }
 
 @Composable
-fun TabHeader(
+private fun TabHeader(
     selectedTab: ChannelTab,
     onClick: (ChannelTab) -> Unit
 ) {

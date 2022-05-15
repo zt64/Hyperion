@@ -1,6 +1,5 @@
 package com.hyperion.ui.components
 
-import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -15,55 +14,85 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.ExperimentalUnitApi
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.hyperion.R
 import com.hyperion.domain.model.DomainVideoPartial
+import com.hyperion.preferences.Prefs
+import com.hyperion.preferences.VideoCardStyle
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalUnitApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VideoCard(
+    modifier: Modifier = Modifier,
     video: DomainVideoPartial,
-    onChannelClick: () -> Unit,
+    onChannelClick: () -> Unit = { },
     onClick: () -> Unit,
 ) {
     ElevatedCard(
-        modifier = Modifier.clickable(onClick = onClick)
+        modifier = modifier,
+        onClick = onClick
     ) {
-        @SuppressLint("SwitchIntDef")
-        when (LocalConfiguration.current.orientation) {
-            Configuration.ORIENTATION_PORTRAIT -> {
-                Box {
-                    AsyncImage(
-                        modifier = Modifier.aspectRatio(16f / 9f),
-                        model = ImageRequest.Builder(LocalContext.current)
-                            .data(video.thumbnailUrl)
-                            .crossfade(true)
-                            .build(),
-                        contentDescription = stringResource(R.string.thumbnail),
-                        contentScale = ContentScale.Crop
+        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE || Prefs.videoCardStyle == VideoCardStyle.COMPACT) {
+            // Compact horizontal layout
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+            ) {
+                Thumbnail(
+                    modifier = Modifier.width(140.dp),
+                    video = video
+                )
+
+                Column(
+                    modifier = Modifier
+                        .heightIn(min = 70.dp)
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    Text(
+                        text = video.title,
+                        style = MaterialTheme.typography.labelMedium
                     )
 
-                    if (video.timestamp != null) {
-                        Timestamp(
-                            modifier = Modifier.align(Alignment.BottomEnd),
-                            text = video.timestamp
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        video.author?.avatarUrl?.let {
+                            ChannelThumbnail(
+                                modifier = Modifier
+                                    .clickable(onClick = onChannelClick)
+                                    .size(28.dp),
+                                url = it
+                            )
+                        }
+
+                        Text(
+                            text = video.subtitle,
+                            style = MaterialTheme.typography.labelSmall
                         )
                     }
                 }
+            }
+        } else {
+            Column {
+                Thumbnail(video = video)
 
                 Row(
                     modifier = Modifier.padding(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    ChannelThumbnail(
-                        modifier = Modifier
-                            .clickable(onClick = onChannelClick)
-                            .size(36.dp),
-                        url = video.author!!.avatarUrl!!
-                    )
+                    video.author?.avatarUrl?.let {
+                        ChannelThumbnail(
+                            modifier = Modifier
+                                .clickable(onClick = onChannelClick)
+                                .size(36.dp),
+                            url = it
+                        )
+                    }
 
                     Column {
                         Text(
@@ -80,68 +109,31 @@ fun VideoCard(
                     }
                 }
             }
-            Configuration.ORIENTATION_LANDSCAPE -> {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxHeight()
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier.aspectRatio(16f / 9f),
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(video.thumbnailUrl)
-                                .crossfade(true)
-                                .build(),
-                            contentDescription = stringResource(R.string.thumbnail),
-                            contentScale = ContentScale.Crop
-                        )
+        }
+    }
+}
 
-                        if (video.timestamp != null) {
-                            Timestamp(
-                                modifier = Modifier.align(Alignment.BottomEnd),
-                                text = video.timestamp
-                            )
-                        }
-                    }
+@Composable
+private fun Thumbnail(
+    modifier: Modifier = Modifier,
+    video: DomainVideoPartial
+) {
+    Box(modifier) {
+        AsyncImage(
+            modifier = Modifier.aspectRatio(16f / 9f),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(video.thumbnailUrl)
+                .crossfade(true)
+                .build(),
+            contentDescription = stringResource(R.string.thumbnail),
+            contentScale = ContentScale.Crop
+        )
 
-                    Column(
-                        modifier = Modifier
-                            .heightIn(min = 70.dp)
-                            .padding(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = video.title,
-                            style = MaterialTheme.typography.labelMedium
-                        )
-
-                        Text(
-                            text = video.subtitle,
-                            style = MaterialTheme.typography.labelSmall
-                        )
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            ChannelThumbnail(
-                                modifier = Modifier
-                                    .clickable(onClick = onChannelClick)
-                                    .size(28.dp),
-                                url = video.author!!.avatarUrl!!
-                            )
-
-                            Text(
-                                text = video.subtitle,
-                                style = MaterialTheme.typography.labelSmall
-                            )
-                        }
-                    }
-                }
-            }
+        if (video.timestamp != null) {
+            Timestamp(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                text = video.timestamp
+            )
         }
     }
 }
