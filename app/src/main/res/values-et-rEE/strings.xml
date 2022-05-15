@@ -22,4 +22,6 @@
     <string name="playlists">Playlists</string>
     <string name="search">Otsing</string>
     <string name="error">Error</string>
+    <string name="black_background">Black background</string>
+    <string name="error_occurred">An error has occurred</string>
 </resources>
