@@ -10,6 +10,8 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
@@ -24,7 +26,7 @@ class InnerTubeService @Inject constructor(
     private lateinit var innerTubeApiKey: String
     private lateinit var innerTubeContext: ApiContext
 
-    suspend fun initApi() {
+    suspend fun initApi() = withContext(Dispatchers.IO) {
         val html = httpClient.get(YOUTUBE_URL) {
             parameter("hl", "en")
         }.bodyAsText()
@@ -47,83 +49,95 @@ class InnerTubeService @Inject constructor(
     }
 
     // TODO
-    suspend fun getRecommendations() = httpClient.post("$API_URL/browse") {
-        parameter("key", innerTubeApiKey)
-        contentType(ContentType.Application.Json)
-        setBody(
-            BrowseBody(
-                context = innerTubeContext,
-                browseId = "FEwhat_to_watch"
+    suspend fun getRecommendations(): HttpResponse = withContext(Dispatchers.IO) {
+        httpClient.post("$API_URL/browse") {
+            parameter("key", innerTubeApiKey)
+            contentType(ContentType.Application.Json)
+            setBody(
+                BrowseBody(
+                    context = innerTubeContext,
+                    browseId = "FEwhat_to_watch"
+                )
             )
-        )
+        }
     }
 
-    suspend fun getTrending(continuation: String? = null) = httpClient.post("$API_URL/browse") {
-        parameter("key", innerTubeApiKey)
-        contentType(ContentType.Application.Json)
-        setBody(
-            BrowseBody(
-                context = innerTubeContext,
-                browseId = "FEtrending",
-                continuation = continuation
+    suspend fun getTrending(continuation: String? = null): ApiTrending = withContext(Dispatchers.IO) {
+        httpClient.post("$API_URL/browse") {
+            parameter("key", innerTubeApiKey)
+            contentType(ContentType.Application.Json)
+            setBody(
+                BrowseBody(
+                    context = innerTubeContext,
+                    browseId = "FEtrending",
+                    continuation = continuation
+                )
             )
-        )
-    }.body<ApiTrending>()
+        }.body()
+    }
 
-    suspend fun getChannel(id: String) = httpClient.post("$API_URL/browse") {
-        parameter("key", innerTubeApiKey)
-        contentType(ContentType.Application.Json)
-        setBody(
-            BrowseBody(
-                context = innerTubeContext,
-                browseId = id
+    suspend fun getChannel(id: String): ApiChannel = withContext(Dispatchers.IO) {
+        httpClient.post("$API_URL/browse") {
+            parameter("key", innerTubeApiKey)
+            contentType(ContentType.Application.Json)
+            setBody(
+                BrowseBody(
+                    context = innerTubeContext,
+                    browseId = id
+                )
             )
-        )
-    }.body<ApiChannel>()
+        }.body()
+    }
 
-    suspend fun getSuggestions(search: String): JsonElement {
+    suspend fun getSuggestions(search: String): JsonElement = withContext(Dispatchers.IO) {
         val body = httpClient.get("https://suggestqueries-clients6.youtube.com/complete/search") {
             parameter("client", "youtube")
             parameter("ds", "yt")
             parameter("q", search)
         }.bodyAsText()
 
-        return json.parseToJsonElement(body.substringAfter("(").substringBeforeLast(")"))
+        json.parseToJsonElement(body.substringAfter("(").substringBeforeLast(")"))
     }
 
-    suspend fun search(query: String) = httpClient.post("$API_URL/search") {
-        parameter("key", innerTubeApiKey)
-        contentType(ContentType.Application.Json)
-        setBody(
-            SearchBody(
-                context = innerTubeContext,
-                query = query
+    suspend fun search(query: String): ApiSearch = withContext(Dispatchers.IO) {
+        httpClient.post("$API_URL/search") {
+            parameter("key", innerTubeApiKey)
+            contentType(ContentType.Application.Json)
+            setBody(
+                SearchBody(
+                    context = innerTubeContext,
+                    query = query
+                )
             )
-        )
-    }.body<ApiSearch>()
+        }.body()
+    }
 
-    suspend fun getPlayer(id: String) = httpClient.post("$API_URL/player") {
-        parameter("key", innerTubeApiKey)
-        contentType(ContentType.Application.Json)
-        setBody(
-            PlayerBody(
-                context = innerTubeContext,
-                videoId = id
+    suspend fun getPlayer(id: String): ApiPlayer = withContext(Dispatchers.IO) {
+        httpClient.post("$API_URL/player") {
+            parameter("key", innerTubeApiKey)
+            contentType(ContentType.Application.Json)
+            setBody(
+                PlayerBody(
+                    context = innerTubeContext,
+                    videoId = id
+                )
             )
-        )
-    }.body<ApiPlayer>()
+        }.body()
+    }
 
-    suspend fun getNext(id: String, continuation: String? = null) = httpClient.post("$API_URL/next") {
-        parameter("key", innerTubeApiKey)
-        contentType(ContentType.Application.Json)
-        setBody(
-            NextBody(
-                context = innerTubeContext,
-                videoId = id,
-                continuation = continuation
+    suspend fun getNext(id: String, continuation: String? = null): ApiNext = withContext(Dispatchers.IO) {
+        httpClient.post("$API_URL/next") {
+            parameter("key", innerTubeApiKey)
+            contentType(ContentType.Application.Json)
+            setBody(
+                NextBody(
+                    context = innerTubeContext,
+                    videoId = id,
+                    continuation = continuation
+                )
             )
-        )
-    }.body<ApiNext>()
+        }.body()
+    }
 
     private companion object {
         private const val YOUTUBE_URL = "https://www.youtube.com"
