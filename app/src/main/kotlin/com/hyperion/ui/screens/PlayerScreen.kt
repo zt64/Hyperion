@@ -138,8 +138,8 @@ fun PlayerScreen(
 
                             VideoActions(
                                 video = viewModel.video!!,
-                                onLike = {  },
-                                onDislike = {  },
+                                onLike = { },
+                                onDislike = { },
                                 onShare = viewModel::shareVideo,
                                 onDownload = { }
                             )
@@ -181,15 +181,17 @@ fun PlayerScreen(
 
                             Divider()
 
-                            Text(
-                                modifier = Modifier
-                                    .clickable { expandedDescription = !expandedDescription }
-                                    .animateContentSize(animationSpec = tween()),
-                                text = viewModel.video!!.description,
-                                style = MaterialTheme.typography.bodyMedium,
-                                maxLines = if (expandedDescription) Int.MAX_VALUE else 5,
-                                overflow = TextOverflow.Ellipsis
-                            )
+                            if (viewModel.video!!.description.isNotBlank()) {
+                                Text(
+                                    modifier = Modifier
+                                        .clickable { expandedDescription = !expandedDescription }
+                                        .animateContentSize(animationSpec = tween()),
+                                    text = viewModel.video!!.description,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    maxLines = if (expandedDescription) Int.MAX_VALUE else 5,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
 
                             Divider()
                         }
