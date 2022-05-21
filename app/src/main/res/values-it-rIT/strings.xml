@@ -22,6 +22,6 @@
     <string name="playlists">Playlist</string>
     <string name="search">Cerca</string>
     <string name="error">Errore</string>
-    <string name="black_background">Black background</string>
-    <string name="error_occurred">An error has occurred</string>
+    <string name="black_background">Sfondo nero</string>
+    <string name="error_occurred">Si è verificato un errore</string>
 </resources>

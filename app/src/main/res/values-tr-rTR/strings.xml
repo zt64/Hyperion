@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Hyperion</string>
-    <string name="home">Home</string>
+    <string name="home">Ana sayfa</string>
     <string name="settings_screen">Ayarlar</string>
     <string name="apply">Uygula</string>
     <string name="theme">Tema</string>
@@ -17,11 +17,11 @@
     <string name="views">görüntülenme</string>
     <string name="download_location">İndirme konumu</string>
     <string name="start_screen">Başlangıç ekranı</string>
-    <string name="thumbnail">Thumbnail</string>
-    <string name="videos">Videos</string>
-    <string name="playlists">Playlists</string>
+    <string name="thumbnail">Küçük resim</string>
+    <string name="videos">Videolar</string>
+    <string name="playlists">Oynatma Listeleri</string>
     <string name="search">Ara</string>
-    <string name="error">Error</string>
-    <string name="black_background">Black background</string>
-    <string name="error_occurred">An error has occurred</string>
+    <string name="error">Hata</string>
+    <string name="black_background">Siyah arka plan</string>
+    <string name="error_occurred">Bir hata oluştu</string>
 </resources>

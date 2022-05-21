@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hyperion</string>
+    <string name="home">Ev</string>
+    <string name="settings_screen">Tənzimləmələr</string>
+    <string name="apply">Tətbiq et</string>
+    <string name="theme">Mövzu</string>
+    <string name="theme_setting_description">Hyperion görünüşü</string>
+    <string name="subscriptions_screen">Abunəliklər</string>
+    <string name="download">Endirin</string>
+    <string name="share">Paylaşın</string>
+    <string name="todo">Ediləcəklər</string>
+    <string name="dislike">Bəyənmirəm</string>
+    <string name="like">Bəyəndim</string>
+    <string name="library_screen">Kitabxana</string>
+    <string name="subscribe">Abunə olun</string>
+    <string name="views">baxış</string>
+    <string name="download_location">Endirmə məkanı</string>
+    <string name="start_screen">Başlanğıc ekranı</string>
+    <string name="thumbnail">Miniatür</string>
+    <string name="videos">Videolar</string>
+    <string name="playlists">Pleylistlər</string>
+    <string name="search">Axtarın</string>
+    <string name="error">Xəta</string>
+    <string name="black_background">Qaranlıq arxafon</string>
+    <string name="error_occurred">Bir səhv baş verdi</string>
+</resources>
