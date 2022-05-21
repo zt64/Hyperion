@@ -1,5 +1,5 @@
 val pagingVersion = "3.1.0"
-val composeVersion = "1.2.0-beta01"
+val composeVersion = "1.2.0-beta02"
 val ktorVersion = "2.0.1"
 val accompanistVersion = "0.24.8-beta"
 
@@ -67,8 +67,8 @@ dependencies {
     // compose dependencies
     implementation("androidx.compose.ui:ui:${composeVersion}")
     implementation("androidx.compose.ui:ui-tooling:${composeVersion}")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha11")
-    implementation("androidx.compose.material:material-icons-extended:1.2.0-beta01")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha12")
+    implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
     implementation("androidx.paging:paging-compose:1.0.0-alpha14")
 
     // accompanist

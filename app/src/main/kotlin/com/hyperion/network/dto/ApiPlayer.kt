@@ -36,6 +36,6 @@ data class ApiPlayer(
         val thumbnail: ApiThumbnail,
         val title: String,
         val videoId: String,
-        val viewCount: String
+        val viewCount: String? = null
     )
 }

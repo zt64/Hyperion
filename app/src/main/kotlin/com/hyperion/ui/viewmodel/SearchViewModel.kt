@@ -6,10 +6,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hyperion.domain.model.DomainVideoPartial
+import androidx.paging.*
+import com.hyperion.domain.model.DomainSearch
 import com.hyperion.domain.repository.InnerTubeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,48 +18,54 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val repository: InnerTubeRepository
 ) : ViewModel() {
-    sealed class State {
-        object Loaded : State()
-        object Loading : State()
-        object Error : State()
-
-        val isLoading get() = this is Loading
-    }
-
-    var state by mutableStateOf<State>(State.Loading)
-        private set
     var search by mutableStateOf("")
         private set
     var suggestions = mutableStateListOf<String>()
-        private  set
-    var results = mutableStateListOf<DomainVideoPartial>()
+        private set
+    var results by mutableStateOf(emptyFlow<PagingData<DomainSearch.Result>>().cachedIn(viewModelScope))
         private set
 
-    init {
-        fetchSuggestions("")
-    }
-
-    fun fetchSuggestions(query: String) {
+    fun getSuggestions(query: String) {
         search = query
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val searchSuggestions = repository.getSuggestions(query)
-
-            suggestions.clear()
-            suggestions.addAll(searchSuggestions)
-        }
-    }
-
-    fun fetchResults() {
 
         viewModelScope.launch {
             try {
-                repository.search(search)
-                results.clear()
+                val searchSuggestions = repository.getSearchSuggestions(query)
+
+                suggestions.clear()
+                suggestions.addAll(searchSuggestions)
             } catch (e: Exception) {
-                state = State.Error
                 e.printStackTrace()
             }
         }
+    }
+
+    fun getResults() {
+        results = Pager(PagingConfig(20)) {
+            object : PagingSource<String, DomainSearch.Result>() {
+                override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainSearch.Result> {
+                    return try {
+                        val searchResults = repository.getSearchResults(search, params.key)
+
+                        LoadResult.Page(
+                            data = searchResults.items,
+                            prevKey = null,
+                            nextKey = searchResults.continuation
+                        )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        LoadResult.Error(e)
+                    }
+                }
+
+                override fun getRefreshKey(state: PagingState<String, DomainSearch.Result>): String? = null
+            }
+        }.flow.cachedIn(viewModelScope)
+    }
+
+    fun search(query: String) {
+        search = query
+
+        getResults()
     }
 }

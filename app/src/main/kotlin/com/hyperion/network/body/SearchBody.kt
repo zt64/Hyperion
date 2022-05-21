@@ -7,5 +7,6 @@ import kotlinx.serialization.Serializable
 data class SearchBody(
     val query: String,
     val params: String? = null,
-    val context: ApiContext
+    val context: ApiContext,
+    val continuation: String? = null
 )

@@ -89,7 +89,7 @@ class InnerTubeService @Inject constructor(
         }.body()
     }
 
-    suspend fun getSuggestions(search: String): JsonElement = withContext(Dispatchers.IO) {
+    suspend fun getSearchSuggestions(search: String): JsonElement = withContext(Dispatchers.IO) {
         val body = httpClient.get("https://suggestqueries-clients6.youtube.com/complete/search") {
             parameter("client", "youtube")
             parameter("ds", "yt")
@@ -97,19 +97,6 @@ class InnerTubeService @Inject constructor(
         }.bodyAsText()
 
         json.parseToJsonElement(body.substringAfter("(").substringBeforeLast(")"))
-    }
-
-    suspend fun search(query: String): ApiSearch = withContext(Dispatchers.IO) {
-        httpClient.post("$API_URL/search") {
-            parameter("key", innerTubeApiKey)
-            contentType(ContentType.Application.Json)
-            setBody(
-                SearchBody(
-                    context = innerTubeContext,
-                    query = query
-                )
-            )
-        }.body()
     }
 
     suspend fun getPlayer(id: String): ApiPlayer = withContext(Dispatchers.IO) {
@@ -139,6 +126,20 @@ class InnerTubeService @Inject constructor(
         }.body()
     }
 
+    suspend fun getSearchResults(query: String, continuation: String? = null): ApiSearch = withContext(Dispatchers.IO) {
+        httpClient.post("$API_URL/search") {
+            parameter("key", innerTubeApiKey)
+            contentType(ContentType.Application.Json)
+            setBody(
+                SearchBody(
+                    context = innerTubeContext,
+                    query = query,
+                    continuation = continuation
+                )
+            )
+        }.body()
+    }
+
     private companion object {
         private const val YOUTUBE_URL = "https://www.youtube.com"
         private const val API_URL = "https://www.youtube.com/youtubei/v1"
@@ -154,5 +155,5 @@ private data class InnerTubeData(
     @SerialName("INNERTUBE_API_KEY")
     val innerTubeApiKey: String,
     @SerialName("INNERTUBE_CONTEXT")
-    val innerTubeContext: ApiContext,
+    val innerTubeContext: ApiContext
 )

@@ -2,9 +2,11 @@ package com.hyperion.domain.repository
 
 import com.hyperion.domain.mapper.toDomain
 import com.hyperion.domain.model.DomainChannelPartial
+import com.hyperion.domain.model.DomainSearch
 import com.hyperion.domain.model.DomainTrending
 import com.hyperion.domain.model.DomainVideo
 import com.hyperion.network.dto.ApiFormat
+import com.hyperion.network.dto.ApiText
 import com.hyperion.network.service.InnerTubeService
 import com.hyperion.network.service.RYDService
 import kotlinx.serialization.json.jsonArray
@@ -32,11 +34,71 @@ class InnerTubeRepository @Inject constructor(
         )
     }
 
-    suspend fun getSuggestions(query: String) = service.getSuggestions(query).jsonArray[1].jsonArray
+    suspend fun getSearchSuggestions(query: String) = service.getSearchSuggestions(query).jsonArray[1].jsonArray
         .map { it.jsonArray[0].jsonPrimitive.content }
 
-    suspend fun search(query: String) {
-        service.search(query).contents
+    suspend fun getSearchResults(query: String, continuation: String? = null): DomainSearch {
+        val searchResults = service.getSearchResults(query, continuation)
+        val section = if (continuation == null) {
+            searchResults.contents!!.sectionListRenderer
+        } else {
+            searchResults.continuationContents!!.sectionListContinuation
+        }
+
+        return DomainSearch(
+            continuation = section.continuations.first().nextContinuationData?.continuation,
+            items = section.contents.filter { it.itemSectionRenderer != null }.flatMap {
+                it.itemSectionRenderer!!.contents.mapNotNull { content ->
+                    when {
+                        content.compactVideoRenderer != null -> {
+                            val video = content.compactVideoRenderer
+
+                            DomainSearch.Result.Video(
+                                id = video.videoId,
+                                title = video.title.toString(),
+                                subtitle = buildString {
+                                    append("${video.shortBylineText.runs.first().text} - ")
+                                    video.shortViewCountText?.let { viewCount -> append("$viewCount - ") }
+                                    append("${video.publishedTimeText?.toString()}")
+                                },
+                                timestamp = video.lengthText?.toString(),
+                                thumbnailUrl = video.thumbnail.thumbnails.last().url,
+                                author = DomainChannelPartial(
+                                    id = video.shortBylineText.runs.first().navigationEndpoint.browseEndpoint.browseId,
+                                    avatarUrl = video.channelThumbnail.thumbnails.first().url
+                                )
+                            )
+                        }
+                        content.compactChannelRenderer != null -> {
+                            val channel = content.compactChannelRenderer
+
+                            DomainSearch.Result.Channel(
+                                id = channel.channelId,
+                                name = channel.displayName.toString(),
+                                thumbnailUrl = "https://${channel.thumbnail.thumbnails.last().url}",
+                                subscriptionsText = channel.subscriberCountText.runs.first().text,
+                                videoCountText = channel.videoCountText.runs.joinToString(
+                                    separator = "",
+                                    transform = ApiText.TextRun::text
+                                )
+                            )
+                        }
+                        content.compactPlaylistRenderer != null -> {
+                            val playlist = content.compactPlaylistRenderer
+
+                            DomainSearch.Result.Playlist(
+                                id = playlist.playlistId,
+                                title = playlist.title.toString(),
+                                thumbnailUrl = playlist.thumbnail.thumbnails.last().url,
+                                videoCountText = playlist.videoCountShortText.toString(),
+                                channelName = playlist.shortBylineText.toString()
+                            )
+                        }
+                        else -> null
+                    }
+                }
+            }
+        )
     }
 
     suspend fun getChannel(id: String) = service.getChannel(id).toDomain()
@@ -51,7 +113,7 @@ class InnerTubeRepository @Inject constructor(
             subtitle = next.contents.singleColumnWatchNextResults.results.results.contents[0].slimVideoMetadataSectionRenderer!!.contents[0]
                 .elementRenderer.newElement.type.componentType.model.videoMetadataModel!!.videoMetadata.subtitleData.viewCount.content,
             description = player.videoDetails.shortDescription,
-            views = player.videoDetails.viewCount.toInt(),
+            views = player.videoDetails.viewCount?.toInt() ?: 43285348,
             likesText = next.contents.singleColumnWatchNextResults.results.results.contents[0].slimVideoMetadataSectionRenderer!!.contents[1]
                 .elementRenderer.newElement.type.componentType.model.videoActionBarModel!!.buttons[0].likeButton!!.buttonData.defaultButton.title,
             // TODO: Fetch from RYD API
