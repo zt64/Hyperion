@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Hyperion</string>
-    <string name="home">Home</string>
+    <string name="home">Tuisblad</string>
     <string name="settings_screen">Instellings</string>
     <string name="apply">Aansoek doen</string>
     <string name="theme">Tema</string>
-    <string name="theme_setting_description">Hyperion appearance</string>
-    <string name="subscriptions_screen">Feed</string>
-    <string name="download">Download</string>
-    <string name="share">Share</string>
-    <string name="todo">TODO</string>
-    <string name="dislike">Dislike</string>
-    <string name="like">Like</string>
-    <string name="library_screen">Library</string>
-    <string name="subscribe">Subscribe</string>
-    <string name="views">views</string>
-    <string name="download_location">Download location</string>
-    <string name="start_screen">Start screen</string>
-    <string name="thumbnail">Thumbnail</string>
-    <string name="videos">Videos</string>
-    <string name="playlists">Playlists</string>
-    <string name="search">Search</string>
-    <string name="error">Error</string>
-    <string name="black_background">Black background</string>
-    <string name="error_occurred">An error has occurred</string>
+    <string name="theme_setting_description">Hyperion voorkoms</string>
+    <string name="subscriptions_screen">Subskripsies</string>
+    <string name="download">Aflaai</string>
+    <string name="share">Deel</string>
+    <string name="todo">OM TE DOEN</string>
+    <string name="dislike">Afkeer</string>
+    <string name="like">Hou Van</string>
+    <string name="library_screen">Biblioteek</string>
+    <string name="subscribe">Skryf in</string>
+    <string name="views">sienings</string>
+    <string name="download_location">Laai ligging af</string>
+    <string name="start_screen">Begin skerm</string>
+    <string name="thumbnail">Kleinkiekie</string>
+    <string name="videos">Video\'s</string>
+    <string name="playlists">Snitlyste</string>
+    <string name="search">Soek</string>
+    <string name="error">Fout</string>
+    <string name="black_background">Swart agtergrond</string>
+    <string name="error_occurred">N fout het voorgekom</string>
 </resources>
