@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Hyperion</string>
-    <string name="home">Home</string>
+    <string name="home">Avaleht</string>
     <string name="settings_screen">Seaded</string>
     <string name="apply">Rakenda</string>
     <string name="theme">Kujundus</string>
@@ -17,11 +17,11 @@
     <string name="views">vaatamist</string>
     <string name="download_location">Allalaadimiste asukoht</string>
     <string name="start_screen">Avaleht</string>
-    <string name="thumbnail">Thumbnail</string>
-    <string name="videos">Videos</string>
-    <string name="playlists">Playlists</string>
+    <string name="thumbnail">Pisipilt</string>
+    <string name="videos">Videod</string>
+    <string name="playlists">Esitusloendid</string>
     <string name="search">Otsing</string>
-    <string name="error">Error</string>
-    <string name="black_background">Black background</string>
-    <string name="error_occurred">An error has occurred</string>
+    <string name="error">Tõrge</string>
+    <string name="black_background">Must taust</string>
+    <string name="error_occurred">Ilmnes viga</string>
 </resources>
