@@ -23,7 +23,6 @@ import com.hyperion.R
 import com.hyperion.preferences.Prefs
 import com.hyperion.ui.screens.NavGraphs
 import com.hyperion.ui.screens.appDestination
-import com.hyperion.ui.screens.destinations.IntroScreenDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
@@ -91,8 +90,8 @@ fun HyperionScaffold() {
             DestinationsNavHost(
                 modifier = Modifier.fillMaxSize(),
                 navController = navController,
-                startRoute = if (Prefs.firstLaunch) IntroScreenDestination else startScreen.direction,
-                navGraph = if (Prefs.firstLaunch) NavGraphs.intro else NavGraphs.root,
+                startRoute = startScreen.direction,
+                navGraph = NavGraphs.root,
                 engine = navHostEngine
             )
         }
