@@ -16,11 +16,13 @@ data class ApiContext(
         val hl: String,
         val platform: String,
         val userAgent: String,
-        val visitorData: String
+        val visitorData: String,
+        val clientFormFactor: String
     )
 
     @Serializable
     data class Request(val useSsl: Boolean)
+
     @Serializable
     data class User(val lockedSafetyMode: Boolean)
 }

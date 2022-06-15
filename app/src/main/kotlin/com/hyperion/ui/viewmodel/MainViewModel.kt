@@ -24,6 +24,7 @@ class MainViewModel @Inject constructor(
                         nextKey = trendingVideosResponse.continuation
                     )
                 } catch (e: Exception) {
+                    e.printStackTrace()
                     LoadResult.Error(e)
                 }
             }

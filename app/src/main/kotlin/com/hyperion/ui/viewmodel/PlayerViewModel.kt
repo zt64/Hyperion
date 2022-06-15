@@ -7,12 +7,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.*
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultRenderersFactory
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.hyperion.domain.model.DomainStream
 import com.hyperion.domain.model.DomainVideo
+import com.hyperion.domain.model.DomainVideoPartial
 import com.hyperion.domain.repository.InnerTubeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -44,7 +46,7 @@ class PlayerViewModel @Inject constructor(
                 .setUsage(C.USAGE_MEDIA)
                 .setContentType(C.CONTENT_TYPE_MOVIE)
                 .build(),
-            /* handleAudioFocus= */ true
+            /* handleAudioFocus = */ true
         )
         .setRenderersFactory(
             DefaultRenderersFactory(application)
@@ -53,6 +55,31 @@ class PlayerViewModel @Inject constructor(
                 .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
         )
         .build()
+
+    val relatedVideos = Pager(PagingConfig(4)) {
+        object : PagingSource<String, DomainVideoPartial>() {
+            override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainVideoPartial> {
+                return try {
+                    val relatedVideosResponse = if (params.key == null) {
+                        repository.getNext(video!!.id).relatedVideos
+                    } else {
+                        repository.getRelatedVideos(video!!.id, params.key!!)
+                    }
+
+                    LoadResult.Page(
+                        data = relatedVideosResponse.videos,
+                        prevKey = null,
+                        nextKey = relatedVideosResponse.continuation
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    LoadResult.Error(e)
+                }
+            }
+
+            override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
+        }
+    }.flow.cachedIn(viewModelScope)
 
     fun shareVideo() {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {

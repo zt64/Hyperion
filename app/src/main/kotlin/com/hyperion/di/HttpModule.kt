@@ -5,9 +5,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
-import io.ktor.client.engine.android.*
+import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.cache.*
+import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
@@ -25,7 +26,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideHttpClient(json: Json) = HttpClient(Android) {
+    fun provideHttpClient(json: Json) = HttpClient(CIO) {
         BrowserUserAgent()
 
         install(ContentNegotiation) {
@@ -35,6 +36,11 @@ object NetworkModule {
         install(HttpRequestRetry) {
             retryOnServerErrors(maxRetries = 5)
             exponentialDelay()
+        }
+
+        install(ContentEncoding) {
+            deflate()
+            gzip()
         }
 
         install(HttpCache)

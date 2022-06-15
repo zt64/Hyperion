@@ -27,9 +27,7 @@ class InnerTubeService @Inject constructor(
     private lateinit var innerTubeContext: ApiContext
 
     suspend fun initApi() = withContext(Dispatchers.IO) {
-        val html = httpClient.get(YOUTUBE_URL) {
-            parameter("hl", "en")
-        }.bodyAsText()
+        val html = httpClient.get(YOUTUBE_URL).bodyAsText()
 
         val (obj) = "ytcfg.set\\((.*?)\\);".toRegex(RegexOption.DOT_MATCHES_ALL)
             .findAll(html)
@@ -43,7 +41,8 @@ class InnerTubeService @Inject constructor(
             client = data.innerTubeContext.client.copy(
                 clientName = CLIENT_NAME,
                 clientVersion = CLIENT_VERSION,
-                platform = PLATFORM
+                platform = PLATFORM,
+                clientFormFactor = FORM_FACTOR
             )
         )
     }
@@ -147,6 +146,7 @@ class InnerTubeService @Inject constructor(
         private const val CLIENT_NAME = "ANDROID"
         private const val CLIENT_VERSION = "17.11.37"
         private const val PLATFORM = "MOBILE"
+        private const val FORM_FACTOR = "SMALL_FORM_FACTOR"
     }
 }
 

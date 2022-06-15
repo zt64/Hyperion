@@ -169,7 +169,7 @@ fun SearchScreen(
                                         )
                                     }
                                 }
-                                else -> {}
+                                is LoadState.NotLoading -> Divider()
                             }
                         }
                     }

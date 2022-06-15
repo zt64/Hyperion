@@ -1,9 +1,20 @@
 package com.hyperion.network.dto
 
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.*
 
 @Serializable
-data class ApiNext(val contents: Contents) {
+data class ApiNext(
+    val contents: Contents? = null,
+    val engagementPanels: List<EngagementPanel> = emptyList(),
+    val continuationContents: ContinuationContents? = null,
+) {
     @Serializable
     data class Contents(val singleColumnWatchNextResults: SingleColumnWatchNextResults) {
         @Serializable
@@ -11,23 +22,283 @@ data class ApiNext(val contents: Contents) {
             @Serializable
             data class Results(val results: Results) {
                 @Serializable
-                data class Results(val contents: List<Content>) {
+                data class Results(
+                    val contents: List<Renderer>,
+                    val continuations: List<ApiContinuation>
+                ) {
+                    @Serializable(with = Renderer.Serializer::class)
+                    abstract class Renderer {
+                        companion object Serializer : KSerializer<Renderer> {
+                            override val descriptor = buildClassSerialDescriptor("Renderer")
+
+                            override fun deserialize(decoder: Decoder): Renderer {
+                                val input = (decoder as? JsonDecoder)!!
+                                val tree = input.decodeJsonElement().jsonObject
+                                val json = input.json
+
+                                return when {
+                                    "slimVideoMetadataSectionRenderer" in tree ->
+                                        json.decodeFromJsonElement(SlimVideoMetadataSectionRenderer.serializer(), tree["slimVideoMetadataSectionRenderer"]!!)
+                                    "itemSectionRenderer" in tree ->
+                                        json.decodeFromJsonElement(ItemSectionRenderer.serializer(), tree["itemSectionRenderer"]!!)
+                                    "shelfRenderer" in tree ->
+                                        json.decodeFromJsonElement(ShelfRenderer.serializer(), tree["shelfRenderer"]!!)
+                                    else -> throw NoWhenBranchMatchedException()
+                                }
+                            }
+
+                            override fun serialize(encoder: Encoder, value: Renderer) {
+                                TODO("Not yet implemented")
+                            }
+                        }
+                    }
+
                     @Serializable
-                    data class Content(val slimVideoMetadataSectionRenderer: SlimVideoMetadataSectionRenderer? = null) {
+                    data class SlimVideoMetadataSectionRenderer(val contents: List<Content>) : Renderer() {
                         @Serializable
-                        data class SlimVideoMetadataSectionRenderer(val contents: List<Content>) {
+                        data class Content(val elementRenderer: ElementRenderer) {
                             @Serializable
-                            data class Content(val elementRenderer: ElementRenderer) {
+                            data class ElementRenderer(val newElement: NewElement) {
                                 @Serializable
-                                data class ElementRenderer(val newElement: NewElement) {
+                                data class NewElement(val type: Type) {
                                     @Serializable
-                                    data class NewElement(val type: Type) {
+                                    data class Type(val componentType: ComponentType) {
                                         @Serializable
-                                        data class Type(val componentType: ComponentType) {
-                                            @Serializable
-                                            data class ComponentType(val model: Model)
-                                        }
+                                        data class ComponentType(val model: Model)
                                     }
+                                }
+                            }
+                        }
+                    }
+
+                    @Serializable
+                    class ShelfRenderer : Renderer()
+
+                    @Serializable(with = ItemSectionRenderer.Serializer::class)
+                    abstract class ItemSectionRenderer : Renderer() {
+                        companion object Serializer :
+                            JsonContentPolymorphicSerializer<ItemSectionRenderer>(ItemSectionRenderer::class) {
+                            override fun selectDeserializer(
+                                element: JsonElement
+                            ): DeserializationStrategy<out ItemSectionRenderer> {
+                                val sectionIdentifier = element.jsonObject["sectionIdentifier"]
+                                    ?.jsonPrimitive
+                                    ?.contentOrNull
+
+                                return when (sectionIdentifier) {
+                                    "comments-entry-point" -> CommentsEntryRenderer.serializer()
+                                    "related-items" -> RelatedItemsRenderer.serializer()
+                                    null -> SeparatorRenderer.serializer()
+                                    else -> throw NoWhenBranchMatchedException()
+                                }
+                            }
+                        }
+                    }
+
+                    @Serializable
+                    data class CommentsEntryRenderer(val contents: List<Content>) : ItemSectionRenderer() {
+                        @Serializable
+                        data class Content(val elementRenderer: ElementRenderer) {
+                            @Serializable
+                            data class ElementRenderer(val newElement: NewElement) {
+                                @Serializable
+                                data class NewElement(val type: Type) {
+                                    @Serializable
+                                    data class Type(val componentType: ComponentType) {
+                                        @Serializable
+                                        data class ComponentType(val model: Model)
+                                    }
+                                }
+                            }
+                        }
+
+                        @Serializable
+                        class Model
+//                        @Serializable
+//                        data class Model(val commentsCompositeEntryPointModel: ApiVideo)
+                    }
+
+                    @Serializable
+                    class RelatedItemsRenderer(val contents: List<Content>) : ItemSectionRenderer() {
+                        @Serializable
+                        data class Content(val elementRenderer: ElementRenderer) {
+                            @Serializable
+                            data class ElementRenderer(val newElement: NewElement) {
+                                @Serializable
+                                data class NewElement(val type: Type) {
+                                    @Serializable
+                                    data class Type(val componentType: ComponentType) {
+                                        @Serializable
+                                        data class ComponentType(val model: Model)
+                                    }
+                                }
+                            }
+                        }
+
+                        @Serializable
+                        data class Model(val videoWithContextModel: ApiVideo? = null)
+                    }
+
+                    @Serializable
+                    class SeparatorRenderer : ItemSectionRenderer()
+                }
+            }
+        }
+    }
+
+    @Serializable
+    data class EngagementPanel(
+        val panelIdentifier: PanelIdentifier? = null,
+        val header: Header? = null,
+        val content: Content? = null
+    ) {
+        @Serializable
+        enum class PanelIdentifier {
+            @SerialName("video-description-ep-identifier")
+            DESCRIPTION,
+
+            @SerialName("comment-item-section")
+            COMMENTS
+        }
+
+        @Serializable
+        data class Header(
+            @SerialName("engagementPanelHeaderRenderer")
+            val renderer: Renderer
+        ) {
+            @Serializable
+            data class Renderer(
+                val title: ApiText,
+                val contextualInfo: ApiText
+            )
+        }
+
+        @Serializable
+        data class Content(
+            @SerialName("sectionListRenderer")
+            val renderer: SectionListRenderer<Model>
+        ) {
+            @Serializable
+            sealed class Model {
+                @Serializable
+                data class VideoDescriptionHeaderModel(val videoDescriptionHeader: VideoDescriptionHeader) : Model() {
+                    @Serializable
+                    data class VideoDescriptionHeader(
+                        private val videoTitle: JsonObject,
+                        val channelName: String,
+                        val viewCountText: String,
+                        val dateText: String
+                    ) {
+                        val title = videoTitle.jsonPrimitive.content
+                    }
+                }
+            }
+        }
+    }
+
+    @Serializable
+    data class SectionListRenderer<T>(
+        private val contents: List<SectionContent<T>> = emptyList(),
+        val continuations: List<ApiContinuation> = emptyList()
+    ) {
+        @Serializable
+        data class SectionContent<T>(val itemSectionRenderer: ItemSectionRenderer<T>? = null) {
+            @Serializable
+            data class ItemSectionRenderer<T>(val contents: List<Content<T>>) {
+                @Serializable
+                data class Content<T>(val elementRenderer: ElementRenderer<T>? = null) {
+                    @Serializable
+                    data class ElementRenderer<T>(val newElement: NewElement<T>) {
+                        @Serializable
+                        data class NewElement<T>(val type: Type<T>) {
+                            @Serializable
+                            data class Type<T>(val componentType: ComponentType<T>) {
+                                @Serializable
+                                data class ComponentType<T>(val model: T)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Serializable
+    data class ContinuationContents(val sectionListContinuation: SectionListContinuation) {
+        @Serializable
+        data class Model(val videoWithContextModel: VideoWithContextModel) {
+            @Serializable
+            data class VideoWithContextModel(val videoWithContextData: VideoWithContextData) {
+                @Serializable
+                data class VideoWithContextData(
+                    val onTap: OnTap,
+                    val videoData: VideoData
+                ) {
+                    @Serializable
+                    data class OnTap(val innertubeCommand: InnertubeCommand) {
+                        @Serializable
+                        data class InnertubeCommand(
+                            val watchNextWatchEndpointMutationCommand: WatchNextWatchEndpointMutationCommand
+                        ) {
+                            @Serializable
+                            data class WatchNextWatchEndpointMutationCommand(val watchEndpoint: ApiWatchEndpoint)
+                        }
+                    }
+
+                    @Serializable
+                    data class VideoData(
+                        val avatar: Avatar? = null,
+                        val metadata: Metadata,
+                        val thumbnail: Thumbnail
+                    ) {
+                        @Serializable
+                        data class Avatar(
+                            val avatarImageSize: String,
+                            val endpoint: Endpoint,
+                            val image: ApiImage
+                        ) {
+                            @Serializable
+                            data class Endpoint(val innertubeCommand: InnertubeCommand) {
+                                @Serializable
+                                data class InnertubeCommand(val browseEndpoint: ApiBrowseEndpoint)
+                            }
+                        }
+
+                        @Serializable
+                        data class Metadata(
+                            val metadataDetails: String = "YouTube",
+                            val title: String
+                        )
+
+                        @Serializable
+                        data class Thumbnail(
+                            val image: ApiImage,
+                            val timestampText: String? = null
+                        )
+                    }
+                }
+            }
+        }
+
+        @Serializable
+        data class SectionListContinuation(
+            val contents: List<Content>,
+            val continuations: List<ApiContinuation>
+        ) {
+            @Serializable
+            data class Content(val itemSectionRenderer: ItemSectionRenderer) {
+                @Serializable
+                data class ItemSectionRenderer(val contents: List<Content>) {
+                    @Serializable
+                    data class Content(val elementRenderer: ElementRenderer) {
+                        @Serializable
+                        data class ElementRenderer(val newElement: NewElement) {
+                            @Serializable
+                            data class NewElement(val type: Type) {
+                                @Serializable
+                                data class Type(val componentType: ComponentType) {
+                                    @Serializable
+                                    data class ComponentType(val model: Model)
                                 }
                             }
                         }
@@ -48,16 +319,13 @@ data class ApiNext(val contents: Contents) {
             @Serializable
             data class VideoMetadata(
                 val subtitleData: SubtitleData,
-                val title: Title
+                val title: Text
             ) {
                 @Serializable
-                data class SubtitleData(
-                    val viewCount: Title,
-                    val viewCountLength: Int
-                )
+                data class SubtitleData(val viewCount: Text)
 
                 @Serializable
-                data class Title(val content: String)
+                data class Text(val content: String)
             }
         }
 
@@ -69,13 +337,7 @@ data class ApiNext(val contents: Contents) {
                 val subtitle: String? = null
             ) {
                 @Serializable
-                data class Avatar(val image: Image) {
-                    @Serializable
-                    data class Image(val sources: List<Source>) {
-                        @Serializable
-                        data class Source(val url: String)
-                    }
-                }
+                data class Avatar(val image: ApiImage)
             }
         }
 

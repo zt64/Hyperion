@@ -4,10 +4,7 @@ import com.hyperion.domain.model.DomainChannel
 import com.hyperion.domain.model.DomainChannelPartial
 import com.hyperion.domain.model.DomainStream
 import com.hyperion.domain.model.DomainVideoPartial
-import com.hyperion.network.dto.ApiChannel
-import com.hyperion.network.dto.ApiChannelVideo
-import com.hyperion.network.dto.ApiFormat
-import com.hyperion.network.dto.ApiTrending
+import com.hyperion.network.dto.*
 
 fun ApiChannel.toDomain(): DomainChannel {
     val channelProfile = channelHeaderModal.channelProfile
@@ -37,19 +34,15 @@ fun ApiChannelVideo.toDomain() = DomainVideoPartial(
     timestamp = videoData.thumbnail.timestampText
 )
 
-fun ApiTrending.ApiVideoContext.toDomain() = DomainVideoPartial(
-    id = videoId,
-    title = headline.toString(),
-    subtitle = buildString {
-        append("${shortBylineText.runs[0].text} - ")
-        shortViewCountText?.let { append("$it - ") }
-        append(publishedTimeText.toString())
-    },
-    thumbnailUrl = thumbnail.thumbnails.last().url,
-    timestamp = lengthText.toString(),
+fun ApiTrending.VideoWithContextData.toDomain() = DomainVideoPartial(
+    id = onTap.innertubeCommand.watchEndpoint.videoId,
+    title = videoData.metadata.title,
+    subtitle = videoData.metadata.metadataDetails,
+    thumbnailUrl = videoData.thumbnail.image.sources.last().url,
+    timestamp = videoData.thumbnail.timestampText,
     author = DomainChannelPartial(
-        id = shortBylineText.runs[0].navigationEndpoint.browseEndpoint.browseId,
-        avatarUrl = channelThumbnail.channelThumbnailWithLinkRenderer.thumbnail.thumbnails[0].url
+        id = videoData.avatar.endpoint.innertubeCommand.browseEndpoint.browseId,
+        avatarUrl = videoData.avatar.image.sources.last().url
     )
 )
 
@@ -67,3 +60,17 @@ fun ApiFormat.toDomain() = when {
 //    )
     else -> DomainStream(url)
 }
+
+fun ApiVideo.ContextData.toDomain() = DomainVideoPartial(
+    id = onTap.innertubeCommand.watchNextWatchEndpointMutationCommand.watchEndpoint.watchEndpoint.videoId,
+    title = videoData.metadata.title,
+    subtitle = videoData.metadata.metadataDetails,
+    thumbnailUrl = videoData.thumbnail.image.sources.last().url,
+    timestamp = videoData.thumbnail.timestampText,
+    author = videoData.avatar?.let {
+        DomainChannelPartial(
+            id = videoData.avatar.endpoint.innertubeCommand.browseEndpoint.browseId,
+            avatarUrl = videoData.avatar.image.sources.last().url
+        )
+    }
+)

@@ -35,41 +35,77 @@ data class ApiTrending(
             @Serializable
             data class ItemSectionRenderer(val contents: List<Content>) {
                 @Serializable
-                data class Content(val videoWithContextRenderer: ApiVideoContext? = null)
+                data class Content(val elementRenderer: ElementRenderer? = null) {
+                    @Serializable
+                    data class ElementRenderer(val newElement: NewElement) {
+                        @Serializable
+                        data class NewElement(val type: Type) {
+                            @Serializable
+                            data class Type(val componentType: ComponentType) {
+                                @Serializable
+                                data class ComponentType(val model: Model) {
+                                    @Serializable
+                                    data class Model(val videoWithContextModel: VideoWithContextModel? = null) {
+                                        @Serializable
+                                        data class VideoWithContextModel(val videoWithContextData: VideoWithContextData)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 
     @Serializable
-    data class ApiVideoContext(
-        val channelThumbnail: ApiChannelThumbnail,
-        val headline: ApiText,
-        val isWatched: Boolean,
-        val publishedTimeText: ApiText,
-        val shortBylineText: ShortBylineText,
-        val shortViewCountText: ApiText? = null,
-        val lengthText: ApiText,
-        val thumbnail: ApiThumbnail,
-        val videoId: String
+    data class VideoWithContextData(
+        val videoData: VideoData,
+        val onTap: OnTap
     ) {
         @Serializable
-        data class ApiChannelThumbnail(val channelThumbnailWithLinkRenderer: ChannelThumbnailWithLinkRenderer) {
+        data class VideoData(
+            val avatar: Avatar,
+            val metadata: Metadata,
+            val thumbnail: Thumbnail
+        ) {
             @Serializable
-            data class ChannelThumbnailWithLinkRenderer(val thumbnail: ApiThumbnail)
+            data class Avatar(
+                val avatarImageSize: String,
+                val endpoint: Endpoint,
+                val image: ApiImage
+            ) {
+                @Serializable
+                data class Endpoint(val innertubeCommand: InnertubeCommand) {
+                    @Serializable
+                    data class InnertubeCommand(val browseEndpoint: BrowseEndpoint) {
+                        @Serializable
+                        data class BrowseEndpoint(val browseId: String)
+                    }
+                }
+            }
+
+            @Serializable
+            data class Metadata(
+                val maxLinesMetadataDetails: Int,
+                val maxTitleLine: Int,
+                val metadataDetails: String,
+                val title: String
+            )
+
+            @Serializable
+            data class Thumbnail(
+                val image: ApiImage,
+                val timestampText: String,
+            )
         }
 
         @Serializable
-        data class ShortBylineText(val runs: List<Run>) {
+        data class OnTap(val innertubeCommand: InnertubeCommand) {
             @Serializable
-            data class Run(
-                val text: String,
-                val navigationEndpoint: NavigationEndpoint
-            ) {
+            data class InnertubeCommand(val watchEndpoint: WatchEndpoint) {
                 @Serializable
-                data class NavigationEndpoint(val browseEndpoint: BrowseEndpoint) {
-                    @Serializable
-                    data class BrowseEndpoint(val browseId: String)
-                }
+                data class WatchEndpoint(val videoId: String)
             }
         }
     }

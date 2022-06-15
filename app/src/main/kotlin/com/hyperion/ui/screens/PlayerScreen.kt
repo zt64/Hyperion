@@ -3,7 +3,6 @@ package com.hyperion.ui.screens
 import android.text.format.DateUtils
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -22,6 +21,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -29,14 +31,17 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.hyperion.R
 import com.hyperion.ui.components.ChannelThumbnail
+import com.hyperion.ui.components.VideoCard
 import com.hyperion.ui.components.player.VideoActions
 import com.hyperion.ui.screens.destinations.ChannelScreenDestination
+import com.hyperion.ui.screens.destinations.HomeScreenDestination
+import com.hyperion.ui.screens.destinations.PlayerScreenDestination
 import com.hyperion.ui.viewmodel.PlayerViewModel
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.popUpTo
 
-@OptIn(ExperimentalFoundationApi::class)
 @Destination(
     deepLinks = [
         DeepLink(uriPattern = "https://youtu.be/{videoId}"),
@@ -95,14 +100,10 @@ fun PlayerScreen(
 
         when (viewModel.state) {
             PlayerViewModel.State.Loaded -> {
+                val relatedVideos = viewModel.relatedVideos.collectAsLazyPagingItems()
+
                 // TODO: Move to view model in the future
                 DisposableEffect(viewModel.video) {
-                    val streams = viewModel.video!!.streams
-
-                    val mediaItem = MediaItem.Builder()
-                        .setUri(viewModel.video!!.streams.last().url)
-                    viewModel.player.setMediaItem(MediaItem.fromUri(viewModel.video!!.streams.last().url))
-
 //                    val factory = ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory())
 //                    val videoItem = factory.createMediaSource(MediaItem.fromUri(streams.filterIsInstance<DomainStream.Video>().first().url))
 //                    val soundItem = factory.createMediaSource(MediaItem.fromUri(streams.filterIsInstance<DomainStream.Audio>().first().url))
@@ -110,6 +111,7 @@ fun PlayerScreen(
 //
 //                    viewModel.player.setMediaSource(mergedSource)
 
+                    viewModel.player.setMediaItem(MediaItem.fromUri(viewModel.video!!.streams.last().url))
                     viewModel.player.prepare()
                     viewModel.player.playWhenReady = true
 
@@ -204,11 +206,47 @@ fun PlayerScreen(
                         )
                     }
 
-                    stickyHeader {
-                        Text(
-                            text = "Related videos",
-                            style = MaterialTheme.typography.titleMedium
+                    item {
+                        Divider()
+                    }
+
+                    items(relatedVideos) { video ->
+                        if (video == null) return@items
+
+                        VideoCard(
+                            video = video,
+                            onClick = {
+                                navigator.navigate(PlayerScreenDestination(video.id)) {
+                                    popUpTo(HomeScreenDestination)
+                                }
+                            },
+                            onChannelClick = { navigator.navigate(ChannelScreenDestination(video.author!!.id)) }
                         )
+                    }
+
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            relatedVideos.loadState.apply {
+                                when (append) {
+                                    is LoadState.Loading -> {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.align(Alignment.Center)
+                                        )
+                                    }
+                                    is LoadState.Error -> {
+                                        (append as LoadState.Error).error.message?.let {
+                                            Text(
+                                                text = it,
+                                                style = MaterialTheme.typography.bodySmall
+                                            )
+                                        }
+                                    }
+                                    is LoadState.NotLoading -> Divider()
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -1,11 +1,9 @@
 package com.hyperion.domain.repository
 
 import com.hyperion.domain.mapper.toDomain
-import com.hyperion.domain.model.DomainChannelPartial
-import com.hyperion.domain.model.DomainSearch
-import com.hyperion.domain.model.DomainTrending
-import com.hyperion.domain.model.DomainVideo
+import com.hyperion.domain.model.*
 import com.hyperion.network.dto.ApiFormat
+import com.hyperion.network.dto.ApiNext
 import com.hyperion.network.dto.ApiText
 import com.hyperion.network.service.InnerTubeService
 import com.hyperion.network.service.RYDService
@@ -29,7 +27,7 @@ class InnerTubeRepository @Inject constructor(
         return DomainTrending(
             continuation = section.continuations.findLast { it.nextContinuationData != null }?.nextContinuationData?.continuation,
             videos = section.contents!!.mapNotNull {
-                it.itemSectionRenderer?.contents?.single()?.videoWithContextRenderer?.toDomain()
+                it.itemSectionRenderer?.contents?.single()?.elementRenderer?.newElement?.type?.componentType?.model?.videoWithContextModel?.videoWithContextData?.toDomain()
             }
         )
     }
@@ -103,29 +101,56 @@ class InnerTubeRepository @Inject constructor(
 
     suspend fun getChannel(id: String) = service.getChannel(id).toDomain()
 
+    suspend fun getNext(videoId: String, continuation: String? = null): DomainNext {
+        val next = service.getNext(videoId, continuation)
+
+        val slimVideoMetadataSectionRenderer = next.contents?.singleColumnWatchNextResults?.results?.results?.contents?.filterIsInstance<ApiNext.Contents.SingleColumnWatchNextResults.Results.Results.SlimVideoMetadataSectionRenderer>()!!
+            .first()
+        return DomainNext(
+            subtitle = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.newElement.type.componentType.model.videoMetadataModel!!.videoMetadata.subtitleData.viewCount.content,
+            channelAvatar = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.newElement.type.componentType.model.channelBarModel!!.videoChannelBarData.avatar.image.sources[0].url,
+            likesText = slimVideoMetadataSectionRenderer.contents[1].elementRenderer.newElement.type.componentType.model.videoActionBarModel!!.buttons[0].likeButton!!.buttonData.defaultButton.title,
+            subscribersText = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.newElement.type.componentType.model.channelBarModel!!.videoChannelBarData.subtitle,
+            comments = DomainNext.Comments(
+                continuation = null,
+                comments = emptyList()
+            ),
+            relatedVideos = DomainNext.RelatedVideos(
+                continuation = next.contents.singleColumnWatchNextResults.results.results.continuations.first().nextContinuationData!!.continuation,
+                videos = next.contents.singleColumnWatchNextResults.results.results.contents
+                    .filterIsInstance<ApiNext.Contents.SingleColumnWatchNextResults.Results.Results.RelatedItemsRenderer>()
+                    .flatMap { it.contents.mapNotNull { (renderer) -> renderer.newElement.type.componentType.model.videoWithContextModel?.videoWithContextData?.toDomain() } }
+            )
+        )
+    }
+
+    suspend fun getRelatedVideos(videoId: String, continuation: String): DomainNext.RelatedVideos {
+        val next = service.getNext(videoId, continuation)
+
+        return DomainNext.RelatedVideos(
+            continuation = next.continuationContents!!.sectionListContinuation.continuations.first().nextContinuationData?.continuation,
+            videos = next.continuationContents.sectionListContinuation.contents.mapNotNull { null }
+        )
+    }
+
     suspend fun getVideo(id: String): DomainVideo {
         val player = service.getPlayer(id)
-        val next = service.getNext(id)
+        val next = getNext(id)
 
         return DomainVideo(
             id = player.videoDetails.videoId,
             title = player.videoDetails.title,
-            subtitle = next.contents.singleColumnWatchNextResults.results.results.contents[0].slimVideoMetadataSectionRenderer!!.contents[0]
-                .elementRenderer.newElement.type.componentType.model.videoMetadataModel!!.videoMetadata.subtitleData.viewCount.content,
+            subtitle = next.subtitle,
             description = player.videoDetails.shortDescription,
             views = player.videoDetails.viewCount?.toInt() ?: 43285348,
-            likesText = next.contents.singleColumnWatchNextResults.results.results.contents[0].slimVideoMetadataSectionRenderer!!.contents[1]
-                .elementRenderer.newElement.type.componentType.model.videoActionBarModel!!.buttons[0].likeButton!!.buttonData.defaultButton.title,
-            // TODO: Fetch from RYD API
+            likesText = next.likesText,
             dislikes = rydService.getVotes(id).dislikes,
             streams = player.streamingData.formats.map(ApiFormat::toDomain),
             author = DomainChannelPartial(
                 id = player.videoDetails.channelId,
                 name = player.videoDetails.author,
-                avatarUrl = next.contents.singleColumnWatchNextResults.results.results.contents[0].slimVideoMetadataSectionRenderer!!.contents[2]
-                    .elementRenderer.newElement.type.componentType.model.channelBarModel!!.videoChannelBarData.avatar.image.sources[0].url,
-                subscriberText = next.contents.singleColumnWatchNextResults.results.results.contents[0].slimVideoMetadataSectionRenderer!!.contents[2]
-                    .elementRenderer.newElement.type.componentType.model.channelBarModel!!.videoChannelBarData.subtitle
+                avatarUrl = next.channelAvatar,
+                subscriberText = next.subscribersText
             )
         )
     }

@@ -1,7 +1,8 @@
 val pagingVersion = "3.1.0"
-val composeVersion = "1.2.0-beta02"
-val ktorVersion = "2.0.1"
-val accompanistVersion = "0.24.8-beta"
+val composeVersion = "1.2.0-rc01"
+val ktorVersion = "2.0.2"
+val accompanistVersion = "0.24.10-beta"
+val composeDestinationsVersion = "1.5.12-beta"
 
 plugins {
     id("com.android.application")
@@ -45,31 +46,26 @@ android {
 
     buildFeatures.compose = true
     composeOptions.kotlinCompilerExtensionVersion = composeVersion
-}
 
-kotlin {
-    sourceSets {
-        debug {
-            kotlin.srcDir("build/generated/ksp/debug/kotlin")
-        }
-        release {
-            kotlin.srcDir("build/generated/ksp/release/kotlin")
+    applicationVariants.all {
+        kotlin.sourceSets.all {
+            kotlin.srcDir("build/generated/ksp/$name/kotlin")
         }
     }
 }
 
 dependencies {
     // core dependencies
-    implementation("androidx.appcompat:appcompat:1.4.1")
-    implementation("androidx.core:core-ktx:1.7.0")
-    implementation("androidx.core:core-splashscreen:1.0.0-beta02")
+    implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.core:core-splashscreen:1.0.0-rc01")
 
     // compose dependencies
     implementation("androidx.compose.ui:ui:${composeVersion}")
     implementation("androidx.compose.ui:ui-tooling:${composeVersion}")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha12")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha13")
     implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha14")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha15")
 
     // accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -77,17 +73,18 @@ dependencies {
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
 
     // compose destinations
-    implementation("io.github.raamcosta.compose-destinations:animations-core:1.5.5-beta")
-    ksp("io.github.raamcosta.compose-destinations:ksp:1.5.5-beta")
+    implementation("io.github.raamcosta.compose-destinations:animations-core:$composeDestinationsVersion")
+    ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
 
     // other dependencies
-    implementation("io.coil-kt:coil-compose:2.0.0")
+    implementation("io.coil-kt:coil-compose:2.1.0")
     implementation("com.google.android.exoplayer:exoplayer:2.17.1")
     implementation("com.google.android.exoplayer:exoplayer-ui:2.17.1")
 
     // ktor
     implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-android:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-encoding:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
@@ -98,7 +95,7 @@ dependencies {
 
     // Google & Youtube auth
     implementation("com.google.android.gms:play-services-auth:20.2.0")
-    implementation("com.google.api-client:google-api-client-android:1.34.1") {
+    implementation("com.google.api-client:google-api-client-android:1.35.1") {
         exclude("org.apache.httpcomponents")
     }
 }
