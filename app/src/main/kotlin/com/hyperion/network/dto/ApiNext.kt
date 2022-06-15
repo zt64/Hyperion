@@ -322,7 +322,10 @@ data class ApiNext(
                 val title: Text
             ) {
                 @Serializable
-                data class SubtitleData(val viewCount: Text)
+                data class SubtitleData(
+                    val viewCount: Text,
+                    val dateA11yLabel: String
+                )
 
                 @Serializable
                 data class Text(val content: String)

@@ -1,7 +1,8 @@
 package com.hyperion.domain.model
 
 data class DomainNext(
-    val subtitle: String,
+    val viewCount: String,
+    val uploadDate: String,
     val channelAvatar: String,
     val likesText: String,
     val subscribersText: String? = null,

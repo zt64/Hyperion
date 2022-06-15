@@ -106,8 +106,10 @@ class InnerTubeRepository @Inject constructor(
 
         val slimVideoMetadataSectionRenderer = next.contents?.singleColumnWatchNextResults?.results?.results?.contents?.filterIsInstance<ApiNext.Contents.SingleColumnWatchNextResults.Results.Results.SlimVideoMetadataSectionRenderer>()!!
             .first()
+
         return DomainNext(
-            subtitle = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.newElement.type.componentType.model.videoMetadataModel!!.videoMetadata.subtitleData.viewCount.content,
+            viewCount = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.newElement.type.componentType.model.videoMetadataModel!!.videoMetadata.subtitleData.viewCount.content,
+            uploadDate = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.newElement.type.componentType.model.videoMetadataModel!!.videoMetadata.subtitleData.dateA11yLabel,
             channelAvatar = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.newElement.type.componentType.model.channelBarModel!!.videoChannelBarData.avatar.image.sources[0].url,
             likesText = slimVideoMetadataSectionRenderer.contents[1].elementRenderer.newElement.type.componentType.model.videoActionBarModel!!.buttons[0].likeButton!!.buttonData.defaultButton.title,
             subscribersText = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.newElement.type.componentType.model.channelBarModel!!.videoChannelBarData.subtitle,
@@ -119,7 +121,11 @@ class InnerTubeRepository @Inject constructor(
                 continuation = next.contents.singleColumnWatchNextResults.results.results.continuations.first().nextContinuationData!!.continuation,
                 videos = next.contents.singleColumnWatchNextResults.results.results.contents
                     .filterIsInstance<ApiNext.Contents.SingleColumnWatchNextResults.Results.Results.RelatedItemsRenderer>()
-                    .flatMap { it.contents.mapNotNull { (renderer) -> renderer.newElement.type.componentType.model.videoWithContextModel?.videoWithContextData?.toDomain() } }
+                    .flatMap {
+                        it.contents.mapNotNull { (renderer) ->
+                            renderer.newElement.type.componentType.model.videoWithContextModel?.videoWithContextData?.toDomain()
+                        }
+                    }
             )
         )
     }
@@ -140,9 +146,9 @@ class InnerTubeRepository @Inject constructor(
         return DomainVideo(
             id = player.videoDetails.videoId,
             title = player.videoDetails.title,
-            subtitle = next.subtitle,
+            viewCount = next.viewCount,
+            uploadDate = next.uploadDate,
             description = player.videoDetails.shortDescription,
-            views = player.videoDetails.viewCount?.toInt() ?: 43285348,
             likesText = next.likesText,
             dislikes = rydService.getVotes(id).dislikes,
             streams = player.streamingData.formats.map(ApiFormat::toDomain),

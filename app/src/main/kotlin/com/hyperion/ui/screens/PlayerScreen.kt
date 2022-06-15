@@ -101,9 +101,10 @@ fun PlayerScreen(
         when (viewModel.state) {
             PlayerViewModel.State.Loaded -> {
                 val relatedVideos = viewModel.relatedVideos.collectAsLazyPagingItems()
+                val video = viewModel.video!!
 
                 // TODO: Move to view model in the future
-                DisposableEffect(viewModel.video) {
+                DisposableEffect(video) {
 //                    val factory = ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory())
 //                    val videoItem = factory.createMediaSource(MediaItem.fromUri(streams.filterIsInstance<DomainStream.Video>().first().url))
 //                    val soundItem = factory.createMediaSource(MediaItem.fromUri(streams.filterIsInstance<DomainStream.Audio>().first().url))
@@ -111,7 +112,7 @@ fun PlayerScreen(
 //
 //                    viewModel.player.setMediaSource(mergedSource)
 
-                    viewModel.player.setMediaItem(MediaItem.fromUri(viewModel.video!!.streams.last().url))
+                    viewModel.player.setMediaItem(MediaItem.fromUri(video.streams.last().url))
                     viewModel.player.prepare()
                     viewModel.player.playWhenReady = true
 
@@ -129,17 +130,17 @@ fun PlayerScreen(
                             var expandedDescription by remember { mutableStateOf(false) }
 
                             Text(
-                                text = viewModel.video!!.title,
+                                text = video.title,
                                 style = MaterialTheme.typography.titleMedium
                             )
 
                             Text(
-                                text = viewModel.video!!.subtitle,
+                                text = "${video.viewCount} - ${video.uploadDate}",
                                 style = MaterialTheme.typography.labelMedium
                             )
 
                             VideoActions(
-                                video = viewModel.video!!,
+                                video = video,
                                 onLike = { },
                                 onDislike = { },
                                 onShare = viewModel::shareVideo,
@@ -150,23 +151,23 @@ fun PlayerScreen(
 
                             Row(
                                 modifier = Modifier.clickable {
-                                    navigator.navigate(ChannelScreenDestination(viewModel.video!!.author.id))
+                                    navigator.navigate(ChannelScreenDestination(video.author.id))
                                 },
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                ChannelThumbnail(url = viewModel.video!!.author.avatarUrl!!)
+                                ChannelThumbnail(url = video.author.avatarUrl!!)
 
                                 Column(
                                     modifier = Modifier.weight(1f, true)
                                 ) {
                                     Text(
-                                        text = viewModel.video!!.author.name!!,
+                                        text = video.author.name!!,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
 
-                                    viewModel.video!!.author.subscriberText?.let { subscriberText ->
+                                    video.author.subscriberText?.let { subscriberText ->
                                         Text(
                                             text = subscriberText,
                                             style = MaterialTheme.typography.labelSmall
@@ -183,12 +184,12 @@ fun PlayerScreen(
 
                             Divider()
 
-                            if (viewModel.video!!.description.isNotBlank()) {
+                            if (video.description.isNotBlank()) {
                                 Text(
                                     modifier = Modifier
                                         .clickable { expandedDescription = !expandedDescription }
                                         .animateContentSize(animationSpec = tween()),
-                                    text = viewModel.video!!.description,
+                                    text = video.description,
                                     style = MaterialTheme.typography.bodyMedium,
                                     maxLines = if (expandedDescription) Int.MAX_VALUE else 5,
                                     overflow = TextOverflow.Ellipsis
