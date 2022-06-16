@@ -82,7 +82,7 @@ class PlayerViewModel(
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
 
-//            putExtra(Intent.EXTRA_TEXT, video!!.url)
+            putExtra(Intent.EXTRA_TEXT, video!!.shareUrl)
             putExtra(Intent.EXTRA_TITLE, video!!.title)
         }
 
