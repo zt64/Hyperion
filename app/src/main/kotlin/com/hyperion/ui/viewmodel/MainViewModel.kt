@@ -5,13 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.hyperion.domain.model.DomainVideoPartial
 import com.hyperion.domain.repository.InnerTubeRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
-@HiltViewModel
-class MainViewModel @Inject constructor(
-    private val repository: InnerTubeRepository
-) : ViewModel() {
+class MainViewModel(private val repository: InnerTubeRepository) : ViewModel() {
     val videos = Pager(PagingConfig(10)) {
         object : PagingSource<String, DomainVideoPartial>() {
             override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainVideoPartial> {

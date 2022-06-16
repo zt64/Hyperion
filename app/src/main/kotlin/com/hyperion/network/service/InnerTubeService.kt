@@ -11,20 +11,24 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
-import javax.inject.Inject
 
-class InnerTubeService @Inject constructor(
+class InnerTubeService(
     private val httpClient: HttpClient,
     private val json: Json
 ) {
     private lateinit var innerTubeApiKey: String
     private lateinit var innerTubeContext: ApiContext
+
+    init {
+        runBlocking { initApi() }
+    }
 
     suspend fun initApi() = withContext(Dispatchers.IO) {
         val html = httpClient.get(YOUTUBE_URL).bodyAsText()
@@ -47,7 +51,6 @@ class InnerTubeService @Inject constructor(
         )
     }
 
-    // TODO
     suspend fun getRecommendations(): HttpResponse = withContext(Dispatchers.IO) {
         httpClient.post("$API_URL/browse") {
             parameter("key", innerTubeApiKey)
@@ -61,7 +64,7 @@ class InnerTubeService @Inject constructor(
         }
     }
 
-    suspend fun getTrending(continuation: String? = null): ApiTrending = withContext(Dispatchers.IO) {
+    suspend fun getTrending(continuation: String?): ApiTrending = withContext(Dispatchers.IO) {
         httpClient.post("$API_URL/browse") {
             parameter("key", innerTubeApiKey)
             contentType(ContentType.Application.Json)
@@ -111,7 +114,7 @@ class InnerTubeService @Inject constructor(
         }.body()
     }
 
-    suspend fun getNext(id: String, continuation: String? = null): ApiNext = withContext(Dispatchers.IO) {
+    suspend fun getNext(id: String, continuation: String?): ApiNext = withContext(Dispatchers.IO) {
         httpClient.post("$API_URL/next") {
             parameter("key", innerTubeApiKey)
             contentType(ContentType.Application.Json)
@@ -125,19 +128,20 @@ class InnerTubeService @Inject constructor(
         }.body()
     }
 
-    suspend fun getSearchResults(query: String, continuation: String? = null): ApiSearch = withContext(Dispatchers.IO) {
-        httpClient.post("$API_URL/search") {
-            parameter("key", innerTubeApiKey)
-            contentType(ContentType.Application.Json)
-            setBody(
-                SearchBody(
-                    context = innerTubeContext,
-                    query = query,
-                    continuation = continuation
+    suspend fun getSearchResults(query: String, continuation: String?): ApiSearch =
+        withContext(Dispatchers.IO) {
+            httpClient.post("$API_URL/search") {
+                parameter("key", innerTubeApiKey)
+                contentType(ContentType.Application.Json)
+                setBody(
+                    SearchBody(
+                        context = innerTubeContext,
+                        query = query,
+                        continuation = continuation
+                    )
                 )
-            )
-        }.body()
-    }
+            }.body()
+        }
 
     private companion object {
         private const val YOUTUBE_URL = "https://www.youtube.com"

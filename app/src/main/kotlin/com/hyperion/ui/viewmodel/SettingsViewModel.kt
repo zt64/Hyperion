@@ -10,13 +10,8 @@ import androidx.lifecycle.ViewModel
 import com.hyperion.preferences.Prefs
 import com.hyperion.ui.theme.Theme
 import com.hyperion.util.githubUrl
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
-@HiltViewModel
-class SettingsViewModel @Inject constructor(
-    private val application: Application
-) : ViewModel() {
+class SettingsViewModel(private val application: Application) : ViewModel() {
     var showThemePicker by mutableStateOf(false)
         private set
 

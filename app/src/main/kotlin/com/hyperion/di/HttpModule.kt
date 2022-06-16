@@ -1,9 +1,5 @@
 package com.hyperion.di
 
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
@@ -12,21 +8,12 @@ import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-import javax.inject.Singleton
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object NetworkModule {
-    @Singleton
-    @Provides
-    fun provideJson() = Json {
-        prettyPrint = true
-        ignoreUnknownKeys = true
-    }
-
-    @Singleton
-    @Provides
-    fun provideHttpClient(json: Json) = HttpClient(CIO) {
+val httpModule = module {
+    fun provideInnerTubeClient(
+        json: Json
+    ) = HttpClient(CIO) {
         BrowserUserAgent()
 
         install(ContentNegotiation) {
@@ -45,4 +32,13 @@ object NetworkModule {
 
         install(HttpCache)
     }
+
+    single {
+        Json {
+            prettyPrint = true
+            ignoreUnknownKeys = true
+        }
+    }
+
+    single { provideInnerTubeClient(get()) }
 }

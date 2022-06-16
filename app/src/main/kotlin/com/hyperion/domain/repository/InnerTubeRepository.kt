@@ -9,9 +9,8 @@ import com.hyperion.network.service.InnerTubeService
 import com.hyperion.network.service.RYDService
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
-import javax.inject.Inject
 
-class InnerTubeRepository @Inject constructor(
+class InnerTubeRepository(
     private val service: InnerTubeService,
     private val rydService: RYDService
 ) {

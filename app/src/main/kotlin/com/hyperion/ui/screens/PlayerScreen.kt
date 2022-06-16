@@ -20,7 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -41,6 +40,7 @@ import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.popUpTo
+import org.koin.androidx.compose.getViewModel
 
 @Destination(
     deepLinks = [
@@ -53,7 +53,7 @@ import com.ramcosta.composedestinations.navigation.popUpTo
 @Composable
 fun PlayerScreen(
     navigator: DestinationsNavigator,
-    viewModel: PlayerViewModel = hiltViewModel(),
+    viewModel: PlayerViewModel = getViewModel(),
     videoId: String
 ) {
     LaunchedEffect(Unit) {

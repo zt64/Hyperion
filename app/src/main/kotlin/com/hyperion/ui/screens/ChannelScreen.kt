@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.hyperion.R
@@ -30,6 +29,7 @@ import com.hyperion.ui.screens.destinations.PlayerScreenDestination
 import com.hyperion.ui.viewmodel.ChannelViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import org.koin.androidx.compose.getViewModel
 
 enum class ChannelTab(
     @StringRes
@@ -46,7 +46,7 @@ enum class ChannelTab(
 @Composable
 fun ChannelScreen(
     navigator: DestinationsNavigator,
-    viewModel: ChannelViewModel = hiltViewModel(),
+    viewModel: ChannelViewModel = getViewModel(),
     channelId: String
 ) {
     Box(

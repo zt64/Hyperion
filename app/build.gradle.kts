@@ -3,14 +3,14 @@ val composeVersion = "1.2.0-rc01"
 val ktorVersion = "2.0.2"
 val accompanistVersion = "0.24.10-beta"
 val composeDestinationsVersion = "1.5.12-beta"
+val koinVersion = "3.2.0"
+val exoPlayerVersion = "2.17.1"
 
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("dagger.hilt.android.plugin")
-    kotlin("plugin.serialization") version "1.6.21"
     id("com.google.devtools.ksp") version "1.6.21-1.0.5"
-    kotlin("kapt")
+    kotlin("plugin.serialization") version "1.6.21"
 }
 
 android {
@@ -55,10 +55,11 @@ android {
 }
 
 dependencies {
-    // core dependencies
     implementation("androidx.appcompat:appcompat:1.4.2")
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.core:core-splashscreen:1.0.0-rc01")
+    implementation("io.insert-koin:koin-android:$koinVersion")
+    implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
 
     // compose dependencies
     implementation("androidx.compose.ui:ui:${composeVersion}")
@@ -78,8 +79,8 @@ dependencies {
 
     // other dependencies
     implementation("io.coil-kt:coil-compose:2.1.0")
-    implementation("com.google.android.exoplayer:exoplayer:2.17.1")
-    implementation("com.google.android.exoplayer:exoplayer-ui:2.17.1")
+    implementation("com.google.android.exoplayer:exoplayer:$exoPlayerVersion")
+    implementation("com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion")
 
     // ktor
     implementation("io.ktor:ktor-client-core:$ktorVersion")
@@ -87,11 +88,6 @@ dependencies {
     implementation("io.ktor:ktor-client-encoding:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-
-    // hilt
-    implementation("com.google.dagger:hilt-android:2.42")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    kapt("com.google.dagger:hilt-android-compiler:2.42")
 
     // Google & Youtube auth
     implementation("com.google.android.gms:play-services-auth:20.2.0")

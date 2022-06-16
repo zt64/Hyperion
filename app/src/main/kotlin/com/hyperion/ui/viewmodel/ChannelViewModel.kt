@@ -7,14 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hyperion.domain.model.DomainChannel
 import com.hyperion.domain.repository.InnerTubeRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class ChannelViewModel @Inject constructor(
-    private val repository: InnerTubeRepository
-) : ViewModel() {
+class ChannelViewModel(private val repository: InnerTubeRepository) : ViewModel() {
     sealed class State {
         class Loaded(val channel: DomainChannel) : State()
         object Loading : State()

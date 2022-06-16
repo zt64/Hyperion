@@ -16,12 +16,9 @@ import com.hyperion.domain.model.DomainStream
 import com.hyperion.domain.model.DomainVideo
 import com.hyperion.domain.model.DomainVideoPartial
 import com.hyperion.domain.repository.InnerTubeRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class PlayerViewModel @Inject constructor(
+class PlayerViewModel(
     private val application: Application,
     private val repository: InnerTubeRepository
 ) : ViewModel() {

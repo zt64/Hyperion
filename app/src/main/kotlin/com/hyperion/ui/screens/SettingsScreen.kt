@@ -16,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.hyperion.R
 import com.hyperion.preferences.Prefs
 import com.hyperion.preferences.VideoCardStyle
@@ -25,11 +24,12 @@ import com.hyperion.ui.components.settings.SettingItem
 import com.hyperion.ui.components.settings.ThemePicker
 import com.hyperion.ui.viewmodel.SettingsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import org.koin.androidx.compose.getViewModel
 
 @Destination
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = hiltViewModel()
+    viewModel: SettingsViewModel = getViewModel()
 ) {
     Column(
         modifier = Modifier
