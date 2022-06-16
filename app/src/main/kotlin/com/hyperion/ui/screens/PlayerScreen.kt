@@ -20,14 +20,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.ui.AspectRatioFrameLayout
+import androidx.media3.ui.PlayerView
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
-import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.hyperion.R
 import com.hyperion.ui.components.ChannelThumbnail
 import com.hyperion.ui.components.VideoCard
@@ -80,7 +80,7 @@ fun PlayerScreen(
                         )
                     },
                 factory = { context ->
-                    StyledPlayerView(context).apply {
+                    PlayerView(context).apply {
                         resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH
                         useController = true
                         player = viewModel.player

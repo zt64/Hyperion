@@ -1,10 +1,4 @@
-val pagingVersion = "3.1.0"
 val composeVersion = "1.2.0-rc01"
-val ktorVersion = "2.0.2"
-val accompanistVersion = "0.24.10-beta"
-val composeDestinationsVersion = "1.5.12-beta"
-val koinVersion = "3.2.0"
-val exoPlayerVersion = "2.17.1"
 
 plugins {
     id("com.android.application")
@@ -58,6 +52,8 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.4.2")
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.core:core-splashscreen:1.0.0-rc01")
+
+    val koinVersion = "3.2.0"
     implementation("io.insert-koin:koin-android:$koinVersion")
     implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
 
@@ -69,20 +65,25 @@ dependencies {
     implementation("androidx.paging:paging-compose:1.0.0-alpha15")
 
     // accompanist
+    val accompanistVersion = "0.24.10-beta"
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
 
     // compose destinations
+    val composeDestinationsVersion = "1.5.12-beta"
     implementation("io.github.raamcosta.compose-destinations:animations-core:$composeDestinationsVersion")
     ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
 
     // other dependencies
     implementation("io.coil-kt:coil-compose:2.1.0")
-    implementation("com.google.android.exoplayer:exoplayer:$exoPlayerVersion")
-    implementation("com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion")
+
+    val media3Version = "1.0.0-alpha03"
+    implementation("androidx.media3:media3-exoplayer:$media3Version")
+    implementation("androidx.media3:media3-ui:$media3Version")
 
     // ktor
+    val ktorVersion = "2.0.2"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-encoding:$ktorVersion")
