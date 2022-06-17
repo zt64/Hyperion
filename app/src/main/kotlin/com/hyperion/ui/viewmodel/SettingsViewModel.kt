@@ -7,11 +7,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
-import com.hyperion.preferences.Prefs
+import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.theme.Theme
 import com.hyperion.util.githubUrl
 
-class SettingsViewModel(private val application: Application) : ViewModel() {
+class SettingsViewModel(
+    private val application: Application,
+    val prefs: PreferencesManager
+) : ViewModel() {
     var showThemePicker by mutableStateOf(false)
         private set
 
@@ -24,7 +27,7 @@ class SettingsViewModel(private val application: Application) : ViewModel() {
     }
 
     fun setTheme(theme: Theme) {
-        Prefs.theme = theme
+        prefs.theme = theme
     }
 
     fun openGitHub() {

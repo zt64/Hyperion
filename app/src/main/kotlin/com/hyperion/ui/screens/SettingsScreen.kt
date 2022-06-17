@@ -17,8 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
-import com.hyperion.preferences.Prefs
-import com.hyperion.preferences.VideoCardStyle
 import com.hyperion.ui.components.NavigationDestination
 import com.hyperion.ui.components.settings.SettingItem
 import com.hyperion.ui.components.settings.ThemePicker
@@ -31,6 +29,8 @@ import org.koin.androidx.compose.getViewModel
 fun SettingsScreen(
     viewModel: SettingsViewModel = getViewModel()
 ) {
+    val prefs = viewModel.prefs
+
     Column(
         modifier = Modifier
             .verticalScroll(state = rememberScrollState())
@@ -45,23 +45,23 @@ fun SettingsScreen(
         }
 
         SettingItem(
-            modifier = Modifier.clickable { Prefs.materialYou = !Prefs.materialYou },
+            modifier = Modifier.clickable { prefs.materialYou = !prefs.materialYou },
             text = { Text("Material You") },
             trailing = {
-                Switch(checked = Prefs.materialYou, onCheckedChange = { Prefs.materialYou = it })
+                Switch(checked = prefs.materialYou, onCheckedChange = { prefs.materialYou = it })
             }
         )
 
         SettingItem(
-            modifier = Modifier.clickable(enabled = !Prefs.materialYou) {
-                Prefs.blackBackground = !Prefs.blackBackground
+            modifier = Modifier.clickable(enabled = !prefs.materialYou) {
+                prefs.midnightMode = !prefs.midnightMode
             },
             text = { Text(stringResource(R.string.black_background)) },
             trailing = {
                 Switch(
-                    enabled = !Prefs.materialYou,
-                    checked = Prefs.blackBackground,
-                    onCheckedChange = { Prefs.blackBackground = it }
+                    enabled = !prefs.materialYou,
+                    checked = prefs.midnightMode,
+                    onCheckedChange = { prefs.midnightMode = it }
                 )
             }
         )
@@ -80,44 +80,26 @@ fun SettingsScreen(
                 FilledTonalButton(
                     onClick = viewModel::showThemePicker
                 ) {
-                    Text(Prefs.theme.displayName)
+                    Text(prefs.theme.displayName)
                 }
             }
         )
 
-        var showVideoCardStyleDropdown by remember { mutableStateOf(false) }
+
         SettingItem(
-            modifier = Modifier.clickable { showVideoCardStyleDropdown = true },
+            modifier = Modifier.clickable { prefs.compactCard = !prefs.compactCard },
             icon = {
                 Icon(
                     imageVector = Icons.Default.VideoSettings,
                     contentDescription = null
                 )
             },
-            text = { Text("Video card style") },
+            text = { Text("Compact cards") },
             trailing = {
-                Box {
-                    FilledTonalButton(
-                        onClick = { showVideoCardStyleDropdown = true }
-                    ) {
-                        Text(Prefs.videoCardStyle.displayName)
-                    }
-
-                    DropdownMenu(
-                        expanded = showVideoCardStyleDropdown,
-                        onDismissRequest = { showVideoCardStyleDropdown = false }
-                    ) {
-                        VideoCardStyle.values().forEach { style ->
-                            DropdownMenuItem(
-                                text = { Text(style.displayName) },
-                                onClick = {
-                                    Prefs.videoCardStyle = style
-                                    showVideoCardStyleDropdown = false
-                                }
-                            )
-                        }
-                    }
-                }
+                Switch(
+                    checked = prefs.compactCard,
+                    onCheckedChange = { prefs.compactCard = it }
+                )
             }
         )
 
@@ -131,7 +113,7 @@ fun SettingsScreen(
                     FilledTonalButton(
                         onClick = { showStartScreenDropdown = true }
                     ) {
-                        Text(Prefs.startScreen.name)
+                        Text(prefs.startScreen.name)
                     }
 
                     DropdownMenu(
@@ -141,7 +123,7 @@ fun SettingsScreen(
                         NavigationDestination.values().forEach { destination ->
                             DropdownMenuItem(
                                 text = { Text(destination.name) },
-                                onClick = { Prefs.startScreen = destination }
+                                onClick = { prefs.startScreen = destination }
                             )
                         }
                     }
@@ -150,7 +132,7 @@ fun SettingsScreen(
         )
 
         val directoryChooser = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
-            if (uri != null) Prefs.downloadDirectory = uri.toString()
+            if (uri != null) prefs.downloadDirectory = uri.toString()
         }
         SettingItem(
             modifier = Modifier.clickable { directoryChooser.launch(null) },
@@ -161,7 +143,7 @@ fun SettingsScreen(
                 )
             },
             text = { Text(stringResource(R.string.download_location)) },
-            secondaryText = { Text(Prefs.downloadDirectory) }
+            secondaryText = { Text(prefs.downloadDirectory ?: "Unknown") }
         )
 
         Divider()

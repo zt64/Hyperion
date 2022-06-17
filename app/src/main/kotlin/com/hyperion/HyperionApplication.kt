@@ -1,10 +1,7 @@
 package com.hyperion
 
 import android.app.Application
-import com.hyperion.di.httpModule
-import com.hyperion.di.repositoryModule
-import com.hyperion.di.serviceModule
-import com.hyperion.di.viewModelModule
+import com.hyperion.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -14,7 +11,7 @@ class HyperionApplication : Application() {
 
         startKoin {
             androidContext(this@HyperionApplication)
-            modules(httpModule, serviceModule, repositoryModule, viewModelModule)
+            modules(httpModule, serviceModule, repositoryModule, viewModelModule, managerModule)
         }
     }
 }

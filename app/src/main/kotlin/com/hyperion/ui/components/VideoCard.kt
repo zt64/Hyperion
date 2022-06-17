@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.hyperion.R
+import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.domain.model.DomainVideoPartial
-import com.hyperion.preferences.Prefs
-import com.hyperion.preferences.VideoCardStyle
+import org.koin.androidx.compose.get
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,12 +29,13 @@ fun VideoCard(
     video: DomainVideoPartial,
     onChannelClick: () -> Unit = { },
     onClick: () -> Unit,
+    prefs: PreferencesManager = get()
 ) {
     ElevatedCard(
         modifier = modifier,
         onClick = onClick
     ) {
-        if (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE || Prefs.videoCardStyle == VideoCardStyle.COMPACT) {
+        if ((LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) || prefs.compactCard) {
             // Compact horizontal layout
             Row(
                 modifier = Modifier

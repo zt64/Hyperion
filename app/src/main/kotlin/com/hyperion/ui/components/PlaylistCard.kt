@@ -15,16 +15,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.domain.model.DomainSearch
-import com.hyperion.preferences.Prefs
-import com.hyperion.preferences.VideoCardStyle
+import org.koin.androidx.compose.get
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaylistCard(
     modifier: Modifier = Modifier,
     playlist: DomainSearch.Result.Playlist,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    prefs: PreferencesManager = get()
 ) {
     ElevatedCard(
         modifier = Modifier
@@ -32,7 +33,7 @@ fun PlaylistCard(
             .then(modifier),
         onClick = onClick
     ) {
-        val compactCard = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE || Prefs.videoCardStyle == VideoCardStyle.COMPACT
+        val compactCard = (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) || prefs.compactCard
 
         if (compactCard) {
             Row(

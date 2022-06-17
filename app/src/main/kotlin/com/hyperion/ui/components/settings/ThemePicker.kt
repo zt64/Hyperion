@@ -15,16 +15,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
-import com.hyperion.preferences.Prefs
+import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.theme.Theme
+import org.koin.androidx.compose.get
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThemePicker(
     onDismissRequest: () -> Unit,
-    onConfirm: (Theme) -> Unit
+    onConfirm: (Theme) -> Unit,
+    prefs: PreferencesManager = get()
 ) {
-    var selectedTheme by remember { mutableStateOf(Prefs.theme) }
+    var selectedTheme by remember { mutableStateOf(prefs.theme) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -33,9 +35,7 @@ fun ThemePicker(
             Column {
                 Theme.values().forEach { theme ->
                     Row(
-                        modifier = Modifier.clickable {
-                            selectedTheme = theme
-                        },
+                        modifier = Modifier.clickable { selectedTheme = theme },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(

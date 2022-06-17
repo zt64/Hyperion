@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
@@ -20,13 +18,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.hyperion.R
-import com.hyperion.preferences.Prefs
+import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.screens.NavGraphs
 import com.hyperion.ui.screens.appDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import com.ramcosta.composedestinations.navigation.navigate
+import org.koin.androidx.compose.get
 
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -34,7 +33,9 @@ import com.ramcosta.composedestinations.navigation.navigate
     ExperimentalMaterialNavigationApi::class,
 )
 @Composable
-fun HyperionScaffold() {
+fun HyperionScaffold(
+    prefs: PreferencesManager = get()
+) {
     val navController = rememberAnimatedNavController()
     val navHostEngine = rememberAnimatedNavHostEngine(
         rootDefaultAnimations = RootNavGraphDefaultAnimations(
@@ -58,8 +59,6 @@ fun HyperionScaffold() {
         Row(
             modifier = Modifier.padding(paddingValues)
         ) {
-            val startScreen by rememberUpdatedState(newValue = Prefs.startScreen)
-
             if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 NavigationRail(
                     header = { Icon(painterResource(R.drawable.ic_launcher_foreground), null) },
@@ -90,7 +89,7 @@ fun HyperionScaffold() {
             DestinationsNavHost(
                 modifier = Modifier.fillMaxSize(),
                 navController = navController,
-                startRoute = startScreen.direction,
+                startRoute = prefs.startScreen.direction,
                 navGraph = NavGraphs.root,
                 engine = navHostEngine
             )

@@ -1,19 +1,20 @@
 package com.hyperion
 
-import android.content.Context
 import android.os.Bundle
 import android.view.animation.AccelerateInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.hyperion.preferences.Prefs
-import com.hyperion.preferences.sharedPreferences
+import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.components.HyperionScaffold
 import com.hyperion.ui.theme.HyperionTheme
 import com.hyperion.ui.theme.Theme
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
+    private val prefs: PreferencesManager by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen().setOnExitAnimationListener { provider ->
             provider.view.animate().apply {
@@ -28,13 +29,11 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        sharedPreferences = getPreferences(Context.MODE_PRIVATE)
-
         setContent {
             HyperionTheme(
-                isBlack = Prefs.blackBackground,
-                isDarkTheme = Prefs.theme == Theme.SYSTEM && isSystemInDarkTheme() || Prefs.theme == Theme.DARK,
-                isDynamicColor = Prefs.materialYou
+                isBlack = prefs.midnightMode,
+                isDarkTheme = prefs.theme == Theme.SYSTEM && isSystemInDarkTheme() || prefs.theme == Theme.DARK,
+                isDynamicColor = prefs.materialYou
             ) {
                 HyperionScaffold()
             }
