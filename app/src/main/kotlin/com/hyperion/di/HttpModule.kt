@@ -8,12 +8,16 @@ import io.ktor.client.plugins.compression.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val httpModule = module {
-    fun provideInnerTubeClient(
-        json: Json
-    ) = HttpClient(CIO) {
+    fun provideJson() = Json {
+        prettyPrint = true
+        ignoreUnknownKeys = true
+    }
+
+    fun provideInnerTubeClient(json: Json) = HttpClient(CIO) {
         BrowserUserAgent()
 
         install(ContentNegotiation) {
@@ -33,12 +37,6 @@ val httpModule = module {
         install(HttpCache)
     }
 
-    single {
-        Json {
-            prettyPrint = true
-            ignoreUnknownKeys = true
-        }
-    }
-
-    single { provideInnerTubeClient(get()) }
+    singleOf(::provideJson)
+    singleOf(::provideInnerTubeClient)
 }
