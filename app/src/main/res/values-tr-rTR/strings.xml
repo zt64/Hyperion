@@ -24,4 +24,7 @@
     <string name="error">Hata</string>
     <string name="black_background">Siyah arka plan</string>
     <string name="error_occurred">Bir hata oluştu</string>
+    <string name="unknown">Unknown</string>
+    <string name="compact_card">Compact card</string>
+    <string name="pip">Picture-in-picture (PiP)</string>
 </resources>

@@ -24,4 +24,7 @@
     <string name="error">Fout</string>
     <string name="black_background">Swart agtergrond</string>
     <string name="error_occurred">N fout het voorgekom</string>
+    <string name="unknown">Unknown</string>
+    <string name="compact_card">Compact card</string>
+    <string name="pip">Picture-in-picture (PiP)</string>
 </resources>

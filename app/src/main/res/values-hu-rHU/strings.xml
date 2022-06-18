@@ -24,4 +24,7 @@
     <string name="error">Hiba</string>
     <string name="black_background">Fekete háttér</string>
     <string name="error_occurred">Hiba lépett fel</string>
+    <string name="unknown">Unknown</string>
+    <string name="compact_card">Compact card</string>
+    <string name="pip">Picture-in-picture (PiP)</string>
 </resources>

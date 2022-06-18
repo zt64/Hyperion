@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Hyperion</string>
-    <string name="home">Home</string>
+    <string name="home">Strona główna</string>
     <string name="settings_screen">Ustawienia</string>
     <string name="apply">Zastosuj</string>
     <string name="theme">Motyw</string>
@@ -17,11 +17,14 @@
     <string name="views">wyświetlenia</string>
     <string name="download_location">Folder pobierania</string>
     <string name="start_screen">Strona startowa</string>
-    <string name="thumbnail">Thumbnail</string>
-    <string name="videos">Videos</string>
-    <string name="playlists">Playlists</string>
+    <string name="thumbnail">Miniaturka</string>
+    <string name="videos">Filmy</string>
+    <string name="playlists">Playlisty</string>
     <string name="search">Szukaj</string>
-    <string name="error">Error</string>
-    <string name="black_background">Black background</string>
-    <string name="error_occurred">An error has occurred</string>
+    <string name="error">Błąd</string>
+    <string name="black_background">Czarne tło</string>
+    <string name="error_occurred">Wystąpił błąd</string>
+    <string name="unknown">Unknown</string>
+    <string name="compact_card">Compact card</string>
+    <string name="pip">Picture-in-picture (PiP)</string>
 </resources>

@@ -24,4 +24,7 @@
     <string name="error">خطأ</string>
     <string name="black_background">خلفية سوداء</string>
     <string name="error_occurred">حدث خطأ</string>
+    <string name="unknown">Unknown</string>
+    <string name="compact_card">Compact card</string>
+    <string name="pip">Picture-in-picture (PiP)</string>
 </resources>
