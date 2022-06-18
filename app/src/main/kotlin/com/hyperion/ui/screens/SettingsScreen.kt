@@ -152,6 +152,32 @@ fun SettingsScreen(
             }
         )
 
+        SettingItem(
+            text = { Text("Timestamp scale") },
+            secondaryText = {
+                var timeStampScale by remember { mutableStateOf(prefs.timestampScale) }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Slider(
+                        modifier = Modifier.weight(0.75f, true),
+                        value = timeStampScale,
+                        valueRange = 0.8f..2f,
+                        steps = 10,
+                        onValueChange = { timeStampScale = it },
+                        onValueChangeFinished = { prefs.timestampScale = timeStampScale }
+                    )
+
+                    Text(
+                        text = "${"%.1f".format(timeStampScale)}x",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+            }
+        )
+
         val directoryChooser = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
             if (uri != null) prefs.downloadDirectory = uri.toString()
         }

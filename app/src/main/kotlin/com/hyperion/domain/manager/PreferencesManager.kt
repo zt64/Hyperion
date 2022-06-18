@@ -16,4 +16,5 @@ class PreferencesManager(
     var startScreen by enumPreference("start_screen", NavigationDestination.Home)
     var pictureInPicture by booleanPreference("pip", true)
     var downloadDirectory by stringPreference("download_directory", Environment.DIRECTORY_DOWNLOADS)
+    var timestampScale by floatPreference("timestamp_scale", 1f)
 }
