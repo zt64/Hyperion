@@ -3,25 +3,26 @@ package com.hyperion.ui.screens
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.hyperion.R
+import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.components.NavigationDestination
-import com.hyperion.ui.components.settings.SettingItem
-import com.hyperion.ui.components.settings.ThemePicker
+import com.hyperion.ui.theme.Theme
 import com.hyperion.ui.viewmodel.SettingsViewModel
 import com.ramcosta.composedestinations.annotation.Destination
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
 @Destination
@@ -94,7 +95,7 @@ fun SettingsScreen(
                     contentDescription = null
                 )
             },
-            text = { Text("Compact cards") },
+            text = { Text(stringResource(R.string.compact_card)) },
             trailing = {
                 Switch(
                     checked = prefs.compactCard,
@@ -131,6 +132,26 @@ fun SettingsScreen(
             }
         )
 
+        SettingItem(
+            modifier = Modifier.clickable(
+                enabled = false // TODO: Remove when PIP is supported
+            ) { prefs.pictureInPicture = !prefs.pictureInPicture },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.PictureInPicture,
+                    contentDescription = stringResource(R.string.pip)
+                )
+            },
+            text = { Text(stringResource(R.string.pip)) },
+            trailing = {
+                Switch(
+                    checked = prefs.pictureInPicture,
+                    onCheckedChange = { prefs.pictureInPicture = !prefs.pictureInPicture },
+                    enabled = false // TODO: Remove when PIP is supported
+                )
+            }
+        )
+
         val directoryChooser = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
             if (uri != null) prefs.downloadDirectory = uri.toString()
         }
@@ -143,7 +164,7 @@ fun SettingsScreen(
                 )
             },
             text = { Text(stringResource(R.string.download_location)) },
-            secondaryText = { Text(prefs.downloadDirectory ?: "Unknown") }
+            secondaryText = { Text(prefs.downloadDirectory ?: stringResource(R.string.unknown)) }
         )
 
         Divider()
@@ -159,4 +180,91 @@ fun SettingsScreen(
             text = { Text(stringResource(R.string.github)) }
         )
     }
+}
+
+@Composable
+fun SettingItem(
+    modifier: Modifier = Modifier,
+    icon: @Composable (() -> Unit) = { },
+    text: @Composable () -> Unit,
+    secondaryText: @Composable (() -> Unit) = { },
+    trailing: @Composable (() -> Unit) = { },
+) {
+    Row(
+        modifier = modifier
+            .heightIn(min = 64.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 18.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(14.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        icon()
+
+        Column(
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            ProvideTextStyle(
+                MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp
+                )
+            ) {
+                text()
+            }
+            ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
+                secondaryText()
+            }
+        }
+
+        Spacer(Modifier.weight(1f, true))
+
+        trailing()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ThemePicker(
+    onDismissRequest: () -> Unit,
+    onConfirm: (Theme) -> Unit,
+    prefs: PreferencesManager = get()
+) {
+    var selectedTheme by remember { mutableStateOf(prefs.theme) }
+
+    AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = { Text(stringResource(R.string.theme)) },
+        text = {
+            Column {
+                Theme.values().forEach { theme ->
+                    Row(
+                        modifier = Modifier.clickable { selectedTheme = theme },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            theme.displayName,
+                            style = MaterialTheme.typography.labelLarge
+                        )
+
+                        Spacer(Modifier.weight(1f, true))
+
+                        RadioButton(
+                            selected = theme == selectedTheme,
+                            onClick = { selectedTheme = theme }
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    onConfirm(selectedTheme)
+                    onDismissRequest()
+                }
+            ) {
+                Text(stringResource(R.string.apply))
+            }
+        }
+    )
 }

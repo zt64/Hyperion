@@ -14,6 +14,7 @@ class PreferencesManager(
     var midnightMode by booleanPreference(MIDNIGHT_MODE_KEY, MIDNIGHT_MODE_DEFAULT)
     var compactCard by booleanPreference(COMPACT_CARD_KEY, COMPACT_CARD_DEFAULT)
     var startScreen by enumPreference(START_SCREEN_KEY, START_SCREEN_DEFAULT)
+    var pictureInPicture by booleanPreference(PIP_KEY, PIP_DEFAULT)
     var downloadDirectory by stringPreference(DOWNLOAD_DIRECTORY_KEY, DOWNLOAD_DIRECTORY_DEFAULT)
 
     companion object {
@@ -31,6 +32,9 @@ class PreferencesManager(
 
         private val START_SCREEN_KEY = "start_screen"
         private val START_SCREEN_DEFAULT = NavigationDestination.Home
+
+        private val PIP_KEY = "pip"
+        private val PIP_DEFAULT = true
 
         private val DOWNLOAD_DIRECTORY_KEY = "download_directory"
         private val DOWNLOAD_DIRECTORY_DEFAULT = Environment.DIRECTORY_DOWNLOADS
