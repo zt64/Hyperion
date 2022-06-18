@@ -24,7 +24,7 @@
     <string name="error">Xəta</string>
     <string name="black_background">Qaranlıq arxafon</string>
     <string name="error_occurred">Bir səhv baş verdi</string>
-    <string name="unknown">Unknown</string>
-    <string name="compact_card">Compact card</string>
-    <string name="pip">Picture-in-picture (PiP)</string>
+    <string name="unknown">Naməlum</string>
+    <string name="compact_card">Kompakt kart</string>
+    <string name="pip">Şəkil içində şəkil (PiP)</string>
 </resources>

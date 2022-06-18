@@ -24,7 +24,7 @@
     <string name="error">Błąd</string>
     <string name="black_background">Czarne tło</string>
     <string name="error_occurred">Wystąpił błąd</string>
-    <string name="unknown">Unknown</string>
-    <string name="compact_card">Compact card</string>
-    <string name="pip">Picture-in-picture (PiP)</string>
+    <string name="unknown">Nieznane</string>
+    <string name="compact_card">Karta kompaktowa</string>
+    <string name="pip">Obraz w obrazie</string>
 </resources>
