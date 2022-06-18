@@ -1,7 +1,6 @@
 package com.hyperion
 
 import android.os.Bundle
-import android.view.animation.AccelerateInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,16 +15,7 @@ class MainActivity : ComponentActivity() {
     private val prefs: PreferencesManager by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen().setOnExitAnimationListener { provider ->
-            provider.view.animate().apply {
-                interpolator = AccelerateInterpolator()
-                duration = 200L
-
-                alpha(0f)
-                withEndAction(provider::remove)
-                start()
-            }
-        }
+        installSplashScreen()
 
         super.onCreate(savedInstanceState)
 
