@@ -19,13 +19,11 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
           cache: 'gradle'
-      - run: ./gradlew build --no-daemon
 
       - name: Build project with Gradle
-        run: chmod +x ./gradlew && ./gradlew app:assembleDebug
-        
-      - name: Upload APK file as artifact
-        uses: actions/upload-artifact@v2
+        run: chmod +x ./gradlew && ./gradlew app:assembleDebug --no-daemon
+
+      - uses: actions/upload-artifact@v3
         with:
           name: app-debug
           path: |
