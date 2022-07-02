@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Hyperion</string>
-    <string name="home">Home</string>
+    <string name="home">Inicio</string>
     <string name="settings_screen">Ajustes</string>
     <string name="apply">Aplicar</string>
     <string name="theme">Tema</string>
@@ -15,16 +15,16 @@
     <string name="library_screen">Biblioteca</string>
     <string name="subscribe">Suscribirse</string>
     <string name="views">vistas</string>
-    <string name="download_location">Ruta de descarga</string>
+    <string name="download_location">Ubicación de descargas</string>
     <string name="start_screen">Pantalla de Inicio</string>
-    <string name="thumbnail">Thumbnail</string>
+    <string name="thumbnail">Miniatura</string>
     <string name="videos">Videos</string>
-    <string name="playlists">Playlists</string>
+    <string name="playlists">Lista de reproducción</string>
     <string name="search">Búsqueda</string>
-    <string name="error">Error</string>
-    <string name="black_background">Black background</string>
-    <string name="error_occurred">An error has occurred</string>
-    <string name="unknown">Unknown</string>
-    <string name="compact_card">Compact card</string>
-    <string name="pip">Picture-in-picture (PiP)</string>
+    <string name="error">Fallo de conexión</string>
+    <string name="black_background">Fondo negro</string>
+    <string name="error_occurred">Se ha producido un error</string>
+    <string name="unknown">Desconocido</string>
+    <string name="compact_card">Tarjeta Compacta</string>
+    <string name="pip">\"Ventana Flotante\"</string>
 </resources>
