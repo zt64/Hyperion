@@ -24,7 +24,7 @@
     <string name="error">Errore</string>
     <string name="black_background">Sfondo nero</string>
     <string name="error_occurred">Si è verificato un errore</string>
-    <string name="unknown">Unknown</string>
-    <string name="compact_card">Compact card</string>
+    <string name="unknown">Sconosciuto</string>
+    <string name="compact_card">Scheda compatta</string>
     <string name="pip">Picture-in-picture (PiP)</string>
 </resources>
