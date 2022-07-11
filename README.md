@@ -18,11 +18,11 @@ A modern alternate YouTube front-end for Android
 ## Features
 
 - Material You support
-- Return Youtube Dislikes
+- Return YouTube Dislikes
 - Ad removal
 - More to come:
     - Google account login
-    - Sponsorblock
+    - SponsorBlock
     - Custom themes
 
 ## Installation
@@ -32,7 +32,7 @@ releases will be added once Hyperion is in a more stable state.
 
 ## Acknowledgements
 
-- [Return Youtube Dislikes](https://github.com/Anarios/return-youtube-dislike)
+- [Return YouTube Dislikes](https://github.com/Anarios/return-youtube-dislike)
 
 ## License
 
