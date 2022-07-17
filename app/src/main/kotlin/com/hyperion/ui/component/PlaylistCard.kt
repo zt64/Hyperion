@@ -1,42 +1,41 @@
-package com.hyperion.ui.components
+package com.hyperion.ui.component
 
 import android.content.res.Configuration
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlaylistPlay
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
-import com.hyperion.domain.model.DomainVideoPartial
+import com.hyperion.domain.model.DomainSearch
 import org.koin.androidx.compose.get
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VideoCard(
+fun PlaylistCard(
     modifier: Modifier = Modifier,
-    video: DomainVideoPartial,
-    onChannelClick: () -> Unit = { },
+    playlist: DomainSearch.Result.Playlist,
     onClick: () -> Unit,
     prefs: PreferencesManager = get()
 ) {
     ElevatedCard(
-        modifier = modifier,
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(modifier),
         onClick = onClick
     ) {
-        if ((LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) || prefs.compactCard) {
-            // Compact horizontal layout
+        val compactCard = (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) || prefs.compactCard
+
+        if (compactCard) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -44,7 +43,8 @@ fun VideoCard(
             ) {
                 Thumbnail(
                     modifier = Modifier.width(140.dp),
-                    video = video
+                    thumbnailUrl = playlist.thumbnailUrl,
+                    videoCountText = playlist.videoCountText
                 )
 
                 Column(
@@ -54,57 +54,37 @@ fun VideoCard(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        text = video.title,
+                        text = playlist.title,
                         style = MaterialTheme.typography.labelMedium
                     )
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        video.author?.avatarUrl?.let {
-                            ChannelThumbnail(
-                                modifier = Modifier
-                                    .clickable(onClick = onChannelClick)
-                                    .size(28.dp),
-                                url = it
-                            )
-                        }
-
-                        Text(
-                            text = video.subtitle,
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
+                    Text(
+                        text = playlist.channelName,
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
         } else {
             Column {
-                Thumbnail(video = video)
+                Thumbnail(
+                    thumbnailUrl = playlist.thumbnailUrl,
+                    videoCountText = playlist.videoCountText
+                )
 
                 Row(
                     modifier = Modifier.padding(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    video.author?.avatarUrl?.let {
-                        ChannelThumbnail(
-                            modifier = Modifier
-                                .clickable(onClick = onChannelClick)
-                                .size(36.dp),
-                            url = it
-                        )
-                    }
-
                     Column {
                         Text(
-                            text = video.title,
+                            text = playlist.title,
                             style = MaterialTheme.typography.labelLarge,
                             maxLines = 2,
                         )
 
                         Text(
                             modifier = Modifier.padding(top = 4.dp),
-                            text = video.subtitle,
+                            text = playlist.channelName,
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
@@ -117,23 +97,42 @@ fun VideoCard(
 @Composable
 private fun Thumbnail(
     modifier: Modifier = Modifier,
-    video: DomainVideoPartial
+    thumbnailUrl: String,
+    videoCountText: String
 ) {
-    Box(modifier) {
+    Box(
+        modifier = Modifier
+            .height(IntrinsicSize.Min)
+            .then(modifier)
+    ) {
         AsyncImage(
             modifier = Modifier.aspectRatio(16f / 9f),
             model = ImageRequest.Builder(LocalContext.current)
-                .data(video.thumbnailUrl)
+                .data(thumbnailUrl)
                 .crossfade(true)
                 .build(),
-            contentDescription = stringResource(R.string.thumbnail),
+            contentDescription = null,
             contentScale = ContentScale.Crop
         )
 
-        if (video.timestamp != null) {
-            Timestamp(
-                modifier = Modifier.align(Alignment.BottomEnd),
-                text = video.timestamp
+        Column(
+            modifier = Modifier
+                .width(72.dp)
+                .fillMaxHeight()
+                .align(Alignment.CenterEnd)
+                .background(color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.85f)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically)
+        ) {
+            Icon(
+                modifier = Modifier.size(34.dp),
+                imageVector = Icons.Default.PlaylistPlay,
+                contentDescription = null
+            )
+
+            Text(
+                text = videoCountText,
+                style = MaterialTheme.typography.labelMedium
             )
         }
     }

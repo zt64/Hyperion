@@ -1,4 +1,4 @@
-package com.hyperion.ui.screens
+package com.hyperion.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,9 +19,9 @@ import androidx.paging.compose.items
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import com.hyperion.ui.components.VideoCard
-import com.hyperion.ui.screens.destinations.ChannelScreenDestination
-import com.hyperion.ui.screens.destinations.PlayerScreenDestination
+import com.hyperion.ui.component.VideoCard
+import com.hyperion.ui.screen.destinations.ChannelScreenDestination
+import com.hyperion.ui.screen.destinations.PlayerScreenDestination
 import com.hyperion.ui.viewmodel.MainViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph

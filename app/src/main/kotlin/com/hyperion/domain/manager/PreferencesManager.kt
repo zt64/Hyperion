@@ -3,7 +3,7 @@ package com.hyperion.domain.manager
 import android.content.SharedPreferences
 import android.os.Environment
 import com.hyperion.domain.manager.base.BasePreferenceManager
-import com.hyperion.ui.components.NavigationDestination
+import com.hyperion.ui.component.NavigationDestination
 import com.hyperion.ui.theme.Theme
 
 class PreferencesManager(

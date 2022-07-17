@@ -1,4 +1,4 @@
-package com.hyperion.ui.components
+package com.hyperion.ui.component
 
 import androidx.compose.animation.*
 import androidx.compose.material.icons.Icons
@@ -11,8 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.hyperion.ui.screens.appDestination
-import com.hyperion.ui.screens.destinations.*
+import com.hyperion.ui.screen.appDestination
+import com.hyperion.ui.screen.destinations.*
 import com.hyperion.util.title
 import com.ramcosta.composedestinations.navigation.navigate
 

@@ -1,4 +1,4 @@
-package com.hyperion.ui.screens
+package com.hyperion.ui.screen
 
 import android.text.format.DateUtils
 import androidx.compose.animation.*
@@ -29,12 +29,12 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.R
-import com.hyperion.ui.components.ChannelThumbnail
-import com.hyperion.ui.components.VideoCard
-import com.hyperion.ui.components.player.VideoActions
-import com.hyperion.ui.screens.destinations.ChannelScreenDestination
-import com.hyperion.ui.screens.destinations.HomeScreenDestination
-import com.hyperion.ui.screens.destinations.PlayerScreenDestination
+import com.hyperion.ui.component.ChannelThumbnail
+import com.hyperion.ui.component.VideoCard
+import com.hyperion.ui.component.player.VideoActions
+import com.hyperion.ui.screen.destinations.ChannelScreenDestination
+import com.hyperion.ui.screen.destinations.HomeScreenDestination
+import com.hyperion.ui.screen.destinations.PlayerScreenDestination
 import com.hyperion.ui.viewmodel.PlayerViewModel
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination

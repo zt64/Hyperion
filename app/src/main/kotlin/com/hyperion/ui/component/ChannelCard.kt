@@ -1,4 +1,4 @@
-package com.hyperion.ui.components
+package com.hyperion.ui.component
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

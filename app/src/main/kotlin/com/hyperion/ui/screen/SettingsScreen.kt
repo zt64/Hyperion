@@ -1,4 +1,4 @@
-package com.hyperion.ui.screens
+package com.hyperion.ui.screen
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
-import com.hyperion.ui.components.NavigationDestination
+import com.hyperion.ui.component.NavigationDestination
 import com.hyperion.ui.theme.Theme
 import com.hyperion.ui.viewmodel.SettingsViewModel
 import com.ramcosta.composedestinations.annotation.Destination

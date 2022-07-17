@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.hyperion.domain.manager.PreferencesManager
-import com.hyperion.ui.components.HyperionScaffold
+import com.hyperion.ui.component.HyperionScaffold
 import com.hyperion.ui.theme.HyperionTheme
 import com.hyperion.ui.theme.Theme
 import org.koin.android.ext.android.inject

@@ -1,4 +1,4 @@
-package com.hyperion.ui.screens
+package com.hyperion.ui.screen
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.hyperion.R
-import com.hyperion.ui.components.VideoCard
-import com.hyperion.ui.screens.destinations.PlayerScreenDestination
+import com.hyperion.ui.component.VideoCard
+import com.hyperion.ui.screen.destinations.PlayerScreenDestination
 import com.hyperion.ui.viewmodel.ChannelViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator

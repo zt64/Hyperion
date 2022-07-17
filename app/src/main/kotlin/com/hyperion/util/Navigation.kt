@@ -2,7 +2,7 @@ package com.hyperion.util
 
 import androidx.annotation.StringRes
 import com.hyperion.R
-import com.hyperion.ui.screens.destinations.*
+import com.hyperion.ui.screen.destinations.*
 
 @get:StringRes
 val Destination.title

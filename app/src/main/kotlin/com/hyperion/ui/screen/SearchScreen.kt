@@ -1,4 +1,4 @@
-package com.hyperion.ui.screens
+package com.hyperion.ui.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -29,11 +29,11 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.hyperion.R
 import com.hyperion.domain.model.DomainSearch
 import com.hyperion.domain.model.DomainVideoPartial
-import com.hyperion.ui.components.ChannelCard
-import com.hyperion.ui.components.PlaylistCard
-import com.hyperion.ui.components.VideoCard
-import com.hyperion.ui.screens.destinations.ChannelScreenDestination
-import com.hyperion.ui.screens.destinations.PlayerScreenDestination
+import com.hyperion.ui.component.ChannelCard
+import com.hyperion.ui.component.PlaylistCard
+import com.hyperion.ui.component.VideoCard
+import com.hyperion.ui.screen.destinations.ChannelScreenDestination
+import com.hyperion.ui.screen.destinations.PlayerScreenDestination
 import com.hyperion.ui.viewmodel.SearchViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator

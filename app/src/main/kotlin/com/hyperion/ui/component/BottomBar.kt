@@ -1,4 +1,4 @@
-package com.hyperion.ui.components
+package com.hyperion.ui.component
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
@@ -18,10 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.hyperion.R
-import com.hyperion.ui.screens.appDestination
-import com.hyperion.ui.screens.destinations.HomeScreenDestination
-import com.hyperion.ui.screens.destinations.LibraryScreenDestination
-import com.hyperion.ui.screens.destinations.SubscriptionsScreenDestination
+import com.hyperion.ui.screen.appDestination
+import com.hyperion.ui.screen.destinations.HomeScreenDestination
+import com.hyperion.ui.screen.destinations.LibraryScreenDestination
+import com.hyperion.ui.screen.destinations.SubscriptionsScreenDestination
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 
