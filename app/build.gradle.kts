@@ -1,9 +1,7 @@
-val composeVersion = "1.2.0-rc01"
-
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("com.google.devtools.ksp") version "1.6.21-1.0.5"
+    id("com.google.devtools.ksp") version "1.7.0-1.0.6"
     kotlin("plugin.serialization") version "1.6.21"
 }
 
@@ -17,8 +15,6 @@ android {
         targetSdk = 32
         versionCode = 1
         versionName = "0.0.1"
-
-        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -39,7 +35,7 @@ android {
     }
 
     buildFeatures.compose = true
-    composeOptions.kotlinCompilerExtensionVersion = composeVersion
+    composeOptions.kotlinCompilerExtensionVersion = "1.2.0"
 
     applicationVariants.all {
         kotlin.sourceSets.all {
@@ -49,41 +45,49 @@ android {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.4.2")
+    // AndroidX core
     implementation("androidx.core:core-ktx:1.8.0")
     implementation("androidx.core:core-splashscreen:1.0.0-rc01")
 
+    // AndroidX paging
+    implementation("androidx.paging:paging-compose:1.0.0-alpha15")
+
+    // Koin
     val koinVersion = "3.2.0"
     implementation("io.insert-koin:koin-android:$koinVersion")
     implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
 
-    // compose dependencies
+    // Compose
+    val composeVersion = "1.3.0-alpha01"
     implementation("androidx.compose.ui:ui:${composeVersion}")
-    implementation("androidx.compose.ui:ui-tooling:${composeVersion}")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha13")
+    debugImplementation("androidx.compose.ui:ui-tooling:${composeVersion}")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha14")
     implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha15")
 
-    // accompanist
-    val accompanistVersion = "0.24.10-beta"
+    // Accompanist
+    val accompanistVersion = "0.24.13-rc"
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
 
-    // compose destinations
-    val composeDestinationsVersion = "1.5.12-beta"
+    // Compose destinations
+    val composeDestinationsVersion = "1.6.13-beta"
     implementation("io.github.raamcosta.compose-destinations:animations-core:$composeDestinationsVersion")
     ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
 
-    // other dependencies
+    // Coil
     implementation("io.coil-kt:coil-compose:2.1.0")
 
-    val media3Version = "1.0.0-alpha03"
+    // KotlinX
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+
+    // Media3
+    val media3Version = "1.0.0-beta01"
     implementation("androidx.media3:media3-exoplayer:$media3Version")
     implementation("androidx.media3:media3-ui:$media3Version")
 
-    // ktor
-    val ktorVersion = "2.0.2"
+    // Ktor
+    val ktorVersion = "2.0.3"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-encoding:$ktorVersion")
@@ -92,7 +96,7 @@ dependencies {
 
     // Google & Youtube auth
     implementation("com.google.android.gms:play-services-auth:20.2.0")
-    implementation("com.google.api-client:google-api-client-android:1.35.1") {
+    implementation("com.google.api-client:google-api-client-android:2.0.0") {
         exclude("org.apache.httpcomponents")
     }
 }
