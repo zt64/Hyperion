@@ -93,10 +93,4 @@ dependencies {
     implementation("io.ktor:ktor-client-encoding:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-
-    // Google & Youtube auth
-    implementation("com.google.android.gms:play-services-auth:20.2.0")
-    implementation("com.google.api-client:google-api-client-android:2.0.0") {
-        exclude("org.apache.httpcomponents")
-    }
 }
