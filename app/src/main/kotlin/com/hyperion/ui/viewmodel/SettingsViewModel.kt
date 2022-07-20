@@ -9,7 +9,6 @@ import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.theme.Theme
-import com.hyperion.util.githubUrl
 
 class SettingsViewModel(
     private val application: Application,
@@ -31,7 +30,7 @@ class SettingsViewModel(
     }
 
     fun openGitHub() {
-        val intent = Intent(Intent.ACTION_VIEW, githubUrl.toUri()).apply {
+        val intent = Intent(Intent.ACTION_VIEW, "https://github.com/zt64/Hyperion".toUri()).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
 
