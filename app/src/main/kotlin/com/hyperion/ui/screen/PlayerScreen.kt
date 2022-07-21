@@ -148,6 +148,10 @@ private fun PlayerScreenLoaded(
                     }
                 )
         ) {
+            DisposableEffect(Unit) {
+                onDispose { viewModel.player.release() }
+            }
+
             Player(player = viewModel.player)
 
             this@Column.AnimatedVisibility(
