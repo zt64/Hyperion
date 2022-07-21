@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Hyperion</string>
     <string name="home">主頁</string>
+    <string name="explore">Explore</string>
     <string name="settings_screen">設定</string>
     <string name="apply">套用</string>
     <string name="theme">主題</string>
@@ -27,4 +28,15 @@
     <string name="unknown">未知</string>
     <string name="compact_card">小型卡片</string>
     <string name="pip">畫中畫 (PiP)</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+    <string name="close_mini_player">Close mini-player</string>
+    <string name="back">Back</string>
+    <string name="more">More</string>
+    <string name="skip_next">Skip next</string>
+    <string name="skip_previous">Skip previous</string>
+    <string name="minimize">Minimize</string>
+    <string name="close_fullscreen">Close fullscreen</string>
+    <string name="open_fullscreen">Open fullscreen</string>
+    <string name="verified">Verified</string>
 </resources>
