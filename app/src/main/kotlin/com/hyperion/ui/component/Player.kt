@@ -22,8 +22,6 @@ fun Player(
             useController = false
             useArtwork = true
             resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
-
-            videoSurfaceView!!.alpha = 0.9f
         }
     }
 )
