@@ -1,5 +1,7 @@
 package com.hyperion.domain.repository
 
+import android.icu.text.CompactDecimalFormat
+import android.os.Build
 import com.hyperion.domain.mapper.toDomain
 import com.hyperion.domain.model.*
 import com.hyperion.network.dto.ApiFormat
@@ -9,6 +11,7 @@ import com.hyperion.network.service.InnerTubeService
 import com.hyperion.network.service.RYDService
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
+import java.util.*
 
 class InnerTubeRepository(
     private val service: InnerTubeService,
@@ -149,7 +152,15 @@ class InnerTubeRepository(
             uploadDate = next.uploadDate,
             description = player.videoDetails.shortDescription,
             likesText = next.likesText,
-            dislikes = rydService.getVotes(id).dislikes,
+            dislikesText = rydService.getVotes(id).dislikes.let { dislikes ->
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    CompactDecimalFormat
+                        .getInstance(Locale.getDefault(), CompactDecimalFormat.CompactStyle.SHORT)
+                        .format(dislikes)
+                } else {
+                    dislikes.toString()
+                }
+            },
             streams = player.streamingData.formats.map(ApiFormat::toDomain),
             author = DomainChannelPartial(
                 id = player.videoDetails.channelId,

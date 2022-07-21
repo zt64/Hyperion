@@ -13,9 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.component.NavigationDestination
@@ -25,6 +23,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Destination
 @Composable
 fun SettingsScreen(
@@ -45,20 +44,20 @@ fun SettingsScreen(
             )
         }
 
-        SettingItem(
+        ListItem(
             modifier = Modifier.clickable { prefs.materialYou = !prefs.materialYou },
-            text = { Text("Material You") },
-            trailing = {
+            headlineText = { Text("Material You") },
+            trailingContent = {
                 Switch(checked = prefs.materialYou, onCheckedChange = { prefs.materialYou = it })
             }
         )
 
-        SettingItem(
+        ListItem(
             modifier = Modifier.clickable(enabled = !prefs.materialYou) {
                 prefs.midnightMode = !prefs.midnightMode
             },
-            text = { Text(stringResource(R.string.black_background)) },
-            trailing = {
+            headlineText = { Text(stringResource(R.string.black_background)) },
+            trailingContent = {
                 Switch(
                     enabled = !prefs.materialYou,
                     checked = prefs.midnightMode,
@@ -67,17 +66,17 @@ fun SettingsScreen(
             }
         )
 
-        SettingItem(
+        ListItem(
             modifier = Modifier.clickable { viewModel.showThemePicker() },
-            icon = {
+            leadingContent = {
                 Icon(
                     imageVector = Icons.Default.Style,
                     contentDescription = null
                 )
             },
-            text = { Text(stringResource(R.string.theme)) },
-            secondaryText = { Text(stringResource(R.string.theme_setting_description)) },
-            trailing = {
+            headlineText = { Text(stringResource(R.string.theme)) },
+            supportingText = { Text(stringResource(R.string.theme_setting_description)) },
+            trailingContent = {
                 FilledTonalButton(
                     onClick = viewModel::showThemePicker
                 ) {
@@ -87,16 +86,16 @@ fun SettingsScreen(
         )
 
 
-        SettingItem(
+        ListItem(
             modifier = Modifier.clickable { prefs.compactCard = !prefs.compactCard },
-            icon = {
+            leadingContent = {
                 Icon(
                     imageVector = Icons.Default.VideoSettings,
                     contentDescription = null
                 )
             },
-            text = { Text(stringResource(R.string.compact_card)) },
-            trailing = {
+            headlineText = { Text(stringResource(R.string.compact_card)) },
+            trailingContent = {
                 Switch(
                     checked = prefs.compactCard,
                     onCheckedChange = { prefs.compactCard = it }
@@ -105,11 +104,11 @@ fun SettingsScreen(
         )
 
         var showStartScreenDropdown by remember { mutableStateOf(false) }
-        SettingItem(
+        ListItem(
             modifier = Modifier.clickable { showStartScreenDropdown = true },
-            icon = { Icon(imageVector = Icons.Default.Start, contentDescription = null) },
-            text = { Text(stringResource(R.string.start_screen)) },
-            trailing = {
+            leadingContent = { Icon(imageVector = Icons.Default.Start, contentDescription = null) },
+            headlineText = { Text(stringResource(R.string.start_screen)) },
+            trailingContent = {
                 Box {
                     FilledTonalButton(
                         onClick = { showStartScreenDropdown = true }
@@ -132,18 +131,18 @@ fun SettingsScreen(
             }
         )
 
-        SettingItem(
+        ListItem(
             modifier = Modifier.clickable(
                 enabled = false // TODO: Remove when PIP is supported
             ) { prefs.pictureInPicture = !prefs.pictureInPicture },
-            icon = {
+            leadingContent = {
                 Icon(
                     imageVector = Icons.Default.PictureInPicture,
                     contentDescription = stringResource(R.string.pip)
                 )
             },
-            text = { Text(stringResource(R.string.pip)) },
-            trailing = {
+            headlineText = { Text(stringResource(R.string.pip)) },
+            trailingContent = {
                 Switch(
                     checked = prefs.pictureInPicture,
                     onCheckedChange = { prefs.pictureInPicture = !prefs.pictureInPicture },
@@ -152,9 +151,9 @@ fun SettingsScreen(
             }
         )
 
-        SettingItem(
-            text = { Text("Timestamp scale") },
-            secondaryText = {
+        ListItem(
+            headlineText = { Text("Timestamp scale") },
+            supportingText = {
                 var timeStampScale by remember { mutableStateOf(prefs.timestampScale) }
 
                 Row(
@@ -181,70 +180,30 @@ fun SettingsScreen(
         val directoryChooser = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
             if (uri != null) prefs.downloadDirectory = uri.toString()
         }
-        SettingItem(
+        ListItem(
             modifier = Modifier.clickable { directoryChooser.launch(null) },
-            icon = {
+            leadingContent = {
                 Icon(
                     imageVector = Icons.Default.Download,
                     contentDescription = stringResource(R.string.download_location)
                 )
             },
-            text = { Text(stringResource(R.string.download_location)) },
-            secondaryText = { Text(prefs.downloadDirectory ?: stringResource(R.string.unknown)) }
+            headlineText = { Text(stringResource(R.string.download_location)) },
+            supportingText = { Text(prefs.downloadDirectory ?: stringResource(R.string.unknown)) }
         )
 
         Divider()
 
-        SettingItem(
+        ListItem(
             modifier = Modifier.clickable { viewModel.openGitHub() },
-            icon = {
+            leadingContent = {
                 Icon(
                     imageVector = Icons.Default.Code,
                     contentDescription = stringResource(R.string.github)
                 )
             },
-            text = { Text(stringResource(R.string.github)) }
+            headlineText = { Text(stringResource(R.string.github)) }
         )
-    }
-}
-
-@Composable
-fun SettingItem(
-    modifier: Modifier = Modifier,
-    icon: @Composable (() -> Unit) = { },
-    text: @Composable () -> Unit,
-    secondaryText: @Composable (() -> Unit) = { },
-    trailing: @Composable (() -> Unit) = { },
-) {
-    Row(
-        modifier = modifier
-            .heightIn(min = 64.dp)
-            .fillMaxWidth()
-            .padding(horizontal = 18.dp, vertical = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(14.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        icon()
-
-        Column(
-            verticalArrangement = Arrangement.spacedBy(2.dp)
-        ) {
-            ProvideTextStyle(
-                MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 18.sp
-                )
-            ) {
-                text()
-            }
-            ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
-                secondaryText()
-            }
-        }
-
-        Spacer(Modifier.weight(1f, true))
-
-        trailing()
     }
 }
 

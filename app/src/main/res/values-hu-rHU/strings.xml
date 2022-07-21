@@ -6,7 +6,7 @@
     <string name="apply">Alkalmaz</string>
     <string name="theme">Téma</string>
     <string name="theme_setting_description">Hyperion kinézete</string>
-    <string name="subscriptions_screen">Hírfolyam</string>
+    <string name="feed">Hírfolyam</string>
     <string name="download">Letöltés</string>
     <string name="share">Megosztás</string>
     <string name="todo">Hátra van</string>

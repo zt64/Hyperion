@@ -1,9 +1,8 @@
-package com.hyperion.ui.component.player
+package com.hyperion.ui.component
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,9 +14,9 @@ import com.hyperion.domain.model.DomainComment
 @Composable
 fun CommentCard(
     comment: DomainComment,
-    onLike: () -> Unit,
-    onDislike: () -> Unit,
-    onReply: () -> Unit
+    onClickLike: () -> Unit,
+    onClickDislike: () -> Unit,
+    onClickReply: () -> Unit
 ) {
     ElevatedCard {
         Column(
@@ -42,15 +41,6 @@ fun CommentCard(
                 }
 
                 Spacer(Modifier.weight(1f, true))
-
-                IconButton(
-                    onClick = { /*TODO*/ }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = null
-                    )
-                }
             }
 
             Text(

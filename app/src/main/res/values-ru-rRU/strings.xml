@@ -6,7 +6,7 @@
     <string name="apply">Применить</string>
     <string name="theme">Тема</string>
     <string name="theme_setting_description">Внешний вид Hyperion</string>
-    <string name="subscriptions_screen">Лента</string>
+    <string name="feed">Лента</string>
     <string name="download">Скачать</string>
     <string name="share">Поделиться</string>
     <string name="todo">Планируется</string>

@@ -14,7 +14,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 
 @Destination
 @Composable
-fun SubscriptionsScreen() {
+fun FeedScreen() {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {

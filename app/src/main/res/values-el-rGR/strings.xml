@@ -6,7 +6,7 @@
     <string name="apply">Εφαρμογή</string>
     <string name="theme">Θέμα</string>
     <string name="theme_setting_description">Εμφάνιση του Hyperion</string>
-    <string name="subscriptions_screen">Ροή</string>
+    <string name="feed">Ροή</string>
     <string name="download">Λήψη</string>
     <string name="share">Κοινοποίηση</string>
     <string name="todo">To-Do</string>

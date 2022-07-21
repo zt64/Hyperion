@@ -8,7 +8,7 @@ import com.hyperion.ui.screen.destinations.*
 val Destination.title
     get(): Int? = when (this) {
         HomeScreenDestination -> R.string.home
-        SubscriptionsScreenDestination -> R.string.subscriptions_screen
+        FeedScreenDestination -> R.string.feed
         LibraryScreenDestination -> R.string.library_screen
         SettingsScreenDestination -> R.string.settings_screen
         else -> null

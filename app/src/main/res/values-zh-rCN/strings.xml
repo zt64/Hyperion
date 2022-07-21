@@ -6,7 +6,7 @@
     <string name="apply">套用</string>
     <string name="theme">主题</string>
     <string name="theme_setting_description">Hyperion 的外观</string>
-    <string name="subscriptions_screen">订阅源</string>
+    <string name="feed">订阅源</string>
     <string name="download">下载</string>
     <string name="share">分享</string>
     <string name="todo">待办事项</string>

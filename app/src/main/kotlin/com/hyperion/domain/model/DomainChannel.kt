@@ -14,5 +14,6 @@ data class DomainChannelPartial(
     val id: String,
     val name: String? = null,
     val avatarUrl: String? = null,
-    val subscriberText: String? = null
+    val subscriberText: String? = null,
+    val verified: Boolean = false
 )

@@ -6,7 +6,7 @@
     <string name="apply">Übernehmen</string>
     <string name="theme">Erscheinungsbild</string>
     <string name="theme_setting_description">Hyperion Erscheinung</string>
-    <string name="subscriptions_screen">Feed</string>
+    <string name="feed">Feed</string>
     <string name="download">Herunterladen</string>
     <string name="share">Teilen</string>
     <string name="todo">Zu erledigen</string>

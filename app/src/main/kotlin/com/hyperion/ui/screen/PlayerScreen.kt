@@ -1,358 +1,407 @@
 package com.hyperion.ui.screen
 
-import android.text.format.DateUtils
-import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.media3.common.C
-import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
-import androidx.media3.ui.AspectRatioFrameLayout
-import androidx.media3.ui.PlayerView
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.R
-import com.hyperion.ui.component.ChannelThumbnail
-import com.hyperion.ui.component.VideoCard
-import com.hyperion.ui.component.player.VideoActions
+import com.hyperion.ui.component.*
 import com.hyperion.ui.screen.destinations.ChannelScreenDestination
-import com.hyperion.ui.screen.destinations.HomeScreenDestination
-import com.hyperion.ui.screen.destinations.PlayerScreenDestination
 import com.hyperion.ui.viewmodel.PlayerViewModel
-import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.popUpTo
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
+import kotlin.math.roundToInt
 
-@Destination(
-    deepLinks = [
-        DeepLink(uriPattern = "https://youtu.be/{videoId}"),
-        DeepLink(uriPattern = "https://m.youtube.com/{videoId}"),
-        DeepLink(uriPattern = "https://youtube.com/{videoId}"),
-        DeepLink(uriPattern = "https://www.youtube.com/{videoId}")
-    ]
-)
+@Destination
 @Composable
 fun PlayerScreen(
-    navigator: DestinationsNavigator,
+    navigator: DestinationsNavigator = EmptyDestinationsNavigator,
     viewModel: PlayerViewModel = getViewModel(),
-    videoId: String
+    videoId: String? = null
 ) {
     LaunchedEffect(Unit) {
-        viewModel.getVideo(videoId)
+        if (videoId != null) viewModel.loadVideo(videoId)
     }
 
-    Column(
-        modifier = Modifier.fillMaxHeight()
-    ) {
-        Box {
-            var showControls by remember { mutableStateOf(false) }
-            val configuration = LocalConfiguration.current
-
-            AndroidView(
-                modifier = Modifier
-                    .aspectRatio(16f / 9f)
-                    .pointerInput(Unit) {
-                        detectTapGestures(
-                            onTap = { showControls = !showControls },
-                            onDoubleTap = { offset ->
-                                if (offset.x > configuration.screenWidthDp / 2) viewModel.player.seekForward()
-                                else viewModel.player.seekBack()
-                            }
-                        )
-                    },
-                factory = { context ->
-                    PlayerView(context).apply {
-                        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH
-                        useController = true
-                        player = viewModel.player
-                    }
-                }
+    when (viewModel.state) {
+        is PlayerViewModel.State.Loading -> {
+            PlayerScreenLoading(
+                modifier = Modifier.fillMaxSize()
             )
-
-//            PlayerControls(
-//                modifier = Modifier.matchParentSize(),
-//                visible = showControls,
-//                player = viewModel.player,
-//                isPlaying = viewModel.player.isPlaying,
-//                onMinimize = { navigator.navigate(HomeScreenDestination) },
-//                onPlayPause = viewModel::playPause
-//            )
         }
-
-        when (viewModel.state) {
-            PlayerViewModel.State.Loaded -> {
-                val relatedVideos = viewModel.relatedVideos.collectAsLazyPagingItems()
-                val video = viewModel.video!!
-
-                // TODO: Move to view model in the future
-                DisposableEffect(video) {
-//                    val factory = ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory())
-//                    val videoItem = factory.createMediaSource(MediaItem.fromUri(streams.filterIsInstance<DomainStream.Video>().first().url))
-//                    val soundItem = factory.createMediaSource(MediaItem.fromUri(streams.filterIsInstance<DomainStream.Audio>().first().url))
-//                    val mergedSource = MergingMediaSource(true, true, videoItem, soundItem)
-//
-//                    viewModel.player.setMediaSource(mergedSource)
-
-                    viewModel.player.setMediaItem(MediaItem.fromUri(video.streams.last().url))
-                    viewModel.player.prepare()
-                    viewModel.player.playWhenReady = true
-
-                    onDispose(viewModel.player::release)
-                }
-
-                LazyColumn(
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    item {
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            var expandedDescription by remember { mutableStateOf(false) }
-
-                            Text(
-                                text = video.title,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-
-                            Text(
-                                text = "${video.viewCount} - ${video.uploadDate}",
-                                style = MaterialTheme.typography.labelMedium
-                            )
-
-                            VideoActions(
-                                video = video,
-                                onLike = { },
-                                onDislike = { },
-                                onShare = viewModel::shareVideo,
-                                onDownload = { }
-                            )
-
-                            Divider()
-
-                            Row(
-                                modifier = Modifier.clickable {
-                                    navigator.navigate(ChannelScreenDestination(video.author.id))
-                                },
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                ChannelThumbnail(url = video.author.avatarUrl!!)
-
-                                Column(
-                                    modifier = Modifier.weight(1f, true)
-                                ) {
-                                    Text(
-                                        text = video.author.name!!,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-
-                                    video.author.subscriberText?.let { subscriberText ->
-                                        Text(
-                                            text = subscriberText,
-                                            style = MaterialTheme.typography.labelSmall
-                                        )
-                                    }
-                                }
-
-                                FilledTonalButton(
-                                    onClick = viewModel::subscribe
-                                ) {
-                                    Text(stringResource(R.string.subscribe))
-                                }
-                            }
-
-                            Divider()
-
-                            if (video.description.isNotBlank()) {
-                                Text(
-                                    modifier = Modifier
-                                        .clickable { expandedDescription = !expandedDescription }
-                                        .animateContentSize(animationSpec = tween()),
-                                    text = video.description,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    maxLines = if (expandedDescription) Int.MAX_VALUE else 5,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                            }
-
-                            Divider()
-                        }
-                    }
-
-                    item {
-                        Text(
-                            text = "Comments",
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
-
-                    item {
-                        Divider()
-                    }
-
-                    items(relatedVideos) { video ->
-                        if (video == null) return@items
-
-                        VideoCard(
-                            video = video,
-                            onClick = {
-                                navigator.navigate(PlayerScreenDestination(video.id)) {
-                                    popUpTo(HomeScreenDestination)
-                                }
-                            },
-                            onChannelClick = { navigator.navigate(ChannelScreenDestination(video.author!!.id)) }
-                        )
-                    }
-
-                    item {
-                        Box(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            relatedVideos.loadState.apply {
-                                when (append) {
-                                    is LoadState.Loading -> {
-                                        CircularProgressIndicator(
-                                            modifier = Modifier.align(Alignment.Center)
-                                        )
-                                    }
-                                    is LoadState.Error -> {
-                                        (append as LoadState.Error).error.message?.let {
-                                            Text(
-                                                text = it,
-                                                style = MaterialTheme.typography.bodySmall
-                                            )
-                                        }
-                                    }
-                                    is LoadState.NotLoading -> Divider()
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            PlayerViewModel.State.Loading -> {}
-            PlayerViewModel.State.Error -> {}
+        is PlayerViewModel.State.Loaded -> {
+            PlayerScreenLoaded(
+                modifier = Modifier.fillMaxSize(),
+                viewModel = viewModel,
+                navigator = navigator
+            )
+        }
+        is PlayerViewModel.State.Error -> {
+            PlayerScreenError(
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-private fun PlayerControls(
-    modifier: Modifier,
-    visible: Boolean,
-    player: Player,
-    isPlaying: Boolean,
-    onMinimize: () -> Unit,
-    onPlayPause: () -> Unit
-) = AnimatedVisibility(
-    modifier = modifier,
-    visible = visible,
-    enter = fadeIn(),
-    exit = fadeOut()
+private fun PlayerScreenLoading(
+    modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = modifier.background(MaterialTheme.colorScheme.surface.copy(alpha = 0.4f))
+    Column(
+        modifier = modifier
     ) {
-        Row(
+        Box(
             modifier = Modifier
-                .align(Alignment.TopCenter)
-                .animateEnterExit(
-                    enter = slideInVertically(),
-                    exit = slideOutVertically()
+                .background(Color.Black)
+                .aspectRatio(16f / 9f)
+                .fillMaxSize()
+        ) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PlayerScreenLoaded(
+    modifier: Modifier = Modifier,
+    viewModel: PlayerViewModel,
+    navigator: DestinationsNavigator = EmptyDestinationsNavigator
+) {
+    Column(
+        modifier = modifier
+    ) {
+        val coroutineScope = rememberCoroutineScope()
+        val offsetY = remember { Animatable(0f) }
+
+        Box(
+            modifier = Modifier
+                .wrapContentSize()
+                .offset { IntOffset(0, offsetY.value.roundToInt()) }
+                .pointerInput(Unit) {
+                    coroutineScope {
+                        launch {
+                            detectTapGestures(
+                                onTap = { viewModel.toggleControls() },
+                                onDoubleTap = { offset ->
+                                    if (offset.x > size.width / 2) viewModel.skipForward() else viewModel.skipBackward()
+                                }
+                            )
+                        }
+                    }
+                }
+                .draggable(
+                    orientation = Orientation.Vertical,
+                    state = rememberDraggableState { dragAmount ->
+                        coroutineScope.launch {
+                            val offset = offsetY.value + dragAmount
+
+                            if (viewModel.isFullscreen && offset in 0f..200f || !viewModel.isFullscreen && offset in -200f..0f) {
+                                offsetY.snapTo(offset)
+                            }
+                        }
+                    },
+                    onDragStopped = {
+                        when {
+                            offsetY.value > 150 -> viewModel.exitFullscreen()
+                            offsetY.value < -150 -> viewModel.enterFullscreen()
+                        }
+
+                        offsetY.animateTo(0f)
+                    }
                 )
         ) {
-            IconButton(
-                onClick = onMinimize
+            Player(player = viewModel.player)
+
+            this@Column.AnimatedVisibility(
+                modifier = Modifier.matchParentSize(),
+                visible = viewModel.showControls,
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
-                Icon(Icons.Default.CloseFullscreen, null)
+                Surface(
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
+                    tonalElevation = 8.dp
+                ) {
+                    PlayerControls(
+                        modifier = Modifier.matchParentSize(),
+                        isFullscreen = viewModel.isFullscreen,
+                        isPlaying = viewModel.isPlaying,
+                        position = viewModel.position,
+                        duration = viewModel.duration,
+                        onSkipNext = viewModel::skipNext,
+                        onSkipPrevious = viewModel::skipPrevious,
+                        onClickCollapse = navigator::popBackStack,
+                        onClickPlayPause = viewModel::togglePlayPause,
+                        onClickFullscreen = viewModel::toggleFullscreen,
+                        onClickMore = viewModel::toggleMoreOptions,
+                        onSeek = viewModel::seekTo
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.weight(1f, true))
+//            SeekBar(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .align(Alignment.BottomStart),
+//                duration = Duration.ZERO,
+//                value = viewModel.position.inWholeMilliseconds.toFloat(),
+//                valueRange = 0f..viewModel.duration.inWholeMilliseconds.toFloat(),
+//                onSeek = viewModel::seekTo,
+//                onSeekFinished = { }
+//            )
+        }
 
-            Box {
-                IconButton(
-                    onClick = { /*TODO*/ }
+        val video = viewModel.video!!
+        val relatedVideos = viewModel.relatedVideos.collectAsLazyPagingItems()
+
+        LazyColumn(
+            modifier = Modifier.padding(horizontal = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            item {
+                Column(
+                    modifier = Modifier.padding(top = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(Icons.Default.MoreVert, null)
+                    val uriHandler = LocalUriHandler.current
+
+                    // TODO: Add automatic hyperlinks
+                    val description = buildAnnotatedString {
+                        withStyle(
+                            style = SpanStyle(
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        ) {
+                            append(video.description)
+                        }
+                    }
+
+                    Text(
+                        text = video.title,
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+
+                    Text(
+                        text = "${video.viewCount} - ${video.uploadDate}",
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+
+                    SelectionContainer {
+                        ClickableText(
+                            modifier = Modifier.animateContentSize(),
+                            text = description,
+                            style = MaterialTheme.typography.bodyMedium,
+                            maxLines = if (viewModel.showFullDescription) Int.MAX_VALUE else 3,
+                            overflow = TextOverflow.Ellipsis
+                        ) { offset ->
+                            val annotation = description.getStringAnnotations(
+                                tag = "URL",
+                                start = offset,
+                                end = offset
+                            ).firstOrNull()
+
+                            if (annotation == null) viewModel.toggleDescription() else uriHandler.openUri(annotation.item)
+                        }
+                    }
+
+                    VideoActions(
+                        modifier = Modifier.fillMaxWidth(),
+                        voteEnabled = false,
+                        likeLabel = { Text(video.likesText) },
+                        dislikeLabel = { Text(video.dislikesText) },
+                        onClickVote = viewModel::updateVote,
+                        onClickShare = viewModel::shareVideo,
+                        onClickDownload = viewModel::download
+                    )
+
+                    Card(
+                        onClick = {
+                            navigator.navigate(ChannelScreenDestination(video.author.id))
+                        }
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            ChannelThumbnail(
+                                modifier = Modifier.size(42.dp),
+                                url = video.author.avatarUrl!!
+                            )
+
+                            Column(
+                                modifier = Modifier.weight(1f, true)
+                            ) {
+                                Row(
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Text(
+                                        text = video.author.name!!,
+                                        softWrap = false,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+
+                                    if (video.author.verified) {
+                                        Icon(
+                                            modifier = Modifier.size(16.dp),
+                                            imageVector = Icons.Default.Verified,
+                                            contentDescription = stringResource(R.string.verified)
+                                        )
+                                    }
+                                }
+
+                                video.author.subscriberText?.let { subscriberText ->
+                                    Text(
+                                        text = subscriberText,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                }
+                            }
+
+                            FilledTonalToggleButton(
+                                enabled = false,
+                                checked = false,
+                                onCheckedChange = viewModel::updateSubscription
+                            ) {
+                                Text(stringResource(R.string.subscribe))
+                            }
+                        }
+                    }
+
+                    Card(
+                        onClick = viewModel::showComments
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = "Comments",
+                                style = MaterialTheme.typography.titleSmall
+                            )
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    modifier = Modifier.size(30.dp),
+                                    imageVector = Icons.Default.AccountCircle,
+                                    contentDescription = null
+                                )
+                                Text(
+                                    text = "Some top comment here",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
                 }
+            }
 
-                DropdownMenu(
-                    expanded = false,
-                    onDismissRequest = { /*TODO*/ }
+            items(relatedVideos) { relatedVideo ->
+                if (relatedVideo == null) return@items
+
+                VideoCard(
+                    video = relatedVideo,
+                    onClick = {
+                        viewModel.loadVideo(relatedVideo.id)
+                    },
+                    onClickChannel = {
+                        navigator.navigate(ChannelScreenDestination(relatedVideo.author!!.id))
+                    }
+                )
+            }
+
+            item {
+                Box(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    DropdownMenuItem(text = { Text("Speed") }, onClick = { /*TODO*/ })
+                    relatedVideos.loadState.apply {
+                        when (append) {
+                            is LoadState.NotLoading,
+                            is LoadState.Loading -> {
+                                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                            }
+                            is LoadState.Error -> {
+                                (append as LoadState.Error).error.message?.let { error ->
+                                    Text(
+                                        text = error,
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
+    }
+}
 
-        Row(
-            modifier = Modifier.align(Alignment.Center)
+@Composable
+private fun PlayerScreenError(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+    ) {
+        CompositionLocalProvider(
+            LocalContentColor provides MaterialTheme.colorScheme.error,
+            LocalTextStyle provides MaterialTheme.typography.titleMedium
         ) {
-            IconButton(
-                onClick = onPlayPause
-            ) {
-                Icon(
-                    imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                    contentDescription = null
-                )
-            }
-        }
-
-        Row(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(8.dp)
-                .animateEnterExit(
-                    enter = slideInVertically { it / 2 },
-                    exit = slideOutVertically { it / 2 }
-                ),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            var position by remember { mutableStateOf(0L) }
+            Icon(
+                modifier = Modifier.size(56.dp),
+                imageVector = Icons.Default.Error,
+                contentDescription = null
+            )
 
             Text(
-                text = buildString {
-                    append(DateUtils.formatElapsedTime(player.currentPosition / 1000))
-                    append(" / ")
-                    append(DateUtils.formatElapsedTime(player.duration / 1000))
-                },
-                style = MaterialTheme.typography.labelMedium
+                text = "Error",
+                textAlign = TextAlign.Center
             )
-
-            Slider(
-                modifier = Modifier.weight(1f, true),
-                value = player.currentPosition.toFloat(),
-                valueRange = if (player.duration == C.TIME_UNSET) 0f..0f else 0f..player.duration.toFloat(),
-                onValueChange = { position = it.toLong() },
-                onValueChangeFinished = { player.seekTo(position) }
-            )
-
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Default.Fullscreen, contentDescription = "Fullscreen")
-            }
         }
     }
 }

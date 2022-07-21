@@ -6,7 +6,7 @@
     <string name="apply">Apply</string>
     <string name="theme">Theme</string>
     <string name="theme_setting_description">Hyperion appearance</string>
-    <string name="subscriptions_screen">Feed</string>
+    <string name="feed">Feed</string>
     <string name="download">Download</string>
     <string name="share">Share</string>
     <string name="todo">TODO</string>

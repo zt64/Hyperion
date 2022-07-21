@@ -6,7 +6,7 @@
     <string name="apply">Appliquer</string>
     <string name="theme">Thème</string>
     <string name="theme_setting_description">Apparence de Hyperion</string>
-    <string name="subscriptions_screen">Fil d\'actualité</string>
+    <string name="feed">Fil d\'actualité</string>
     <string name="download">Télécharger</string>
     <string name="share">Partager</string>
     <string name="todo">À FAIRE</string>

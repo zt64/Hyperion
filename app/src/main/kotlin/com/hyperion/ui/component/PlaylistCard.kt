@@ -1,4 +1,4 @@
-package com.hyperion.ui.component
+package com.hyperion.ui.widget
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background

@@ -6,7 +6,9 @@ import androidx.paging.*
 import com.hyperion.domain.model.DomainVideoPartial
 import com.hyperion.domain.repository.InnerTubeRepository
 
-class MainViewModel(private val repository: InnerTubeRepository) : ViewModel() {
+class HomeViewModel(
+    private val repository: InnerTubeRepository
+) : ViewModel() {
     val videos = Pager(PagingConfig(10)) {
         object : PagingSource<String, DomainVideoPartial>() {
             override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainVideoPartial> {

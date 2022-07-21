@@ -27,8 +27,8 @@ import org.koin.androidx.compose.get
 fun VideoCard(
     modifier: Modifier = Modifier,
     video: DomainVideoPartial,
-    onChannelClick: () -> Unit = { },
     onClick: () -> Unit,
+    onClickChannel: () -> Unit = { },
     prefs: PreferencesManager = get()
 ) {
     ElevatedCard(
@@ -65,7 +65,7 @@ fun VideoCard(
                         video.author?.avatarUrl?.let {
                             ChannelThumbnail(
                                 modifier = Modifier
-                                    .clickable(onClick = onChannelClick)
+                                    .clickable(onClick = onClickChannel)
                                     .size(28.dp),
                                 url = it
                             )
@@ -89,7 +89,7 @@ fun VideoCard(
                     video.author?.avatarUrl?.let {
                         ChannelThumbnail(
                             modifier = Modifier
-                                .clickable(onClick = onChannelClick)
+                                .clickable(onClick = onClickChannel)
                                 .size(36.dp),
                             url = it
                         )

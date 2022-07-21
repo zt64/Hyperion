@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.hyperion.R
 import com.hyperion.ui.screen.appDestination
 import com.hyperion.ui.screen.destinations.*
 import com.hyperion.util.title
@@ -25,43 +26,50 @@ fun TopBar(
 
     AnimatedVisibility(
         visible = currentDestination !is PlayerScreenDestination,
-        enter = expandVertically(expandFrom = Alignment.CenterVertically) + fadeIn(),
-        exit = shrinkVertically(shrinkTowards = Alignment.CenterVertically) + fadeOut()
+        enter = expandVertically(expandFrom = Alignment.Top) + fadeIn(),
+        exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut()
     ) {
         SmallTopAppBar(
             navigationIcon = {
                 if (
                     when (currentDestination) {
                         HomeScreenDestination,
-                        SubscriptionsScreenDestination,
+                        FeedScreenDestination,
                         LibraryScreenDestination -> false
                         else -> true
                     }
                 ) {
-                    IconButton(
-                        onClick = { navController.popBackStack() }
-                    ) {
-                        Icon(imageVector = Icons.Default.NavigateBefore, contentDescription = "Back")
+                    IconButton(onClick = navController::popBackStack) {
+                        Icon(
+                            imageVector = Icons.Default.NavigateBefore,
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
                 }
             },
             title = {
-                currentDestination.title?.let { Text(stringResource(id = it)) }
+                currentDestination.title?.let { id -> Text(stringResource(id)) }
             },
             actions = {
-                if (currentDestination != SearchScreenDestination && currentDestination != SettingsScreenDestination) {
-                    IconButton(
-                        onClick = { navController.navigate(SearchScreenDestination) }
-                    ) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+                if (currentDestination !is SettingsScreenDestination) {
+                    if (currentDestination !is SearchScreenDestination) {
+                        IconButton(
+                            onClick = { navController.navigate(SearchScreenDestination) }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = stringResource(R.string.search)
+                            )
+                        }
                     }
-                }
 
-                if (currentDestination != SettingsScreenDestination) {
                     IconButton(
                         onClick = { navController.navigate(SettingsScreenDestination) }
                     ) {
-                        Icon(imageVector = Icons.Default.Settings, contentDescription = "Settings")
+                        Icon(
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = stringResource(R.string.settings_screen)
+                        )
                     }
                 }
             },

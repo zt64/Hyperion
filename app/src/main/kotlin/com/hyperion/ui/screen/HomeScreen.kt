@@ -12,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -22,24 +21,24 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.screen.destinations.ChannelScreenDestination
 import com.hyperion.ui.screen.destinations.PlayerScreenDestination
-import com.hyperion.ui.viewmodel.MainViewModel
+import com.hyperion.ui.viewmodel.HomeViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.navigate
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import org.koin.androidx.compose.getViewModel
 
 @RootNavGraph(start = true)
 @Destination
 @Composable
 fun HomeScreen(
-    navController: NavController,
-    viewModel: MainViewModel = getViewModel()
+    navigator: DestinationsNavigator = EmptyDestinationsNavigator,
+    viewModel: HomeViewModel = getViewModel()
 ) {
     val videoListItems = viewModel.videos.collectAsLazyPagingItems()
-    val refreshState = rememberSwipeRefreshState(videoListItems.loadState.refresh == LoadState.Loading)
 
     SwipeRefresh(
-        state = refreshState,
+        state = rememberSwipeRefreshState(videoListItems.loadState.refresh == LoadState.Loading),
         onRefresh = videoListItems::refresh,
         indicator = { state, trigger ->
             SwipeRefreshIndicator(
@@ -64,26 +63,24 @@ fun HomeScreen(
 
                 VideoCard(
                     video = video,
-                    onClick = { navController.navigate(PlayerScreenDestination(video.id)) },
-                    onChannelClick = { navController.navigate(ChannelScreenDestination(video.author!!.id)) }
+                    onClick = { navigator.navigate(PlayerScreenDestination(video.id)) },
+                    onClickChannel = { navigator.navigate(ChannelScreenDestination(video.author!!.id)) }
                 )
             }
 
-            videoListItems.loadState.apply {
-                when (append) {
-                    is LoadState.Loading -> {
-                        item {
+            item {
+                videoListItems.loadState.apply {
+                    when (append) {
+                        is LoadState.Loading -> {
                             CircularProgressIndicator(modifier = Modifier.padding(4.dp))
                         }
-                    }
-                    is LoadState.Error -> {
-                        item {
+                        is LoadState.Error -> {
                             (append as LoadState.Error).error.printStackTrace()
 
                             Text("An error has occurred")
                         }
+                        else -> Unit
                     }
-                    else -> Unit
                 }
             }
         }

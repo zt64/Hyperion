@@ -61,9 +61,7 @@ fun ChannelCard(
                 }
             }
 
-            Button(
-                onClick = onSubscribe
-            ) {
+            Button(onClick = onSubscribe) {
                 Text(stringResource(R.string.subscribe))
             }
         }

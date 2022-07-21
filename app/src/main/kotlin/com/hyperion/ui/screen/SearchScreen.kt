@@ -30,11 +30,11 @@ import com.hyperion.R
 import com.hyperion.domain.model.DomainSearch
 import com.hyperion.domain.model.DomainVideoPartial
 import com.hyperion.ui.component.ChannelCard
-import com.hyperion.ui.component.PlaylistCard
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.screen.destinations.ChannelScreenDestination
 import com.hyperion.ui.screen.destinations.PlayerScreenDestination
 import com.hyperion.ui.viewmodel.SearchViewModel
+import com.hyperion.ui.widget.PlaylistCard
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.getViewModel
@@ -131,7 +131,7 @@ fun SearchScreen(
                                     timestamp = result.timestamp
                                 ),
                                 onClick = { navigator.navigate(PlayerScreenDestination(result.id)) },
-                                onChannelClick = { navigator.navigate(ChannelScreenDestination(result.author!!.id)) }
+                                onClickChannel = { navigator.navigate(ChannelScreenDestination(result.author!!.id)) }
                             )
                         }
                         is DomainSearch.Result.Channel -> {

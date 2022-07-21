@@ -7,7 +7,7 @@ data class DomainVideo(
     val uploadDate: String,
     val description: String = "",
     val likesText: String,
-    val dislikes: Int,
+    val dislikesText: String,
     val streams: List<DomainStream>,
     val author: DomainChannelPartial
 ) {

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,7 @@ import com.hyperion.ui.screen.destinations.PlayerScreenDestination
 import com.hyperion.ui.viewmodel.ChannelViewModel
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import org.koin.androidx.compose.getViewModel
 
 enum class ChannelTab(
@@ -45,7 +47,7 @@ enum class ChannelTab(
 @Destination
 @Composable
 fun ChannelScreen(
-    navigator: DestinationsNavigator,
+    navigator: DestinationsNavigator = EmptyDestinationsNavigator,
     viewModel: ChannelViewModel = getViewModel(),
     channelId: String
 ) {
@@ -81,6 +83,7 @@ fun ChannelScreen(
                                     .data(channel.banner)
                                     .crossfade(true)
                                     .build(),
+                                contentScale = ContentScale.FillWidth,
                                 contentDescription = null
                             )
 
