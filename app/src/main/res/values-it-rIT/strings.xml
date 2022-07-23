@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Hyperion</string>
     <string name="home">Home</string>
-    <string name="explore">Explore</string>
+    <string name="explore">Esplora</string>
     <string name="settings_screen">Impostazioni</string>
     <string name="apply">Applica</string>
     <string name="theme">Tema</string>
@@ -28,11 +28,11 @@
     <string name="unknown">Sconosciuto</string>
     <string name="compact_card">Scheda compatta</string>
     <string name="pip">Picture-in-picture (PiP)</string>
-    <string name="play">Play</string>
-    <string name="pause">Pause</string>
-    <string name="close_mini_player">Close mini-player</string>
-    <string name="back">Back</string>
-    <string name="more">More</string>
+    <string name="play">Riproduci</string>
+    <string name="pause">Pausa</string>
+    <string name="close_mini_player">Chiudi Mini Player</string>
+    <string name="back">Indietro</string>
+    <string name="more">Altro</string>
     <string name="skip_next">Skip next</string>
     <string name="skip_previous">Skip previous</string>
     <string name="minimize">Minimize</string>

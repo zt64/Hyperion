@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Hyperion</string>
     <string name="home">Strona główna</string>
-    <string name="explore">Explore</string>
+    <string name="explore">Odkrywaj</string>
     <string name="settings_screen">Ustawienia</string>
     <string name="apply">Zastosuj</string>
     <string name="theme">Motyw</string>
@@ -12,7 +12,7 @@
     <string name="share">Udostępnij</string>
     <string name="todo">Do zrobienia</string>
     <string name="dislike">Nie podoba mi się</string>
-    <string name="like">Lubię to</string>
+    <string name="like">Podoba mi się</string>
     <string name="library_screen">Biblioteka</string>
     <string name="subscribe">Subskrybuj</string>
     <string name="views">wyświetlenia</string>
@@ -20,7 +20,7 @@
     <string name="start_screen">Strona startowa</string>
     <string name="thumbnail">Miniaturka</string>
     <string name="videos">Filmy</string>
-    <string name="playlists">Playlisty</string>
+    <string name="playlists">Listy odtwarzania</string>
     <string name="search">Szukaj</string>
     <string name="error">Błąd</string>
     <string name="black_background">Czarne tło</string>
@@ -28,15 +28,15 @@
     <string name="unknown">Nieznane</string>
     <string name="compact_card">Karta kompaktowa</string>
     <string name="pip">Obraz w obrazie</string>
-    <string name="play">Play</string>
-    <string name="pause">Pause</string>
-    <string name="close_mini_player">Close mini-player</string>
-    <string name="back">Back</string>
-    <string name="more">More</string>
-    <string name="skip_next">Skip next</string>
-    <string name="skip_previous">Skip previous</string>
-    <string name="minimize">Minimize</string>
-    <string name="close_fullscreen">Close fullscreen</string>
-    <string name="open_fullscreen">Open fullscreen</string>
-    <string name="verified">Verified</string>
+    <string name="play">Odtwórz</string>
+    <string name="pause">Wstrzymaj</string>
+    <string name="close_mini_player">Zamknij mini odtwarzacz</string>
+    <string name="back">Wstecz</string>
+    <string name="more">Więcej</string>
+    <string name="skip_next">Pomiń następne</string>
+    <string name="skip_previous">Pomiń poprzednie</string>
+    <string name="minimize">Minimalizuj</string>
+    <string name="close_fullscreen">Zamknij pełny ekran</string>
+    <string name="open_fullscreen">Otwórz pełny ekran</string>
+    <string name="verified">Zweryfikowane</string>
 </resources>
