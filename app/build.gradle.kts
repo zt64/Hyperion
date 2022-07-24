@@ -82,7 +82,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 
     // Media3
-    val media3Version = "1.0.0-beta01"
+    val media3Version = "1.0.0-beta02"
     implementation("androidx.media3:media3-exoplayer:$media3Version")
     implementation("androidx.media3:media3-ui:$media3Version")
 
