@@ -65,7 +65,7 @@ fun SettingsScreen(
 
             ListItem(
                 modifier = Modifier.clickable { prefs.dynamicColor = !prefs.dynamicColor },
-                headlineText = { Text("Material You") },
+                headlineText = { Text(stringResource(R.string.dynamic_color)) },
                 trailingContent = {
                     Switch(checked = prefs.dynamicColor, onCheckedChange = { prefs.dynamicColor = it })
                 }
