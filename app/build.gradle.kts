@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("com.google.devtools.ksp") version "1.7.0-1.0.6"
+    id("kotlin-parcelize")
     kotlin("plugin.serialization") version "1.6.21"
 }
 
@@ -15,6 +15,8 @@ android {
         targetSdk = 32
         versionCode = 1
         versionName = "0.0.1"
+
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -36,12 +38,6 @@ android {
 
     buildFeatures.compose = true
     composeOptions.kotlinCompilerExtensionVersion = "1.2.0"
-
-    applicationVariants.all {
-        kotlin.sourceSets.all {
-            kotlin.srcDir("build/generated/ksp/$name/kotlin")
-        }
-    }
 }
 
 dependencies {
@@ -51,6 +47,9 @@ dependencies {
 
     // AndroidX paging
     implementation("androidx.paging:paging-compose:1.0.0-alpha15")
+
+    // AndroidX activity
+    implementation("androidx.activity:activity-compose:1.6.0-alpha05")
 
     // Koin
     val koinVersion = "3.2.0"
@@ -70,16 +69,14 @@ dependencies {
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
 
-    // Compose destinations
-    val composeDestinationsVersion = "1.6.13-beta"
-    implementation("io.github.raamcosta.compose-destinations:animations-core:$composeDestinationsVersion")
-    ksp("io.github.raamcosta.compose-destinations:ksp:$composeDestinationsVersion")
-
     // Coil
     implementation("io.coil-kt:coil-compose:2.1.0")
 
     // KotlinX
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+
+    // Taxi
+    implementation("com.github.X1nto:Taxi:1.0.0")
 
     // Media3
     val media3Version = "1.0.0-beta02"

@@ -38,44 +38,45 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.R
 import com.hyperion.ui.component.*
-import com.hyperion.ui.screen.destinations.ChannelScreenDestination
+import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.viewmodel.PlayerViewModel
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import com.xinto.taxi.BackstackNavigator
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 import kotlin.math.roundToInt
 
-@Destination
 @Composable
 fun PlayerScreen(
-    navigator: DestinationsNavigator = EmptyDestinationsNavigator,
     viewModel: PlayerViewModel = getViewModel(),
+    navigator: BackstackNavigator<AppDestination>,
     videoId: String? = null
 ) {
     LaunchedEffect(Unit) {
         if (videoId != null) viewModel.loadVideo(videoId)
     }
 
-    when (viewModel.state) {
-        is PlayerViewModel.State.Loading -> {
-            PlayerScreenLoading(
-                modifier = Modifier.fillMaxSize()
-            )
-        }
-        is PlayerViewModel.State.Loaded -> {
-            PlayerScreenLoaded(
-                modifier = Modifier.fillMaxSize(),
-                viewModel = viewModel,
-                navigator = navigator
-            )
-        }
-        is PlayerViewModel.State.Error -> {
-            PlayerScreenError(
-                modifier = Modifier.fillMaxSize()
-            )
+    Surface(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        when (viewModel.state) {
+            is PlayerViewModel.State.Loading -> {
+                PlayerScreenLoading(
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            is PlayerViewModel.State.Loaded -> {
+                PlayerScreenLoaded(
+                    modifier = Modifier.fillMaxSize(),
+                    viewModel = viewModel,
+                    navigator = navigator
+                )
+            }
+            is PlayerViewModel.State.Error -> {
+                PlayerScreenError(
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
 }
@@ -103,7 +104,7 @@ private fun PlayerScreenLoading(
 private fun PlayerScreenLoaded(
     modifier: Modifier = Modifier,
     viewModel: PlayerViewModel,
-    navigator: DestinationsNavigator = EmptyDestinationsNavigator
+    navigator: BackstackNavigator<AppDestination>
 ) {
     Column(
         modifier = modifier
@@ -172,7 +173,7 @@ private fun PlayerScreenLoaded(
                         duration = viewModel.duration,
                         onSkipNext = viewModel::skipNext,
                         onSkipPrevious = viewModel::skipPrevious,
-                        onClickCollapse = navigator::popBackStack,
+                        onClickCollapse = navigator::pop,
                         onClickPlayPause = viewModel::togglePlayPause,
                         onClickFullscreen = viewModel::toggleFullscreen,
                         onClickMore = viewModel::toggleMoreOptions,
@@ -257,9 +258,7 @@ private fun PlayerScreenLoaded(
                     )
 
                     Card(
-                        onClick = {
-                            navigator.navigate(ChannelScreenDestination(video.author.id))
-                        }
+                        onClick = { navigator.push(AppDestination.Channel(video.author.id)) }
                     ) {
                         Row(
                             modifier = Modifier.padding(8.dp),
@@ -348,12 +347,8 @@ private fun PlayerScreenLoaded(
 
                 VideoCard(
                     video = relatedVideo,
-                    onClick = {
-                        viewModel.loadVideo(relatedVideo.id)
-                    },
-                    onClickChannel = {
-                        navigator.navigate(ChannelScreenDestination(relatedVideo.author!!.id))
-                    }
+                    onClick = { viewModel.loadVideo(relatedVideo.id) },
+                    onClickChannel = { navigator.push(AppDestination.Channel(relatedVideo.author!!.id)) }
                 )
             }
 

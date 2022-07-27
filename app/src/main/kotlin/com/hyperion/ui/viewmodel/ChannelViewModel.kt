@@ -9,13 +9,13 @@ import com.hyperion.domain.model.DomainChannel
 import com.hyperion.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.launch
 
-class ChannelViewModel(private val repository: InnerTubeRepository) : ViewModel() {
+class ChannelViewModel(
+    private val repository: InnerTubeRepository
+) : ViewModel() {
     sealed class State {
         class Loaded(val channel: DomainChannel) : State()
         object Loading : State()
         class Error(val error: Exception) : State()
-
-        val isLoading get() = this is Loading
     }
 
     var state by mutableStateOf<State>(State.Loading)
