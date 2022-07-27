@@ -39,4 +39,5 @@
     <string name="close_fullscreen">Close fullscreen</string>
     <string name="open_fullscreen">Open fullscreen</string>
     <string name="verified">Verified</string>
+    <string name="dynamic_color">Dynamic color</string>
 </resources>

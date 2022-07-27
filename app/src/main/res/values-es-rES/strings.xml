@@ -2,12 +2,12 @@
 <resources>
     <string name="app_name">Hyperion</string>
     <string name="home">Inicio</string>
-    <string name="explore">Explore</string>
+    <string name="explore">Explorar</string>
     <string name="settings_screen">Ajustes</string>
     <string name="apply">Aplicar</string>
     <string name="theme">Tema</string>
     <string name="theme_setting_description">Apariencia de Hyperion</string>
-    <string name="feed">Feed</string>
+    <string name="feed">Inicio</string>
     <string name="download">Descargar</string>
     <string name="share">Compartir</string>
     <string name="todo">POR HACER</string>
@@ -27,16 +27,17 @@
     <string name="error_occurred">Se ha producido un error</string>
     <string name="unknown">Desconocido</string>
     <string name="compact_card">Tarjeta Compacta</string>
-    <string name="pip">\"Ventana Flotante\"</string>
-    <string name="play">Play</string>
-    <string name="pause">Pause</string>
-    <string name="close_mini_player">Close mini-player</string>
-    <string name="back">Back</string>
-    <string name="more">More</string>
-    <string name="skip_next">Skip next</string>
-    <string name="skip_previous">Skip previous</string>
-    <string name="minimize">Minimize</string>
-    <string name="close_fullscreen">Close fullscreen</string>
-    <string name="open_fullscreen">Open fullscreen</string>
-    <string name="verified">Verified</string>
+    <string name="pip">\"Ventana Flotante (PiP)\"</string>
+    <string name="play">Reproducir</string>
+    <string name="pause">Pausar</string>
+    <string name="close_mini_player">Cerrar Mini Reproductor</string>
+    <string name="back">Atrás</string>
+    <string name="more">Más</string>
+    <string name="skip_next">Saltar al siguiente</string>
+    <string name="skip_previous">Volver al anterior</string>
+    <string name="minimize">Minimizar</string>
+    <string name="close_fullscreen">Salir de pantalla completa</string>
+    <string name="open_fullscreen">Abrir en pantalla completa</string>
+    <string name="verified">Verificado</string>
+    <string name="dynamic_color">Dynamic color</string>
 </resources>
