@@ -17,13 +17,13 @@ A modern alternate YouTube front-end for Android
 
 ## Features
 
-- Material You support
-- Return YouTube Dislikes
-- Ad removal
+- :art: Dynamic color
+- :thumbsdown: Return YouTube Dislikes
+- :no_entry_sign: Ad-free
 - More to come:
-    - Google account login
-    - SponsorBlock
-    - Custom themes
+    - :bust_in_silhouette: Google account login
+    - :x: SponsorBlock
+    - :art: Custom themes
 
 ## Installation
 
