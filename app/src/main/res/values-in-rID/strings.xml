@@ -40,4 +40,6 @@
     <string name="open_fullscreen">Buka layar penuh</string>
     <string name="verified">Terverifikasi</string>
     <string name="dynamic_color">Dynamic color</string>
+    <string name="timestamp_scale">Timestamp scale</string>
+    <string name="about">About</string>
 </resources>
