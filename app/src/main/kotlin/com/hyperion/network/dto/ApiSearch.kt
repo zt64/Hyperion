@@ -1,5 +1,6 @@
 package com.hyperion.network.dto
 
+import com.hyperion.network.dto.renderer.ElementRenderer
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -34,13 +35,13 @@ data class ApiSearch(
                         val badges: List<Badge> = emptyList(),
                         val channelThumbnail: ApiThumbnail,
                         val lengthText: ApiText? = null,
-                        val longBylineText: BylineText,
+                        val longBylineText: ApiBylineText,
                         val navigationEndpoint: NavigationEndpoint,
                         val publishedTimeText: ApiText? = null,
-                        val shortBylineText: BylineText,
+                        val shortBylineText: ApiBylineText,
                         val shortViewCountText: ApiText? = null,
                         val thumbnail: ApiThumbnail,
-                        val thumbnailOverlays: List<ThumbnailOverlay>,
+                        val thumbnailOverlays: List<ApiThumbnailOverlay>,
                         val title: ApiText,
                         val videoId: String,
                         val viewCountText: ApiText? = null
@@ -49,24 +50,6 @@ data class ApiSearch(
                         data class Badge(val textBadge: TextBadge) {
                             @Serializable
                             data class TextBadge(val label: ApiText)
-                        }
-
-                        @Serializable
-                        data class BylineText(val runs: List<Run>) {
-                            @Serializable
-                            data class Run(
-                                val navigationEndpoint: NavigationEndpoint,
-                                val text: String
-                            ) {
-                                @Serializable
-                                data class NavigationEndpoint(val browseEndpoint: BrowseEndpoint) {
-                                    @Serializable
-                                    data class BrowseEndpoint(
-                                        val browseId: String,
-                                        val canonicalBaseUrl: String
-                                    )
-                                }
-                            }
                         }
                     }
 
@@ -97,23 +80,17 @@ data class ApiSearch(
                                 val unsubscribedButtonText: ApiText
                             ) {
                                 @Serializable
-                                data class OnSubscribeEndpoint(val subscribeEndpoint: SubscriptionEndpoint)
+                                data class OnSubscribeEndpoint(val subscribeEndpoint: ApiSubscriptionEndpoint)
 
                                 @Serializable
-                                data class OnUnsubscribeEndpoint(val unsubscribeEndpoint: SubscriptionEndpoint)
-
-                                @Serializable
-                                data class SubscriptionEndpoint(
-                                    val channelIds: List<String>,
-                                    val params: String
-                                )
+                                data class OnUnsubscribeEndpoint(val unsubscribeEndpoint: ApiSubscriptionEndpoint)
 
                                 @Serializable
                                 data class UnsubscribeMessage(
-                                    val paidChannelUnsubscribeMessageRenderer: PaidChannelUnsubscribeMessageRenderer
+                                    val paidChannelUnsubscribeMessageRenderer: UnsubscribeMessageRenderer
                                 ) {
                                     @Serializable
-                                    data class PaidChannelUnsubscribeMessageRenderer(
+                                    data class UnsubscribeMessageRenderer(
                                         val keepSubscriptionButtonText: ApiText,
                                         val unsubscribeButtonText: ApiText,
                                         val unsubscribeMessage: ApiText,
@@ -136,42 +113,18 @@ data class ApiSearch(
             }
 
             @Serializable
-            data class NavigationEndpoint(val browseEndpoint: BrowseEndpoint? = null) {
-                @Serializable
-                data class BrowseEndpoint(
-                    val browseId: String,
-                    val canonicalBaseUrl: String
-                )
-            }
-
-            @Serializable
-            data class ThumbnailOverlay(val thumbnailOverlayTimeStatusRenderer: ThumbnailOverlayTimeStatusRenderer) {
-                @Serializable
-                data class ThumbnailOverlayTimeStatusRenderer(val text: ApiText)
-            }
+            data class NavigationEndpoint(val browseEndpoint: ApiBrowseEndpoint? = null)
         }
     }
 
     @Serializable
-    data class HeaderRenderer(val elementRenderer: ElementRenderer) {
+    data class HeaderRenderer(val elementRenderer: ElementRenderer<Model>) {
         @Serializable
-        data class ElementRenderer(val newElement: NewElement) {
+        data class Model(val shelfHeaderModel: ShelfHeaderModel) {
             @Serializable
-            data class NewElement(val type: Type) {
+            data class ShelfHeaderModel(val shelfHeaderData: ShelfHeaderData) {
                 @Serializable
-                data class Type(val componentType: ComponentType) {
-                    @Serializable
-                    data class ComponentType(val model: Model) {
-                        @Serializable
-                        data class Model(val shelfHeaderModel: ShelfHeaderModel) {
-                            @Serializable
-                            data class ShelfHeaderModel(val shelfHeaderData: ShelfHeaderData) {
-                                @Serializable
-                                data class ShelfHeaderData(val title: String)
-                            }
-                        }
-                    }
-                }
+                data class ShelfHeaderData(val title: String)
             }
         }
     }

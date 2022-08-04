@@ -113,7 +113,9 @@ class InnerTubeRepository(
             viewCount = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.newElement.type.componentType.model.videoMetadataModel!!.videoMetadata.subtitleData.viewCount.content,
             uploadDate = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.newElement.type.componentType.model.videoMetadataModel!!.videoMetadata.subtitleData.dateA11yLabel,
             channelAvatar = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.newElement.type.componentType.model.channelBarModel!!.videoChannelBarData.avatar.image.sources[0].url,
-            likesText = slimVideoMetadataSectionRenderer.contents[1].elementRenderer.newElement.type.componentType.model.videoActionBarModel!!.buttons[0].likeButton!!.buttonData.defaultButton.title,
+            likesText = slimVideoMetadataSectionRenderer.contents[1].elementRenderer.newElement.type.componentType.model.videoActionBarModel!!.buttons
+                .filterIsInstance<ApiNext.Button.LikeButton>()
+                .single().buttonData.defaultButton.title,
             subscribersText = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.newElement.type.componentType.model.channelBarModel!!.videoChannelBarData.subtitle,
             comments = DomainNext.Comments(
                 continuation = null,

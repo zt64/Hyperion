@@ -27,7 +27,6 @@ fun HomeScreen(
     val videoListItems = viewModel.videos.collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
 
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()

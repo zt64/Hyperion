@@ -40,4 +40,6 @@
     <string name="open_fullscreen">Open fullscreen</string>
     <string name="verified">Verified</string>
     <string name="dynamic_color">Dynamic color</string>
+    <string name="timestamp_scale">Timestamp scale</string>
+    <string name="about">About</string>
 </resources>

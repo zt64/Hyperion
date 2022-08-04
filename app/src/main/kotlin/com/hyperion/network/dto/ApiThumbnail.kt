@@ -11,3 +11,9 @@ data class ApiThumbnail(val thumbnails: List<Thumbnail>) {
         val url: String,
     )
 }
+
+@Serializable
+data class Thumbnail(
+    val image: ApiImage,
+    val timestampText: String? = null,
+)

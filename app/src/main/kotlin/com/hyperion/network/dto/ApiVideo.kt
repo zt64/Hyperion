@@ -17,17 +17,13 @@ data class ApiVideo(val videoWithContextData: ContextData) {
         ) {
             @Serializable
             data class Avatar(
-                val avatarImageSize: String,
                 val endpoint: Endpoint,
                 val image: ApiImage
             ) {
                 @Serializable
                 data class Endpoint(val innertubeCommand: InnertubeCommand) {
                     @Serializable
-                    data class InnertubeCommand(val browseEndpoint: BrowseEndpoint) {
-                        @Serializable
-                        data class BrowseEndpoint(val browseId: String)
-                    }
+                    data class InnertubeCommand(val browseEndpoint: ApiBrowseEndpoint)
                 }
             }
 
@@ -37,26 +33,14 @@ data class ApiVideo(val videoWithContextData: ContextData) {
                 val metadataDetails: String = "YouTube",
                 val title: String
             )
-
-            @Serializable
-            data class Thumbnail(
-                val image: ApiImage,
-                val timestampText: String? = null,
-            )
         }
 
         @Serializable
         data class OnTap(val innertubeCommand: InnertubeCommand) {
             @Serializable
-            data class InnertubeCommand(val watchNextWatchEndpointMutationCommand: MutationCommand) {
+            data class InnertubeCommand(val watchNextWatchEndpointMutationCommand: MutationCommand? = null) {
                 @Serializable
-                data class MutationCommand(val watchEndpoint: WatchEndpoint) {
-                    @Serializable
-                    data class WatchEndpoint(val watchEndpoint: WatchEndpoint) {
-                        @Serializable
-                        data class WatchEndpoint(val videoId: String)
-                    }
-                }
+                data class MutationCommand(val watchEndpoint: ApiWatchEndpoint)
             }
         }
     }

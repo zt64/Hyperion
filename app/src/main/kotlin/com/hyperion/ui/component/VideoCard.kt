@@ -12,11 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.domain.model.DomainVideoPartial
@@ -122,10 +120,7 @@ private fun Thumbnail(
     Box(modifier) {
         AsyncImage(
             modifier = Modifier.aspectRatio(16f / 9f),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(video.thumbnailUrl)
-                .crossfade(true)
-                .build(),
+            model = video.thumbnailUrl,
             contentDescription = stringResource(R.string.thumbnail),
             contentScale = ContentScale.Crop
         )

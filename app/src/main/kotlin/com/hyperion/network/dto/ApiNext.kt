@@ -1,5 +1,6 @@
 package com.hyperion.network.dto
 
+import com.hyperion.network.dto.renderer.ElementRenderer
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
@@ -56,19 +57,7 @@ data class ApiNext(
                     @Serializable
                     data class SlimVideoMetadataSectionRenderer(val contents: List<Content>) : Renderer() {
                         @Serializable
-                        data class Content(val elementRenderer: ElementRenderer) {
-                            @Serializable
-                            data class ElementRenderer(val newElement: NewElement) {
-                                @Serializable
-                                data class NewElement(val type: Type) {
-                                    @Serializable
-                                    data class Type(val componentType: ComponentType) {
-                                        @Serializable
-                                        data class ComponentType(val model: Model)
-                                    }
-                                }
-                            }
-                        }
+                        data class Content(val elementRenderer: ElementRenderer<Model>)
                     }
 
                     @Serializable
@@ -98,19 +87,7 @@ data class ApiNext(
                     @Serializable
                     data class CommentsEntryRenderer(val contents: List<Content>) : ItemSectionRenderer() {
                         @Serializable
-                        data class Content(val elementRenderer: ElementRenderer) {
-                            @Serializable
-                            data class ElementRenderer(val newElement: NewElement) {
-                                @Serializable
-                                data class NewElement(val type: Type) {
-                                    @Serializable
-                                    data class Type(val componentType: ComponentType) {
-                                        @Serializable
-                                        data class ComponentType(val model: Model)
-                                    }
-                                }
-                            }
-                        }
+                        data class Content(val elementRenderer: ElementRenderer<Model>)
 
                         @Serializable
                         class Model
@@ -121,19 +98,7 @@ data class ApiNext(
                     @Serializable
                     class RelatedItemsRenderer(val contents: List<Content>) : ItemSectionRenderer() {
                         @Serializable
-                        data class Content(val elementRenderer: ElementRenderer) {
-                            @Serializable
-                            data class ElementRenderer(val newElement: NewElement) {
-                                @Serializable
-                                data class NewElement(val type: Type) {
-                                    @Serializable
-                                    data class Type(val componentType: ComponentType) {
-                                        @Serializable
-                                        data class ComponentType(val model: Model)
-                                    }
-                                }
-                            }
-                        }
+                        data class Content(val elementRenderer: ElementRenderer<Model>)
 
                         @Serializable
                         data class Model(val videoWithContextModel: ApiVideo? = null)
@@ -179,9 +144,9 @@ data class ApiNext(
             val renderer: SectionListRenderer<Model>
         ) {
             @Serializable
-            sealed class Model {
+            sealed interface Model {
                 @Serializable
-                data class VideoDescriptionHeaderModel(val videoDescriptionHeader: VideoDescriptionHeader) : Model() {
+                data class VideoDescriptionHeaderModel(val videoDescriptionHeader: VideoDescriptionHeader) : Model {
                     @Serializable
                     data class VideoDescriptionHeader(
                         private val videoTitle: JsonObject,
@@ -206,19 +171,7 @@ data class ApiNext(
             @Serializable
             data class ItemSectionRenderer<T>(val contents: List<Content<T>>) {
                 @Serializable
-                data class Content<T>(val elementRenderer: ElementRenderer<T>? = null) {
-                    @Serializable
-                    data class ElementRenderer<T>(val newElement: NewElement<T>) {
-                        @Serializable
-                        data class NewElement<T>(val type: Type<T>) {
-                            @Serializable
-                            data class Type<T>(val componentType: ComponentType<T>) {
-                                @Serializable
-                                data class ComponentType<T>(val model: T)
-                            }
-                        }
-                    }
-                }
+                data class Content<T>(val elementRenderer: ElementRenderer<T>? = null)
             }
         }
     }
@@ -290,19 +243,7 @@ data class ApiNext(
                 @Serializable
                 data class ItemSectionRenderer(val contents: List<Content>) {
                     @Serializable
-                    data class Content(val elementRenderer: ElementRenderer) {
-                        @Serializable
-                        data class ElementRenderer(val newElement: NewElement) {
-                            @Serializable
-                            data class NewElement(val type: Type) {
-                                @Serializable
-                                data class Type(val componentType: ComponentType) {
-                                    @Serializable
-                                    data class ComponentType(val model: Model)
-                                }
-                            }
-                        }
-                    }
+                    data class Content(val elementRenderer: ElementRenderer<Model>)
                 }
             }
         }
@@ -336,27 +277,48 @@ data class ApiNext(
         data class ChannelBarModel(val videoChannelBarData: VideoChannelBarData) {
             @Serializable
             data class VideoChannelBarData(
-                val avatar: Avatar,
+                val avatar: ApiAvatar,
                 val subtitle: String? = null
-            ) {
-                @Serializable
-                data class Avatar(val image: ApiImage)
-            }
+            )
         }
 
         @Serializable
-        data class VideoActionBarModel(val buttons: List<Button>) {
-            @Serializable
-            data class Button(val likeButton: LikeButton? = null) {
-                @Serializable
-                data class LikeButton(val buttonData: ButtonData) {
-                    @Serializable
-                    data class ButtonData(val defaultButton: DefaultButton) {
-                        @Serializable
-                        data class DefaultButton(val title: String)
-                    }
+        data class VideoActionBarModel(val buttons: List<Button>)
+    }
+
+    @Serializable(with = Button.Serializer::class)
+    sealed interface Button {
+        companion object Serializer : KSerializer<Button> {
+            override val descriptor = buildClassSerialDescriptor("Button")
+
+            override fun deserialize(decoder: Decoder): Button {
+                val input = (decoder as? JsonDecoder)!!
+                val tree = input.decodeJsonElement().jsonObject
+                val json = input.json
+
+                return when {
+                    "likeButton" in tree -> json.decodeFromJsonElement(LikeButton.serializer(), tree["likeButton"]!!)
+                    "dislikeButton" in tree -> json.decodeFromJsonElement(DislikeButton.serializer(), tree["dislikeButton"]!!)
+                    else -> OtherButton
                 }
             }
+
+            override fun serialize(encoder: Encoder, value: Button) = TODO("Not yet implemented")
         }
+
+        @Serializable
+        data class ButtonData(val defaultButton: DefaultButton) {
+            @Serializable
+            data class DefaultButton(val title: String)
+        }
+
+        @Serializable
+        data class LikeButton(val buttonData: ButtonData) : Button
+
+        @Serializable
+        data class DislikeButton(val buttonData: ButtonData) : Button
+
+        @Serializable
+        object OtherButton : Button
     }
 }

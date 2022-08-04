@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                             channelId = destination.channelId
                         )
                         is AppDestination.Settings -> SettingsScreen(
-                            navigator = navigator
+                            onClickBack = navigator::pop
                         )
                     }
                 }

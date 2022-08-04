@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-parcelize")
-    kotlin("plugin.serialization") version "1.6.21"
+    kotlin("plugin.serialization") version "1.7.10"
 }
 
 android {
@@ -37,13 +37,13 @@ android {
     }
 
     buildFeatures.compose = true
-    composeOptions.kotlinCompilerExtensionVersion = "1.2.0"
+    composeOptions.kotlinCompilerExtensionVersion = "1.3.0-rc01"
 }
 
 dependencies {
     // AndroidX core
-    implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.core:core-splashscreen:1.0.0-rc01")
+    implementation("androidx.core:core-ktx:1.9.0-alpha05")
+    implementation("androidx.core:core-splashscreen:1.0.0")
 
     // AndroidX paging
     implementation("androidx.paging:paging-compose:1.0.0-alpha15")
@@ -57,14 +57,14 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
 
     // Compose
-    val composeVersion = "1.3.0-alpha01"
+    val composeVersion = "1.3.0-alpha02"
     implementation("androidx.compose.ui:ui:${composeVersion}")
     debugImplementation("androidx.compose.ui:ui-tooling:${composeVersion}")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha14")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha15")
     implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
 
     // Accompanist
-    val accompanistVersion = "0.24.13-rc"
+    val accompanistVersion = "0.26.0-alpha"
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
@@ -73,7 +73,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.1.0")
 
     // KotlinX
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
 
     // Taxi
     implementation("com.github.X1nto:Taxi:1.0.0")

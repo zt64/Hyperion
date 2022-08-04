@@ -1,5 +1,6 @@
 package com.hyperion.network.dto
 
+import com.hyperion.network.dto.renderer.ElementRenderer
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,9 +9,9 @@ data class ApiTrending(
     val continuationContents: ContinuationContents? = null
 ) {
     @Serializable
-    data class Contents(val singleColumnBrowseResultsRenderer: SingleColumnBrowseResultsRenderer) {
+    data class Contents(val singleColumnBrowseResultsRenderer: BrowseResultsRenderer) {
         @Serializable
-        data class SingleColumnBrowseResultsRenderer(val tabs: List<Tab>) {
+        data class BrowseResultsRenderer(val tabs: List<Tab>) {
             @Serializable
             data class Tab(val tabRenderer: TabRenderer) {
                 @Serializable
@@ -35,23 +36,11 @@ data class ApiTrending(
             @Serializable
             data class ItemSectionRenderer(val contents: List<Content>) {
                 @Serializable
-                data class Content(val elementRenderer: ElementRenderer? = null) {
+                data class Content(val elementRenderer: ElementRenderer<Model>? = null) {
                     @Serializable
-                    data class ElementRenderer(val newElement: NewElement) {
+                    data class Model(val videoWithContextModel: VideoWithContextModel? = null) {
                         @Serializable
-                        data class NewElement(val type: Type) {
-                            @Serializable
-                            data class Type(val componentType: ComponentType) {
-                                @Serializable
-                                data class ComponentType(val model: Model) {
-                                    @Serializable
-                                    data class Model(val videoWithContextModel: VideoWithContextModel? = null) {
-                                        @Serializable
-                                        data class VideoWithContextModel(val videoWithContextData: VideoWithContextData)
-                                    }
-                                }
-                            }
-                        }
+                        data class VideoWithContextModel(val videoWithContextData: VideoWithContextData)
                     }
                 }
             }
@@ -78,10 +67,7 @@ data class ApiTrending(
                 @Serializable
                 data class Endpoint(val innertubeCommand: InnertubeCommand) {
                     @Serializable
-                    data class InnertubeCommand(val browseEndpoint: BrowseEndpoint) {
-                        @Serializable
-                        data class BrowseEndpoint(val browseId: String)
-                    }
+                    data class InnertubeCommand(val browseEndpoint: ApiBrowseEndpoint)
                 }
             }
 
@@ -103,10 +89,7 @@ data class ApiTrending(
         @Serializable
         data class OnTap(val innertubeCommand: InnertubeCommand) {
             @Serializable
-            data class InnertubeCommand(val watchEndpoint: WatchEndpoint) {
-                @Serializable
-                data class WatchEndpoint(val videoId: String)
-            }
+            data class InnertubeCommand(val watchEndpoint: WatchEndpoint)
         }
     }
 }

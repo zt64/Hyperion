@@ -12,77 +12,62 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
-import com.hyperion.domain.manager.PreferencesManager
-import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.theme.Theme
 import com.hyperion.ui.viewmodel.SettingsViewModel
-import com.xinto.taxi.BackstackNavigator
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = getViewModel(),
-    navigator: BackstackNavigator<AppDestination>
+    onClickBack: () -> Unit
 ) {
-    val prefs = viewModel.prefs
-    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarScrollState())
-
     Scaffold(
-        modifier = Modifier,
         topBar = {
             MediumTopAppBar(
-                title = { Text("Settings") },
+                title = { Text(stringResource(R.string.settings_screen)) },
                 navigationIcon = {
-                    IconButton(onClick = navigator::pop) {
+                    IconButton(onClick = onClickBack) {
                         Icon(
                             imageVector = Icons.Default.NavigateBefore,
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
-                },
-                scrollBehavior = scrollBehavior
+                }
             )
         }
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .verticalScroll(state = rememberScrollState())
+                .verticalScroll(rememberScrollState())
                 .padding(paddingValues),
-//                .padding(horizontal = 14.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            val prefs = viewModel.prefs
+
             if (viewModel.showThemePicker) {
                 ThemePicker(
+                    currentTheme = prefs.theme,
                     onDismissRequest = viewModel::dismissThemePicker,
                     onConfirm = viewModel::setTheme
                 )
             }
 
-            ListItem(
-                modifier = Modifier.clickable { prefs.dynamicColor = !prefs.dynamicColor },
-                headlineText = { Text(stringResource(R.string.dynamic_color)) },
-                trailingContent = {
-                    Switch(checked = prefs.dynamicColor, onCheckedChange = { prefs.dynamicColor = it })
-                }
+            SwitchSetting(
+                checked = prefs.dynamicColor,
+                text = stringResource(R.string.dynamic_color),
+                onCheckedChange = { prefs.dynamicColor = it }
             )
 
-            ListItem(
-                modifier = Modifier.clickable(enabled = !prefs.dynamicColor) {
-                    prefs.midnightMode = !prefs.midnightMode
-                },
-                headlineText = { Text(stringResource(R.string.black_background)) },
-                trailingContent = {
-                    Switch(
-                        enabled = !prefs.dynamicColor,
-                        checked = prefs.midnightMode,
-                        onCheckedChange = { prefs.midnightMode = it }
-                    )
-                }
+            SwitchSetting(
+                enabled = !prefs.dynamicColor,
+                checked = prefs.midnightMode,
+                text = stringResource(R.string.black_background),
+                onCheckedChange = { prefs.midnightMode = it }
             )
 
             ListItem(
@@ -104,23 +89,14 @@ fun SettingsScreen(
                 }
             )
 
-
-            ListItem(
-                modifier = Modifier.clickable { prefs.compactCard = !prefs.compactCard },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Default.VideoSettings,
-                        contentDescription = null
-                    )
-                },
-                headlineText = { Text(stringResource(R.string.compact_card)) },
-                trailingContent = {
-                    Switch(
-                        checked = prefs.compactCard,
-                        onCheckedChange = { prefs.compactCard = it }
-                    )
-                }
+            SwitchSetting(
+                checked = prefs.compactCard,
+                text = stringResource(R.string.compact_card),
+                icon = Icons.Default.VideoSettings,
+                onCheckedChange = { prefs.compactCard = it }
             )
+
+            Divider()
 
             var showStartScreenDropdown by remember { mutableStateOf(false) }
             ListItem(
@@ -150,51 +126,23 @@ fun SettingsScreen(
                 }
             )
 
-            ListItem(
-                modifier = Modifier.clickable(
-                    enabled = false // TODO: Remove when PIP is supported
-                ) { prefs.pictureInPicture = !prefs.pictureInPicture },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Default.PictureInPicture,
-                        contentDescription = stringResource(R.string.pip)
-                    )
-                },
-                headlineText = { Text(stringResource(R.string.pip)) },
-                trailingContent = {
-                    Switch(
-                        checked = prefs.pictureInPicture,
-                        onCheckedChange = { prefs.pictureInPicture = !prefs.pictureInPicture },
-                        enabled = false // TODO: Remove when PIP is supported
-                    )
-                }
+            SwitchSetting(
+                enabled = false,
+                checked = prefs.pictureInPicture,
+                text = stringResource(R.string.pip),
+                icon = Icons.Default.PictureInPicture,
+                onCheckedChange = { prefs.pictureInPicture = it }
             )
 
-            ListItem(
-                headlineText = { Text("Timestamp scale") },
-                supportingText = {
-                    var timeStampScale by remember { mutableStateOf(prefs.timestampScale) }
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Slider(
-                            modifier = Modifier.weight(0.75f, true),
-                            value = timeStampScale,
-                            valueRange = 0.8f..2f,
-                            steps = 10,
-                            onValueChange = { timeStampScale = it },
-                            onValueChangeFinished = { prefs.timestampScale = timeStampScale }
-                        )
-
-                        Text(
-                            text = "${"%.1f".format(timeStampScale)}x",
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    }
-                }
+            SliderSetting(
+                text = stringResource(R.string.timestamp_scale),
+                suffix = "x",
+                value = prefs.timestampScale,
+                valueRange = 0.8f..2f,
+                onValueChangeFinished = { prefs.timestampScale = it }
             )
+
+            Divider()
 
             val directoryChooser = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
                 if (uri != null) prefs.downloadDirectory = uri.toString()
@@ -214,7 +162,7 @@ fun SettingsScreen(
             Divider()
 
             ListItem(
-                modifier = Modifier.clickable { viewModel.openGitHub() },
+                modifier = Modifier.clickable(onClick = viewModel::openGitHub),
                 leadingContent = {
                     Icon(
                         imageVector = Icons.Default.Code,
@@ -227,14 +175,13 @@ fun SettingsScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThemePicker(
+    currentTheme: Theme,
     onDismissRequest: () -> Unit,
     onConfirm: (Theme) -> Unit,
-    prefs: PreferencesManager = get()
 ) {
-    var selectedTheme by remember { mutableStateOf(prefs.theme) }
+    var selectedTheme by remember { mutableStateOf(currentTheme) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -247,7 +194,7 @@ fun ThemePicker(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            theme.displayName,
+                            text = theme.displayName,
                             style = MaterialTheme.typography.labelLarge
                         )
 
@@ -270,6 +217,74 @@ fun ThemePicker(
             ) {
                 Text(stringResource(R.string.apply))
             }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SliderSetting(
+    text: String,
+    suffix: String = "",
+    value: Float,
+    valueRange: ClosedFloatingPointRange<Float>,
+    steps: Int = 10,
+    onValueChange: (value: Float) -> Unit = { },
+    onValueChangeFinished: (value: Float) -> Unit,
+    trailingContent: (@Composable () -> Unit)? = null
+) {
+    ListItem(
+        headlineText = { Text(text) },
+        supportingText = {
+            var sliderValue by remember { mutableStateOf(value) }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Slider(
+                    modifier = Modifier.weight(0.5f),
+                    value = sliderValue,
+                    valueRange = valueRange,
+                    steps = steps,
+                    onValueChange = {
+                        onValueChange(it)
+                        sliderValue = it
+                    },
+                    onValueChangeFinished = { onValueChangeFinished(sliderValue) }
+                )
+
+                Text("${"%.1f".format(sliderValue)}$suffix")
+            }
+        },
+        trailingContent = trailingContent
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SwitchSetting(
+    enabled: Boolean = true,
+    checked: Boolean,
+    icon: ImageVector? = null,
+    text: String,
+    supportingText: String? = null,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    ListItem(
+        modifier = Modifier.clickable(enabled) {
+            onCheckedChange(!checked)
+        },
+        headlineText = { Text(text) },
+        supportingText = supportingText?.let { { Text(it) } },
+        leadingContent = icon?.let { imageVector ->
+            { Icon(imageVector = imageVector, contentDescription = text) }
+        },
+        trailingContent = {
+            Switch(
+                enabled = enabled,
+                checked = checked,
+                onCheckedChange = onCheckedChange
+            )
         }
     )
 }

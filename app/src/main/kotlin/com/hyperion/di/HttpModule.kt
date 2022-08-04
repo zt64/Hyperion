@@ -13,7 +13,6 @@ import org.koin.dsl.module
 
 val httpModule = module {
     fun provideJson() = Json {
-        prettyPrint = true
         ignoreUnknownKeys = true
     }
 

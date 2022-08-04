@@ -3,14 +3,16 @@ package com.hyperion.ui.component
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.*
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.hyperion.domain.model.DomainComment
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentCard(
     comment: DomainComment,

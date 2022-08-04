@@ -28,7 +28,7 @@ fun MainRootScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
         decayAnimationSpec = rememberSplineBasedDecay(),
-        state = rememberTopAppBarScrollState()
+        state = rememberTopAppBarState()
     )
     val mainRootNavigator = rememberNavigator(HomeDestination.HOME)
     val currentDestination = mainRootNavigator.currentDestination

@@ -9,7 +9,7 @@ import com.hyperion.network.dto.*
 fun ApiChannel.toDomain(): DomainChannel {
     val channelProfile = channelHeaderModal.channelProfile
     val avatars = channelProfile.avatarData.avatar.image.sources
-    val banners = channelHeaderModal.channelBanner.image.sources
+    val banners = channelHeaderModal.channelBanner?.image?.sources
 
     val tabRenderer = contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer
 
@@ -19,7 +19,7 @@ fun ApiChannel.toDomain(): DomainChannel {
         description = channelProfile.descriptionPreview.description,
         subscriberText = channelHeaderModal.channelProfile.metadata.subscriberCountText,
         avatar = avatars[0].url,
-        banner = banners[0].url,
+        banner = banners?.get(0)?.url,
         videos = tabRenderer.content.sectionListRenderer.contents?.mapNotNull {
             it.shelfRenderer.content.horizontalListRenderer?.items?.get(0)?.elementRenderer?.newElement?.type?.componentType?.model?.gridVideoModel?.toDomain()
         } ?: emptyList()
@@ -62,7 +62,7 @@ fun ApiFormat.toDomain() = when {
 }
 
 fun ApiVideo.ContextData.toDomain() = DomainVideoPartial(
-    id = onTap.innertubeCommand.watchNextWatchEndpointMutationCommand.watchEndpoint.watchEndpoint.videoId,
+    id = onTap.innertubeCommand.watchNextWatchEndpointMutationCommand?.watchEndpoint?.watchEndpoint?.videoId.orEmpty(),
     title = videoData.metadata.title,
     subtitle = videoData.metadata.metadataDetails,
     thumbnailUrl = videoData.thumbnail.image.sources.last().url,

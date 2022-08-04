@@ -1,5 +1,6 @@
 package com.hyperion.ui.viewmodel
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,12 +11,13 @@ import com.hyperion.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.launch
 
 class ChannelViewModel(
+    private val application: Application,
     private val repository: InnerTubeRepository
 ) : ViewModel() {
-    sealed class State {
-        class Loaded(val channel: DomainChannel) : State()
-        object Loading : State()
-        class Error(val error: Exception) : State()
+    sealed interface State {
+        class Loaded(val channel: DomainChannel) : State
+        object Loading : State
+        class Error(val error: Exception) : State
     }
 
     var state by mutableStateOf<State>(State.Loading)
@@ -30,5 +32,19 @@ class ChannelViewModel(
                 e.printStackTrace()
             }
         }
+    }
+
+    fun shareChannel() {
+//        Find a way to get the channel url from the state
+//        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+//            type = "text/plain"
+//
+//            putExtra(Intent.EXTRA_TEXT, video!!.shareUrl)
+//            putExtra(Intent.EXTRA_TITLE, video!!.title)
+//        }
+//
+//        application.startActivity(Intent.createChooser(shareIntent, null).apply {
+//            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//        })
     }
 }

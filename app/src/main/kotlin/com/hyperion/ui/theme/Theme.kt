@@ -15,8 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
-private val LightColorScheme = lightColorScheme()
-private val DarkColorScheme = darkColorScheme()
 private val BlackColorScheme = darkColorScheme(
     background = Color.Black,
     surface = Color.Black,
@@ -40,8 +38,8 @@ fun HyperionTheme(
     val colorScheme = when {
         dynamicColor && isDarkTheme -> dynamicDarkColorScheme(LocalContext.current)
         dynamicColor && !isDarkTheme -> dynamicLightColorScheme(LocalContext.current)
-        isDarkTheme -> if (isBlack) BlackColorScheme else DarkColorScheme
-        else -> LightColorScheme
+        isDarkTheme -> if (isBlack) BlackColorScheme else darkColorScheme()
+        else -> lightColorScheme()
     }
 
     val systemUiController = rememberSystemUiController()

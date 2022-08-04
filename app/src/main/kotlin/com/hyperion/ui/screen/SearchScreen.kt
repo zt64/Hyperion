@@ -194,6 +194,7 @@ fun SearchScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TextField(
     modifier: Modifier = Modifier,

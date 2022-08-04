@@ -6,7 +6,7 @@ data class DomainChannel(
     val description: String,
     val subscriberText: String?,
     val avatar: String,
-    val banner: String,
+    val banner: String?,
     val videos: List<DomainVideoPartial>
 )
 
