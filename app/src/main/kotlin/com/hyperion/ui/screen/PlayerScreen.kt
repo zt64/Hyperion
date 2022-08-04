@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.*
@@ -28,7 +29,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.IntOffset
@@ -52,6 +52,8 @@ fun PlayerScreen(
     navigator: BackstackNavigator<AppDestination>,
     videoId: String? = null
 ) {
+    val state = viewModel.state
+
     LaunchedEffect(Unit) {
         if (videoId != null) viewModel.loadVideo(videoId)
     }
@@ -59,7 +61,7 @@ fun PlayerScreen(
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
-        when (viewModel.state) {
+        when (state) {
             is PlayerViewModel.State.Loading -> {
                 PlayerScreenLoading(
                     modifier = Modifier.fillMaxSize()
@@ -74,7 +76,8 @@ fun PlayerScreen(
             }
             is PlayerViewModel.State.Error -> {
                 PlayerScreenError(
-                    modifier = Modifier.fillMaxSize()
+                    exception = state.exception,
+                    onClickBack = navigator::pop
                 )
             }
         }
@@ -378,29 +381,61 @@ private fun PlayerScreenLoaded(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PlayerScreenError(
-    modifier: Modifier = Modifier
+    exception: Exception,
+    onClickBack: () -> Unit
 ) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
-    ) {
-        CompositionLocalProvider(
-            LocalContentColor provides MaterialTheme.colorScheme.error,
-            LocalTextStyle provides MaterialTheme.typography.titleMedium
+    Scaffold(
+        topBar = {
+            SmallTopAppBar(
+                navigationIcon = {
+                    IconButton(onClick = onClickBack) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                },
+                title = { Text(stringResource(R.string.error)) }
+            )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
-                modifier = Modifier.size(56.dp),
-                imageVector = Icons.Default.Error,
-                contentDescription = null
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    modifier = Modifier.size(36.dp),
+                    imageVector = Icons.Default.Error,
+                    tint = MaterialTheme.colorScheme.error,
+                    contentDescription = stringResource(R.string.error)
+                )
 
-            Text(
-                text = "Error",
-                textAlign = TextAlign.Center
-            )
+                Text(
+                    text = stringResource(R.string.error_occurred),
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                exception.localizedMessage?.let { message ->
+                    SelectionContainer {
+                        Text(
+                            text = message,
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                }
+            }
         }
     }
 }

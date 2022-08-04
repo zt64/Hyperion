@@ -27,7 +27,7 @@ class PlayerViewModel(
     sealed interface State {
         object Loaded : State
         object Loading : State
-        object Error : State
+        class Error(val exception: Exception) : State
     }
 
     var state by mutableStateOf<State>(State.Loading)
@@ -69,7 +69,7 @@ class PlayerViewModel(
         }
 
         override fun onPlayerError(error: PlaybackException) {
-            state = State.Error
+            state = State.Error(error)
         }
     }
 
@@ -229,7 +229,7 @@ class PlayerViewModel(
                 state = State.Loaded
             } catch (e: Exception) {
                 e.printStackTrace()
-                state = State.Error
+                state = State.Error(e)
             }
         }
     }
