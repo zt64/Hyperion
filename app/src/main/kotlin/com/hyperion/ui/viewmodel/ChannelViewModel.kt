@@ -26,6 +26,7 @@ class ChannelViewModel(
     fun getChannel(id: String) {
         viewModelScope.launch {
             try {
+                state = State.Loading
                 state = State.Loaded(repository.getChannel(id))
             } catch (e: Exception) {
                 state = State.Error(e)
