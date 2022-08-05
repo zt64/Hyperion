@@ -10,7 +10,6 @@ android {
     compileSdk = 32
 
     defaultConfig {
-        applicationId = "com.hyperion"
         minSdk = 24
         targetSdk = 32
         versionCode = 1
@@ -37,7 +36,7 @@ android {
     }
 
     buildFeatures.compose = true
-    composeOptions.kotlinCompilerExtensionVersion = "1.3.0-rc01"
+    composeOptions.kotlinCompilerExtensionVersion = "1.3.0-rc02"
 }
 
 dependencies {
