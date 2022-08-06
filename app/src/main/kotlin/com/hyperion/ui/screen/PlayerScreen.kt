@@ -321,7 +321,7 @@ private fun PlayerScreenLoaded(
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text(
-                                text = "Comments",
+                                text = stringResource(R.string.comments),
                                 style = MaterialTheme.typography.titleSmall
                             )
 
