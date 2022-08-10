@@ -38,19 +38,19 @@ android {
     }
 
     buildFeatures.compose = true
-    composeOptions.kotlinCompilerExtensionVersion = "1.3.0-rc02"
+    composeOptions.kotlinCompilerExtensionVersion = "1.3.0"
 }
 
 dependencies {
     // AndroidX core
-    implementation("androidx.core:core-ktx:1.9.0-alpha05")
+    implementation("androidx.core:core-ktx:1.9.0-beta01")
     implementation("androidx.core:core-splashscreen:1.0.0")
 
     // AndroidX paging
-    implementation("androidx.paging:paging-compose:1.0.0-alpha15")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha16")
 
     // AndroidX activity
-    implementation("androidx.activity:activity-compose:1.6.0-alpha05")
+    implementation("androidx.activity:activity-compose:1.6.0-beta01")
 
     // Koin
     val koinVersion = "3.2.0"
@@ -58,10 +58,10 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
 
     // Compose
-    val composeVersion = "1.3.0-alpha02"
+    val composeVersion = "1.3.0-alpha03"
     implementation("androidx.compose.ui:ui:${composeVersion}")
     debugImplementation("androidx.compose.ui:ui-tooling:${composeVersion}")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha15")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha16")
     implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
 
     // Accompanist
@@ -77,7 +77,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
 
     // Taxi
-    implementation("com.github.X1nto:Taxi:1.0.0")
+    implementation("com.github.X1nto:Taxi:1.1.0")
 
     // Media3
     val media3Version = "1.0.0-beta02"
