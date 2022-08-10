@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                 val navigator = rememberBackstackNavigator<AppDestination>(AppDestination.Home)
 
                 BackHandler {
-                    navigator.pop()
+                    if (!navigator.pop()) finish()
                 }
 
                 Taxi(
