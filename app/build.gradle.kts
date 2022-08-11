@@ -65,7 +65,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
 
     // Accompanist
-    val accompanistVersion = "0.26.0-alpha"
+    val accompanistVersion = "0.26.1-alpha"
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
