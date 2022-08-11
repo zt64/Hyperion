@@ -18,8 +18,8 @@ fun ApiChannel.toDomain(): DomainChannel {
         name = channelProfile.title,
         description = channelProfile.descriptionPreview.description,
         subscriberText = channelHeaderModal.channelProfile.metadata.subscriberCountText,
-        avatar = avatars[0].url,
-        banner = banners?.get(0)?.url,
+        avatar = avatars.first().url,
+        banner = banners?.lastOrNull()?.url,
         videos = tabRenderer.content.sectionListRenderer.contents?.mapNotNull {
             it.shelfRenderer.content.horizontalListRenderer?.items?.get(0)?.elementRenderer?.newElement?.type?.componentType?.model?.gridVideoModel?.toDomain()
         } ?: emptyList()
