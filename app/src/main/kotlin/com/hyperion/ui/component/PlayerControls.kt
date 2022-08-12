@@ -118,7 +118,7 @@ fun PlayerControls(
                 ) {
                     if (isFullscreen) {
                         Icon(
-                            imageVector = Icons.Default.CloseFullscreen,
+                            imageVector = Icons.Default.FullscreenExit,
                             contentDescription = stringResource(R.string.close_fullscreen)
                         )
                     } else {
