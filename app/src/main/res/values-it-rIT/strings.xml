@@ -43,4 +43,5 @@
     <string name="timestamp_scale">Timestamp scale</string>
     <string name="about">About</string>
     <string name="comments">Comments</string>
+    <string name="show_download_button">Show download button</string>
 </resources>

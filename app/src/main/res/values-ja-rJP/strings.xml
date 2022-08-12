@@ -43,4 +43,5 @@
     <string name="timestamp_scale">タイムスタンプの大きさ</string>
     <string name="about">概要</string>
     <string name="comments">Comments</string>
+    <string name="show_download_button">Show download button</string>
 </resources>
