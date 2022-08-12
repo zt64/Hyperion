@@ -115,7 +115,8 @@ fun SearchScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 14.dp)
+                .padding(horizontal = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (showResults) {
                 items(results) { result ->
@@ -128,7 +129,6 @@ fun SearchScreen(
                                     id = result.id,
                                     title = result.title,
                                     subtitle = result.subtitle,
-                                    thumbnailUrl = result.thumbnailUrl,
                                     author = result.author,
                                     timestamp = result.timestamp
                                 ),

@@ -46,16 +46,16 @@ fun ChannelCard(
                     style = MaterialTheme.typography.labelLarge
                 )
 
-                channel.subscriptionsText?.let {
+                if (channel.subscriptionsText != null) {
                     Text(
-                        text = it,
+                        text = channel.subscriptionsText,
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
 
-                channel.videoCountText?.let {
+                if (channel.videoCountText != null) {
                     Text(
-                        text = it,
+                        text = channel.videoCountText,
                         style = MaterialTheme.typography.labelSmall
                     )
                 }

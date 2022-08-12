@@ -4,9 +4,10 @@ import android.icu.text.CompactDecimalFormat
 import android.os.Build
 import com.hyperion.domain.mapper.toDomain
 import com.hyperion.domain.model.*
+import com.hyperion.network.dto.ApiContinuation
 import com.hyperion.network.dto.ApiFormat
 import com.hyperion.network.dto.ApiNext
-import com.hyperion.network.dto.ApiText
+import com.hyperion.network.dto.ApiSearch
 import com.hyperion.network.service.InnerTubeService
 import com.hyperion.network.service.RYDService
 import kotlinx.serialization.json.jsonArray
@@ -27,9 +28,9 @@ class InnerTubeRepository(
         }
 
         return DomainTrending(
-            continuation = section.continuations.findLast { it.nextContinuationData != null }?.nextContinuationData?.continuation,
-            videos = section.contents!!.mapNotNull {
-                it.itemSectionRenderer?.contents?.single()?.elementRenderer?.newElement?.type?.componentType?.model?.videoWithContextModel?.videoWithContextData?.toDomain()
+            continuation = section.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation,
+            videos = section.contents.mapNotNull {
+                it.itemSectionRenderer?.contents?.single()?.elementRenderer?.model?.videoWithContextModel?.videoWithContextData?.toDomain()
             }
         )
     }
@@ -46,58 +47,46 @@ class InnerTubeRepository(
         }
 
         return DomainSearch(
-            continuation = section.continuations.first().nextContinuationData?.continuation,
-            items = section.contents.filter { it.itemSectionRenderer != null }.flatMap {
-                it.itemSectionRenderer!!.contents.mapNotNull { content ->
-                    when {
-                        content.compactVideoRenderer != null -> {
-                            val video = content.compactVideoRenderer
-
-                            DomainSearch.Result.Video(
-                                id = video.videoId,
-                                title = video.title.toString(),
-                                subtitle = buildString {
-                                    append("${video.shortBylineText.runs.first().text} - ")
-                                    video.shortViewCountText?.let { viewCount -> append("$viewCount - ") }
-                                    append("${video.publishedTimeText?.toString()}")
-                                },
-                                timestamp = video.lengthText?.toString(),
-                                thumbnailUrl = video.thumbnail.thumbnails.last().url,
-                                author = DomainChannelPartial(
-                                    id = video.shortBylineText.runs.first().navigationEndpoint.browseEndpoint.browseId,
-                                    avatarUrl = video.channelThumbnail.thumbnails.first().url
+            continuation = section.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation,
+            items = section.contents
+                .mapNotNull(ApiSearch.SectionListRenderer.Content::itemSectionRenderer)
+                .flatMap {
+                    it.contents.mapNotNull { renderer ->
+                        when (renderer) {
+                            is ApiSearch.SectionListRenderer.Content.Renderer.CompactChannel -> {
+                                DomainSearch.Result.Channel(
+                                    id = renderer.compactChannelRenderer.channelId,
+                                    name = renderer.compactChannelRenderer.title.toString(),
+                                    thumbnailUrl = "https:${renderer.compactChannelRenderer.thumbnail.thumbnails.last().url}",
+                                    subscriptionsText = renderer.compactChannelRenderer.subscriberCountText?.toString(),
+                                    videoCountText = renderer.compactChannelRenderer.videoCountText?.toString(),
                                 )
-                            )
-                        }
-                        content.compactChannelRenderer != null -> {
-                            val channel = content.compactChannelRenderer
+                            }
+                            is ApiSearch.SectionListRenderer.Content.Renderer.Element -> {
+                                when (val model = renderer.elementRenderer.model) {
+                                    is ApiSearch.VideoWithContextSlots -> {
+                                        val (onTap, videoData) = model.videoWithContextSlotsModel.videoWithContextData
 
-                            DomainSearch.Result.Channel(
-                                id = channel.channelId,
-                                name = channel.displayName.toString(),
-                                thumbnailUrl = "https://${channel.thumbnail.thumbnails.last().url}",
-                                subscriptionsText = channel.subscriberCountText.runs.first().text,
-                                videoCountText = channel.videoCountText.runs.joinToString(
-                                    separator = "",
-                                    transform = ApiText.TextRun::text
-                                )
-                            )
-                        }
-                        content.compactPlaylistRenderer != null -> {
-                            val playlist = content.compactPlaylistRenderer
+                                        if (videoData.metadata.isPlaylistMix) return@mapNotNull null
 
-                            DomainSearch.Result.Playlist(
-                                id = playlist.playlistId,
-                                title = playlist.title.toString(),
-                                thumbnailUrl = playlist.thumbnail.thumbnails.last().url,
-                                videoCountText = playlist.videoCountShortText.toString(),
-                                channelName = playlist.shortBylineText.toString()
-                            )
+                                        DomainSearch.Result.Video(
+                                            id = onTap.innertubeCommand.watchEndpoint!!.videoId!!,
+                                            author = DomainChannelPartial(
+                                                id = videoData.avatar!!.endpoint.innertubeCommand.browseEndpoint.browseId,
+                                                avatarUrl = videoData.avatar.image.sources.first().url
+                                            ),
+                                            title = videoData.metadata.title,
+                                            subtitle = videoData.metadata.metadataDetails!!,
+                                            timestamp = videoData.thumbnail.timestampText
+                                        )
+                                    }
+                                    else -> null
+                                }
+                            }
+                            else -> null
                         }
-                        else -> null
                     }
                 }
-            }
         )
     }
 
@@ -110,10 +99,10 @@ class InnerTubeRepository(
             .first()
 
         return DomainNext(
-            viewCount = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.newElement.type.componentType.model.videoMetadataModel!!.videoMetadata.subtitleData.viewCount.content,
-            uploadDate = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.newElement.type.componentType.model.videoMetadataModel!!.videoMetadata.subtitleData.dateA11yLabel,
-            channelAvatar = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.newElement.type.componentType.model.channelBarModel!!.videoChannelBarData.avatar.image.sources[0].url,
-            likesText = slimVideoMetadataSectionRenderer.contents[1].elementRenderer.newElement.type.componentType.model.videoActionBarModel!!.buttons
+            viewCount = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.model.videoMetadataModel!!.videoMetadata.subtitleData.viewCount.content,
+            uploadDate = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.model.videoMetadataModel!!.videoMetadata.subtitleData.dateA11yLabel,
+            channelAvatar = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.model.channelBarModel!!.videoChannelBarData.avatar.image.sources[0].url,
+            likesText = slimVideoMetadataSectionRenderer.contents[1].elementRenderer.model.videoActionBarModel!!.buttons
                 .filterIsInstance<ApiNext.Button.LikeButton>()
                 .single().buttonData.defaultButton.title,
             subscribersText = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.newElement.type.componentType.model.channelBarModel!!.videoChannelBarData.subtitle,
@@ -122,7 +111,8 @@ class InnerTubeRepository(
                 comments = emptyList()
             ),
             relatedVideos = DomainNext.RelatedVideos(
-                continuation = next.contents.singleColumnWatchNextResults.results.results.continuations.first().nextContinuationData!!.continuation,
+                continuation = next.contents.singleColumnWatchNextResults.results.results.continuations.filterIsInstance<ApiContinuation.Next>()
+                    .singleOrNull()?.continuation,
                 videos = next.contents.singleColumnWatchNextResults.results.results.contents
                     .filterIsInstance<ApiNext.Contents.SingleColumnWatchNextResults.Results.Results.RelatedItemsRenderer>()
                     .flatMap {
@@ -138,7 +128,8 @@ class InnerTubeRepository(
         val next = service.getNext(videoId, continuation)
 
         return DomainNext.RelatedVideos(
-            continuation = next.continuationContents!!.sectionListContinuation.continuations.first().nextContinuationData?.continuation,
+            continuation = next.continuationContents!!.sectionListContinuation.continuations.filterIsInstance<ApiContinuation.Next>()
+                .singleOrNull()?.continuation,
             videos = next.continuationContents.sectionListContinuation.contents.mapNotNull { null }
         )
     }

@@ -8,12 +8,12 @@ data class ApiThumbnail(val thumbnails: List<Thumbnail>) {
     data class Thumbnail(
         val width: Int,
         val height: Int,
-        val url: String,
+        val url: String
     )
 }
 
 @Serializable
-data class Thumbnail(
+data class ApiThumbnailTimestamp(
     val image: ApiImage,
-    val timestampText: String? = null,
+    val timestampText: String? = null
 )

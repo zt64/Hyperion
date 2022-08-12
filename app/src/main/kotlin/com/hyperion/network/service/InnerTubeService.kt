@@ -143,7 +143,7 @@ class InnerTubeService(
             }.body()
         }
 
-    private companion object {
+    companion object {
         private const val YOUTUBE_URL = "https://www.youtube.com"
         private const val API_URL = "https://www.youtube.com/youtubei/v1"
 
@@ -151,6 +151,8 @@ class InnerTubeService(
         private const val CLIENT_VERSION = "17.11.37"
         private const val PLATFORM = "MOBILE"
         private const val FORM_FACTOR = "SMALL_FORM_FACTOR"
+
+        fun getVideoThumbnail(id: String): String = "https://i.ytimg.com/vi/$id/hqdefault.jpg"
     }
 }
 

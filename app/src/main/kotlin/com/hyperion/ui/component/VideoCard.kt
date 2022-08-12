@@ -147,7 +147,6 @@ private fun Thumbnail(
             },
             contentScale = ContentScale.Crop,
             contentDescription = stringResource(R.string.thumbnail),
-            contentScale = ContentScale.Crop
         )
 
         if (video.timestamp != null) {

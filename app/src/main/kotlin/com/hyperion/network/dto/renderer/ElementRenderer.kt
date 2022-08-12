@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ElementRenderer<T>(val newElement: NewElement<T>) {
+    val model = newElement.type.componentType.model
+
     @Serializable
     data class NewElement<T>(val type: Type<T>)
 

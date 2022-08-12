@@ -1,5 +1,7 @@
 package com.hyperion.domain.model
 
+import com.hyperion.network.service.InnerTubeService
+
 data class DomainVideo(
     val id: String,
     val title: String,
@@ -19,6 +21,7 @@ data class DomainVideoPartial(
     val title: String,
     val subtitle: String,
     val timestamp: String? = null,
-    val thumbnailUrl: String,
     val author: DomainChannelPartial? = null
-)
+) {
+    val thumbnailUrl = InnerTubeService.getVideoThumbnail(id)
+}

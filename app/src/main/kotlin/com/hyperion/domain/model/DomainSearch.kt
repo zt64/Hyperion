@@ -1,33 +1,38 @@
 package com.hyperion.domain.model
 
+import com.hyperion.network.service.InnerTubeService
+
 data class DomainSearch(
     val continuation: String?,
     val items: List<Result>
 ) {
-    sealed class Result {
+    sealed interface Result {
+        val id: String
+
         data class Video(
-            val id: String,
+            override val id: String,
             val title: String,
             val subtitle: String,
-            val timestamp: String? = null,
-            val thumbnailUrl: String,
-            val author: DomainChannelPartial? = null
-        ) : Result()
+            val timestamp: String?,
+            val author: DomainChannelPartial?
+        ) : Result {
+            val thumbnailUrl = InnerTubeService.getVideoThumbnail(id)
+        }
 
         data class Channel(
-            val id: String,
+            override val id: String,
             val name: String,
             val thumbnailUrl: String,
-            val subscriptionsText: String? = null,
-            val videoCountText: String? = null
-        ) : Result()
+            val subscriptionsText: String?,
+            val videoCountText: String?
+        ) : Result
 
         data class Playlist(
-            val id: String,
+            override val id: String,
             val title: String,
             val thumbnailUrl: String,
             val channelName: String,
             val videoCountText: String
-        ) : Result()
+        ) : Result
     }
 }

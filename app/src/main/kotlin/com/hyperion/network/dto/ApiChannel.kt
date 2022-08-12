@@ -1,6 +1,7 @@
 package com.hyperion.network.dto
 
 import com.hyperion.network.dto.renderer.ElementRenderer
+import com.hyperion.network.dto.renderer.ListRenderer
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,9 +9,6 @@ data class ApiChannel(
     val contents: Contents,
     val header: Header
 ) {
-    val channelHeaderModal
-        get() = header.channelMobileHeaderRenderer.channelHeader.elementRenderer.newElement.type.componentType.model.channelHeaderModel
-
     @Serializable
     data class Contents(val singleColumnBrowseResultsRenderer: SingleColumnBrowseResultsRenderer)
 
@@ -33,23 +31,14 @@ data class ApiChannel(
                     @Serializable
                     data class SectionListRenderer(val contents: List<Content>? = null) {
                         @Serializable
-                        data class Content(val shelfRenderer: ShelfRenderer) {
+                        data class Content(val shelfRenderer: ShelfRenderer? = null) {
                             @Serializable
                             data class ShelfRenderer(val content: Content) {
                                 @Serializable
                                 data class Content(
-                                    val horizontalListRenderer: HorizontalListRenderer? = null,
-                                    val verticalListRenderer: VerticalListRenderer? = null
-                                ) {
-                                    @Serializable
-                                    data class VerticalListRenderer(val items: List<Item>) {
-                                        @Serializable
-                                        data class Item(val elementRenderer: ElementRenderer<Model>) {
-                                            @Serializable
-                                            data class Model(val videoWithContextModel: ApiVideo)
-                                        }
-                                    }
-                                }
+                                    val horizontalListRenderer: ListRenderer<HorizontalListItem>? = null,
+                                    val verticalListRenderer: ListRenderer<VerticalListItem>? = null
+                                )
                             }
                         }
                     }
@@ -59,37 +48,40 @@ data class ApiChannel(
     }
 
     @Serializable
-    data class HorizontalListRenderer(val items: List<Item>) {
+    data class HorizontalListItem(
+        val elementRenderer: ElementRenderer<Model>? = null,
+        val gridChannelRenderer: GridChannelRenderer? = null
+    ) {
         @Serializable
-        data class Item(
-            val elementRenderer: ElementRenderer<Model>? = null,
-            val gridChannelRenderer: GridChannelRenderer? = null
-        ) {
-            @Serializable
-            data class Model(val gridVideoModel: ApiChannelVideo? = null)
+        data class Model(val gridVideoModel: ApiChannelVideo? = null)
 
-            @Serializable
-            data class GridChannelRenderer(
-                val channelId: String,
-                val navigationEndpoint: ApiNavigationEndpoint,
-                val shortSubscriberCountText: ApiText? = null,
-                val subscriberCountText: ApiText? = null,
-                val thumbnail: ApiThumbnail,
-                val title: ApiText
-            )
-        }
+        @Serializable
+        data class GridChannelRenderer(
+            val channelId: String,
+            val navigationEndpoint: ApiNavigationEndpoint,
+            val shortSubscriberCountText: ApiText? = null,
+            val subscriberCountText: ApiText? = null,
+            val thumbnail: ApiThumbnail,
+            val title: ApiText
+        )
+    }
+
+    @Serializable
+    data class VerticalListItem(val elementRenderer: ElementRenderer<Model>) {
+        @Serializable
+        data class Model(val videoWithContextModel: ApiVideo)
     }
 
     @Serializable
     data class Header(val channelMobileHeaderRenderer: ChannelMobileHeaderRenderer) {
         @Serializable
-        data class ChannelMobileHeaderRenderer(val channelHeader: ChannelHeader) {
-            @Serializable
-            data class ChannelHeader(val elementRenderer: ElementRenderer<Model>) {
-                @Serializable
-                data class Model(val channelHeaderModel: ChannelHeaderModel)
-            }
-        }
+        data class ChannelMobileHeaderRenderer(val channelHeader: ChannelHeader)
+
+        @Serializable
+        data class ChannelHeader(val elementRenderer: ElementRenderer<Model>)
+
+        @Serializable
+        data class Model(val channelHeaderModel: ChannelHeaderModel)
     }
 
     @Serializable
@@ -108,7 +100,10 @@ data class ApiChannel(
             val title: String
         ) {
             @Serializable
-            data class AvatarData(val avatar: ApiAvatar)
+            data class AvatarData(val avatar: Avatar) {
+                @Serializable
+                data class Avatar(val image: ApiImage)
+            }
 
             @Serializable
             data class DescriptionPreview(val description: String = "")
@@ -117,7 +112,7 @@ data class ApiChannel(
             data class Metadata(
                 val joinDateText: String,
                 val subscriberCountText: String? = null,
-                val videosCountText: String
+                val videosCountText: String? = null
             )
         }
     }
@@ -131,18 +126,12 @@ data class ApiChannelVideo(
     @Serializable
     data class VideoData(
         val metadata: Metadata,
-        val thumbnail: Thumbnail
+        val thumbnail: ApiThumbnailTimestamp
     ) {
         @Serializable
         data class Metadata(
             val metadataDetails: String,
             val title: String
-        )
-
-        @Serializable
-        data class Thumbnail(
-            val image: ApiImage,
-            val timestampText: String? = null
         )
     }
 

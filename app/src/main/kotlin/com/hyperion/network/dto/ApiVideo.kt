@@ -11,27 +11,14 @@ data class ApiVideo(val videoWithContextData: ContextData) {
     ) {
         @Serializable
         data class VideoData(
-            val avatar: Avatar? = null,
+            val avatar: ApiAvatar? = null,
             val metadata: Metadata,
-            val thumbnail: Thumbnail
+            val thumbnail: ApiThumbnailTimestamp
         ) {
             @Serializable
-            data class Avatar(
-                val endpoint: Endpoint,
-                val image: ApiImage
-            ) {
-                @Serializable
-                data class Endpoint(val innertubeCommand: InnertubeCommand) {
-                    @Serializable
-                    data class InnertubeCommand(val browseEndpoint: ApiBrowseEndpoint)
-                }
-            }
-
-            @Serializable
             data class Metadata(
-                val maxTitleLine: Int,
-                val metadataDetails: String = "YouTube",
-                val title: String
+                val title: String,
+                val metadataDetails: String = "YouTube"
             )
         }
 
