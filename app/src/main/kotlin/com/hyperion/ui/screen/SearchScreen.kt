@@ -158,11 +158,14 @@ fun SearchScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         results.loadState.apply {
-                            when (append) {
-                                is LoadState.Loading -> {
+                            when {
+                                refresh is LoadState.Loading -> {
                                     CircularProgressIndicator()
                                 }
-                                is LoadState.Error -> {
+                                append is LoadState.Loading -> {
+                                    CircularProgressIndicator()
+                                }
+                                append is LoadState.Error -> {
                                     (append as LoadState.Error).error.message?.let {
                                         Text(
                                             text = it,
@@ -170,7 +173,6 @@ fun SearchScreen(
                                         )
                                     }
                                 }
-                                is LoadState.NotLoading -> {}
                             }
                         }
                     }

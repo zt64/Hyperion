@@ -1,11 +1,10 @@
 package com.hyperion.ui.screen
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -46,17 +45,27 @@ fun HomeScreen(
         }
 
         item {
-            videoListItems.loadState.apply {
-                when (append) {
-                    is LoadState.Loading -> {
-                        CircularProgressIndicator(modifier = Modifier.padding(4.dp))
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                videoListItems.loadState.apply {
+                    when {
+                        refresh is LoadState.Loading -> {
+                            CircularProgressIndicator()
+                        }
+                        append is LoadState.Loading -> {
+                            CircularProgressIndicator()
+                        }
+                        append is LoadState.Error -> {
+                            (append as LoadState.Error).error.message?.let {
+                                Text(
+                                    text = it,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
                     }
-                    is LoadState.Error -> {
-                        (append as LoadState.Error).error.printStackTrace()
-
-                        Text("An error has occurred")
-                    }
-                    else -> Unit
                 }
             }
         }
