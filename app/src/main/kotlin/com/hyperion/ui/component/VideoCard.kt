@@ -11,6 +11,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -156,5 +157,28 @@ private fun Thumbnail(
                 scale = timeStampScale
             )
         }
+    }
+}
+
+@Composable
+fun Timestamp(
+    modifier: Modifier = Modifier,
+    text: String,
+    scale: Float
+) {
+    Surface(
+        modifier = Modifier
+            .padding(8.dp)
+            .then(modifier),
+        shape = MaterialTheme.shapes.small,
+        color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.8f)
+    ) {
+        Text(
+            modifier = Modifier.padding(4.dp),
+            text = text,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onTertiaryContainer,
+            fontSize = 14.sp * scale
+        )
     }
 }
