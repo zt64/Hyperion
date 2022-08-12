@@ -58,6 +58,11 @@ class SearchViewModel(private val repository: InnerTubeRepository) : ViewModel()
         }.flow.cachedIn(viewModelScope)
     }
 
+    fun clearSearch() {
+        search = ""
+        suggestions.clear()
+    }
+
     fun search(query: String) {
         search = query
 

@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -73,19 +74,19 @@ fun SearchScreen(
                         placeholder = { Text(stringResource(R.string.search)) },
                         textStyle = MaterialTheme.typography.bodyLarge,
                         trailingIcon = {
-                            IconButton(
-                                onClick = {
-                                    if (viewModel.search.isNotBlank()) {
-                                        viewModel.getResults()
-                                        focusManager.clearFocus()
-                                    }
+                            if (viewModel.search.isNotBlank()) {
+                                IconButton(
+                                    onClick = { viewModel.clearSearch() }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Clear,
+                                        contentDescription = stringResource(R.string.clear_search)
+                                    )
                                 }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = stringResource(R.string.search)
-                                )
-                            }
+                            } else Icon(
+                                imageVector = Icons.Default.Search,
+                                contentDescription = stringResource(R.string.search)
+                            )
                         },
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                         keyboardActions = KeyboardActions(
