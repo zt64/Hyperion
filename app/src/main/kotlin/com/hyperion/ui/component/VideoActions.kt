@@ -23,6 +23,7 @@ fun VideoActions(
     voteEnabled: Boolean,
     likeLabel: @Composable () -> Unit,
     dislikeLabel: @Composable () -> Unit,
+    showDownloadButton: Boolean,
     onClickVote: (Boolean) -> Unit,
     onClickShare: () -> Unit,
     onClickDownload: () -> Unit
@@ -71,14 +72,16 @@ fun VideoActions(
             )
         }
 
-        FilledTonalIconButton(
-            enabled = false,
-            onClick = onClickDownload
-        ) {
-            Icon(
-                imageVector = Icons.Default.Download,
-                contentDescription = stringResource(R.string.download)
-            )
+        if (showDownloadButton) {
+            FilledTonalIconButton(
+                enabled = false,
+                onClick = onClickDownload
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Download,
+                    contentDescription = stringResource(R.string.download)
+                )
+            }
         }
     }
 }

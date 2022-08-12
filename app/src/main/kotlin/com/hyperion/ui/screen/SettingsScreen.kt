@@ -144,6 +144,12 @@ fun SettingsScreen(
 
             Divider()
 
+            SwitchSetting(
+                checked = prefs.showDownloadButton,
+                text = stringResource(R.string.show_download_button),
+                onCheckedChange = { prefs.showDownloadButton = it }
+            )
+
             val directoryChooser = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
                 if (uri != null) prefs.downloadDirectory = uri.toString()
             }

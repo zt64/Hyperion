@@ -37,12 +37,14 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.R
+import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.component.*
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.viewmodel.PlayerViewModel
 import com.xinto.taxi.BackstackNavigator
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 import kotlin.math.roundToInt
 
@@ -107,7 +109,8 @@ private fun PlayerScreenLoading(
 private fun PlayerScreenLoaded(
     modifier: Modifier = Modifier,
     viewModel: PlayerViewModel,
-    navigator: BackstackNavigator<AppDestination>
+    navigator: BackstackNavigator<AppDestination>,
+    prefs: PreferencesManager = get()
 ) {
     Column(
         modifier = modifier
@@ -255,6 +258,7 @@ private fun PlayerScreenLoaded(
                         voteEnabled = false,
                         likeLabel = { Text(video.likesText) },
                         dislikeLabel = { Text(video.dislikesText) },
+                        showDownloadButton = prefs.showDownloadButton,
                         onClickVote = viewModel::updateVote,
                         onClickShare = viewModel::shareVideo,
                         onClickDownload = viewModel::download
