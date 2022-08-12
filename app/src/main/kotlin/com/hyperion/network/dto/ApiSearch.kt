@@ -16,18 +16,12 @@ data class ApiSearch(
     @Serializable(with = Model.Serializer::class)
     sealed interface Model {
         companion object Serializer : JsonContentPolymorphicSerializer<Model>(Model::class) {
-            override fun selectDeserializer(element: JsonElement) = when {
-                "videoWithContextSlotsModel" in element.jsonObject -> VideoWithContextSlots.serializer()
-                "videoWithContextModel" in element.jsonObject -> VideoWithContext.serializer()
-                "cellDividerModel" in element.jsonObject -> CellDivider.serializer()
-                "inlineShortsModel" in element.jsonObject -> InlineShorts.serializer()
-                "shelfHeaderModel" in element.jsonObject -> ShelfHeader.serializer()
-                "compactTvfilmItemModel" in element.jsonObject -> Unknown.serializer()
-                "textSearchAdWithDescriptionFirstModel" in element.jsonObject -> Unknown.serializer()
-                "shortsShelfModel" in element.jsonObject -> Unknown.serializer()
-                "horizontalVideoShelfModel" in element.jsonObject -> Unknown.serializer()
-                "postShelfModel" in element.jsonObject -> Unknown.serializer()
-                else -> throw NoWhenBranchMatchedException(element.jsonObject.toString())
+            override fun selectDeserializer(element: JsonElement) = when (element.jsonObject.entries.single().key) {
+                "videoWithContextSlotsModel" -> VideoWithContextSlots.serializer()
+                "videoWithContextModel" -> VideoWithContext.serializer()
+                "inlineShortsModel" -> InlineShorts.serializer()
+                "shelfHeaderModel" -> ShelfHeader.serializer()
+                else -> Unknown.serializer()
             }
         }
     }
@@ -88,9 +82,6 @@ data class ApiSearch(
 
     @Serializable
     object VideoWithContext : Model
-
-    @Serializable
-    object CellDivider : Model
 
     @Serializable
     object InlineShorts : Model
