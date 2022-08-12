@@ -15,10 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.placeholder
+import com.google.accompanist.placeholder.shimmer
 import com.hyperion.R
 import com.hyperion.domain.model.DomainChannel
 import com.hyperion.ui.component.VideoCard
@@ -112,21 +116,40 @@ fun ChannelScreenLoaded(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
-                Column {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                ) {
                     if (channel.banner != null) {
-                        AsyncImage(
+                        SubcomposeAsyncImage(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                                .padding(horizontal = 8.dp)
                                 .clip(MaterialTheme.shapes.medium),
                             model = channel.banner,
-                            contentScale = ContentScale.FillWidth,
+                            loading = {
+                                val localElevation = LocalAbsoluteTonalElevation.current
+
+                                Box(
+                                    modifier = Modifier
+                                        .placeholder(
+                                            visible = true,
+                                            color = MaterialTheme.colorScheme.surfaceColorAtElevation(localElevation + 2.dp),
+                                            highlight = PlaceholderHighlight.shimmer(
+                                                highlightColor = MaterialTheme.colorScheme.surfaceColorAtElevation(localElevation + 3.dp)
+                                            )
+                                        )
+                                        .fillMaxSize(),
+                                )
+                            },
+                            success = {
+                                SubcomposeAsyncImageContent()
+                            },
                             contentDescription = channel.name
                         )
                     }
 
                     Row(
-                        modifier = Modifier.padding(top = 14.dp, start = 8.dp, end = 8.dp),
+                        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {

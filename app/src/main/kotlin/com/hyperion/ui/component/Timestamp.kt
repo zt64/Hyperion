@@ -8,14 +8,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hyperion.domain.manager.PreferencesManager
-import org.koin.androidx.compose.get
 
 @Composable
 fun Timestamp(
     modifier: Modifier = Modifier,
     text: String,
-    prefs: PreferencesManager = get()
+    scale: Float
 ) {
     Surface(
         modifier = Modifier
@@ -29,7 +27,7 @@ fun Timestamp(
             text = text,
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onTertiaryContainer,
-            fontSize = 14.sp * prefs.timestampScale
+            fontSize = 14.sp * scale
         )
     }
 }

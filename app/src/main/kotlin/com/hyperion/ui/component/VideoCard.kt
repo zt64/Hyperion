@@ -3,10 +3,7 @@ package com.hyperion.ui.component
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,7 +11,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.placeholder
+import com.google.accompanist.placeholder.shimmer
 import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.domain.model.DomainVideoPartial
@@ -42,7 +43,8 @@ fun VideoCard(
             ) {
                 Thumbnail(
                     modifier = Modifier.width(140.dp),
-                    video = video
+                    video = video,
+                    timeStampScale = prefs.timestampScale
                 )
 
                 Column(
@@ -78,7 +80,10 @@ fun VideoCard(
             }
         } else {
             Column {
-                Thumbnail(video = video)
+                Thumbnail(
+                    video = video,
+                    timeStampScale = prefs.timestampScale
+                )
 
                 Row(
                     modifier = Modifier.padding(8.dp),
@@ -115,12 +120,32 @@ fun VideoCard(
 @Composable
 private fun Thumbnail(
     modifier: Modifier = Modifier,
-    video: DomainVideoPartial
+    video: DomainVideoPartial,
+    timeStampScale: Float
 ) {
     Box(modifier) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             modifier = Modifier.aspectRatio(16f / 9f),
             model = video.thumbnailUrl,
+            loading = {
+                val localElevation = LocalAbsoluteTonalElevation.current
+
+                Box(
+                    modifier = modifier
+                        .placeholder(
+                            visible = true,
+                            color = MaterialTheme.colorScheme.surfaceColorAtElevation(localElevation + 2.dp),
+                            highlight = PlaceholderHighlight.shimmer(
+                                highlightColor = MaterialTheme.colorScheme.surfaceColorAtElevation(localElevation + 3.dp)
+                            )
+                        )
+                        .fillMaxSize(),
+                )
+            },
+            success = {
+                SubcomposeAsyncImageContent()
+            },
+            contentScale = ContentScale.Crop,
             contentDescription = stringResource(R.string.thumbnail),
             contentScale = ContentScale.Crop
         )
@@ -128,7 +153,8 @@ private fun Thumbnail(
         if (video.timestamp != null) {
             Timestamp(
                 modifier = Modifier.align(Alignment.BottomEnd),
-                text = video.timestamp
+                text = video.timestamp,
+                scale = timeStampScale
             )
         }
     }
