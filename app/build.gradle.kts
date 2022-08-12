@@ -85,7 +85,7 @@ dependencies {
     implementation("androidx.media3:media3-ui:$media3Version")
 
     // Ktor
-    val ktorVersion = "2.0.3"
+    val ktorVersion = "2.1.0"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-encoding:$ktorVersion")
