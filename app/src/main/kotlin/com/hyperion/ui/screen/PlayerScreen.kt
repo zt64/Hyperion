@@ -12,6 +12,8 @@ import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
@@ -231,9 +233,22 @@ private fun PlayerScreenLoaded(
                     )
 
                     Text(
-                        text = "${video.viewCount} - ${video.uploadDate}",
-                        style = MaterialTheme.typography.bodySmall,
+                        text = "${video.viewCount} · ${video.uploadDate}",
+                        style = MaterialTheme.typography.bodySmall
                     )
+
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        items(video.badges) { badge ->
+                            SuggestionChip(
+                                modifier = Modifier.height(26.dp),
+                                label = { Text(badge) },
+                                onClick = { /* TODO: Redirect to badge page */ }
+                            )
+                        }
+                    }
 
                     SelectionContainer {
                         ClickableText(

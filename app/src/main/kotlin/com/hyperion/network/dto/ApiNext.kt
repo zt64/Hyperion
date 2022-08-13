@@ -184,7 +184,8 @@ data class ApiNext(
             @Serializable
             data class VideoMetadata(
                 val title: Text,
-                val subtitleData: SubtitleData
+                val subtitleData: SubtitleData,
+                val badgesData: List<Badge> = emptyList()
             ) {
                 @Serializable
                 data class Text(val content: String)
@@ -192,8 +193,11 @@ data class ApiNext(
                 @Serializable
                 data class SubtitleData(
                     val viewCount: Text,
-                    val dateA11yLabel: String
+                    val date: Text
                 )
+
+                @Serializable
+                data class Badge(val label: String)
             }
         }
 

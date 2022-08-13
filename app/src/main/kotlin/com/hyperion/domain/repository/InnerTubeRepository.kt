@@ -100,14 +100,18 @@ class InnerTubeRepository(
         val slimVideoMetadataSectionRenderer = next.contents?.singleColumnWatchNextResults?.results?.results?.contents?.filterIsInstance<ApiNext.Contents.SingleColumnWatchNextResults.Results.Results.SlimVideoMetadataSectionRenderer>()!!
             .first()
 
+        val videoMetadataModel = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.model.videoMetadataModel!!
+        val videoActionBarModel = slimVideoMetadataSectionRenderer.contents[1].elementRenderer.model.videoActionBarModel!!
+        val channelBarModel = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.model.channelBarModel!!
+
         return DomainNext(
-            viewCount = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.model.videoMetadataModel!!.videoMetadata.subtitleData.viewCount.content,
-            uploadDate = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.model.videoMetadataModel!!.videoMetadata.subtitleData.dateA11yLabel,
-            channelAvatar = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.model.channelBarModel!!.videoChannelBarData.avatar.image.sources[0].url,
-            likesText = slimVideoMetadataSectionRenderer.contents[1].elementRenderer.model.videoActionBarModel!!.buttons
+            viewCount = videoMetadataModel.videoMetadata.subtitleData.viewCount.content,
+            uploadDate = videoMetadataModel.videoMetadata.subtitleData.date.content,
+            channelAvatar = channelBarModel.videoChannelBarData.avatar.image.sources.first().url,
+            likesText = videoActionBarModel.buttons
                 .filterIsInstance<ApiNext.Button.LikeButton>()
                 .single().buttonData.defaultButton.title,
-            subscribersText = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.newElement.type.componentType.model.channelBarModel!!.videoChannelBarData.subtitle,
+            subscribersText = channelBarModel.videoChannelBarData.subtitle,
             comments = DomainNext.Comments(
                 continuation = null,
                 comments = emptyList()
@@ -119,10 +123,11 @@ class InnerTubeRepository(
                     .filterIsInstance<ApiNext.Contents.SingleColumnWatchNextResults.Results.Results.RelatedItemsRenderer>()
                     .flatMap {
                         it.contents.mapNotNull { (renderer) ->
-                            renderer.newElement.type.componentType.model.videoWithContextModel?.videoWithContextData?.toDomain()
+                            renderer.model.videoWithContextModel?.videoWithContextData?.toDomain()
                         }
                     }
-            )
+            ),
+            badges = videoMetadataModel.videoMetadata.badgesData.map { it.label },
         )
     }
 
@@ -130,8 +135,10 @@ class InnerTubeRepository(
         val next = service.getNext(videoId, continuation)
 
         return DomainNext.RelatedVideos(
-            continuation = next.continuationContents!!.sectionListContinuation.continuations.filterIsInstance<ApiContinuation.Next>()
-                .singleOrNull()?.continuation,
+            continuation = next.continuationContents!!.sectionListContinuation.continuations
+                .filterIsInstance<ApiContinuation.Next>()
+                .singleOrNull()
+                ?.continuation,
             videos = next.continuationContents.sectionListContinuation.contents.mapNotNull { null }
         )
     }
@@ -162,7 +169,8 @@ class InnerTubeRepository(
                 name = player.videoDetails.author,
                 avatarUrl = next.channelAvatar,
                 subscriberText = next.subscribersText
-            )
+            ),
+            badges = next.badges
         )
     }
 }

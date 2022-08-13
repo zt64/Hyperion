@@ -7,5 +7,6 @@ import kotlinx.serialization.Serializable
 data class BrowseBody(
     val context: ApiContext,
     val browseId: String,
-    val continuation: String? = null
+    val continuation: String? = null,
+    val params: String? = null
 )

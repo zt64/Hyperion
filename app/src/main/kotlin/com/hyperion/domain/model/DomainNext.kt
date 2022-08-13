@@ -7,7 +7,8 @@ data class DomainNext(
     val likesText: String,
     val subscribersText: String? = null,
     val comments: Comments,
-    val relatedVideos: RelatedVideos
+    val relatedVideos: RelatedVideos,
+    val badges: List<String>
 ) {
     data class Comments(
         val continuation: String? = null,

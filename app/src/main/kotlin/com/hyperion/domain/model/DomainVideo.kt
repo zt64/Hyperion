@@ -11,7 +11,8 @@ data class DomainVideo(
     val likesText: String,
     val dislikesText: String,
     val streams: List<DomainStream>,
-    val author: DomainChannelPartial
+    val author: DomainChannelPartial,
+    val badges: List<String>
 ) {
     val shareUrl = "https://youtu.be/$id"
 }
