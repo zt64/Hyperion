@@ -30,7 +30,7 @@ class InnerTubeService(
         runBlocking { initApi() }
     }
 
-    suspend fun initApi() = withContext(Dispatchers.IO) {
+    private suspend fun initApi() = withContext(Dispatchers.IO) {
         val html = httpClient.get(YOUTUBE_URL).bodyAsText()
 
         val (obj) = "ytcfg.set\\((.*?)\\);".toRegex(RegexOption.DOT_MATCHES_ALL)
@@ -51,45 +51,36 @@ class InnerTubeService(
         )
     }
 
-    suspend fun getRecommendations(): HttpResponse = withContext(Dispatchers.IO) {
+    private suspend inline fun <reified T> getBrowse(body: BrowseBody) = withContext(Dispatchers.IO) {
         httpClient.post("$API_URL/browse") {
             parameter("key", innerTubeApiKey)
             contentType(ContentType.Application.Json)
-            setBody(
-                BrowseBody(
-                    context = innerTubeContext,
-                    browseId = "FEwhat_to_watch"
-                )
-            )
-        }
+            setBody(body)
+        }.body<T>()
     }
 
-    suspend fun getTrending(continuation: String?): ApiTrending = withContext(Dispatchers.IO) {
-        httpClient.post("$API_URL/browse") {
-            parameter("key", innerTubeApiKey)
-            contentType(ContentType.Application.Json)
-            setBody(
-                BrowseBody(
-                    context = innerTubeContext,
-                    browseId = "FEtrending",
-                    continuation = continuation
-                )
-            )
-        }.body()
-    }
+    suspend fun getRecommendations(): HttpResponse = getBrowse(
+        BrowseBody(
+            context = innerTubeContext,
+            browseId = "FEwhat_to_watch"
+        )
+    )
 
-    suspend fun getChannel(id: String): ApiChannel = withContext(Dispatchers.IO) {
-        httpClient.post("$API_URL/browse") {
-            parameter("key", innerTubeApiKey)
-            contentType(ContentType.Application.Json)
-            setBody(
-                BrowseBody(
-                    context = innerTubeContext,
-                    browseId = id
-                )
-            )
-        }.body()
-    }
+    suspend fun getTrending(continuation: String?): ApiTrending = getBrowse(
+        BrowseBody(
+            context = innerTubeContext,
+            browseId = "FEtrending",
+            continuation = continuation
+        )
+    )
+
+    suspend fun getChannel(id: String, params: String? = null): ApiChannel = getBrowse(
+        BrowseBody(
+            context = innerTubeContext,
+            browseId = id,
+            params = params
+        )
+    )
 
     suspend fun getSearchSuggestions(search: String): JsonElement = withContext(Dispatchers.IO) {
         val body = httpClient.get("https://suggestqueries-clients6.youtube.com/complete/search") {
@@ -128,20 +119,19 @@ class InnerTubeService(
         }.body()
     }
 
-    suspend fun getSearchResults(query: String, continuation: String?): ApiSearch =
-        withContext(Dispatchers.IO) {
-            httpClient.post("$API_URL/search") {
-                parameter("key", innerTubeApiKey)
-                contentType(ContentType.Application.Json)
-                setBody(
-                    SearchBody(
-                        context = innerTubeContext,
-                        query = query,
-                        continuation = continuation
-                    )
+    suspend fun getSearchResults(query: String, continuation: String?): ApiSearch = withContext(Dispatchers.IO) {
+        httpClient.post("$API_URL/search") {
+            parameter("key", innerTubeApiKey)
+            contentType(ContentType.Application.Json)
+            setBody(
+                SearchBody(
+                    context = innerTubeContext,
+                    query = query,
+                    continuation = continuation
                 )
-            }.body()
-        }
+            )
+        }.body()
+    }
 
     companion object {
         private const val YOUTUBE_URL = "https://www.youtube.com"

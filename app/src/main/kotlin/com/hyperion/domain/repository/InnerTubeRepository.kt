@@ -139,7 +139,11 @@ class InnerTubeRepository(
                 .filterIsInstance<ApiContinuation.Next>()
                 .singleOrNull()
                 ?.continuation,
-            videos = next.continuationContents.sectionListContinuation.contents.mapNotNull { null }
+            videos = next.continuationContents.sectionListContinuation.contents.flatMap { (itemSectionRenderer) ->
+                itemSectionRenderer.contents.mapNotNull { (elementRenderer) ->
+                    elementRenderer.model.videoWithContextModel?.videoWithContextData?.toDomain()
+                }
+            }
         )
     }
 

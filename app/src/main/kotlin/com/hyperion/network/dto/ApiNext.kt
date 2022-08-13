@@ -90,8 +90,6 @@ data class ApiNext(
 
                         @Serializable
                         object Model
-//                        @Serializable
-//                        data class Model(val commentsCompositeEntryPointModel: ApiVideo)
                     }
 
                     @Serializable
@@ -113,52 +111,7 @@ data class ApiNext(
     @Serializable
     data class ContinuationContents(val sectionListContinuation: SectionListContinuation) {
         @Serializable
-        data class Model(val videoWithContextModel: VideoWithContextModel? = null) {
-            @Serializable
-            data class VideoWithContextModel(val videoWithContextData: VideoWithContextData) {
-                @Serializable
-                data class VideoWithContextData(
-                    val onTap: OnTap,
-                    val videoData: VideoData
-                ) {
-                    @Serializable
-                    data class OnTap(val innertubeCommand: InnertubeCommand) {
-                        @Serializable
-                        data class InnertubeCommand(
-                            val watchNextWatchEndpointMutationCommand: WatchNextWatchEndpointMutationCommand
-                        ) {
-                            @Serializable
-                            data class WatchNextWatchEndpointMutationCommand(val watchEndpoint: ApiWatchEndpoint)
-                        }
-                    }
-
-                    @Serializable
-                    data class VideoData(
-                        val avatar: Avatar? = null,
-                        val metadata: Metadata,
-                        val thumbnail: ApiThumbnailTimestamp
-                    ) {
-                        @Serializable
-                        data class Avatar(
-                            val endpoint: Endpoint,
-                            val image: ApiImage
-                        ) {
-                            @Serializable
-                            data class Endpoint(val innertubeCommand: InnertubeCommand) {
-                                @Serializable
-                                data class InnertubeCommand(val browseEndpoint: ApiBrowseEndpoint)
-                            }
-                        }
-
-                        @Serializable
-                        data class Metadata(
-                            val metadataDetails: String = "YouTube",
-                            val title: String
-                        )
-                    }
-                }
-            }
-        }
+        data class Model(val videoWithContextModel: ApiVideo? = null)
 
         @Serializable
         data class SectionListContinuation(
@@ -230,7 +183,7 @@ data class ApiNext(
                 return when {
                     "likeButton" in tree -> json.decodeFromJsonElement(LikeButton.serializer(), tree["likeButton"]!!)
                     "dislikeButton" in tree -> json.decodeFromJsonElement(DislikeButton.serializer(), tree["dislikeButton"]!!)
-                    else -> OtherButton()
+                    else -> OtherButton
                 }
             }
 
@@ -250,6 +203,6 @@ data class ApiNext(
         data class DislikeButton(val buttonData: ButtonData) : Button
 
         @Serializable
-        class OtherButton : Button
+        object OtherButton : Button
     }
 }
