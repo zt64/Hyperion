@@ -62,28 +62,24 @@ fun PlayerScreen(
         if (videoId != null) viewModel.loadVideo(videoId)
     }
 
-    Surface(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        when (state) {
-            is PlayerViewModel.State.Loading -> {
-                PlayerScreenLoading(
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            is PlayerViewModel.State.Loaded -> {
-                PlayerScreenLoaded(
-                    modifier = Modifier.fillMaxSize(),
-                    viewModel = viewModel,
-                    navigator = navigator
-                )
-            }
-            is PlayerViewModel.State.Error -> {
-                PlayerScreenError(
-                    exception = state.exception,
-                    onClickBack = navigator::pop
-                )
-            }
+    when (state) {
+        is PlayerViewModel.State.Loading -> {
+            PlayerScreenLoading(
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+        is PlayerViewModel.State.Loaded -> {
+            PlayerScreenLoaded(
+                modifier = Modifier.fillMaxSize(),
+                viewModel = viewModel,
+                navigator = navigator
+            )
+        }
+        is PlayerViewModel.State.Error -> {
+            PlayerScreenError(
+                exception = state.exception,
+                onClickBack = navigator::pop
+            )
         }
     }
 }

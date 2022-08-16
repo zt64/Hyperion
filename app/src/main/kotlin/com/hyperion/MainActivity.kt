@@ -42,29 +42,31 @@ class MainActivity : ComponentActivity() {
                     if (!navigator.pop()) finish()
                 }
 
-                Taxi(
-                    modifier = Modifier.fillMaxSize(),
-                    navigator = navigator,
-                    transitionSpec = { fadeIn() with fadeOut() }
-                ) { destination ->
-                    when (destination) {
-                        is AppDestination.Home -> MainRootScreen(
-                            navigator = navigator
-                        )
-                        is AppDestination.Search -> SearchScreen(
-                            navigator = navigator
-                        )
-                        is AppDestination.Player -> PlayerScreen(
-                            navigator = navigator,
-                            videoId = destination.videoId
-                        )
-                        is AppDestination.Channel -> ChannelScreen(
-                            navigator = navigator,
-                            channelId = destination.channelId
-                        )
-                        is AppDestination.Settings -> SettingsScreen(
-                            onClickBack = navigator::pop
-                        )
+                Surface {
+                    Taxi(
+                        modifier = Modifier.fillMaxSize(),
+                        navigator = navigator,
+                        transitionSpec = { fadeIn() with fadeOut() }
+                    ) { destination ->
+                        when (destination) {
+                            is AppDestination.Home -> MainRootScreen(
+                                navigator = navigator
+                            )
+                            is AppDestination.Search -> SearchScreen(
+                                navigator = navigator
+                            )
+                            is AppDestination.Player -> PlayerScreen(
+                                navigator = navigator,
+                                videoId = destination.videoId
+                            )
+                            is AppDestination.Channel -> ChannelScreen(
+                                navigator = navigator,
+                                channelId = destination.channelId
+                            )
+                            is AppDestination.Settings -> SettingsScreen(
+                                onClickBack = navigator::pop
+                            )
+                        }
                     }
                 }
             }
