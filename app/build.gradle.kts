@@ -59,10 +59,10 @@ dependencies {
 
     // Compose
     val composeVersion = "1.3.0-alpha03"
-    implementation("androidx.compose.ui:ui:${composeVersion}")
-    debugImplementation("androidx.compose.ui:ui-tooling:${composeVersion}")
+    implementation("androidx.compose.ui:ui:$composeVersion")
+    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.material3:material3:1.0.0-alpha16")
-    implementation("androidx.compose.material:material-icons-extended:${composeVersion}")
+    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     // Accompanist
     val accompanistVersion = "0.26.1-alpha"
@@ -77,7 +77,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
 
     // Taxi
-    implementation("com.github.X1nto:Taxi:1.1.0")
+    implementation("com.github.X1nto:Taxi:1.2.0")
 
     // Media3
     val media3Version = "1.0.0-beta02"
