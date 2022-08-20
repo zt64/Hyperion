@@ -21,8 +21,8 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:exported="true"
             android:supportsPictureInPicture="true"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.Hyperion.SplashScreen">
+            android:theme="@style/Theme.Hyperion.SplashScreen"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
