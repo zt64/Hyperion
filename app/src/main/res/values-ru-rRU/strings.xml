@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Hyperion</string>
-    <string name="home">Home</string>
+    <string name="home">Главная</string>
     <string name="explore">Explore</string>
     <string name="settings_screen">Настройки</string>
     <string name="apply">Применить</string>
@@ -19,29 +19,29 @@
     <string name="download_location">Расположение загрузок</string>
     <string name="start_screen">Начальный экран</string>
     <string name="thumbnail">Thumbnail</string>
-    <string name="videos">Videos</string>
-    <string name="playlists">Playlists</string>
+    <string name="videos">Видео</string>
+    <string name="playlists">Плейлисты</string>
     <string name="search">Поиск</string>
     <string name="error">Ошибка</string>
     <string name="black_background">Black background</string>
     <string name="error_occurred">Произошла ошибка</string>
     <string name="unknown">Unknown</string>
     <string name="compact_card">Compact card</string>
-    <string name="pip">Picture-in-picture (PiP)</string>
+    <string name="pip">Картинка в картинке (PiP)</string>
     <string name="play">Play</string>
     <string name="pause">Pause</string>
     <string name="close_mini_player">Close mini-player</string>
-    <string name="back">Back</string>
+    <string name="back">Назад</string>
     <string name="more">More</string>
     <string name="skip_next">Пропустить следующее</string>
     <string name="skip_previous">Skip previous</string>
     <string name="minimize">Minimize</string>
     <string name="close_fullscreen">Close fullscreen</string>
     <string name="open_fullscreen">Open fullscreen</string>
-    <string name="verified">Verified</string>
+    <string name="verified">Подтверждён</string>
     <string name="dynamic_color">Динамический цвет</string>
     <string name="timestamp_scale">Timestamp scale</string>
     <string name="about">About</string>
-    <string name="comments">Comments</string>
-    <string name="show_download_button">Show download button</string>
+    <string name="comments">Комментарии</string>
+    <string name="show_download_button">Показать кнопку загрузки</string>
 </resources>
