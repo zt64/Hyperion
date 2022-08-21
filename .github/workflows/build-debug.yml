@@ -36,7 +36,7 @@ jobs:
       - name: Automatic Release
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          repo_token: "${{ secrets.REPO_TOKEN }}"
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "debug"
           prerelease: true
           title: "Automatic Debug Build"
