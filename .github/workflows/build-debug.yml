@@ -9,6 +9,10 @@ on:
       - '*'
   workflow_dispatch:
 
+concurrency:
+    group: "build-debug-apk"
+    cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -28,3 +32,13 @@ jobs:
           name: app-debug
           path: |
             app/build/outputs/apk/debug/app-debug.apk
+      
+      - name: Automatic Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.REPO_TOKEN }}"
+          automatic_release_tag: "debug"
+          prerelease: true
+          title: "Automatic Debug Build"
+          files: |
+              app/build/outputs/apk/debug/app-debug.apk
