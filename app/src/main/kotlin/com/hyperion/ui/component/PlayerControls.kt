@@ -45,26 +45,30 @@ fun PlayerControls(
 
         Row(
             modifier = Modifier.align(Alignment.Center),
-            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            horizontalArrangement = Arrangement.spacedBy(40.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onSkipPrevious) {
                 Icon(
+                    modifier = Modifier.size(30.dp),
                     imageVector = Icons.Default.SkipPrevious,
                     contentDescription = stringResource(R.string.skip_previous)
                 )
             }
 
-            IconButton(onClick = onClickPlayPause) {
+            IconButton(
+                modifier = Modifier.size(64.dp),
+                onClick = onClickPlayPause
+            ) {
                 if (isPlaying) {
                     Icon(
-                        modifier = Modifier.size(70.dp),
+                        modifier = Modifier.size(50.dp),
                         imageVector = Icons.Default.Pause,
                         contentDescription = stringResource(R.string.pause)
                     )
                 } else {
                     Icon(
-                        modifier = Modifier.size(70.dp),
+                        modifier = Modifier.size(50.dp),
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = stringResource(R.string.play)
                     )
@@ -73,6 +77,7 @@ fun PlayerControls(
 
             IconButton(onClick = onSkipNext) {
                 Icon(
+                    modifier = Modifier.size(30.dp),
                     imageVector = Icons.Default.SkipNext,
                     contentDescription = stringResource(R.string.skip_next)
                 )
