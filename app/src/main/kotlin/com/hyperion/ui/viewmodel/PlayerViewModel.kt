@@ -19,6 +19,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.ExperimentalTime
 
 class PlayerViewModel(
     private val application: Application,
@@ -172,7 +173,11 @@ class PlayerViewModel(
     fun skipBackward() = player.seekBack()
     fun skipNext() = player.seekToNext()
     fun skipPrevious() = player.seekToPrevious()
-    fun seekTo(milliseconds: Float) = player.seekTo(milliseconds.toLong())
+    @OptIn(ExperimentalTime::class)
+    fun seekTo(milliseconds: Float) {
+        position = milliseconds.toLong().milliseconds
+        player.seekTo(milliseconds.toLong())
+    }
 
     fun toggleDescription() {
         showFullDescription = !showFullDescription
