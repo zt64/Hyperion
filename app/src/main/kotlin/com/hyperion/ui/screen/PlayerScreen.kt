@@ -154,7 +154,7 @@ private fun PlayerScreenLoaded(
                 )
         ) {
             DisposableEffect(Unit) {
-                onDispose { viewModel.player.release() }
+                onDispose { viewModel.player.pause() }
             }
 
             Player(player = viewModel.player)
