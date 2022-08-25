@@ -6,6 +6,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.draggable
@@ -149,6 +150,7 @@ private fun PlayerScreenLoaded(
                             offsetY.value < -150 -> viewModel.enterFullscreen()
                         }
 
+
                         offsetY.animateTo(0f)
                     }
                 )
@@ -202,7 +204,9 @@ private fun PlayerScreenLoaded(
         val relatedVideos = viewModel.relatedVideos.collectAsLazyPagingItems()
 
         LazyColumn(
-            modifier = Modifier.padding(horizontal = 14.dp),
+            modifier = Modifier.padding(horizontal = 14.dp).clickable {
+                viewModel.toggleDescription()
+            },
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
@@ -226,11 +230,13 @@ private fun PlayerScreenLoaded(
                     Text(
                         text = video.title,
                         style = MaterialTheme.typography.titleMedium,
+
                     )
 
                     Text(
                         text = "${video.viewCount} · ${video.uploadDate}",
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
+
                     )
 
                     LazyRow(

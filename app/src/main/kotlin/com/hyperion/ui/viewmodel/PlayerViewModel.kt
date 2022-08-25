@@ -116,7 +116,7 @@ class PlayerViewModel(
     var position: Duration by mutableStateOf(Duration.ZERO)
         private set
 
-    val relatedVideos = Pager(PagingConfig(4)) {
+    var relatedVideos = Pager(PagingConfig(4)) {
         object : PagingSource<String, DomainVideoPartial>() {
             override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainVideoPartial> {
                 return try {
@@ -173,7 +173,7 @@ class PlayerViewModel(
     fun skipBackward() = player.seekBack()
     fun skipNext() = player.seekToNext()
     fun skipPrevious() = player.seekToPrevious()
-    @OptIn(ExperimentalTime::class)
+
     fun seekTo(milliseconds: Float) {
         position = milliseconds.toLong().milliseconds
         player.seekTo(milliseconds.toLong())
@@ -232,6 +232,30 @@ class PlayerViewModel(
                 player.play()
 
                 state = State.Loaded
+                relatedVideos = Pager(PagingConfig(4)) {
+                    object : PagingSource<String, DomainVideoPartial>() {
+                        override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainVideoPartial> {
+                            return try {
+                                val relatedVideosResponse = if (params.key == null) {
+                                    repository.getNext(video!!.id).relatedVideos
+                                } else {
+                                    repository.getRelatedVideos(video!!.id, params.key!!)
+                                }
+
+                                LoadResult.Page(
+                                    data = relatedVideosResponse.videos,
+                                    prevKey = null,
+                                    nextKey = relatedVideosResponse.continuation
+                                )
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                LoadResult.Error(e)
+                            }
+                        }
+
+                        override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
+                    }
+                }.flow.cachedIn(viewModelScope)
             } catch (e: Exception) {
                 e.printStackTrace()
                 state = State.Error(e)

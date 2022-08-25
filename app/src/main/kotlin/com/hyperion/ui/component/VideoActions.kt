@@ -68,7 +68,8 @@ fun VideoActions(
         FilledTonalIconButton(onClick = onClickShare) {
             Icon(
                 imageVector = Icons.Default.Share,
-                contentDescription = stringResource(R.string.share)
+                contentDescription = stringResource(R.string.share),
+
             )
         }
 
