@@ -33,10 +33,9 @@ fun PlayerActions(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        FilledTonalIconToggleButton(
+        FilledTonalButton(
             enabled = voteEnabled,
-            checked = false,
-            onCheckedChange = onClickVote
+            onClick = { }
         ) {
             Icon(
                 imageVector = Icons.Default.ThumbUp,
@@ -48,10 +47,9 @@ fun PlayerActions(
             }
         }
 
-        FilledTonalIconToggleButton(
+        FilledTonalButton(
             enabled = voteEnabled,
-            checked = false,
-            onCheckedChange = onClickVote
+            onClick = { }
         ) {
             Icon(
                 imageVector = Icons.Default.ThumbDown,

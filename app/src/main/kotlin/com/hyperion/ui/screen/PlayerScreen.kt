@@ -369,10 +369,9 @@ fun PlayerScreenPortrait(
                                 }
                             }
 
-                            FilledTonalIconToggleButton(
+                            FilledTonalButton(
                                 enabled = false,
-                                checked = false,
-                                onCheckedChange = viewModel::updateSubscription
+                                onClick = { }
                             ) {
                                 Text(stringResource(R.string.subscribe))
                             }
