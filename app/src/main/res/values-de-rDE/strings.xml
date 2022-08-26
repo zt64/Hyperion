@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Hyperion</string>
     <string name="home">Startseite</string>
     <string name="explore">Erkunden</string>
     <string name="settings_screen">Einstellungen</string>
@@ -43,4 +42,7 @@
     <string name="about">Über</string>
     <string name="comments">Kommentare</string>
     <string name="show_download_button">Download-Button anzeigen</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="confirm">Confirm</string>
+    <string name="quality">Quality</string>
 </resources>
