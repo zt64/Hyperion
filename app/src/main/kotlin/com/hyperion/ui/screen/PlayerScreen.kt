@@ -22,10 +22,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.VideoSettings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -212,6 +209,37 @@ private fun PlayerScreenLoaded(
             }
         )
     }
+    if (viewModel.showDownloadDialog) {
+        AlertDialog(
+            onDismissRequest = viewModel::hideDownloadDialog,
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Download,
+                    contentDescription = stringResource(R.string.download)
+                )
+            },
+            title = { Text(stringResource(R.string.download)) },
+            text = {
+
+            },
+            confirmButton = {
+                Button(onClick = viewModel::hideDownloadDialog) {
+                    Text(stringResource(R.string.download))
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = viewModel::hideDownloadDialog,
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    )
+                ) {
+                    Text(stringResource(R.string.dismiss))
+                }
+            }
+        )
+    }
 
     val context = LocalContext.current
 
@@ -336,7 +364,7 @@ fun PlayerScreenPortrait(
                         showDownloadButton = viewModel.preferences.showDownloadButton,
                         onClickVote = viewModel::updateVote,
                         onClickShare = viewModel::shareVideo,
-                        onClickDownload = viewModel::download
+                        onClickDownload = viewModel::showDownloadDialog
                     )
 
                     Card(

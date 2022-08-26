@@ -71,10 +71,7 @@ fun PlayerActions(
         }
 
         if (showDownloadButton) {
-            FilledTonalIconButton(
-                enabled = false,
-                onClick = onClickDownload
-            ) {
+            FilledTonalIconButton(onClick = onClickDownload) {
                 Icon(
                     imageVector = Icons.Default.Download,
                     contentDescription = stringResource(R.string.download)

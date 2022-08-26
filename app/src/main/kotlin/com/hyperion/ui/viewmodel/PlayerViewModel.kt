@@ -58,6 +58,9 @@ class PlayerViewModel(
     var showQualityPicker by mutableStateOf(false)
         private set
 
+    var showDownloadDialog by mutableStateOf(false)
+        private set
+
     private val listener: Player.Listener = object : Player.Listener {
         override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
             this@PlayerViewModel.playWhenReady = playWhenReady
@@ -207,11 +210,11 @@ class PlayerViewModel(
     }
 
     fun showDownloadDialog() {
-
+        showDownloadDialog = true
     }
 
     fun hideDownloadDialog() {
-
+        showDownloadDialog = false
     }
 
     // TODO: Use enum for like & dislike
