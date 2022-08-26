@@ -16,7 +16,7 @@ import com.hyperion.R
 import kotlin.time.Duration
 
 @Composable
-fun PlayerControls(
+fun PlayerControlsOverlay(
     modifier: Modifier = Modifier,
     isFullscreen: Boolean,
     isPlaying: Boolean,
@@ -89,7 +89,7 @@ fun PlayerControls(
             onClick = onClickMore
         ) {
             Icon(
-                imageVector = Icons.Default.MoreVert,
+                imageVector = Icons.Default.Settings,
                 contentDescription = stringResource(R.string.more)
             )
         }

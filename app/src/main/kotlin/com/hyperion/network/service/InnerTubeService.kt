@@ -1,9 +1,6 @@
 package com.hyperion.network.service
 
-import com.hyperion.network.body.BrowseBody
-import com.hyperion.network.body.NextBody
-import com.hyperion.network.body.PlayerBody
-import com.hyperion.network.body.SearchBody
+import com.hyperion.network.body.*
 import com.hyperion.network.dto.*
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -23,40 +20,38 @@ class InnerTubeService(
     private val httpClient: HttpClient,
     private val json: Json
 ) {
-    private lateinit var innerTubeApiKey: String
-    private lateinit var innerTubeContext: ApiContext
+    private var innerTubeApiKey: String
+    private var innerTubeContext: ApiContext
 
     init {
-        runBlocking { initApi() }
-    }
+        runBlocking {
+            val body = httpClient.get(YOUTUBE_URL).bodyAsText()
 
-    private suspend fun initApi() = withContext(Dispatchers.IO) {
-        val html = httpClient.get(YOUTUBE_URL).bodyAsText()
+            val (obj) = """ytcfg\.set\((.*?)\);""".toRegex()
+                .findAll(body)
+                .elementAt(1)
+                .destructured
 
-        val (obj) = "ytcfg.set\\((.*?)\\);".toRegex(RegexOption.DOT_MATCHES_ALL)
-            .findAll(html)
-            .elementAt(1)
-            .destructured
+            val data: InnerTubeData = json.decodeFromString(obj)
 
-        val data: InnerTubeData = json.decodeFromString(obj)
-
-        innerTubeApiKey = data.innerTubeApiKey
-        innerTubeContext = data.innerTubeContext.copy(
-            client = data.innerTubeContext.client.copy(
-                clientName = CLIENT_NAME,
-                clientVersion = CLIENT_VERSION,
-                platform = PLATFORM,
-                clientFormFactor = FORM_FACTOR
+            innerTubeApiKey = data.innerTubeApiKey
+            innerTubeContext = data.innerTubeContext.copy(
+                client = data.innerTubeContext.client.copy(
+                    clientName = CLIENT_NAME,
+                    clientVersion = CLIENT_VERSION,
+                    platform = PLATFORM,
+                    clientFormFactor = FORM_FACTOR
+                )
             )
-        )
+        }
     }
 
-    private suspend inline fun <reified T> getBrowse(body: BrowseBody) = withContext(Dispatchers.IO) {
+    private suspend inline fun <reified T> getBrowse(body: BrowseBody): T = withContext(Dispatchers.IO) {
         httpClient.post("$API_URL/browse") {
             parameter("key", innerTubeApiKey)
             contentType(ContentType.Application.Json)
             setBody(body)
-        }.body<T>()
+        }.body()
     }
 
     suspend fun getRecommendations(): HttpResponse = getBrowse(
@@ -66,7 +61,28 @@ class InnerTubeService(
         )
     )
 
-    suspend fun getTrending(continuation: String?): ApiTrending = getBrowse(
+    suspend fun getPlaylist(playlistId: String): HttpResponse = getBrowse(
+        BrowseBody(
+            context = innerTubeContext,
+            browseId = playlistId
+        )
+    )
+
+    suspend fun getSubscriptions(): HttpResponse = getBrowse(
+        BrowseBody(
+            context = innerTubeContext,
+            browseId = "FEsubscriptions"
+        )
+    )
+
+    suspend fun getTrending(): ApiTrending = getBrowse(
+        BrowseBody(
+            context = innerTubeContext,
+            browseId = "FEtrending"
+        )
+    )
+
+    suspend fun getTrending(continuation: String): ApiTrendingContinuation = getBrowse(
         BrowseBody(
             context = innerTubeContext,
             browseId = "FEtrending",
@@ -105,7 +121,20 @@ class InnerTubeService(
         }.body()
     }
 
-    suspend fun getNext(id: String, continuation: String?): ApiNext = withContext(Dispatchers.IO) {
+    suspend fun getNext(id: String): ApiNext = withContext(Dispatchers.IO) {
+        httpClient.post("$API_URL/next") {
+            parameter("key", innerTubeApiKey)
+            contentType(ContentType.Application.Json)
+            setBody(
+                NextBody(
+                    context = innerTubeContext,
+                    videoId = id
+                )
+            )
+        }.body()
+    }
+
+    suspend fun getNext(id: String, continuation: String): ApiNextContinuation = withContext(Dispatchers.IO) {
         httpClient.post("$API_URL/next") {
             parameter("key", innerTubeApiKey)
             contentType(ContentType.Application.Json)
@@ -119,18 +148,46 @@ class InnerTubeService(
         }.body()
     }
 
-    suspend fun getSearchResults(query: String, continuation: String?): ApiSearch = withContext(Dispatchers.IO) {
+    suspend fun getSearchResults(query: String): ApiSearch = withContext(Dispatchers.IO) {
         httpClient.post("$API_URL/search") {
             parameter("key", innerTubeApiKey)
             contentType(ContentType.Application.Json)
             setBody(
                 SearchBody(
                     context = innerTubeContext,
-                    query = query,
-                    continuation = continuation
+                    query = query
                 )
             )
         }.body()
+    }
+
+    suspend fun getSearchResults(query: String, continuation: String): ApiSearchContinuation =
+        withContext(Dispatchers.IO) {
+            httpClient.post("$API_URL/search") {
+                parameter("key", innerTubeApiKey)
+                contentType(ContentType.Application.Json)
+                setBody(
+                    SearchBody(
+                        context = innerTubeContext,
+                        query = query,
+                        continuation = continuation
+                    )
+                )
+            }.body()
+        }
+
+    suspend fun createComment(text: String, params: String): Unit = withContext(Dispatchers.IO) {
+        httpClient.post("$API_URL/create_comment") {
+            parameter("key", innerTubeApiKey)
+            contentType(ContentType.Application.Json)
+            setBody(
+                CommentBody(
+                    context = innerTubeContext,
+                    commentText = text,
+                    createCommentParams = params
+                )
+            )
+        }
     }
 
     companion object {

@@ -41,8 +41,6 @@ fun CommentCard(
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
-
-                Spacer(Modifier.weight(1f, true))
             }
 
             Text(

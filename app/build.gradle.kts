@@ -23,6 +23,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -43,14 +44,14 @@ android {
 
 dependencies {
     // AndroidX core
-    implementation("androidx.core:core-ktx:1.9.0-beta01")
+    implementation("androidx.core:core-ktx:1.9.0-rc01")
     implementation("androidx.core:core-splashscreen:1.0.0")
 
     // AndroidX paging
     implementation("androidx.paging:paging-compose:1.0.0-alpha16")
 
     // AndroidX activity
-    implementation("androidx.activity:activity-compose:1.6.0-beta01")
+    implementation("androidx.activity:activity-compose:1.6.0-rc01")
 
     // Koin
     val koinVersion = "3.2.0"
@@ -58,23 +59,24 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
 
     // Compose
-    val composeVersion = "1.3.0-alpha03"
+    val composeVersion = "1.3.0-beta01"
     implementation("androidx.compose.ui:ui:$composeVersion")
+    implementation("androidx.compose.runtime:runtime:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha16")
+    implementation("androidx.compose.material3:material3:1.0.0-beta01")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     // Accompanist
-    val accompanistVersion = "0.26.1-alpha"
+    val accompanistVersion = "0.26.2-beta"
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
 
     // Coil
-    implementation("io.coil-kt:coil-compose:2.1.0")
+    implementation("io.coil-kt:coil-compose:2.2.0")
 
     // KotlinX
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
 
     // Taxi
     implementation("com.github.X1nto:Taxi:1.2.0")

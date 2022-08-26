@@ -23,7 +23,6 @@
     <string name="playlists">Lista de reproducción</string>
     <string name="search">Búsqueda</string>
     <string name="error">Fallo de conexión</string>
-    <string name="black_background">Fondo negro</string>
     <string name="error_occurred">Se ha producido un error</string>
     <string name="unknown">Desconocido</string>
     <string name="compact_card">Tarjeta Compacta</string>

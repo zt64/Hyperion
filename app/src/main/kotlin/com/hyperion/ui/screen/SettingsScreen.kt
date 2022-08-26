@@ -2,6 +2,7 @@ package com.hyperion.ui.screen
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,9 +14,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
+import com.hyperion.ui.navigation.HomeDestination
 import com.hyperion.ui.theme.Theme
 import com.hyperion.ui.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.getViewModel
@@ -26,7 +29,10 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = getViewModel(),
     onClickBack: () -> Unit
 ) {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             MediumTopAppBar(
                 title = { Text(stringResource(R.string.settings_screen)) },
@@ -37,41 +43,37 @@ fun SettingsScreen(
                             contentDescription = stringResource(R.string.back)
                         )
                     }
-                }
+                },
+                scrollBehavior = scrollBehavior
             )
         }
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .padding(paddingValues),
+                .padding(paddingValues)
+                .padding(horizontal = 4.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            val prefs = viewModel.prefs
+            val preferences = viewModel.preferences
 
             if (viewModel.showThemePicker) {
                 ThemePicker(
-                    currentTheme = prefs.theme,
+                    currentTheme = preferences.theme,
                     onDismissRequest = viewModel::dismissThemePicker,
                     onConfirm = viewModel::setTheme
                 )
             }
 
             SwitchSetting(
-                checked = prefs.dynamicColor,
+                checked = preferences.dynamicColor,
                 text = stringResource(R.string.dynamic_color),
-                onCheckedChange = { prefs.dynamicColor = it }
-            )
-
-            SwitchSetting(
-                enabled = !prefs.dynamicColor,
-                checked = prefs.midnightMode,
-                text = stringResource(R.string.black_background),
-                onCheckedChange = { prefs.midnightMode = it }
+                icon = Icons.Default.Palette,
+                onCheckedChange = { preferences.dynamicColor = it }
             )
 
             ListItem(
-                modifier = Modifier.clickable { viewModel.showThemePicker() },
+                modifier = Modifier.clickable(onClick = viewModel::showThemePicker),
                 leadingContent = {
                     Icon(
                         imageVector = Icons.Default.Style,
@@ -81,22 +83,18 @@ fun SettingsScreen(
                 headlineText = { Text(stringResource(R.string.theme)) },
                 supportingText = { Text(stringResource(R.string.theme_setting_description)) },
                 trailingContent = {
-                    FilledTonalButton(
-                        onClick = viewModel::showThemePicker
-                    ) {
-                        Text(prefs.theme.displayName)
+                    FilledTonalButton(onClick = viewModel::showThemePicker) {
+                        Text(preferences.theme.displayName)
                     }
                 }
             )
 
             SwitchSetting(
-                checked = prefs.compactCard,
+                checked = preferences.compactCard,
                 text = stringResource(R.string.compact_card),
                 icon = Icons.Default.VideoSettings,
-                onCheckedChange = { prefs.compactCard = it }
+                onCheckedChange = { preferences.compactCard = it }
             )
-
-            Divider()
 
             var showStartScreenDropdown by remember { mutableStateOf(false) }
             ListItem(
@@ -108,19 +106,22 @@ fun SettingsScreen(
                         FilledTonalButton(
                             onClick = { showStartScreenDropdown = true }
                         ) {
-                            Text(stringResource(prefs.startScreen.label))
+                            Text(stringResource(preferences.startScreen.label))
                         }
 
                         DropdownMenu(
                             expanded = showStartScreenDropdown,
                             onDismissRequest = { showStartScreenDropdown = false }
                         ) {
-//                            NavigationDestination.values().forEach { destination ->
-//                                DropdownMenuItem(
-//                                    text = { Text(destination.name) },
-//                                    onClick = { prefs.startScreen = destination }
-//                                )
-//                            }
+                            HomeDestination.values().forEach { destination ->
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(destination.label)) },
+                                    onClick = {
+                                        preferences.startScreen = destination
+                                        showStartScreenDropdown = false
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -128,44 +129,37 @@ fun SettingsScreen(
 
             SwitchSetting(
                 enabled = false,
-                checked = prefs.pictureInPicture,
+                checked = preferences.pictureInPicture,
                 text = stringResource(R.string.pip),
                 icon = Icons.Default.PictureInPicture,
-                onCheckedChange = { prefs.pictureInPicture = it }
+                onCheckedChange = { preferences.pictureInPicture = it }
             )
 
             SliderSetting(
                 text = stringResource(R.string.timestamp_scale),
-                suffix = "x",
-                value = prefs.timestampScale,
+                value = preferences.timestampScale,
                 valueRange = 0.8f..2f,
-                onValueChangeFinished = { prefs.timestampScale = it }
+                onValueChangeFinished = { preferences.timestampScale = it }
             )
-
-            Divider()
 
             SwitchSetting(
-                checked = prefs.showDownloadButton,
+                checked = preferences.showDownloadButton,
                 text = stringResource(R.string.show_download_button),
-                onCheckedChange = { prefs.showDownloadButton = it }
+                icon = Icons.Default.Download,
+                onCheckedChange = { preferences.showDownloadButton = it }
             )
 
-            val directoryChooser = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
-                if (uri != null) prefs.downloadDirectory = uri.toString()
+            AnimatedVisibility(visible = preferences.showDownloadButton) {
+                val directoryChooser = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
+                    if (uri != null) preferences.downloadDirectory = uri.toString()
+                }
+
+                ListItem(
+                    modifier = Modifier.clickable { directoryChooser.launch(null) },
+                    headlineText = { Text(stringResource(R.string.download_location)) },
+                    supportingText = { Text(preferences.downloadDirectory) }
+                )
             }
-            ListItem(
-                modifier = Modifier.clickable { directoryChooser.launch(null) },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Default.Download,
-                        contentDescription = stringResource(R.string.download_location)
-                    )
-                },
-                headlineText = { Text(stringResource(R.string.download_location)) },
-                supportingText = { Text(prefs.downloadDirectory ?: stringResource(R.string.unknown)) }
-            )
-
-            Divider()
 
             ListItem(
                 modifier = Modifier.clickable(onClick = viewModel::openGitHub),
@@ -200,11 +194,11 @@ fun ThemePicker(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
+                            modifier = Modifier.weight(1f, true),
                             text = theme.displayName,
-                            style = MaterialTheme.typography.labelLarge
+                            style = MaterialTheme.typography.labelLarge,
+                            softWrap = true
                         )
-
-                        Spacer(Modifier.weight(1f, true))
 
                         RadioButton(
                             selected = theme == selectedTheme,
@@ -231,7 +225,6 @@ fun ThemePicker(
 @Composable
 fun SliderSetting(
     text: String,
-    suffix: String = "",
     value: Float,
     valueRange: ClosedFloatingPointRange<Float>,
     steps: Int = 10,
@@ -259,7 +252,7 @@ fun SliderSetting(
                     onValueChangeFinished = { onValueChangeFinished(sliderValue) }
                 )
 
-                Text("${"%.1f".format(sliderValue)}$suffix")
+                Text("${"%.1f".format(sliderValue)}x")
             }
         },
         trailingContent = trailingContent

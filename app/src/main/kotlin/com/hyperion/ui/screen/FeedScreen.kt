@@ -24,6 +24,7 @@ fun FeedScreen() {
                 imageVector = Icons.Default.Construction,
                 contentDescription = null
             )
+
             Text("Incomplete")
         }
     }

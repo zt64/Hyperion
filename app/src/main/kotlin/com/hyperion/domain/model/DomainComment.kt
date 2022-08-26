@@ -1,5 +1,8 @@
 package com.hyperion.domain.model
 
 data class DomainComment(
-    val content: String
+    val author: DomainChannelPartial,
+    val content: String,
+    val likeCount: Int,
+    val datePosted: String
 )

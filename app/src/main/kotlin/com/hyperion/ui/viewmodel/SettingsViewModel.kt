@@ -12,7 +12,7 @@ import com.hyperion.ui.theme.Theme
 
 class SettingsViewModel(
     private val application: Application,
-    val prefs: PreferencesManager
+    val preferences: PreferencesManager
 ) : ViewModel() {
     var showThemePicker by mutableStateOf(false)
         private set
@@ -26,7 +26,7 @@ class SettingsViewModel(
     }
 
     fun setTheme(theme: Theme) {
-        prefs.theme = theme
+        preferences.theme = theme
     }
 
     fun openGitHub() {

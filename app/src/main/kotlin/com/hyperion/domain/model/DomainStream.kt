@@ -1,17 +1,19 @@
 package com.hyperion.domain.model
 
-open class DomainStream(
-    open val url: String
-) {
+sealed interface DomainStream {
+    val url: String
+    val mimeType: String
+
     data class Video(
         override val url: String,
+        override val mimeType: String,
         val itag: Int,
-        val label: String
-    ) : DomainStream(url)
+        val label: String,
+    ) : DomainStream
 
     data class Audio(
         override val url: String,
-        val itag: Int,
-        val codec: String
-    ) : DomainStream(url)
+        override val mimeType: String,
+        val itag: Int
+    ) : DomainStream
 }

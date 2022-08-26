@@ -27,7 +27,7 @@ data class ApiVideo(val videoWithContextData: ContextData) {
             @Serializable
             data class InnertubeCommand(val watchNextWatchEndpointMutationCommand: MutationCommand? = null) {
                 @Serializable
-                data class MutationCommand(val watchEndpoint: ApiWatchEndpoint)
+                data class MutationCommand(val watchEndpoint: ApiWatchCommand)
             }
         }
     }

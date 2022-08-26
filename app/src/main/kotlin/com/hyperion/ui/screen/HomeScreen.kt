@@ -2,7 +2,6 @@ package com.hyperion.ui.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,13 +23,11 @@ fun HomeScreen(
     onClickChannel: (channelId: String) -> Unit
 ) {
     val videoListItems = viewModel.videos.collectAsLazyPagingItems()
-    val lazyListState = rememberLazyListState()
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 14.dp),
-        state = lazyListState,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -51,10 +48,7 @@ fun HomeScreen(
             ) {
                 videoListItems.loadState.apply {
                     when {
-                        refresh is LoadState.Loading -> {
-                            CircularProgressIndicator()
-                        }
-                        append is LoadState.Loading -> {
+                        refresh is LoadState.Loading || append is LoadState.Loading -> {
                             CircularProgressIndicator()
                         }
                         append is LoadState.Error -> {

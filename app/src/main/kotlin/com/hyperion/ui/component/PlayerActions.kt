@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.hyperion.R
 
 @Composable
-fun VideoActions(
+fun PlayerActions(
     modifier: Modifier = Modifier,
     voteEnabled: Boolean,
     likeLabel: @Composable () -> Unit,
@@ -33,7 +33,7 @@ fun VideoActions(
         horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        FilledTonalToggleButton(
+        FilledTonalIconToggleButton(
             enabled = voteEnabled,
             checked = false,
             onCheckedChange = onClickVote
@@ -48,7 +48,7 @@ fun VideoActions(
             }
         }
 
-        FilledTonalToggleButton(
+        FilledTonalIconToggleButton(
             enabled = voteEnabled,
             checked = false,
             onCheckedChange = onClickVote

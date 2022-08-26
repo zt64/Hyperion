@@ -10,9 +10,9 @@ sealed interface ApiContinuation {
     val continuation: String
 
     companion object Serializer : JsonContentPolymorphicSerializer<ApiContinuation>(ApiContinuation::class) {
-        override fun selectDeserializer(element: JsonElement) = when {
-            "nextContinuationData" in element.jsonObject -> Next.serializer()
-            "reloadContinuationData" in element.jsonObject -> Reload.serializer()
+        override fun selectDeserializer(element: JsonElement) = when (element.jsonObject.keys.single()) {
+            "nextContinuationData" -> Next.serializer()
+            "reloadContinuationData" -> Reload.serializer()
             else -> throw NoWhenBranchMatchedException()
         }
     }

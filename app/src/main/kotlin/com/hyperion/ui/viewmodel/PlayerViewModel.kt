@@ -8,9 +8,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.*
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.MergingMediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.paging.*
+import com.hyperion.domain.manager.DownloadManager
+import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.domain.model.DomainStream
 import com.hyperion.domain.model.DomainVideo
 import com.hyperion.domain.model.DomainVideoPartial
@@ -22,7 +27,9 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class PlayerViewModel(
     private val application: Application,
-    private val repository: InnerTubeRepository
+    private val repository: InnerTubeRepository,
+    private val downloadManager: DownloadManager,
+    val preferences: PreferencesManager
 ) : ViewModel() {
     sealed interface State {
         object Loaded : State
@@ -48,7 +55,7 @@ class PlayerViewModel(
     var showControls by mutableStateOf(false)
         private set
 
-    var showMoreOptions by mutableStateOf(false)
+    var showQualityPicker by mutableStateOf(false)
         private set
 
     private val listener: Player.Listener = object : Player.Listener {
@@ -72,6 +79,8 @@ class PlayerViewModel(
             state = State.Error(error)
         }
     }
+
+    private val dataSourceFactory = DefaultHttpDataSource.Factory()
 
     val player = ExoPlayer.Builder(application)
         .setAudioAttributes(
@@ -182,16 +191,28 @@ class PlayerViewModel(
         showControls = !showControls
     }
 
-    fun toggleMoreOptions() {
-        showMoreOptions = !showMoreOptions
-    }
-
     fun togglePlayPause() {
         isPlaying = !isPlaying
         player.playWhenReady = !player.playWhenReady
     }
 
     fun toggleFullscreen() = if (isFullscreen) exitFullscreen() else enterFullscreen()
+
+    fun showQualityPicker() {
+        showQualityPicker = true
+    }
+
+    fun hideQualityPicker() {
+        showQualityPicker = false
+    }
+
+    fun showDownloadDialog() {
+
+    }
+
+    fun hideDownloadDialog() {
+
+    }
 
     // TODO: Use enum for like & dislike
     fun updateVote(like: Boolean) {
@@ -219,10 +240,21 @@ class PlayerViewModel(
             try {
                 state = State.Loading
                 video = repository.getVideo(id)
-                stream = video!!.streams.last()
+                stream = video!!.streams.filterIsInstance<DomainStream.Video>().last()
 
-                val mediaItem = MediaItem.fromUri(stream!!.url)
-                player.setMediaItem(mediaItem)
+                val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(MediaItem.fromUri(stream!!.url))
+
+                val audioSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(MediaItem.fromUri(stream!!.url))
+
+                val mergingMediaSource = MergingMediaSource(
+                    /* adjustPeriodTimeOffsets = */ true,
+                    /* clipDurations = */ true,
+                    /* ...mediaSources = */ videoSource, audioSource
+                )
+
+                player.setMediaSource(mergingMediaSource)
                 player.prepare()
                 player.play()
 
@@ -247,12 +279,10 @@ class PlayerViewModel(
 
     fun enterFullscreen() {
         isFullscreen = true
-
     }
 
     fun exitFullscreen() {
         isFullscreen = false
-
     }
 
     fun showComments() {

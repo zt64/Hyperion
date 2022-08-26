@@ -23,7 +23,6 @@
     <string name="playlists">Pleylistlər</string>
     <string name="search">Axtarın</string>
     <string name="error">Xəta</string>
-    <string name="black_background">Qaranlıq arxafon</string>
     <string name="error_occurred">Bir xəta baş verdi</string>
     <string name="unknown">Naməlum</string>
     <string name="compact_card">Kompakt kart</string>
@@ -36,12 +35,12 @@
     <string name="skip_next">Növbətini ötürün</string>
     <string name="skip_previous">Əvvəlkini ötürün</string>
     <string name="minimize">Kiçildin</string>
-    <string name="close_fullscreen">Tam ekranı bağlayın</string>
-    <string name="open_fullscreen">Tam ekranı açın</string>
-    <string name="verified">Təsdiqləndi</string>
-    <string name="dynamic_color">Dinamik rəng</string>
-    <string name="timestamp_scale">Vaxt möhürü miqyası</string>
-    <string name="about">Haqqında</string>
-    <string name="comments">Şərhlər</string>
-    <string name="show_download_button">Endirmə düyməsini göstərin</string>
+    <string name="close_fullscreen">Close fullscreen</string>
+    <string name="open_fullscreen">Open fullscreen</string>
+    <string name="verified">Verified</string>
+    <string name="dynamic_color">Dynamic color</string>
+    <string name="timestamp_scale">Timestamp scale</string>
+    <string name="about">About</string>
+    <string name="comments">Comments</string>
+    <string name="show_download_button">Show download button</string>
 </resources>

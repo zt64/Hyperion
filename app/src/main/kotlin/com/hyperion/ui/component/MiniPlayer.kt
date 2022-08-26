@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.Player
 import com.hyperion.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MiniPlayer(
     modifier: Modifier = Modifier,
@@ -40,7 +39,7 @@ fun MiniPlayer(
                     .height(70.dp)
                     .clickable(
                         onClick = onClick,
-                        interactionSource = remember(::MutableInteractionSource),
+                        interactionSource = remember { MutableInteractionSource() },
                         indication = null
                     ),
                 verticalAlignment = Alignment.CenterVertically

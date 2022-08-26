@@ -8,8 +8,5 @@ data class ApiAvatar(
     val image: ApiImage
 ) {
     @Serializable
-    data class Endpoint(val innertubeCommand: InnertubeCommand) {
-        @Serializable
-        data class InnertubeCommand(val browseEndpoint: ApiBrowseEndpoint)
-    }
+    data class Endpoint(val innertubeCommand: ApiNavigationEndpoint)
 }

@@ -19,41 +19,44 @@ class InnerTubeRepository(
     private val rydService: RYDService
 ) {
     suspend fun getTrendingVideos(continuation: String? = null): DomainTrending {
-        val trending = service.getTrending(continuation)
-
         val section = if (continuation == null) {
-            trending.contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer
+            service.getTrending().contents.browseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer
         } else {
-            trending.continuationContents!!.sectionListContinuation
+            service.getTrending(continuation).continuationContents.sectionListContinuation
         }
 
         return DomainTrending(
             continuation = section.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation,
-            videos = section.contents.mapNotNull {
-                it.itemSectionRenderer?.contents?.single()?.elementRenderer?.model?.videoWithContextModel?.videoWithContextData?.toDomain()
-            }
+            videos = section.contents
+                .mapNotNull { it.itemSectionRenderer }
+                .mapNotNull { renderer ->
+                    renderer.contents.single().elementRenderer?.model?.videoWithContextModel?.videoWithContextData?.toDomain()
+                }
         )
     }
+
+    suspend fun getRecommendations() = service.getRecommendations()
+
+    suspend fun getSubscriptions() = service.getSubscriptions()
 
     suspend fun getSearchSuggestions(query: String) = service.getSearchSuggestions(query).jsonArray[1].jsonArray
         .map { it.jsonArray[0].jsonPrimitive.content }
 
     suspend fun getSearchResults(query: String, continuation: String? = null): DomainSearch {
-        val searchResults = service.getSearchResults(query, continuation)
-        val section = if (continuation == null) {
-            searchResults.contents!!.sectionListRenderer
+        val section = if (continuation != null) {
+            service.getSearchResults(query, continuation).continuationContents.sectionListContinuation
         } else {
-            searchResults.continuationContents!!.sectionListContinuation
+            service.getSearchResults(query).contents.sectionListRenderer
         }
 
         return DomainSearch(
             continuation = section.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation,
             items = section.contents
-                .mapNotNull(ApiSearch.SectionListRenderer.Content::itemSectionRenderer)
+                .mapNotNull { it.itemSectionRenderer }
                 .flatMap {
                     it.contents.mapNotNull { renderer ->
                         when (renderer) {
-                            is ApiSearch.SectionListRenderer.Content.Renderer.CompactChannel -> {
+                            is ApiSearch.Renderer.CompactChannel -> {
                                 DomainSearch.Result.Channel(
                                     id = renderer.compactChannelRenderer.channelId,
                                     name = renderer.compactChannelRenderer.title.toString(),
@@ -62,7 +65,7 @@ class InnerTubeRepository(
                                     videoCountText = renderer.compactChannelRenderer.videoCountText?.toString(),
                                 )
                             }
-                            is ApiSearch.SectionListRenderer.Content.Renderer.Element -> {
+                            is ApiSearch.Renderer.Element -> {
                                 when (val model = renderer.elementRenderer.model) {
                                     is ApiSearch.VideoWithContextSlots -> {
                                         val (onTap, videoData) = model.videoWithContextSlotsModel.videoWithContextData
@@ -70,7 +73,7 @@ class InnerTubeRepository(
                                         if (videoData.metadata.isPlaylistMix) return@mapNotNull null
 
                                         DomainSearch.Result.Video(
-                                            id = onTap.innertubeCommand.watchEndpoint!!.videoId!!,
+                                            id = onTap.innertubeCommand.watchEndpoint.videoId!!,
                                             author = videoData.avatar?.let { avatar ->
                                                 DomainChannelPartial(
                                                     id = avatar.endpoint.innertubeCommand.browseEndpoint.browseId,
@@ -94,40 +97,41 @@ class InnerTubeRepository(
 
     suspend fun getChannel(id: String) = service.getChannel(id).toDomain()
 
-    suspend fun getNext(videoId: String, continuation: String? = null): DomainNext {
-        val next = service.getNext(videoId, continuation)
+    suspend fun getNext(videoId: String): DomainNext {
+        val next = service.getNext(videoId)
 
-        val slimVideoMetadataSectionRenderer = next.contents?.singleColumnWatchNextResults?.results?.results?.contents?.filterIsInstance<ApiNext.Contents.SingleColumnWatchNextResults.Results.Results.SlimVideoMetadataSectionRenderer>()!!
-            .first()
+        val slimVideoMetadataSectionRenderer = next.contents.singleColumnWatchNextResults.results.results.contents
+            .filterIsInstance<ApiNext.Renderer.SlimVideoMetadataSection>()
+            .single()
 
-        val videoMetadataModel = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.model.videoMetadataModel!!
-        val videoActionBarModel = slimVideoMetadataSectionRenderer.contents[1].elementRenderer.model.videoActionBarModel!!
-        val channelBarModel = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.model.channelBarModel!!
+        val videoMetadata = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.model.videoMetadataModel!!.videoMetadata
+        val videoActionBarButtons = slimVideoMetadataSectionRenderer.contents[1].elementRenderer.model.videoActionBarModel!!.buttons
+        val channelBar = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.model.channelBarModel!!.videoChannelBarData
 
         return DomainNext(
-            viewCount = videoMetadataModel.videoMetadata.subtitleData.viewCount.content,
-            uploadDate = videoMetadataModel.videoMetadata.subtitleData.date.content,
-            channelAvatar = channelBarModel.videoChannelBarData.avatar.image.sources.first().url,
-            likesText = videoActionBarModel.buttons
+            viewCount = videoMetadata.subtitleData.viewCount.content,
+            uploadDate = videoMetadata.subtitleData.date.content,
+            channelAvatarUrl = channelBar.avatar.image.sources.first().url,
+            likesText = videoActionBarButtons
                 .filterIsInstance<ApiNext.Button.LikeButton>()
                 .single().buttonData.defaultButton.title,
-            subscribersText = channelBarModel.videoChannelBarData.subtitle,
+            subscribersText = channelBar.subtitle,
             comments = DomainNext.Comments(
                 continuation = null,
                 comments = emptyList()
             ),
             relatedVideos = DomainNext.RelatedVideos(
-                continuation = next.contents.singleColumnWatchNextResults.results.results.continuations.filterIsInstance<ApiContinuation.Next>()
+                continuation = next.contents.singleColumnWatchNextResults.results.results.continuations
+                    .filterIsInstance<ApiContinuation.Next>()
                     .singleOrNull()?.continuation,
                 videos = next.contents.singleColumnWatchNextResults.results.results.contents
-                    .filterIsInstance<ApiNext.Contents.SingleColumnWatchNextResults.Results.Results.RelatedItemsRenderer>()
-                    .flatMap {
-                        it.contents.mapNotNull { (renderer) ->
-                            renderer.model.videoWithContextModel?.videoWithContextData?.toDomain()
-                        }
+                    .filterIsInstance<ApiNext.Renderer.ItemSection.RelatedItems>()
+                    .map { it.contents }
+                    .mapNotNull { (renderer) ->
+                        renderer.elementRenderer.model.videoWithContextModel?.videoWithContextData?.toDomain()
                     }
             ),
-            badges = videoMetadataModel.videoMetadata.badgesData.map { it.label },
+            badges = videoMetadata.badgesData.map { it.label },
         )
     }
 
@@ -135,7 +139,7 @@ class InnerTubeRepository(
         val next = service.getNext(videoId, continuation)
 
         return DomainNext.RelatedVideos(
-            continuation = next.continuationContents!!.sectionListContinuation.continuations
+            continuation = next.continuationContents.sectionListContinuation.continuations
                 .filterIsInstance<ApiContinuation.Next>()
                 .singleOrNull()
                 ?.continuation,
@@ -167,11 +171,11 @@ class InnerTubeRepository(
                     dislikes.toString()
                 }
             },
-            streams = player.streamingData.formats.map(ApiFormat::toDomain),
+            streams = player.streamingData.adaptiveFormats.map(ApiFormat::toDomain),
             author = DomainChannelPartial(
                 id = player.videoDetails.channelId,
                 name = player.videoDetails.author,
-                avatarUrl = next.channelAvatar,
+                avatarUrl = next.channelAvatarUrl,
                 subscriberText = next.subscribersText
             ),
             badges = next.badges

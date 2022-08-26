@@ -35,7 +35,9 @@ fun VideoCard(
         modifier = modifier,
         onClick = onClick
     ) {
-        if ((LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) || prefs.compactCard) {
+        val orientation = LocalConfiguration.current.orientation
+
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE || prefs.compactCard) {
             // Compact horizontal layout
             Row(
                 modifier = Modifier

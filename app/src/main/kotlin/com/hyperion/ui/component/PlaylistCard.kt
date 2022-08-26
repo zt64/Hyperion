@@ -35,9 +35,7 @@ fun PlaylistCard(
 
         if (compactCard) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min)
+                modifier = Modifier.height(IntrinsicSize.Min)
             ) {
                 Thumbnail(
                     modifier = Modifier.width(140.dp),
@@ -58,6 +56,11 @@ fun PlaylistCard(
 
                     Text(
                         text = playlist.channelName,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+
+                    Text(
+                        text = "",
                         style = MaterialTheme.typography.bodySmall
                     )
                 }

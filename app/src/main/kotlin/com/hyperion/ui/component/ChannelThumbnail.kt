@@ -19,7 +19,7 @@ import com.google.accompanist.placeholder.shimmer
 @Composable
 fun ChannelThumbnail(
     modifier: Modifier = Modifier,
-    url: String,
+    url: String
 ) {
     SubcomposeAsyncImage(
         modifier = Modifier

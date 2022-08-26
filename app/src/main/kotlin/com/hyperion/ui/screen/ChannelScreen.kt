@@ -264,38 +264,32 @@ fun ChannelScreenError(
             )
         }
     ) { paddingValues ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            contentAlignment = Alignment.Center
+                .padding(paddingValues)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Icon(
-                    modifier = Modifier.size(36.dp),
-                    imageVector = Icons.Default.Error,
-                    tint = MaterialTheme.colorScheme.error,
-                    contentDescription = stringResource(R.string.error)
-                )
+            Icon(
+                modifier = Modifier.size(36.dp),
+                imageVector = Icons.Default.Error,
+                tint = MaterialTheme.colorScheme.error,
+                contentDescription = stringResource(R.string.error)
+            )
 
-                Text(
-                    text = stringResource(R.string.error_occurred),
-                    style = MaterialTheme.typography.titleMedium
-                )
+            Text(
+                text = stringResource(R.string.error_occurred),
+                style = MaterialTheme.typography.titleMedium
+            )
 
-                error.localizedMessage?.let { message ->
-                    SelectionContainer {
-                        Text(
-                            text = message,
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
+            error.localizedMessage?.let { message ->
+                SelectionContainer {
+                    Text(
+                        text = message,
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
             }
         }

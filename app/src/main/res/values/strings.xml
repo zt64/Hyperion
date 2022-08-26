@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Hyperion</string>
+    <string name="app_name" translatable="false">Hyperion</string>
     <string name="home">Home</string>
     <string name="explore">Explore</string>
     <string name="settings_screen">Settings</string>
@@ -23,7 +23,6 @@
     <string name="playlists">Playlists</string>
     <string name="search">Search</string>
     <string name="error">Error</string>
-    <string name="black_background">Black background</string>
     <string name="error_occurred">An error has occurred</string>
     <string name="unknown">Unknown</string>
     <string name="compact_card">Compact card</string>
@@ -44,4 +43,7 @@
     <string name="about">About</string>
     <string name="comments">Comments</string>
     <string name="show_download_button">Show download button</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="confirm">Confirm</string>
+    <string name="quality">Quality</string>
 </resources>

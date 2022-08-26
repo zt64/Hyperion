@@ -7,10 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.edit
 import kotlin.reflect.KProperty
 
-abstract class BasePreferenceManager(
-    private val prefs: SharedPreferences
-) {
-    protected fun getString(key: String, defaultValue: String?) = prefs.getString(key, defaultValue)!!
+abstract class BasePreferenceManager(private val prefs: SharedPreferences) {
+    protected fun getString(key: String, defaultValue: String) = prefs.getString(key, defaultValue) ?: defaultValue
     private fun getBoolean(key: String, defaultValue: Boolean) = prefs.getBoolean(key, defaultValue)
     private fun getInt(key: String, defaultValue: Int) = prefs.getInt(key, defaultValue)
     private fun getFloat(key: String, defaultValue: Float) = prefs.getFloat(key, defaultValue)
@@ -42,7 +40,7 @@ abstract class BasePreferenceManager(
 
     protected fun stringPreference(
         key: String,
-        defaultValue: String?
+        defaultValue: String
     ) = Preference(
         key = key,
         defaultValue = defaultValue,
