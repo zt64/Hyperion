@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home">Accueil</string>
-    <string name="explore">Explore</string>
+    <string name="explore">Explorer</string>
     <string name="settings_screen">Options</string>
     <string name="apply">Appliquer</string>
     <string name="theme">Thème</string>
@@ -23,14 +23,14 @@
     <string name="search">Chercher</string>
     <string name="error">Erreur</string>
     <string name="error_occurred">Une erreur est survenue</string>
-    <string name="unknown">Unknown</string>
-    <string name="compact_card">Compact card</string>
+    <string name="unknown">Inconnu</string>
+    <string name="compact_card">Carte compacte</string>
     <string name="pip">Picture-in-picture (PiP)</string>
-    <string name="play">Play</string>
+    <string name="play">Lire</string>
     <string name="pause">Pause</string>
-    <string name="close_mini_player">Close mini-player</string>
-    <string name="back">Back</string>
-    <string name="more">More</string>
+    <string name="close_mini_player">Fermer le mini lecteur</string>
+    <string name="back">Retour</string>
+    <string name="more">Plus d’infos</string>
     <string name="skip_next">Skip next</string>
     <string name="skip_previous">Skip previous</string>
     <string name="minimize">Minimize</string>

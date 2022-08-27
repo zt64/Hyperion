@@ -42,7 +42,7 @@
     <string name="about">Rólunk</string>
     <string name="comments">Hozzászólások</string>
     <string name="show_download_button">Letöltés gomb megjelenítése</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="confirm">Confirm</string>
-    <string name="quality">Quality</string>
+    <string name="dismiss">Elvetés</string>
+    <string name="confirm">Megerősítés</string>
+    <string name="quality">Minőség</string>
 </resources>
