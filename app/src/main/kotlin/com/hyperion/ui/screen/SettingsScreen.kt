@@ -1,5 +1,6 @@
 package com.hyperion.ui.screen
 
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -65,12 +66,14 @@ fun SettingsScreen(
                 )
             }
 
-            SwitchSetting(
-                checked = preferences.dynamicColor,
-                text = stringResource(R.string.dynamic_color),
-                icon = Icons.Default.Palette,
-                onCheckedChange = { preferences.dynamicColor = it }
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                SwitchSetting(
+                    checked = preferences.dynamicColor,
+                    text = stringResource(R.string.dynamic_color),
+                    icon = Icons.Default.Palette,
+                    onCheckedChange = { preferences.dynamicColor = it }
+                )
+            }
 
             ListItem(
                 modifier = Modifier.clickable(onClick = viewModel::showThemePicker),
