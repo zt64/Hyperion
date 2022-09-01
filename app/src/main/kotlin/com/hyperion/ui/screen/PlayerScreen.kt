@@ -2,7 +2,6 @@ package com.hyperion.ui.screen
 
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -39,6 +38,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -245,14 +246,14 @@ private fun PlayerScreenLoaded(
 
     DisposableEffect(viewModel.isFullscreen) {
         val activity = context.findActivity() ?: return@DisposableEffect onDispose { }
-        val insetsController = activity.window.insetsController!!
+        val insetsController = WindowInsetsControllerCompat(activity.window, activity.window.decorView)
         val originalOrientation = activity.requestedOrientation
 
         if (viewModel.isFullscreen) {
             insetsController.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            insetsController.hide(WindowInsets.Type.systemBars())
+            insetsController.hide(WindowInsetsCompat.Type.systemBars())
         } else {
-            insetsController.show(WindowInsets.Type.systemBars())
+            insetsController.show(WindowInsetsCompat.Type.systemBars())
         }
 
         activity.requestedOrientation = if (viewModel.isFullscreen) {
@@ -263,7 +264,7 @@ private fun PlayerScreenLoaded(
 
         onDispose {
             activity.requestedOrientation = originalOrientation
-            insetsController.show(WindowInsets.Type.systemBars())
+            insetsController.show(WindowInsetsCompat.Type.systemBars())
         }
     }
 

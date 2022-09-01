@@ -1,6 +1,8 @@
 package com.hyperion.di
 
+import android.os.Build
 import io.ktor.client.*
+import io.ktor.client.engine.android.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.cache.*
@@ -16,7 +18,13 @@ val httpModule = module {
         ignoreUnknownKeys = true
     }
 
-    fun provideInnerTubeClient(json: Json) = HttpClient(CIO) {
+    fun provideInnerTubeClient(json: Json) = HttpClient(
+        engineFactory = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            CIO
+        } else {
+            Android
+        }
+    ) {
         BrowserUserAgent()
 
         install(ContentNegotiation) {
@@ -33,7 +41,9 @@ val httpModule = module {
             gzip()
         }
 
-        install(HttpCache)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            install(HttpCache)
+        }
     }
 
     singleOf(::provideJson)
