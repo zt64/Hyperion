@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home">होम</string>
-    <string name="explore">Explore</string>
+    <string name="explore">अन्वेषण करना</string>
     <string name="settings_screen">सेटिंग्स</string>
     <string name="apply">आवेदन करें</string>
     <string name="theme">थीम</string>
-    <string name="theme_setting_description">Hyperion appearance</string>
+    <string name="theme_setting_description">हाइपरियन उपस्थिति</string>
     <string name="feed">फ़ीड</string>
     <string name="download">डाउनलोड</string>
     <string name="share">शेयर करें</string>
-    <string name="todo">TODO</string>
+    <string name="todo">करने के लिए</string>
     <string name="dislike">डिस्लाइक</string>
     <string name="like">लाइक</string>
     <string name="library_screen">लाइब्रेरी</string>
@@ -17,8 +17,8 @@
     <string name="views">व्यूज़</string>
     <string name="download_location">डाउनलोड का स्थान</string>
     <string name="start_screen">प्रारंभ स्क्रीन</string>
-    <string name="thumbnail">Thumbnail</string>
-    <string name="videos">Videos</string>
+    <string name="thumbnail">थंबनेल</string>
+    <string name="videos">वीडियो</string>
     <string name="playlists">Playlists</string>
     <string name="search">सर्च</string>
     <string name="error">Error</string>
