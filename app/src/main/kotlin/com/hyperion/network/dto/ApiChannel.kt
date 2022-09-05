@@ -25,7 +25,7 @@ data class ApiChannel(
             data class TabRenderer(
                 val endpoint: Endpoint,
                 val content: TabContent,
-                val selected: Boolean,
+                val selected: Boolean = false,
                 val title: String
             ) {
                 @Serializable
@@ -54,7 +54,7 @@ data class ApiChannel(
             val gridChannelRenderer: GridChannelRenderer? = null
         ) {
             @Serializable
-            data class Model(val gridVideoModel: ApiChannelVideo? = null)
+            data class Model(val gridVideoModel: ApiVideo.ContextData? = null)
 
             @Serializable
             data class GridChannelRenderer(
@@ -70,7 +70,7 @@ data class ApiChannel(
         @Serializable
         data class VerticalListItem(val elementRenderer: ElementRenderer<Model>) {
             @Serializable
-            data class Model(val videoWithContextModel: ApiVideo)
+            data class Model(val videoWithContextModel: ApiNextVideo)
         }
     }
 
@@ -117,29 +117,5 @@ data class ApiChannel(
                 val videosCountText: String? = null
             )
         }
-    }
-}
-
-@Serializable
-data class ApiChannelVideo(
-    val videoData: VideoData,
-    val onTap: OnTap
-) {
-    @Serializable
-    data class VideoData(
-        val metadata: Metadata,
-        val thumbnail: ApiThumbnailTimestamp
-    ) {
-        @Serializable
-        data class Metadata(
-            val metadataDetails: String,
-            val title: String
-        )
-    }
-
-    @Serializable
-    data class OnTap(val innertubeCommand: InnerTubeCommand) {
-        @Serializable
-        data class InnerTubeCommand(val watchEndpoint: ApiWatchEndpoint? = null)
     }
 }

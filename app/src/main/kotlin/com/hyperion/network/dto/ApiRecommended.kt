@@ -7,7 +7,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiTrending(val contents: Contents) {
+data class ApiRecommended(val contents: Contents) {
     @Serializable
     data class Contents(
         @SerialName("singleColumnBrowseResultsRenderer")
@@ -37,7 +37,7 @@ data class ApiTrending(val contents: Contents) {
 }
 
 @Serializable
-data class ApiTrendingContinuation(val continuationContents: ContinuationContents) {
+data class ApiRecommendedContinuation(val continuationContents: ContinuationContents) {
     @Serializable
-    data class ContinuationContents(val sectionListContinuation: SectionListRenderer<ApiTrending.SectionContent>)
+    data class ContinuationContents(val sectionListContinuation: SectionListRenderer<ApiRecommended.SectionContent>)
 }

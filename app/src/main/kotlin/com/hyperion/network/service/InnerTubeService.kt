@@ -46,56 +46,39 @@ class InnerTubeService(
         }
     }
 
-    private suspend inline fun <reified T> getBrowse(body: BrowseBody): T = withContext(Dispatchers.IO) {
+    private suspend inline fun <reified T> getBrowse(
+        browseId: String,
+        continuation: String? = null,
+        params: String? = null
+    ): T = withContext(Dispatchers.IO) {
         httpClient.post("$API_URL/browse") {
             parameter("key", innerTubeApiKey)
             contentType(ContentType.Application.Json)
-            setBody(body)
+            setBody(
+                BrowseBody(
+                    context = innerTubeContext,
+                    browseId = browseId,
+                    continuation = continuation,
+                    params = params
+                )
+            )
         }.body()
     }
 
-    suspend fun getRecommendations(): HttpResponse = getBrowse(
-        BrowseBody(
-            context = innerTubeContext,
-            browseId = "FEwhat_to_watch"
-        )
-    )
+    suspend fun getRecommendations(): ApiRecommended = getBrowse("FEwhat_to_watch")
+    suspend fun getRecommendations(continuation: String): ApiRecommendedContinuation =
+        getBrowse("FEwhat_to_watch", continuation)
 
-    suspend fun getPlaylist(playlistId: String): HttpResponse = getBrowse(
-        BrowseBody(
-            context = innerTubeContext,
-            browseId = playlistId
-        )
-    )
+    suspend fun getPlaylist(playlistId: String): ApiPlaylist = getBrowse(playlistId)
 
-    suspend fun getSubscriptions(): HttpResponse = getBrowse(
-        BrowseBody(
-            context = innerTubeContext,
-            browseId = "FEsubscriptions"
-        )
-    )
+    suspend fun getSubscriptions(): ApiSubscriptions = getBrowse("FEsubscriptions")
 
-    suspend fun getTrending(): ApiTrending = getBrowse(
-        BrowseBody(
-            context = innerTubeContext,
-            browseId = "FEtrending"
-        )
-    )
-
-    suspend fun getTrending(continuation: String): ApiTrendingContinuation = getBrowse(
-        BrowseBody(
-            context = innerTubeContext,
-            browseId = "FEtrending",
-            continuation = continuation
-        )
-    )
+    suspend fun getTrending(): ApiTrending = getBrowse("FEtrending")
+    suspend fun getTrending(continuation: String): ApiTrendingContinuation = getBrowse("FEtrending", continuation)
 
     suspend fun getChannel(id: String, params: String? = null): ApiChannel = getBrowse(
-        BrowseBody(
-            context = innerTubeContext,
-            browseId = id,
-            params = params
-        )
+        browseId = id,
+        params = params
     )
 
     suspend fun getSearchSuggestions(search: String): JsonElement = withContext(Dispatchers.IO) {

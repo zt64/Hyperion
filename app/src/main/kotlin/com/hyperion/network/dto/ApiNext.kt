@@ -81,7 +81,7 @@ data class ApiNext(val contents: Contents) {
                 data class Content(val elementRenderer: ElementRenderer<Model>)
 
                 @Serializable
-                data class Model(val videoWithContextModel: ApiVideo? = null)
+                data class Model(val videoWithContextModel: ApiNextVideo? = null)
             }
 
             @Serializable
@@ -203,5 +203,5 @@ data class ApiNextContinuation(val continuationContents: ContinuationContents) {
     }
 
     @Serializable
-    data class Model(val videoWithContextModel: ApiVideo? = null)
+    data class Model(val videoWithContextModel: ApiNextVideo? = null)
 }

@@ -11,20 +11,18 @@ class HomeViewModel(
 ) : ViewModel() {
     val videos = Pager(PagingConfig(10)) {
         object : PagingSource<String, DomainVideoPartial>() {
-            override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainVideoPartial> {
-                return try {
-                    val trendingVideosResponse = repository.getTrendingVideos(params.key)
+            override suspend fun load(params: LoadParams<String>) = try {
+                val response = repository.getRecommendations(params.key)
 
-                    LoadResult.Page(
-                        data = trendingVideosResponse.videos,
-                        prevKey = null,
-                        nextKey = trendingVideosResponse.continuation
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                LoadResult.Page(
+                    data = response.videos,
+                    prevKey = null,
+                    nextKey = response.continuation
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
 
-                    LoadResult.Error(e)
-                }
+                LoadResult.Error(e)
             }
 
             override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null

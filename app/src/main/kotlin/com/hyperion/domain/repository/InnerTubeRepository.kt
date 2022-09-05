@@ -35,7 +35,22 @@ class InnerTubeRepository(
         )
     }
 
-    suspend fun getRecommendations() = service.getRecommendations()
+    suspend fun getRecommendations(continuation: String? = null): DomainRecommended {
+        val section = if (continuation == null) {
+            service.getRecommendations().contents.browseResultsRenderer.tabs[0].tabRenderer.content!!.sectionListRenderer
+        } else {
+            service.getRecommendations(continuation).continuationContents.sectionListContinuation
+        }
+
+        return DomainRecommended(
+            continuation = section.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation,
+            videos = section.contents
+                .mapNotNull { it.itemSectionRenderer }
+                .mapNotNull { renderer ->
+                    renderer.contents.first().elementRenderer?.model?.videoWithContextModel?.videoWithContextData?.toDomain()
+                }
+        )
+    }
 
     suspend fun getSubscriptions() = service.getSubscriptions()
 
@@ -95,7 +110,39 @@ class InnerTubeRepository(
         )
     }
 
-    suspend fun getChannel(id: String) = service.getChannel(id).toDomain()
+    suspend fun getChannel(id: String): DomainChannel {
+        val channel = service.getChannel(id)
+        val channelHeaderModal = channel.header.channelMobileHeaderRenderer.channelHeader.elementRenderer.model.channelHeaderModel
+
+        val channelProfile = channelHeaderModal.channelProfile
+        val avatars = channelProfile.avatarData.avatar.image.sources
+        val banners = channelHeaderModal.channelBanner?.image?.sources
+
+        val tabRenderer = channel.contents.browseResultsRenderer.tabs.first().tabRenderer
+
+        return DomainChannel(
+            id = tabRenderer.endpoint.browseEndpoint.browseId,
+            name = channelProfile.title,
+            description = channelProfile.descriptionPreview.description,
+            subscriberText = channelHeaderModal.channelProfile.metadata.subscriberCountText,
+            avatar = avatars.first().url,
+            banner = banners?.lastOrNull()?.url,
+            videos = tabRenderer.content.sectionListRenderer.contents
+                .mapNotNull { it.shelfRenderer }
+                .mapNotNull { (shelfRenderer) ->
+                    shelfRenderer.horizontalListRenderer?.items
+                        ?.firstOrNull()?.elementRenderer?.model?.gridVideoModel
+                        ?.let { (videoData, onTap) ->
+                            DomainVideoPartial(
+                                id = onTap.innertubeCommand.watchEndpoint?.videoId ?: "",
+                                title = videoData.metadata.title,
+                                subtitle = videoData.metadata.metadataDetails,
+                                timestamp = videoData.thumbnail.timestampText
+                            )
+                        }
+                }
+        )
+    }
 
     suspend fun getNext(videoId: String): DomainNext {
         val next = service.getNext(videoId)

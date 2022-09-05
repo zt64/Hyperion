@@ -1,7 +1,5 @@
 package com.hyperion.domain.model
 
-import com.hyperion.network.service.InnerTubeService
-
 data class DomainSearch(
     val continuation: String?,
     val items: List<Result>
@@ -15,9 +13,7 @@ data class DomainSearch(
             val subtitle: String,
             val timestamp: String?,
             val author: DomainChannelPartial?
-        ) : Result {
-            val thumbnailUrl = InnerTubeService.getVideoThumbnail(id)
-        }
+        ) : Result
 
         data class Channel(
             override val id: String,
