@@ -89,7 +89,7 @@ class InnerTubeRepository(
 
                                         DomainSearch.Result.Video(
                                             id = onTap.innertubeCommand.watchEndpoint.videoId!!,
-                                            author = videoData.avatar?.let { avatar ->
+                                            channel = videoData.avatar?.let { avatar ->
                                                 DomainChannelPartial(
                                                     id = avatar.endpoint.innertubeCommand.browseEndpoint.browseId,
                                                     avatarUrl = avatar.image.sources.first().url
