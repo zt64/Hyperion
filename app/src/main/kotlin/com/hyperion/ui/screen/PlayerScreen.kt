@@ -443,7 +443,7 @@ fun PlayerScreenPortrait(
                 VideoCard(
                     video = relatedVideo,
                     onClick = { viewModel.loadVideo(relatedVideo.id) },
-                    onClickChannel = { navigator.push(AppDestination.Channel(relatedVideo.author!!.id)) }
+                    onClickChannel = { navigator.push(AppDestination.Channel(relatedVideo.channel!!.id)) }
                 )
             }
 

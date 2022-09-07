@@ -22,7 +22,7 @@ data class DomainVideoPartial(
     val title: String,
     val subtitle: String,
     val timestamp: String? = null,
-    val author: DomainChannelPartial? = null
+    val channel: DomainChannelPartial? = null
 ) {
     val thumbnailUrl = InnerTubeService.getVideoThumbnail(id)
 }

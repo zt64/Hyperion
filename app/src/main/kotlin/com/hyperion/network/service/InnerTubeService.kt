@@ -182,7 +182,7 @@ class InnerTubeService(
         private const val PLATFORM = "MOBILE"
         private const val FORM_FACTOR = "SMALL_FORM_FACTOR"
 
-        fun getVideoThumbnail(id: String): String = "https://i.ytimg.com/vi/$id/hqdefault.jpg"
+        fun getVideoThumbnail(id: String) = "https://i.ytimg.com/vi/$id/hqdefault.jpg"
     }
 }
 

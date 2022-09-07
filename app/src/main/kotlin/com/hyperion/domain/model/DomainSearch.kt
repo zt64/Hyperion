@@ -12,7 +12,7 @@ data class DomainSearch(
             val title: String,
             val subtitle: String,
             val timestamp: String?,
-            val author: DomainChannelPartial?
+            val channel: DomainChannelPartial?
         ) : Result
 
         data class Channel(

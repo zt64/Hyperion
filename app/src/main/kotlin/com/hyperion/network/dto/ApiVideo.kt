@@ -5,9 +5,17 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class VideoData(
     val avatar: ApiAvatar? = null,
+    val decoratedAvatar: DecoratedAvatar? = null,
     val metadata: Metadata,
-    val thumbnail: ApiThumbnailTimestamp
+    val thumbnail: ApiThumbnailTimestamp,
+    val channelId: String? = null
 ) {
+    @Serializable
+    data class DecoratedAvatar(val avatar: Avatar) {
+        @Serializable
+        data class Avatar(val image: ApiImage)
+    }
+
     @Serializable
     data class Metadata(
         val title: String,

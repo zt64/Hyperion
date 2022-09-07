@@ -50,10 +50,8 @@ data class ApiSearch(val contents: Contents) {
     ) {
         @Serializable
         data class ChipRenderer(
-            val isSelected: Boolean,
-            val location: String,
+            val text: ApiText,
             val navigationEndpoint: NavigationEndpoint? = null,
-            val text: ApiText
         ) {
             @Serializable
             data class NavigationEndpoint(val searchEndpoint: SearchEndpoint) {

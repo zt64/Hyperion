@@ -12,12 +12,15 @@ fun ApiVideo.ContextData.toDomain() = DomainVideoPartial(
     title = videoData.metadata.title,
     subtitle = videoData.metadata.metadataDetails,
     timestamp = videoData.thumbnail.timestampText,
-    author = videoData.avatar?.let { avatar ->
+    channel = videoData.avatar?.let { avatar ->
         DomainChannelPartial(
             id = avatar.endpoint.innertubeCommand.browseEndpoint.browseId,
             avatarUrl = avatar.image.sources.last().url
         )
-    }
+    } ?: DomainChannelPartial(
+        id = videoData.channelId!!,
+        avatarUrl = videoData.decoratedAvatar!!.avatar.image.sources.last().url
+    )
 )
 
 fun ApiNextVideo.ContextData.toDomain() = DomainVideoPartial(
@@ -25,10 +28,10 @@ fun ApiNextVideo.ContextData.toDomain() = DomainVideoPartial(
     title = videoData.metadata.title,
     subtitle = videoData.metadata.metadataDetails,
     timestamp = videoData.thumbnail.timestampText,
-    author = videoData.avatar?.let {
+    channel = videoData.avatar?.let { avatar ->
         DomainChannelPartial(
-            id = videoData.avatar.endpoint.innertubeCommand.browseEndpoint.browseId,
-            avatarUrl = videoData.avatar.image.sources.last().url
+            id = avatar.endpoint.innertubeCommand.browseEndpoint.browseId,
+            avatarUrl = avatar.image.sources.last().url
         )
     }
 )

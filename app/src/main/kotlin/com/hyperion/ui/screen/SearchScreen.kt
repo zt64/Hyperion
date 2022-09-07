@@ -129,11 +129,11 @@ fun SearchScreen(
                                     id = result.id,
                                     title = result.title,
                                     subtitle = result.subtitle,
-                                    author = result.author,
+                                    channel = result.channel,
                                     timestamp = result.timestamp
                                 ),
                                 onClick = { navigator.push(AppDestination.Player(result.id)) },
-                                onClickChannel = { navigator.push(AppDestination.Channel(result.author!!.id)) }
+                                onClickChannel = { navigator.push(AppDestination.Channel(result.channel!!.id)) }
                             )
                         }
                         is DomainSearch.Result.Channel -> {

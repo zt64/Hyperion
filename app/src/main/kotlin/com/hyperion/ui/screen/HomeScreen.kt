@@ -37,7 +37,7 @@ fun HomeScreen(
             VideoCard(
                 video = video,
                 onClick = { onClickVideo(video.id) },
-                onClickChannel = { onClickChannel(video.author!!.id) }
+                onClickChannel = { onClickChannel(video.channel!!.id) }
             )
         }
 

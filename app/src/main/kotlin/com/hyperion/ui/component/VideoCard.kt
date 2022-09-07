@@ -65,7 +65,7 @@ fun VideoCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        video.author?.avatarUrl?.let {
+                        video.channel?.avatarUrl?.let {
                             ChannelThumbnail(
                                 modifier = Modifier
                                     .clickable(onClick = onClickChannel)
@@ -92,7 +92,7 @@ fun VideoCard(
                     modifier = Modifier.padding(8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    video.author?.avatarUrl?.let {
+                    video.channel?.avatarUrl?.let {
                         ChannelThumbnail(
                             modifier = Modifier
                                 .clickable(onClick = onClickChannel)
