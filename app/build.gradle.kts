@@ -36,6 +36,15 @@ android {
         jvmTarget = "11"
     }
 
+    packagingOptions {
+        resources {
+            excludes += "/**/*.version"
+            excludes += "/kotlin-tooling-metadata.json"
+            excludes += "/okhttp3/**"
+            excludes += "/DebugProbesKt.bin"
+        }
+    }
+
     buildFeatures.compose = true
     composeOptions.kotlinCompilerExtensionVersion = "1.3.0"
 }
