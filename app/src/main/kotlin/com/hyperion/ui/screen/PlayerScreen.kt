@@ -173,20 +173,19 @@ private fun PlayerScreenLoaded(
                 ) {
                     items(viewModel.video!!.streams.filterIsInstance<DomainStream.Video>()) { stream ->
                         Row(
-                            modifier = Modifier.clickable { selectedStream = stream },
+                            modifier = Modifier
+                                .fillMaxWidth(1f)
+                                .clickable { selectedStream = stream },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            RadioButton(
+                                selected = stream == selectedStream,
+                                onClick = { selectedStream = stream }
+                            )
                             Text(
                                 modifier = Modifier.width(IntrinsicSize.Max),
                                 text = "${stream.label} ${stream.mimeType}",
                                 style = MaterialTheme.typography.labelLarge
-                            )
-
-                            Spacer(Modifier.weight(1f, true))
-
-                            RadioButton(
-                                selected = stream == selectedStream,
-                                onClick = { selectedStream = stream }
                             )
                         }
                     }
