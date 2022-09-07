@@ -69,6 +69,7 @@ dependencies {
     val composeVersion = "1.3.0-beta02"
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
+    debugImplementation("androidx.compose.runtime:runtime-tracing:1.0.0-alpha01")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
     implementation("androidx.compose.material3:material3:1.0.0-beta02")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
