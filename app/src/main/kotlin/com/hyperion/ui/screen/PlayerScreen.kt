@@ -105,7 +105,7 @@ private fun PlayerScreenError(
 ) {
     Scaffold(
         topBar = {
-            SmallTopAppBar(
+            TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = onClickBack) {
                         Icon(

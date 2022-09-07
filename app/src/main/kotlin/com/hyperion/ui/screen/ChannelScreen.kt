@@ -219,7 +219,7 @@ fun ChannelScreenLoading(
 ) {
     Scaffold(
         topBar = {
-            SmallTopAppBar(
+            TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = onClickBack) {
                         Icon(
@@ -251,7 +251,7 @@ fun ChannelScreenError(
 ) {
     Scaffold(
         topBar = {
-            SmallTopAppBar(
+            TopAppBar(
                 navigationIcon = {
                     IconButton(onClick = onClickBack) {
                         Icon(

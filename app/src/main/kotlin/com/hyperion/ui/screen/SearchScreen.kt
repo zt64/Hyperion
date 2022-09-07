@@ -60,7 +60,7 @@ fun SearchScreen(
     Scaffold(
         modifier = Modifier.imePadding(),
         topBar = {
-            SmallTopAppBar(
+            TopAppBar(
                 title = {
                     RoundedTextField(
                         modifier = Modifier

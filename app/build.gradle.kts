@@ -46,19 +46,19 @@ android {
     }
 
     buildFeatures.compose = true
-    composeOptions.kotlinCompilerExtensionVersion = "1.3.0"
+    composeOptions.kotlinCompilerExtensionVersion = "1.3.1"
 }
 
 dependencies {
     // AndroidX core
-    implementation("androidx.core:core-ktx:1.9.0-rc01")
+    implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.core:core-splashscreen:1.0.0")
 
     // AndroidX paging
     implementation("androidx.paging:paging-compose:1.0.0-alpha16")
 
     // AndroidX activity
-    implementation("androidx.activity:activity-compose:1.6.0-rc01")
+    implementation("androidx.activity:activity-compose:1.6.0-rc02")
 
     // Koin
     val koinVersion = "3.2.0"
@@ -66,11 +66,11 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
 
     // Compose
-    val composeVersion = "1.3.0-beta01"
+    val composeVersion = "1.3.0-beta02"
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-beta01")
+    implementation("androidx.compose.material3:material3:1.0.0-beta02")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     // Accompanist
