@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home">Ana sayfa</string>
-    <string name="explore">Explore</string>
+    <string name="explore">Keşfet</string>
     <string name="settings_screen">Ayarlar</string>
     <string name="apply">Uygula</string>
     <string name="theme">Tema</string>
@@ -26,23 +26,23 @@
     <string name="unknown">Bilinmeyen</string>
     <string name="compact_card">Kompakt kart</string>
     <string name="pip">Resim içinde resim (PiP)</string>
-    <string name="play">Play</string>
-    <string name="pause">Pause</string>
-    <string name="close_mini_player">Close mini-player</string>
-    <string name="back">Back</string>
-    <string name="more">More</string>
-    <string name="skip_next">Skip next</string>
-    <string name="skip_previous">Skip previous</string>
-    <string name="minimize">Minimize</string>
-    <string name="close_fullscreen">Close fullscreen</string>
-    <string name="open_fullscreen">Open fullscreen</string>
-    <string name="verified">Verified</string>
-    <string name="dynamic_color">Dynamic color</string>
+    <string name="play">Oynat</string>
+    <string name="pause">Durdur</string>
+    <string name="close_mini_player">Mini oynatıcıyı kapat</string>
+    <string name="back">Geri</string>
+    <string name="more">Daha fazla</string>
+    <string name="skip_next">Sonrakine geç</string>
+    <string name="skip_previous">Öncekine geç</string>
+    <string name="minimize">Küçült</string>
+    <string name="close_fullscreen">Tam ekrandan çık</string>
+    <string name="open_fullscreen">Tam ekranda aç</string>
+    <string name="verified">Doğrulanmış</string>
+    <string name="dynamic_color">Dinamik renk</string>
     <string name="timestamp_scale">Timestamp scale</string>
-    <string name="about">About</string>
-    <string name="comments">Comments</string>
-    <string name="show_download_button">Show download button</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="confirm">Confirm</string>
-    <string name="quality">Quality</string>
+    <string name="about">Hakkında</string>
+    <string name="comments">Yorumlar</string>
+    <string name="show_download_button">İndirme butonunu göster</string>
+    <string name="dismiss">Yoksay</string>
+    <string name="confirm">Onayla</string>
+    <string name="quality">Kalite</string>
 </resources>
