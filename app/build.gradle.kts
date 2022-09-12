@@ -61,9 +61,9 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.6.0-rc02")
 
     // Koin
-    val koinVersion = "3.2.0"
+    val koinVersion = "3.2.1"
     implementation("io.insert-koin:koin-android:$koinVersion")
-    implementation("io.insert-koin:koin-androidx-compose:$koinVersion")
+    implementation("io.insert-koin:koin-androidx-compose:3.2.0")
 
     // Compose
     val composeVersion = "1.3.0-beta02"
@@ -75,13 +75,13 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     // Accompanist
-    val accompanistVersion = "0.26.2-beta"
+    val accompanistVersion = "0.26.3-beta"
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
 
     // Coil
-    implementation("io.coil-kt:coil-compose:2.2.0")
+    implementation("io.coil-kt:coil-compose:2.2.1")
 
     // KotlinX
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
