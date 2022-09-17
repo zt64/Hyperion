@@ -37,12 +37,12 @@
     <string name="close_fullscreen">Zamknij pełny ekran</string>
     <string name="open_fullscreen">Otwórz pełny ekran</string>
     <string name="verified">Zweryfikowane</string>
-    <string name="dynamic_color">Dynamic color</string>
-    <string name="timestamp_scale">Timestamp scale</string>
-    <string name="about">About</string>
-    <string name="comments">Comments</string>
-    <string name="show_download_button">Show download button</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="confirm">Confirm</string>
-    <string name="quality">Quality</string>
+    <string name="dynamic_color">Kolor dynamiczny</string>
+    <string name="timestamp_scale">Rozmiar znacznika czasu</string>
+    <string name="about">O Aplikacji</string>
+    <string name="comments">Komentarze</string>
+    <string name="show_download_button">Pokaż przycisk pobrania</string>
+    <string name="dismiss">Odrzuć</string>
+    <string name="confirm">Potwierdź</string>
+    <string name="quality">Jakość</string>
 </resources>
