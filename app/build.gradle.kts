@@ -58,7 +58,7 @@ dependencies {
     implementation("androidx.paging:paging-compose:1.0.0-alpha16")
 
     // AndroidX activity
-    implementation("androidx.activity:activity-compose:1.6.0-rc02")
+    implementation("androidx.activity:activity-compose:1.6.0")
 
     // Koin
     val koinVersion = "3.2.1"
@@ -66,12 +66,12 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-compose:3.2.0")
 
     // Compose
-    val composeVersion = "1.3.0-beta02"
+    val composeVersion = "1.3.0-beta03"
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
     debugImplementation("androidx.compose.runtime:runtime-tracing:1.0.0-alpha01")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-beta02")
+    implementation("androidx.compose.material3:material3:1.0.0-beta03")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     // Accompanist
