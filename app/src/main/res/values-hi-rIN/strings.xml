@@ -19,11 +19,11 @@
     <string name="start_screen">प्रारंभ स्क्रीन</string>
     <string name="thumbnail">थंबनेल</string>
     <string name="videos">वीडियो</string>
-    <string name="playlists">Playlists</string>
+    <string name="playlists">गानो की सूची</string>
     <string name="search">सर्च</string>
-    <string name="error">Error</string>
-    <string name="error_occurred">An error has occurred</string>
-    <string name="unknown">Unknown</string>
+    <string name="error">त्रुटि</string>
+    <string name="error_occurred">एक त्रुटि हुई।</string>
+    <string name="unknown">अज्ञात</string>
     <string name="compact_card">Compact card</string>
     <string name="pip">Picture-in-picture (PiP)</string>
     <string name="play">Play</string>

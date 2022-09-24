@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home">Home</string>
-    <string name="explore">Explore</string>
+    <string name="explore">Khám phá</string>
     <string name="settings_screen">Cài đặt</string>
     <string name="apply">Áp dụng</string>
     <string name="theme">Chủ đề</string>
@@ -26,18 +26,18 @@
     <string name="unknown">Không biết</string>
     <string name="compact_card">Thẻ thu nhỏ</string>
     <string name="pip">Ảnh trong ảnh (PiP)</string>
-    <string name="play">Play</string>
-    <string name="pause">Pause</string>
-    <string name="close_mini_player">Close mini-player</string>
-    <string name="back">Back</string>
-    <string name="more">More</string>
-    <string name="skip_next">Skip next</string>
-    <string name="skip_previous">Skip previous</string>
-    <string name="minimize">Minimize</string>
-    <string name="close_fullscreen">Close fullscreen</string>
-    <string name="open_fullscreen">Open fullscreen</string>
-    <string name="verified">Verified</string>
-    <string name="dynamic_color">Dynamic color</string>
+    <string name="play">Phát</string>
+    <string name="pause">Tạm dừng</string>
+    <string name="close_mini_player">Đóng trình phát thu nhỏ</string>
+    <string name="back">Quay Lại</string>
+    <string name="more">Nhiều hơn</string>
+    <string name="skip_next">Chuyển đến mục tiếp theo</string>
+    <string name="skip_previous">Chuyển về mục trước</string>
+    <string name="minimize">Thu nhỏ</string>
+    <string name="close_fullscreen">Đóng toàn màn hình</string>
+    <string name="open_fullscreen">Mở toàn màn hình</string>
+    <string name="verified">Đã xác minh</string>
+    <string name="dynamic_color">Màu tương thích</string>
     <string name="timestamp_scale">Timestamp scale</string>
     <string name="about">About</string>
     <string name="comments">Comments</string>
