@@ -61,9 +61,8 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.6.0")
 
     // Koin
-    val koinVersion = "3.2.1"
-    implementation("io.insert-koin:koin-android:$koinVersion")
-    implementation("io.insert-koin:koin-androidx-compose:3.2.0")
+    implementation("io.insert-koin:koin-android:3.2.2")
+    implementation("io.insert-koin:koin-androidx-compose:3.2.1")
 
     // Compose
     val composeVersion = "1.3.0-beta03"
@@ -75,7 +74,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
 
     // Accompanist
-    val accompanistVersion = "0.26.3-beta"
+    val accompanistVersion = "0.26.4-beta"
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
