@@ -49,11 +49,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.capitalize
-import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
 import com.hyperion.ui.navigation.RootDestination
+import com.hyperion.ui.theme.Theme
 import com.hyperion.ui.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.getViewModel
 
@@ -120,7 +119,7 @@ fun SettingsScreen(
                 supportingText = { Text(stringResource(R.string.theme_setting_description)) },
                 trailingContent = {
                     FilledTonalButton(onClick = viewModel::showThemePicker) {
-                        Text(preferences.theme.displayName)
+                        Text(stringResource(preferences.theme.displayName))
                     }
                 }
             )
@@ -217,27 +216,27 @@ fun ThemePicker(
     onDismissRequest: () -> Unit,
     onConfirm: (Theme) -> Unit,
 ) {
-    var selectedValue by remember { mutableStateOf(currentValue) }
+    var selectedValue by remember { mutableStateOf(currentTheme) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = { Text(stringResource(R.string.theme)) },
         text = {
             Column {
-                enumValues<T>().forEach { value ->
+                Theme.values().forEach { theme ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { selectedValue = value },
+                            .clickable { selectedValue = theme },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         RadioButton(
-                            selected = selectedValue == value,
-                            onClick = { selectedValue = value }
+                            selected = selectedValue == theme,
+                            onClick = { selectedValue = theme }
                         )
 
                         Text(
-                            text = value.name.lowercase().capitalize(Locale.current),
+                            text = stringResource(theme.displayName),
                             style = MaterialTheme.typography.labelLarge,
                             softWrap = true
                         )

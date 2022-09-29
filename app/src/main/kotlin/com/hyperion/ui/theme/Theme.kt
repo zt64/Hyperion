@@ -1,18 +1,18 @@
-/*
- * Copyright (c) 2022 Juby210 & zt
- * Licensed under the Open Software License version 3.0
- */
-
-
 package com.hyperion.ui.theme
 
 import android.os.Build
+import androidx.annotation.StringRes
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.hyperion.R
 
 @Composable
 fun HyperionTheme(
@@ -43,8 +43,8 @@ fun HyperionTheme(
     )
 }
 
-enum class Theme(val displayName: String) {
-    SYSTEM("System"),
-    LIGHT("Light"),
-    DARK("Dark");
+enum class Theme(@StringRes val displayName: Int) {
+    SYSTEM(R.string.system),
+    LIGHT(R.string.light),
+    DARK(R.string.dark);
 }
