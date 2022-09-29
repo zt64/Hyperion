@@ -10,7 +10,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -18,7 +28,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
 import com.hyperion.ui.navigation.AppDestination
-import com.hyperion.ui.navigation.HomeDestination
+import com.hyperion.ui.navigation.RootDestination
 import com.xinto.taxi.BackstackNavigator
 import com.xinto.taxi.Taxi
 import com.xinto.taxi.rememberNavigator
@@ -29,7 +39,7 @@ fun MainRootScreen(
     navigator: BackstackNavigator<AppDestination>
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val mainRootNavigator = rememberNavigator(HomeDestination.HOME)
+    val mainRootNavigator = rememberNavigator(RootDestination.HOME)
     val currentDestination = mainRootNavigator.currentDestination
     val orientation = LocalConfiguration.current.orientation
 
@@ -58,7 +68,7 @@ fun MainRootScreen(
         bottomBar = {
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                 NavigationBar {
-                    HomeDestination.values().forEach { destination ->
+                    RootDestination.values().forEach { destination ->
                         NavigationBarItem(
                             selected = currentDestination == destination,
                             icon = { Icon(destination.icon, stringResource(destination.label)) },
@@ -86,26 +96,26 @@ fun MainRootScreen(
                 transitionSpec = { fadeIn() with fadeOut() }
             ) { destination ->
                 when (destination) {
-                    HomeDestination.HOME -> HomeScreen(
+                    RootDestination.HOME -> HomeScreen(
                         onClickVideo = { videoId -> navigator.push(AppDestination.Player(videoId)) },
                         onClickChannel = { channelId -> navigator.push(AppDestination.Channel(channelId)) },
                     )
-                    HomeDestination.FEED -> FeedScreen()
-                    HomeDestination.LIBRARY -> LibraryScreen()
+
+                    RootDestination.FEED -> FeedScreen()
+                    RootDestination.LIBRARY -> LibraryScreen()
                 }
             }
         }
-
     }
 }
 
 @Composable
 private fun NavRail(
-    currentDestination: HomeDestination,
-    onClickDestination: (HomeDestination) -> Unit
+    currentDestination: RootDestination,
+    onClickDestination: (RootDestination) -> Unit
 ) {
     NavigationRail {
-        HomeDestination.values().forEach { destination ->
+        RootDestination.values().forEach { destination ->
             NavigationRailItem(
                 selected = currentDestination == destination,
                 icon = { Icon(destination.icon, stringResource(destination.label)) },

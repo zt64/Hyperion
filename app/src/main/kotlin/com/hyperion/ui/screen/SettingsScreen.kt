@@ -5,22 +5,55 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.NavigateBefore
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.PictureInPicture
+import androidx.compose.material.icons.filled.Start
+import androidx.compose.material.icons.filled.Style
+import androidx.compose.material.icons.filled.VideoSettings
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
-import com.hyperion.ui.navigation.HomeDestination
-import com.hyperion.ui.theme.Theme
+import com.hyperion.ui.navigation.RootDestination
 import com.hyperion.ui.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.getViewModel
 
@@ -116,7 +149,7 @@ fun SettingsScreen(
                             expanded = showStartScreenDropdown,
                             onDismissRequest = { showStartScreenDropdown = false }
                         ) {
-                            HomeDestination.values().forEach { destination ->
+                            RootDestination.values().forEach { destination ->
                                 DropdownMenuItem(
                                     text = { Text(stringResource(destination.label)) },
                                     onClick = {
@@ -184,41 +217,42 @@ fun ThemePicker(
     onDismissRequest: () -> Unit,
     onConfirm: (Theme) -> Unit,
 ) {
-    var selectedTheme by remember { mutableStateOf(currentTheme) }
+    var selectedValue by remember { mutableStateOf(currentValue) }
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = { Text(stringResource(R.string.theme)) },
         text = {
             Column {
-                Theme.values().forEach { theme ->
+                enumValues<T>().forEach { value ->
                     Row(
-                        modifier = Modifier.clickable { selectedTheme = theme },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { selectedValue = value },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            modifier = Modifier.weight(1f, true),
-                            text = theme.displayName,
-                            style = MaterialTheme.typography.labelLarge,
-                            softWrap = true
+                        RadioButton(
+                            selected = selectedValue == value,
+                            onClick = { selectedValue = value }
                         )
 
-                        RadioButton(
-                            selected = theme == selectedTheme,
-                            onClick = { selectedTheme = theme }
+                        Text(
+                            text = value.name.lowercase().capitalize(Locale.current),
+                            style = MaterialTheme.typography.labelLarge,
+                            softWrap = true
                         )
                     }
                 }
             }
         },
         confirmButton = {
-            Button(
-                onClick = {
-                    onConfirm(selectedTheme)
-                    onDismissRequest()
-                }
-            ) {
+            TextButton(onClick = { onConfirm(selectedValue) }) {
                 Text(stringResource(R.string.apply))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismissRequest) {
+                Text(stringResource(R.string.dismiss))
             }
         }
     )
@@ -241,19 +275,21 @@ fun SliderSetting(
             var sliderValue by remember { mutableStateOf(value) }
 
             Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Slider(
-                    modifier = Modifier.weight(0.5f),
-                    value = sliderValue,
-                    valueRange = valueRange,
-                    steps = steps,
-                    onValueChange = {
-                        onValueChange(it)
-                        sliderValue = it
-                    },
-                    onValueChangeFinished = { onValueChangeFinished(sliderValue) }
-                )
+                Box(modifier = Modifier.weight(1f)) {
+                    Slider(
+                        value = sliderValue,
+                        valueRange = valueRange,
+                        steps = steps,
+                        onValueChange = {
+                            onValueChange(it)
+                            sliderValue = it
+                        },
+                        onValueChangeFinished = { onValueChangeFinished(sliderValue) }
+                    )
+                }
 
                 Text("${"%.1f".format(sliderValue)}x")
             }

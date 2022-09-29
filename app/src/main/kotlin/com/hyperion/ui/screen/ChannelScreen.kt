@@ -2,15 +2,46 @@ package com.hyperion.ui.screen
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.VideoLibrary
+import androidx.compose.material.icons.filled.ViewList
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalAbsoluteTonalElevation
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.surfaceColorAtElevation
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -78,7 +109,7 @@ fun ChannelScreen(
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ChannelScreenLoaded(
+private fun ChannelScreenLoaded(
     navigator: BackstackNavigator<AppDestination>,
     channel: DomainChannel,
     onClickShare: () -> Unit
@@ -106,7 +137,7 @@ fun ChannelScreenLoaded(
             )
         }
     ) { paddingValues ->
-        var selectedTab by remember { mutableStateOf(ChannelTab.HOME) }
+        var selectedTab by rememberSaveable { mutableStateOf(ChannelTab.HOME) }
 
         LazyColumn(
             modifier = Modifier
@@ -204,6 +235,7 @@ fun ChannelScreenLoaded(
                         )
                     }
                 }
+
                 ChannelTab.VIDEOS -> {}
                 ChannelTab.PLAYLISTS -> {}
                 ChannelTab.ABOUT -> {}
@@ -214,7 +246,7 @@ fun ChannelScreenLoaded(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChannelScreenLoading(
+private fun ChannelScreenLoading(
     onClickBack: () -> Unit
 ) {
     Scaffold(
@@ -245,7 +277,7 @@ fun ChannelScreenLoading(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChannelScreenError(
+private fun ChannelScreenError(
     error: Exception,
     onClickBack: () -> Unit
 ) {

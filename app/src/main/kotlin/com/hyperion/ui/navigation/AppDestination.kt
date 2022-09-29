@@ -30,7 +30,7 @@ sealed interface AppDestination : Destination {
 }
 
 @Parcelize
-enum class HomeDestination(
+enum class RootDestination(
     val icon: @RawValue ImageVector,
     @StringRes val label: Int
 ) : Destination {

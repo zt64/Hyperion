@@ -3,11 +3,31 @@ package com.hyperion.ui.component
 import android.text.format.DateUtils
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Fullscreen
+import androidx.compose.material.icons.filled.FullscreenExit
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -109,14 +129,15 @@ fun PlayerControlsOverlay(
                 val interactionSource = remember { MutableInteractionSource() }
                 val isDragged by interactionSource.collectIsDraggedAsState()
 
-                Slider(
-                    modifier = Modifier.weight(1f, true),
-                    interactionSource = interactionSource,
-                    value = if (isDragged) seekPosition.toFloat() else position.inWholeMilliseconds.toFloat(),
-                    valueRange = 0f..duration.inWholeMilliseconds.toFloat(),
-                    onValueChange = { seekPosition = it.toLong() },
-                    onValueChangeFinished = { onSeek(seekPosition.toFloat()) }
-                )
+                Box(modifier = Modifier.weight(1f)) {
+                    Slider(
+                        interactionSource = interactionSource,
+                        value = if (isDragged) seekPosition.toFloat() else position.inWholeMilliseconds.toFloat(),
+                        valueRange = 0f..duration.inWholeMilliseconds.toFloat(),
+                        onValueChange = { seekPosition = it.toLong() },
+                        onValueChangeFinished = { onSeek(seekPosition.toFloat()) }
+                    )
+                }
 
                 IconButton(
                     onClick = onClickFullscreen
@@ -135,6 +156,5 @@ fun PlayerControlsOverlay(
                 }
             }
         }
-
     }
 }

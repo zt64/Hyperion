@@ -14,16 +14,53 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.VideoSettings
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,7 +82,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.R
 import com.hyperion.domain.model.DomainStream
-import com.hyperion.ui.component.*
+import com.hyperion.ui.component.ChannelThumbnail
+import com.hyperion.ui.component.Player
+import com.hyperion.ui.component.PlayerActions
+import com.hyperion.ui.component.PlayerControlsOverlay
+import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.viewmodel.PlayerViewModel
 import com.hyperion.util.findActivity
@@ -173,38 +214,31 @@ private fun PlayerScreenLoaded(
                 ) {
                     items(viewModel.video!!.streams.filterIsInstance<DomainStream.Video>()) { stream ->
                         Row(
-                            modifier = Modifier.clickable { selectedStream = stream },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedStream = stream },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                modifier = Modifier.width(IntrinsicSize.Max),
-                                text = "${stream.label} ${stream.mimeType}",
-                                style = MaterialTheme.typography.labelLarge
-                            )
-
-                            Spacer(Modifier.weight(1f, true))
-
                             RadioButton(
                                 selected = stream == selectedStream,
                                 onClick = { selectedStream = stream }
+                            )
+
+                            Text(
+                                text = "${stream.label} ${stream.mimeType}",
+                                style = MaterialTheme.typography.labelLarge
                             )
                         }
                     }
                 }
             },
             confirmButton = {
-                Button(onClick = viewModel::hideQualityPicker) {
+                TextButton(onClick = viewModel::hideQualityPicker) {
                     Text(stringResource(R.string.confirm))
                 }
             },
             dismissButton = {
-                Button(
-                    onClick = viewModel::hideQualityPicker,
-                    colors = ButtonDefaults.buttonColors(
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
-                    )
-                ) {
+                TextButton(onClick = viewModel::hideQualityPicker) {
                     Text(stringResource(R.string.dismiss))
                 }
             }
@@ -224,18 +258,12 @@ private fun PlayerScreenLoaded(
 
             },
             confirmButton = {
-                Button(onClick = viewModel::hideDownloadDialog) {
+                TextButton(onClick = viewModel::hideDownloadDialog) {
                     Text(stringResource(R.string.download))
                 }
             },
             dismissButton = {
-                Button(
-                    onClick = viewModel::hideDownloadDialog,
-                    colors = ButtonDefaults.buttonColors(
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer
-                    )
-                ) {
+                TextButton(onClick = viewModel::hideDownloadDialog) {
                     Text(stringResource(R.string.dismiss))
                 }
             }
