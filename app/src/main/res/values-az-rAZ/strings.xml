@@ -45,4 +45,7 @@
     <string name="dismiss">Rədd et</string>
     <string name="confirm">Təsdiqlə</string>
     <string name="quality">Keyfiyyət</string>
+    <string name="system">System</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
 </resources>

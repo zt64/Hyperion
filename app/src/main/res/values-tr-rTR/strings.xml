@@ -38,11 +38,14 @@
     <string name="open_fullscreen">Tam ekranda aç</string>
     <string name="verified">Doğrulanmış</string>
     <string name="dynamic_color">Dinamik renk</string>
-    <string name="timestamp_scale">Timestamp scale</string>
+    <string name="timestamp_scale">Zaman damgası ölçeği</string>
     <string name="about">Hakkında</string>
     <string name="comments">Yorumlar</string>
     <string name="show_download_button">İndirme butonunu göster</string>
     <string name="dismiss">Yoksay</string>
     <string name="confirm">Onayla</string>
     <string name="quality">Kalite</string>
+    <string name="system">System</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
 </resources>

@@ -45,4 +45,7 @@
     <string name="dismiss">Odrzuć</string>
     <string name="confirm">Potwierdź</string>
     <string name="quality">Jakość</string>
+    <string name="system">System</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
 </resources>

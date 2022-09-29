@@ -45,4 +45,7 @@
     <string name="dismiss">닫기</string>
     <string name="confirm">확인</string>
     <string name="quality">화질</string>
+    <string name="system">System</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
 </resources>

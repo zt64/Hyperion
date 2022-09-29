@@ -45,4 +45,7 @@
     <string name="dismiss">Elvetés</string>
     <string name="confirm">Megerősítés</string>
     <string name="quality">Minőség</string>
+    <string name="system">System</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
 </resources>
