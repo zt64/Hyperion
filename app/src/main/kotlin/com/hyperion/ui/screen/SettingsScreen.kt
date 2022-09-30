@@ -162,13 +162,15 @@ fun SettingsScreen(
                 }
             )
 
-            SwitchSetting(
-                enabled = false,
-                checked = preferences.pictureInPicture,
-                text = stringResource(R.string.pip),
-                icon = Icons.Default.PictureInPicture,
-                onCheckedChange = { preferences.pictureInPicture = it }
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                SwitchSetting(
+                    enabled = false,
+                    checked = preferences.pictureInPicture,
+                    text = stringResource(R.string.pip),
+                    icon = Icons.Default.PictureInPicture,
+                    onCheckedChange = { preferences.pictureInPicture = it }
+                )
+            }
 
             SliderSetting(
                 text = stringResource(R.string.timestamp_scale),
