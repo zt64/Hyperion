@@ -38,14 +38,14 @@
     <string name="open_fullscreen">Mở toàn màn hình</string>
     <string name="verified">Đã xác minh</string>
     <string name="dynamic_color">Màu tương thích</string>
-    <string name="timestamp_scale">Timestamp scale</string>
-    <string name="about">About</string>
-    <string name="comments">Comments</string>
-    <string name="show_download_button">Show download button</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="confirm">Confirm</string>
-    <string name="quality">Quality</string>
-    <string name="system">System</string>
-    <string name="dark">Dark</string>
-    <string name="light">Light</string>
+    <string name="timestamp_scale">Dấu thời gian</string>
+    <string name="about">Về chúng tôi</string>
+    <string name="comments">Bình luận</string>
+    <string name="show_download_button">Hiện nút tải xuống</string>
+    <string name="dismiss">Bỏ qua</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="quality">Chất lượng</string>
+    <string name="system">Hệ thống</string>
+    <string name="dark">Tối</string>
+    <string name="light">Sáng</string>
 </resources>

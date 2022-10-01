@@ -44,8 +44,8 @@
     <string name="show_download_button">ダウンロードボタンを表示</string>
     <string name="dismiss">Dismiss</string>
     <string name="confirm">Confirm</string>
-    <string name="quality">Quality</string>
-    <string name="system">System</string>
-    <string name="dark">Dark</string>
-    <string name="light">Light</string>
+    <string name="quality">画質</string>
+    <string name="system">システム</string>
+    <string name="dark">ダーク</string>
+    <string name="light">ライト</string>
 </resources>
