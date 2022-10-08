@@ -45,7 +45,7 @@
     <string name="dismiss">Yoksay</string>
     <string name="confirm">Onayla</string>
     <string name="quality">Kalite</string>
-    <string name="system">System</string>
-    <string name="dark">Dark</string>
-    <string name="light">Light</string>
+    <string name="system">Sistem</string>
+    <string name="dark">Koyu</string>
+    <string name="light">Açık</string>
 </resources>
