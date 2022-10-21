@@ -83,11 +83,10 @@ dependencies {
     // Coil
     implementation("io.coil-kt:coil-compose:2.2.2")
 
-    // KotlinX
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
-
-    // Taxi
-    implementation("com.github.X1nto:Taxi:1.2.0")
+    // Kotlinx
+    val kotlinxSerializationVersion = "1.4.1"
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinxSerializationVersion")
 
     // Media3
     val media3Version = "1.0.0-beta02"
