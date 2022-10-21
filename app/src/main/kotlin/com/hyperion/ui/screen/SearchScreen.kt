@@ -1,15 +1,8 @@
 package com.hyperion.ui.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -18,35 +11,21 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.NorthWest
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -79,35 +58,17 @@ fun SearchScreen(
     }
 
     Scaffold(
-        modifier = Modifier.imePadding(),
         topBar = {
             TopAppBar(
                 title = {
-                    RoundedTextField(
+                    SearchField(
                         modifier = Modifier
                             .fillMaxWidth()
                             .focusRequester(focusRequester)
                             .onFocusChanged { showResults = !it.isFocused },
                         value = viewModel.search,
-                        onValueChange = { viewModel.getSuggestions(it) },
-                        singleLine = true,
+                        onValueChange = viewModel::getSuggestions,
                         placeholder = { Text(stringResource(R.string.search)) },
-                        textStyle = MaterialTheme.typography.bodyLarge,
-                        trailingIcon = {
-                            IconButton(
-                                onClick = {
-                                    if (viewModel.search.isNotBlank()) {
-                                        viewModel.getResults()
-                                        focusManager.clearFocus()
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = stringResource(R.string.search)
-                                )
-                            }
-                        },
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                         keyboardActions = KeyboardActions(
                             onSearch = {
@@ -124,6 +85,16 @@ fun SearchScreen(
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = { }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.FilterList,
+                            contentDescription = stringResource(R.string.filter)
                         )
                     }
                 }
@@ -200,81 +171,96 @@ fun SearchScreen(
                 }
             } else {
                 items(viewModel.suggestions) { suggestion ->
-                    Text(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
                                 viewModel.search(suggestion)
                                 focusManager.clearFocus()
+                            },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = suggestion,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+
+                        Spacer(Modifier.weight(1f, true))
+
+                        IconButton(
+                            onClick = {
+                                viewModel.getSuggestions(suggestion)
                             }
-                            .padding(vertical = 8.dp),
-                        text = suggestion,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.NorthWest,
+                                contentDescription = null
+                            )
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun RoundedTextField(
+private fun SearchField(
+    modifier: Modifier,
     value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    readOnly: Boolean = false,
-    textStyle: TextStyle = LocalTextStyle.current,
-    label: @Composable (() -> Unit)? = null,
-    placeholder: @Composable (() -> Unit)? = null,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    isError: Boolean = false,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    keyboardActions: KeyboardActions = KeyboardActions.Default,
-    singleLine: Boolean = false,
-    maxLines: Int = Int.MAX_VALUE,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    shape: Shape = CircleShape,
-    colors: TextFieldColors = TextFieldDefaults.textFieldColors()
+    onValueChange: ((String) -> Unit),
+    placeholder: @Composable () -> Unit,
+    keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions
 ) {
-    val textColor = textStyle.color.takeOrElse {
-        MaterialTheme.colorScheme.onSurface
-    }
-    val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
-
     BasicTextField(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(CircleShape),
         value = value,
-        modifier = modifier.background(MaterialTheme.colorScheme.surfaceVariant, shape),
         onValueChange = onValueChange,
-        enabled = enabled,
-        readOnly = readOnly,
-        textStyle = mergedTextStyle,
+        textStyle = MaterialTheme.typography.bodyLarge.copy(
+            color = MaterialTheme.colorScheme.onSurface
+        ),
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-        visualTransformation = visualTransformation,
-        keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions,
-        interactionSource = interactionSource,
-        singleLine = singleLine,
-        maxLines = maxLines,
-        decorationBox = @Composable { innerTextField ->
+        singleLine = true,
+        decorationBox = { innerTextField ->
             TextFieldDefaults.TextFieldDecorationBox(
                 value = value,
-                visualTransformation = visualTransformation,
                 innerTextField = innerTextField,
                 placeholder = placeholder,
-                label = label,
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
-                singleLine = singleLine,
-                enabled = enabled,
-                isError = isError,
-                interactionSource = interactionSource,
-                colors = colors,
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)
+                trailingIcon = {
+                    if (value.isNotEmpty()) {
+                        IconButton(
+                            onClick = {
+                                onValueChange("")
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = stringResource(R.string.clear)
+                            )
+                        }
+                    }
+                },
+                singleLine = true,
+                enabled = true,
+                interactionSource = remember { MutableInteractionSource() },
+                visualTransformation = VisualTransformation.None,
+                contentPadding = PaddingValues(
+                    start = 14.dp,
+                    end = 12.dp,
+                    top = 10.dp,
+                    bottom = 10.dp
+                ),
+                colors = TextFieldDefaults.textFieldColors(
+                    unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(5.dp)
+                )
             )
-        }
+        },
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions
     )
 }
