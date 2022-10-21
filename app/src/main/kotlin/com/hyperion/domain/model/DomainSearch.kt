@@ -26,9 +26,16 @@ data class DomainSearch(
         data class Playlist(
             override val id: String,
             val title: String,
-            val thumbnailUrl: String,
-            val channelName: String,
-            val videoCountText: String
+            val subtitle: String,
+            val videoCountText: String,
+            val thumbnailUrl: String
+        ) : Result
+
+        data class Mix(
+            override val id: String,
+            val title: String,
+            val subtitle: String,
+            val thumbnailUrl: String
         ) : Result
     }
 }

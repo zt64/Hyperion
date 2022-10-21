@@ -2,45 +2,29 @@ package com.hyperion.network.dto
 
 import com.hyperion.network.dto.renderer.ElementRenderer
 import com.hyperion.network.dto.renderer.ListRenderer
-import com.hyperion.network.dto.renderer.SectionListRenderer
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ApiChannel(
-    val contents: Contents,
-    val header: Header
-) {
+    val header: Header,
+    override val contents: Contents<Content>,
+) : ApiBrowse() {
     @Serializable
-    data class Contents(
-        @SerialName("singleColumnBrowseResultsRenderer")
-        val browseResultsRenderer: BrowseResultsRenderer
-    ) {
+    data class Header(val channelMobileHeaderRenderer: ChannelMobileHeaderRenderer) {
         @Serializable
-        data class BrowseResultsRenderer(val tabs: List<Tab>) {
-            @Serializable
-            data class Tab(val tabRenderer: TabRenderer)
+        data class ChannelMobileHeaderRenderer(val channelHeader: ChannelHeader)
 
-            @Serializable
-            data class TabRenderer(
-                val endpoint: Endpoint,
-                val content: TabContent,
-                val selected: Boolean = false,
-                val title: String
-            ) {
-                @Serializable
-                data class Endpoint(val browseEndpoint: ApiBrowseEndpoint)
-            }
+        @Serializable
+        data class ChannelHeader(val elementRenderer: ElementRenderer<Model>)
 
-            @Serializable
-            data class TabContent(val sectionListRenderer: SectionListRenderer<Content>) {
-                @Serializable
-                data class Content(val shelfRenderer: ShelfRenderer? = null) {
-                    @Serializable
-                    data class ShelfRenderer(val content: ShelfRendererContent)
-                }
-            }
-        }
+        @Serializable
+        data class Model(val channelHeaderModel: ChannelHeaderModel)
+    }
+
+    @Serializable
+    data class Content(val shelfRenderer: ShelfRenderer? = null) {
+        @Serializable
+        data class ShelfRenderer(val content: ShelfRendererContent)
     }
 
     @Serializable
@@ -75,25 +59,10 @@ data class ApiChannel(
     }
 
     @Serializable
-    data class Header(val channelMobileHeaderRenderer: ChannelMobileHeaderRenderer) {
-        @Serializable
-        data class ChannelMobileHeaderRenderer(val channelHeader: ChannelHeader)
-
-        @Serializable
-        data class ChannelHeader(val elementRenderer: ElementRenderer<Model>)
-
-        @Serializable
-        data class Model(val channelHeaderModel: ChannelHeaderModel)
-    }
-
-    @Serializable
     data class ChannelHeaderModel(
-        val channelBanner: ChannelBanner? = null,
+        val channelBanner: ImageContainer? = null,
         val channelProfile: ChannelProfile
     ) {
-        @Serializable
-        data class ChannelBanner(val image: ApiImage)
-
         @Serializable
         data class ChannelProfile(
             val avatarData: AvatarData,
@@ -102,13 +71,10 @@ data class ApiChannel(
             val title: String
         ) {
             @Serializable
-            data class AvatarData(val avatar: Avatar) {
-                @Serializable
-                data class Avatar(val image: ApiImage)
-            }
+            data class AvatarData(val avatar: ImageContainer)
 
             @Serializable
-            data class DescriptionPreview(val description: String = "")
+            data class DescriptionPreview(val description: String? = null)
 
             @Serializable
             data class Metadata(

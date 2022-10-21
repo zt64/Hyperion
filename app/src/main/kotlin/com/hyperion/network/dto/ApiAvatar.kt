@@ -4,9 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ApiAvatar(
-    val endpoint: Endpoint,
+    val endpoint: OnTap<ApiNavigationEndpoint>,
     val image: ApiImage
-) {
-    @Serializable
-    data class Endpoint(val innertubeCommand: ApiNavigationEndpoint)
-}
+)
+
+@Serializable
+data class DecoratedAvatar(val avatar: ImageContainer)

@@ -2,11 +2,15 @@ package com.hyperion.network.service
 
 import com.hyperion.network.body.*
 import com.hyperion.network.dto.*
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -46,32 +50,36 @@ class InnerTubeService(
         }
     }
 
+    private suspend fun post(endpoint: String, body: Any) = withContext(Dispatchers.IO) {
+        httpClient.post("$API_URL/$endpoint") {
+            parameter("key", innerTubeApiKey)
+            contentType(ContentType.Application.Json)
+            setBody(body)
+        }
+    }
+
     private suspend inline fun <reified T> getBrowse(
         browseId: String,
         continuation: String? = null,
         params: String? = null
-    ): T = withContext(Dispatchers.IO) {
-        httpClient.post("$API_URL/browse") {
-            parameter("key", innerTubeApiKey)
-            contentType(ContentType.Application.Json)
-            setBody(
-                BrowseBody(
-                    context = innerTubeContext,
-                    browseId = browseId,
-                    continuation = continuation,
-                    params = params
-                )
-            )
-        }.body()
-    }
+    ): T = post(
+        endpoint = "browse",
+        body = BrowseBody(
+            context = innerTubeContext,
+            browseId = browseId,
+            continuation = continuation,
+            params = params
+        )
+    ).body()
 
     suspend fun getRecommendations(): ApiRecommended = getBrowse("FEwhat_to_watch")
-    suspend fun getRecommendations(continuation: String): ApiRecommendedContinuation =
-        getBrowse("FEwhat_to_watch", continuation)
+    suspend fun getRecommendations(continuation: String): ApiRecommendedContinuation = getBrowse("FEwhat_to_watch", continuation)
 
-    suspend fun getPlaylist(playlistId: String): ApiPlaylist = getBrowse(playlistId)
+    suspend fun getPlaylist(id: String): ApiPlaylist = getBrowse(id)
+    suspend fun getPlaylist(id: String, continuation: String): ApiPlaylistContinuation = getBrowse(id, continuation)
 
     suspend fun getSubscriptions(): ApiSubscriptions = getBrowse("FEsubscriptions")
+    suspend fun getSubscriptions(continuation: String): ApiSubscriptionsContinuation = getBrowse("FEsubscriptions", continuation)
 
     suspend fun getTrending(): ApiTrending = getBrowse("FEtrending")
     suspend fun getTrending(continuation: String): ApiTrendingContinuation = getBrowse("FEtrending", continuation)
@@ -91,86 +99,57 @@ class InnerTubeService(
         json.parseToJsonElement(body.substringAfter("(").substringBeforeLast(")"))
     }
 
-    suspend fun getPlayer(id: String): ApiPlayer = withContext(Dispatchers.IO) {
-        httpClient.post("$API_URL/player") {
-            parameter("key", innerTubeApiKey)
-            contentType(ContentType.Application.Json)
-            setBody(
-                PlayerBody(
-                    context = innerTubeContext,
-                    videoId = id
-                )
-            )
-        }.body()
-    }
+    suspend fun getPlayer(id: String): ApiPlayer = post(
+        endpoint = "player",
+        body = PlayerBody(
+            context = innerTubeContext,
+            videoId = id
+        )
+    ).body()
 
-    suspend fun getNext(id: String): ApiNext = withContext(Dispatchers.IO) {
-        httpClient.post("$API_URL/next") {
-            parameter("key", innerTubeApiKey)
-            contentType(ContentType.Application.Json)
-            setBody(
-                NextBody(
-                    context = innerTubeContext,
-                    videoId = id
-                )
-            )
-        }.body()
-    }
+    suspend fun getNext(id: String): ApiNext = post(
+        endpoint = "next",
+        body = NextBody(
+            context = innerTubeContext,
+            videoId = id
+        )
+    ).body()
 
-    suspend fun getNext(id: String, continuation: String): ApiNextContinuation = withContext(Dispatchers.IO) {
-        httpClient.post("$API_URL/next") {
-            parameter("key", innerTubeApiKey)
-            contentType(ContentType.Application.Json)
-            setBody(
-                NextBody(
-                    context = innerTubeContext,
-                    videoId = id,
-                    continuation = continuation
-                )
-            )
-        }.body()
-    }
+    suspend fun getNext(id: String, continuation: String): ApiNextContinuation = post(
+        endpoint = "next",
+        body = NextBody(
+            context = innerTubeContext,
+            videoId = id,
+            continuation = continuation
+        )
+    ).body()
 
-    suspend fun getSearchResults(query: String): ApiSearch = withContext(Dispatchers.IO) {
-        httpClient.post("$API_URL/search") {
-            parameter("key", innerTubeApiKey)
-            contentType(ContentType.Application.Json)
-            setBody(
-                SearchBody(
-                    context = innerTubeContext,
-                    query = query
-                )
-            )
-        }.body()
-    }
+    suspend fun getSearchResults(query: String): ApiSearch = post(
+        endpoint = "search",
+        body = SearchBody(
+            context = innerTubeContext,
+            query = query
+        )
+    ).body()
 
-    suspend fun getSearchResults(query: String, continuation: String): ApiSearchContinuation =
-        withContext(Dispatchers.IO) {
-            httpClient.post("$API_URL/search") {
-                parameter("key", innerTubeApiKey)
-                contentType(ContentType.Application.Json)
-                setBody(
-                    SearchBody(
-                        context = innerTubeContext,
-                        query = query,
-                        continuation = continuation
-                    )
-                )
-            }.body()
-        }
+    suspend fun getSearchResults(query: String, continuation: String): ApiSearchContinuation = post(
+        endpoint = "search",
+        body = SearchBody(
+            context = innerTubeContext,
+            query = query,
+            continuation = continuation
+        )
+    ).body()
 
-    suspend fun createComment(text: String, params: String): Unit = withContext(Dispatchers.IO) {
-        httpClient.post("$API_URL/create_comment") {
-            parameter("key", innerTubeApiKey)
-            contentType(ContentType.Application.Json)
-            setBody(
-                CommentBody(
-                    context = innerTubeContext,
-                    commentText = text,
-                    createCommentParams = params
-                )
+    suspend fun createComment(text: String, params: String) {
+        post(
+            endpoint = "create_comment",
+            body = CommentBody(
+                context = innerTubeContext,
+                commentText = text,
+                createCommentParams = params
             )
-        }
+        )
     }
 
     companion object {
@@ -188,8 +167,6 @@ class InnerTubeService(
 
 @Serializable
 private data class InnerTubeData(
-    @SerialName("INNERTUBE_API_KEY")
-    val innerTubeApiKey: String,
-    @SerialName("INNERTUBE_CONTEXT")
-    val innerTubeContext: ApiContext
+    @SerialName("INNERTUBE_API_KEY") val innerTubeApiKey: String,
+    @SerialName("INNERTUBE_CONTEXT") val innerTubeContext: ApiContext
 )

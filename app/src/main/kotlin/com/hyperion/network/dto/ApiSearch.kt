@@ -4,11 +4,10 @@ import com.hyperion.network.dto.renderer.ChipCloudRenderer
 import com.hyperion.network.dto.renderer.ElementRenderer
 import com.hyperion.network.dto.renderer.ItemSectionRenderer
 import com.hyperion.network.dto.renderer.SectionListRenderer
+import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonContentPolymorphicSerializer
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.*
 
 @Serializable
 data class ApiSearch(val contents: Contents) {
@@ -26,6 +25,7 @@ data class ApiSearch(val contents: Contents) {
                 "compactChannelRenderer" -> CompactChannel.serializer()
                 "elementRenderer" -> Element.serializer()
                 "messageRenderer" -> Message.serializer()
+                "horizontalCardListRenderer" -> Unknown.serializer()
                 else -> throw NoWhenBranchMatchedException(element.jsonObject.toString())
             }
         }
@@ -41,6 +41,9 @@ data class ApiSearch(val contents: Contents) {
 
         @Serializable
         data class Message(val messageRenderer: MessageRenderer) : Renderer
+
+        @Serializable
+        object Unknown : Renderer
     }
 
     @Serializable
@@ -99,46 +102,75 @@ data class ApiSearch(val contents: Contents) {
 
         @Serializable
         data class VideoWithContextData(
-            val onTap: OnTap,
-            val videoData: VideoData
+            val onTap: OnTap<InnertubeCommand>,
+            val videoData: Node
         )
 
         @Serializable
-        data class OnTap(val innertubeCommand: InnertubeCommand) {
+        data class InnertubeCommand(
+            val watchEndpoint: WatchEndpoint? = null,
+            val browseEndpoint: ApiBrowseEndpoint? = null
+        ) {
             @Serializable
-            data class InnertubeCommand(val watchEndpoint: WatchEndpoint) {
-                @Serializable
-                data class WatchEndpoint(
-                    val continuePlayback: Boolean = false,
-                    val params: String,
-                    val playlistId: String? = null,
-                    val videoId: String? = null
-                )
+            data class WatchEndpoint(
+                val continuePlayback: Boolean = false,
+                val params: String,
+                val playlistId: String? = null,
+                val videoId: String? = null
+            )
+        }
+
+        @Serializable(with = Node.Serializer::class)
+        sealed interface Node {
+            companion object Serializer : JsonContentPolymorphicSerializer<Node>(Node::class) {
+                override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out Node> {
+                    val thumbnail = element.jsonObject["thumbnail"]!!.jsonObject
+
+                    return when {
+                        thumbnail["isMix"]?.jsonPrimitive?.boolean == true -> Mix.serializer()
+                        thumbnail["isPlaylist"]?.jsonPrimitive?.boolean == true -> Playlist.serializer()
+                        else -> Video.serializer()
+                    }
+                }
             }
         }
 
         @Serializable
-        data class VideoData(
+        data class Video(
             val avatar: ApiAvatar? = null,
+            val decoratedAvatar: DecoratedAvatar? = null,
+            val metadata: VideoData.Metadata,
+            val thumbnail: ApiThumbnailTimestamp,
+            val channelId: String? = null
+        ) : Node
+
+        @Serializable
+        data class Mix(
             val metadata: Metadata,
-            val thumbnail: Thumbnail
-        ) {
+            val thumbnail: ImageContainer
+        ) : Node {
             @Serializable
             data class Metadata(
                 val title: String,
-                val byline: String? = null,
-                val metadataDetails: String? = null,
-                val isPlaylistMix: Boolean = false,
-                val isVideoWithContext: Boolean? = null,
+                val byline: String
+            )
+        }
+
+        @Serializable
+        data class Playlist(
+            val metadata: Metadata,
+            val thumbnail: Thumbnail
+        ) : Node {
+            @Serializable
+            data class Metadata(
+                val title: String,
+                val byline: String
             )
 
             @Serializable
             data class Thumbnail(
-                val isMix: Boolean? = null,
-                val isPlaylist: Boolean? = null,
-                val isVideoWithContext: Boolean,
-                val timestampText: String? = null,
-                val videoCount: String? = null
+                val videoCount: String,
+                val image: ApiImage
             )
         }
     }

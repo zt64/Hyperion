@@ -18,18 +18,15 @@ sealed interface ApiContinuation {
     }
 
     @Serializable
-    data class Next(private val nextContinuationData: NextContinuationData) : ApiContinuation {
-        override val continuation: String = nextContinuationData.continuation
+    data class ContinuationData(val continuation: String)
 
-        @Serializable
-        data class NextContinuationData(override val continuation: String) : ApiContinuation
+    @Serializable
+    data class Next(private val nextContinuationData: ContinuationData) : ApiContinuation {
+        override val continuation: String = nextContinuationData.continuation
     }
 
     @Serializable
-    data class Reload(private val reloadContinuationData: ReloadContinuationData) : ApiContinuation {
+    data class Reload(private val reloadContinuationData: ContinuationData) : ApiContinuation {
         override val continuation: String = reloadContinuationData.continuation
-
-        @Serializable
-        data class ReloadContinuationData(override val continuation: String) : ApiContinuation
     }
 }

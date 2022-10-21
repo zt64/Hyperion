@@ -50,9 +50,7 @@ data class ApiNext(val contents: Contents) {
         sealed interface ItemSection : Renderer {
             companion object Serializer :
                 JsonContentPolymorphicSerializer<ItemSection>(ItemSection::class) {
-                override fun selectDeserializer(
-                    element: JsonElement
-                ): DeserializationStrategy<out ItemSection> {
+                override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out ItemSection> {
                     val sectionIdentifier = element.jsonObject["sectionIdentifier"]
                         ?.jsonPrimitive
                         ?.contentOrNull
@@ -136,12 +134,9 @@ data class ApiNext(val contents: Contents) {
         data class ChannelBarModel(val videoChannelBarData: VideoChannelBarData) {
             @Serializable
             data class VideoChannelBarData(
-                val avatar: Avatar,
+                val avatar: ImageContainer,
                 val subtitle: String? = null
-            ) {
-                @Serializable
-                data class Avatar(val image: ApiImage)
-            }
+            )
         }
 
         @Serializable
