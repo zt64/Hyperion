@@ -14,12 +14,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.placeholder
-import com.google.accompanist.placeholder.shimmer
 import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.domain.model.DomainVideoPartial
+import com.hyperion.util.shimmer
 import org.koin.androidx.compose.get
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -131,25 +129,17 @@ private fun Thumbnail(
             modifier = Modifier.aspectRatio(16f / 9f),
             model = video.thumbnailUrl,
             loading = {
-                val localElevation = LocalAbsoluteTonalElevation.current
-
                 Box(
                     modifier = modifier
-                        .placeholder(
-                            visible = true,
-                            color = MaterialTheme.colorScheme.surfaceColorAtElevation(localElevation + 2.dp),
-                            highlight = PlaceholderHighlight.shimmer(
-                                highlightColor = MaterialTheme.colorScheme.surfaceColorAtElevation(localElevation + 3.dp)
-                            )
-                        )
-                        .fillMaxSize(),
+                        .shimmer()
+                        .fillMaxSize()
                 )
             },
             success = {
                 SubcomposeAsyncImageContent()
             },
             contentScale = ContentScale.Crop,
-            contentDescription = stringResource(R.string.thumbnail),
+            contentDescription = stringResource(R.string.thumbnail)
         )
 
         if (video.timestamp != null) {
