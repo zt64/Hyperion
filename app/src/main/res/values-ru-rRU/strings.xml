@@ -52,6 +52,12 @@
     <string name="filter">Filter</string>
     <string name="appearance">Appearance</string>
     <string name="general">General</string>
+    <string name="backup_restore">Backup and Restore</string>
     <string name="accounts">Accounts</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="saved_to_library">Saved to library</string>
+    <string name="community">Community</string>
+    <string name="channels">Channels</string>
+    <string name="sponsor_block">SponsorBlock</string>
     <string name="history">History</string>
 </resources>
