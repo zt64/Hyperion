@@ -49,11 +49,10 @@ fun SearchScreen(
     navigator: BackstackNavigator<AppDestination>
 ) {
     val focusManager = LocalFocusManager.current
-    val focusRequester = remember { FocusRequester() }
-    var showResults by remember { mutableStateOf(false) }
+    var showResults by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
+        viewModel.focusRequester.requestFocus()
     }
 
     Scaffold(
@@ -63,7 +62,7 @@ fun SearchScreen(
                     SearchField(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .focusRequester(focusRequester)
+                            .focusRequester(viewModel.focusRequester)
                             .onFocusChanged { showResults = !it.isFocused },
                         value = viewModel.search,
                         onValueChange = viewModel::getSuggestions,
