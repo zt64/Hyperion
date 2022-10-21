@@ -2,7 +2,7 @@
 <resources>
     <string name="home">होम</string>
     <string name="explore">अन्वेषण करना</string>
-    <string name="settings_screen">सेटिंग्स</string>
+    <string name="settings">सेटिंग्स</string>
     <string name="apply">आवेदन करें</string>
     <string name="theme">थीम</string>
     <string name="theme_setting_description">हाइपरियन उपस्थिति</string>
@@ -12,7 +12,7 @@
     <string name="todo">करने के लिए</string>
     <string name="dislike">डिस्लाइक</string>
     <string name="like">लाइक</string>
-    <string name="library_screen">लाइब्रेरी</string>
+    <string name="library">लाइब्रेरी</string>
     <string name="subscribe">सब्सक्राइब</string>
     <string name="views">व्यूज़</string>
     <string name="download_location">डाउनलोड का स्थान</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

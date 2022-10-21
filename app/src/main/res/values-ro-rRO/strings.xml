@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Home</string>
     <string name="explore">Explore</string>
-    <string name="settings_screen">Setări</string>
+    <string name="settings">Setări</string>
     <string name="apply">Aplicare</string>
     <string name="theme">Temă</string>
     <string name="theme_setting_description">Aspect Hyperion</string>
@@ -12,7 +12,7 @@
     <string name="todo">De făcut</string>
     <string name="dislike">Dislike</string>
     <string name="like">Like</string>
-    <string name="library_screen">Bibliotecă</string>
+    <string name="library">Bibliotecă</string>
     <string name="subscribe">Abonare</string>
     <string name="views">vizualizări</string>
     <string name="download_location">Locaţia de descărcare</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

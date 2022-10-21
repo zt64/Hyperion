@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Tuisblad</string>
     <string name="explore">Explore</string>
-    <string name="settings_screen">Instellings</string>
+    <string name="settings">Instellings</string>
     <string name="apply">Aansoek doen</string>
     <string name="theme">Tema</string>
     <string name="theme_setting_description">Hyperion voorkoms</string>
@@ -12,7 +12,7 @@
     <string name="todo">OM TE DOEN</string>
     <string name="dislike">Afkeer</string>
     <string name="like">Hou Van</string>
-    <string name="library_screen">Biblioteek</string>
+    <string name="library">Biblioteek</string>
     <string name="subscribe">Skryf in</string>
     <string name="views">sienings</string>
     <string name="download_location">Laai ligging af</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

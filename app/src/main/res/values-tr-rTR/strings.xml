@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Ana sayfa</string>
     <string name="explore">Keşfet</string>
-    <string name="settings_screen">Ayarlar</string>
+    <string name="settings">Ayarlar</string>
     <string name="apply">Uygula</string>
     <string name="theme">Tema</string>
     <string name="theme_setting_description">Hyperion Görünümü</string>
@@ -12,7 +12,7 @@
     <string name="todo">Yapılacaklar</string>
     <string name="dislike">Beğenme</string>
     <string name="like">Beğen</string>
-    <string name="library_screen">Kitaplık</string>
+    <string name="library">Kitaplık</string>
     <string name="subscribe">Abone Ol</string>
     <string name="views">görüntülenme</string>
     <string name="download_location">İndirme konumu</string>
@@ -48,4 +48,10 @@
     <string name="system">Sistem</string>
     <string name="dark">Koyu</string>
     <string name="light">Açık</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

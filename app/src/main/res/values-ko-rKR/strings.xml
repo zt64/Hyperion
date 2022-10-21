@@ -2,7 +2,7 @@
 <resources>
     <string name="home">홈</string>
     <string name="explore">탐색</string>
-    <string name="settings_screen">설정</string>
+    <string name="settings">설정</string>
     <string name="apply">적용</string>
     <string name="theme">테마</string>
     <string name="theme_setting_description">Hyperion 외형</string>
@@ -12,7 +12,7 @@
     <string name="todo">할 일</string>
     <string name="dislike">싫어요</string>
     <string name="like">좋아요</string>
-    <string name="library_screen">라이브러리</string>
+    <string name="library">라이브러리</string>
     <string name="subscribe">구독</string>
     <string name="views">조회수</string>
     <string name="download_location">저장 위치</string>
@@ -48,4 +48,10 @@
     <string name="system">시스템</string>
     <string name="dark">어두운</string>
     <string name="light">밝은</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

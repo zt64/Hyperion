@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Home</string>
     <string name="explore">Explore</string>
-    <string name="settings_screen">Nastavení</string>
+    <string name="settings">Nastavení</string>
     <string name="apply">Použít</string>
     <string name="theme">Téma</string>
     <string name="theme_setting_description">Vzhled Hyperionu</string>
@@ -12,7 +12,7 @@
     <string name="todo">V přípravě</string>
     <string name="dislike">Nelíbí se mi</string>
     <string name="like">Líbí se mi</string>
-    <string name="library_screen">Knihovna</string>
+    <string name="library">Knihovna</string>
     <string name="subscribe">Odebírat</string>
     <string name="views">zobrazení</string>
     <string name="download_location">Umístění stahování</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

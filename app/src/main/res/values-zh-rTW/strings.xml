@@ -2,7 +2,7 @@
 <resources>
     <string name="home">主頁</string>
     <string name="explore">Explore</string>
-    <string name="settings_screen">設定</string>
+    <string name="settings">設定</string>
     <string name="apply">套用</string>
     <string name="theme">主題</string>
     <string name="theme_setting_description">Hyperion 的外觀</string>
@@ -12,7 +12,7 @@
     <string name="todo">待辦事項</string>
     <string name="dislike">不喜歡</string>
     <string name="like">喜歡</string>
-    <string name="library_screen">媒體庫</string>
+    <string name="library">媒體庫</string>
     <string name="subscribe">訂閱</string>
     <string name="views">觀看次數</string>
     <string name="download_location">下載位置</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

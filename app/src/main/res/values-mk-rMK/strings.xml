@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Home</string>
     <string name="explore">Explore</string>
-    <string name="settings_screen">Поставки</string>
+    <string name="settings">Поставки</string>
     <string name="apply">Примени</string>
     <string name="theme">Тема</string>
     <string name="theme_setting_description">Изгледа на Хиперион</string>
@@ -12,7 +12,7 @@
     <string name="todo">Да се направи</string>
     <string name="dislike">Не им се допаѓа</string>
     <string name="like">Допаѓа</string>
-    <string name="library_screen">Библиотеки</string>
+    <string name="library">Библиотеки</string>
     <string name="subscribe">Претплати</string>
     <string name="views">гледишта</string>
     <string name="download_location">Локација на симнати фајлови</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

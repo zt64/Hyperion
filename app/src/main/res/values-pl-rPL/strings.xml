@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Strona główna</string>
     <string name="explore">Odkrywaj</string>
-    <string name="settings_screen">Ustawienia</string>
+    <string name="settings">Ustawienia</string>
     <string name="apply">Zastosuj</string>
     <string name="theme">Motyw</string>
     <string name="theme_setting_description">Wygląd Hyperiona</string>
@@ -12,7 +12,7 @@
     <string name="todo">Do zrobienia</string>
     <string name="dislike">Nie podoba mi się</string>
     <string name="like">Podoba mi się</string>
-    <string name="library_screen">Biblioteka</string>
+    <string name="library">Biblioteka</string>
     <string name="subscribe">Subskrybuj</string>
     <string name="views">wyświetlenia</string>
     <string name="download_location">Folder pobierania</string>
@@ -48,4 +48,10 @@
     <string name="system">Systemowy</string>
     <string name="dark">Ciemny</string>
     <string name="light">Jasny</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

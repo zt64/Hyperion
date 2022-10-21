@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Ev</string>
     <string name="explore">Kəşf et</string>
-    <string name="settings_screen">Tənzimləmələr</string>
+    <string name="settings">Tənzimləmələr</string>
     <string name="apply">Tətbiq et</string>
     <string name="theme">Mövzu</string>
     <string name="theme_setting_description">Hyperion görünüşü</string>
@@ -12,7 +12,7 @@
     <string name="todo">Ediləcəklər</string>
     <string name="dislike">Bəyənmirəm</string>
     <string name="like">Bəyəndim</string>
-    <string name="library_screen">Kitabxana</string>
+    <string name="library">Kitabxana</string>
     <string name="subscribe">Abunə olun</string>
     <string name="views">baxış</string>
     <string name="download_location">Endirmə məkanı</string>
@@ -48,4 +48,10 @@
     <string name="system">Sistem</string>
     <string name="dark">Qaranlıq</string>
     <string name="light">İşıqlı</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

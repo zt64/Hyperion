@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Kezdőlap</string>
     <string name="explore">Fedezze fel</string>
-    <string name="settings_screen">Beállítások</string>
+    <string name="settings">Beállítások</string>
     <string name="apply">Alkalmaz</string>
     <string name="theme">Téma</string>
     <string name="theme_setting_description">Hyperion kinézete</string>
@@ -12,7 +12,7 @@
     <string name="todo">Hátra van</string>
     <string name="dislike">Nem tetszik</string>
     <string name="like">Tetszik</string>
-    <string name="library_screen">Könyvtár</string>
+    <string name="library">Könyvtár</string>
     <string name="subscribe">Feliratkozás</string>
     <string name="views">nézetség</string>
     <string name="download_location">Letöltési mappa</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

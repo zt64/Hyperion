@@ -2,7 +2,7 @@
 <resources>
     <string name="home">الصفحة الرئيسية</string>
     <string name="explore">Explore</string>
-    <string name="settings_screen">الإعدادات</string>
+    <string name="settings">الإعدادات</string>
     <string name="apply">حفظ</string>
     <string name="theme">سمات الشاشة</string>
     <string name="theme_setting_description">مظهر التطبيق</string>
@@ -12,7 +12,7 @@
     <string name="todo">للتنفيذ</string>
     <string name="dislike">لم يعجبني</string>
     <string name="like">أعجبني</string>
-    <string name="library_screen">المكتبة</string>
+    <string name="library">المكتبة</string>
     <string name="subscribe">إشترِك</string>
     <string name="views">المشاهدات</string>
     <string name="download_location">موقع التحميل</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

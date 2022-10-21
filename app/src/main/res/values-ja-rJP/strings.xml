@@ -2,7 +2,7 @@
 <resources>
     <string name="home">ホーム</string>
     <string name="explore">探索</string>
-    <string name="settings_screen">設定</string>
+    <string name="settings">設定</string>
     <string name="apply">適用</string>
     <string name="theme">テーマ</string>
     <string name="theme_setting_description">Hyperionの外観</string>
@@ -12,7 +12,7 @@
     <string name="todo">TODO</string>
     <string name="dislike">低評価</string>
     <string name="like">高評価</string>
-    <string name="library_screen">ライブラリ</string>
+    <string name="library">ライブラリ</string>
     <string name="subscribe">登録</string>
     <string name="views">視聴回数</string>
     <string name="download_location">ダウンロード先</string>
@@ -48,4 +48,10 @@
     <string name="system">システム</string>
     <string name="dark">ダーク</string>
     <string name="light">ライト</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

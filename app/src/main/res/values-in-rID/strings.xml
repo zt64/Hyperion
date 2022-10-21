@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Beranda</string>
     <string name="explore">Menjelajahi</string>
-    <string name="settings_screen">Pengaturan</string>
+    <string name="settings">Pengaturan</string>
     <string name="apply">Terapkan</string>
     <string name="theme">Tema</string>
     <string name="theme_setting_description">Penampilan Hypertion</string>
@@ -12,7 +12,7 @@
     <string name="todo">HAL YANG AKAN DILAKUKAN</string>
     <string name="dislike">Tidak suka</string>
     <string name="like">Suka</string>
-    <string name="library_screen">Koleksi</string>
+    <string name="library">Koleksi</string>
     <string name="subscribe">Subscribe</string>
     <string name="views">ditonton</string>
     <string name="download_location">Lokasi unduhan</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

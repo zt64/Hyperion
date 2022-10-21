@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Home</string>
     <string name="explore">Explore</string>
-    <string name="settings_screen">Postavke</string>
+    <string name="settings">Postavke</string>
     <string name="apply">Primjeni</string>
     <string name="theme">Tema</string>
     <string name="theme_setting_description">Prilagodite Temu</string>
@@ -12,7 +12,7 @@
     <string name="todo">Napraviti</string>
     <string name="dislike">Ne sviđa se</string>
     <string name="like">Sviđa se</string>
-    <string name="library_screen">Zbirka</string>
+    <string name="library">Zbirka</string>
     <string name="subscribe">Pretplatite se</string>
     <string name="views">pregledi</string>
     <string name="download_location">Lokacija Preuzimanja</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

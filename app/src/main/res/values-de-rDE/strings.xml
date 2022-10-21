@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Startseite</string>
     <string name="explore">Erkunden</string>
-    <string name="settings_screen">Einstellungen</string>
+    <string name="settings">Einstellungen</string>
     <string name="apply">Übernehmen</string>
     <string name="theme">Erscheinungsbild</string>
     <string name="theme_setting_description">Hyperion Erscheinung</string>
@@ -12,7 +12,7 @@
     <string name="todo">Zu erledigen</string>
     <string name="dislike">Gefällt mir nicht</string>
     <string name="like">Gefällt mir</string>
-    <string name="library_screen">Bibliothek</string>
+    <string name="library">Bibliothek</string>
     <string name="subscribe">Abonnieren</string>
     <string name="views">Ansichten</string>
     <string name="download_location">Download-Verzeichnis</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

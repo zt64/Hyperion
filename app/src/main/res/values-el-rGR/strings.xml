@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Home</string>
     <string name="explore">Explore</string>
-    <string name="settings_screen">Ρυθμίσεις</string>
+    <string name="settings">Ρυθμίσεις</string>
     <string name="apply">Εφαρμογή</string>
     <string name="theme">Θέμα</string>
     <string name="theme_setting_description">Εμφάνιση του Hyperion</string>
@@ -12,7 +12,7 @@
     <string name="todo">To-Do</string>
     <string name="dislike">Δεν μου αρέσει</string>
     <string name="like">Μου αρέσει</string>
-    <string name="library_screen">Βιβλιοθήκη</string>
+    <string name="library">Βιβλιοθήκη</string>
     <string name="subscribe">Εγγραφή</string>
     <string name="views">Προβολές</string>
     <string name="download_location">Τοποθεσία Λήψης</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>

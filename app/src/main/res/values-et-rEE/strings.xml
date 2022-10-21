@@ -2,7 +2,7 @@
 <resources>
     <string name="home">Avaleht</string>
     <string name="explore">Explore</string>
-    <string name="settings_screen">Seaded</string>
+    <string name="settings">Seaded</string>
     <string name="apply">Rakenda</string>
     <string name="theme">Kujundus</string>
     <string name="theme_setting_description">Hyperion\'i väljanägemine</string>
@@ -12,7 +12,7 @@
     <string name="todo">Vaja teha</string>
     <string name="dislike">Mittemeeldimine</string>
     <string name="like">Meeldimine</string>
-    <string name="library_screen">Kogu</string>
+    <string name="library">Kogu</string>
     <string name="subscribe">Telli</string>
     <string name="views">vaatamist</string>
     <string name="download_location">Allalaadimiste asukoht</string>
@@ -48,4 +48,10 @@
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
+    <string name="clear">Clear</string>
+    <string name="filter">Filter</string>
+    <string name="appearance">Appearance</string>
+    <string name="general">General</string>
+    <string name="accounts">Accounts</string>
+    <string name="history">History</string>
 </resources>
