@@ -17,7 +17,6 @@ import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.domain.model.DomainSearch
 import org.koin.androidx.compose.get
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaylistCard(
     modifier: Modifier = Modifier,

@@ -33,7 +33,7 @@ import com.xinto.taxi.BackstackNavigator
 import com.xinto.taxi.Taxi
 import com.xinto.taxi.rememberNavigator
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainRootScreen(
     navigator: BackstackNavigator<AppDestination>

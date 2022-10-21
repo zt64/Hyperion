@@ -10,7 +10,6 @@ import androidx.compose.ui.unit.dp
 import com.hyperion.R
 import com.hyperion.domain.model.DomainSearch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChannelCard(
     modifier: Modifier = Modifier,

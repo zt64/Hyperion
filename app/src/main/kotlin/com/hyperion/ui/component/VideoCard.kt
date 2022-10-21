@@ -20,7 +20,6 @@ import com.hyperion.domain.model.DomainVideoPartial
 import com.hyperion.util.shimmer
 import org.koin.androidx.compose.get
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VideoCard(
     modifier: Modifier = Modifier,

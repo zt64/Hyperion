@@ -14,7 +14,6 @@ import com.hyperion.R
 import com.hyperion.ui.viewmodel.PlaylistViewModel
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaylistScreen(
     viewModel: PlaylistViewModel = getViewModel(),

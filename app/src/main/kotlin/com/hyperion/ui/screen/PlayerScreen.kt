@@ -138,7 +138,6 @@ private fun PlayerScreenLoading() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PlayerScreenError(
     exception: Exception,
@@ -306,7 +305,6 @@ private fun PlayerScreenLoaded(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerScreenPortrait(
     viewModel: PlayerViewModel,

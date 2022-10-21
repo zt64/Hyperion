@@ -43,7 +43,6 @@ import com.hyperion.ui.viewmodel.SearchViewModel
 import com.xinto.taxi.BackstackNavigator
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = getViewModel(),

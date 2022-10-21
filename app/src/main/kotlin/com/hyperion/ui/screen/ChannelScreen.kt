@@ -73,7 +73,6 @@ fun ChannelScreen(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun ChannelScreenLoaded(
     navigator: BackstackNavigator<AppDestination>,
@@ -202,7 +201,6 @@ private fun ChannelScreenLoaded(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChannelScreenLoading(
     onClickBack: () -> Unit
@@ -233,7 +231,6 @@ private fun ChannelScreenLoading(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChannelScreenError(
     error: Exception,
