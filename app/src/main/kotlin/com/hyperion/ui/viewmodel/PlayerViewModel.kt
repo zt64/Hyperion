@@ -21,6 +21,7 @@ import com.hyperion.domain.model.DomainVideo
 import com.hyperion.domain.model.DomainVideoPartial
 import com.hyperion.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
@@ -39,25 +40,18 @@ class PlayerViewModel(
 
     var state by mutableStateOf<State>(State.Loading)
         private set
-
     var video by mutableStateOf<DomainVideo?>(null)
         private set
-
     var stream by mutableStateOf<DomainStream?>(null)
         private set
-
     var isFullscreen by mutableStateOf(false)
         private set
-
     var showFullDescription by mutableStateOf(false)
         private set
-
     var showControls by mutableStateOf(false)
         private set
-
     var showQualityPicker by mutableStateOf(false)
         private set
-
     var showDownloadDialog by mutableStateOf(false)
         private set
 
@@ -108,49 +102,22 @@ class PlayerViewModel(
             addListener(listener)
         }
 
-    var playWhenReady: Boolean by mutableStateOf(player.playWhenReady)
+    var playWhenReady by mutableStateOf(player.playWhenReady)
         private set
-
-    var isPlaying: Boolean by mutableStateOf(player.isPlaying)
+    var isPlaying by mutableStateOf(player.isPlaying)
         private set
-
-    var isLoading: Boolean by mutableStateOf(player.isLoading)
+    var isLoading by mutableStateOf(player.isLoading)
         private set
 
     @get:Player.State
-    var playbackState: Int by mutableStateOf(player.playbackState)
+    var playbackState by mutableStateOf(player.playbackState)
         private set
-
-    var duration: Duration by mutableStateOf(Duration.ZERO)
+    var duration by mutableStateOf(Duration.ZERO)
         private set
-
-    var position: Duration by mutableStateOf(Duration.ZERO)
+    var position by mutableStateOf(Duration.ZERO)
         private set
-
-    val relatedVideos = Pager(PagingConfig(4)) {
-        object : PagingSource<String, DomainVideoPartial>() {
-            override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainVideoPartial> {
-                return try {
-                    val relatedVideosResponse = if (params.key == null) {
-                        repository.getNext(video!!.id).relatedVideos
-                    } else {
-                        repository.getRelatedVideos(video!!.id, params.key!!)
-                    }
-
-                    LoadResult.Page(
-                        data = relatedVideosResponse.videos,
-                        prevKey = null,
-                        nextKey = relatedVideosResponse.continuation
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    LoadResult.Error(e)
-                }
-            }
-
-            override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
-        }
-    }.flow.cachedIn(viewModelScope)
+    var relatedVideos = emptyFlow<PagingData<DomainVideoPartial>>()
+        private set
 
     private val job = viewModelScope.launch {
         while (true) {
@@ -239,9 +206,10 @@ class PlayerViewModel(
     }
 
     fun loadVideo(id: String) {
+        state = State.Loading
+
         viewModelScope.launch {
             try {
-                state = State.Loading
                 video = repository.getVideo(id)
                 stream = video!!.streams.filterIsInstance<DomainStream.Video>().last()
 
@@ -260,6 +228,29 @@ class PlayerViewModel(
                 player.setMediaSource(mergingMediaSource)
                 player.prepare()
                 player.play()
+
+                relatedVideos = Pager(PagingConfig(4)) {
+                    object : PagingSource<String, DomainVideoPartial>() {
+                        override suspend fun load(params: LoadParams<String>) = try {
+                            val relatedVideosResponse = if (params.key == null) {
+                                repository.getNext(video!!.id).relatedVideos
+                            } else {
+                                repository.getRelatedVideos(video!!.id, params.key!!)
+                            }
+
+                            LoadResult.Page(
+                                data = relatedVideosResponse.videos,
+                                prevKey = null,
+                                nextKey = relatedVideosResponse.continuation
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            LoadResult.Error(e)
+                        }
+
+                        override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
+                    }
+                }.flow.cachedIn(viewModelScope)
 
                 state = State.Loaded
             } catch (e: Exception) {
