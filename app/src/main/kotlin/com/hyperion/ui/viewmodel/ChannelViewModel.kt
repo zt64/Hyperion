@@ -1,6 +1,7 @@
 package com.hyperion.ui.viewmodel
 
 import android.app.Application
+import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,28 +25,30 @@ class ChannelViewModel(
         private set
 
     fun getChannel(id: String) {
+        state = State.Loading
+
         viewModelScope.launch {
-            try {
-                state = State.Loading
-                state = State.Loaded(repository.getChannel(id))
+            state = try {
+                State.Loaded(repository.getChannel(id))
             } catch (e: Exception) {
-                state = State.Error(e)
                 e.printStackTrace()
+                State.Error(e)
             }
         }
     }
 
     fun shareChannel() {
-//        Find a way to get the channel url from the state
-//        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-//            type = "text/plain"
-//
-//            putExtra(Intent.EXTRA_TEXT, video!!.shareUrl)
-//            putExtra(Intent.EXTRA_TITLE, video!!.title)
-//        }
-//
-//        application.startActivity(Intent.createChooser(shareIntent, null).apply {
-//            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//        })
+        val channel = (state as State.Loaded).channel
+
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+
+            putExtra(Intent.EXTRA_TEXT, channel.shareUrl)
+            putExtra(Intent.EXTRA_TITLE, channel.name)
+        }
+
+        application.startActivity(Intent.createChooser(shareIntent, null).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        })
     }
 }
