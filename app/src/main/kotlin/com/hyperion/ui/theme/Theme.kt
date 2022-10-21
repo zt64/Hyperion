@@ -3,16 +3,19 @@ package com.hyperion.ui.theme
 import android.os.Build
 import androidx.annotation.StringRes
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hyperion.R
+
+enum class Theme(@StringRes val displayName: Int) {
+    SYSTEM(R.string.system),
+    LIGHT(R.string.light),
+    DARK(R.string.dark);
+}
 
 @Composable
 fun HyperionTheme(
@@ -32,7 +35,7 @@ fun HyperionTheme(
 
     SideEffect {
         systemUiController.setSystemBarsColor(
-            color = colorScheme.background,
+            color = Color.Transparent,
             darkIcons = !isDarkTheme
         )
     }
@@ -41,10 +44,4 @@ fun HyperionTheme(
         colorScheme = colorScheme,
         content = content
     )
-}
-
-enum class Theme(@StringRes val displayName: Int) {
-    SYSTEM(R.string.system),
-    LIGHT(R.string.light),
-    DARK(R.string.dark);
 }
