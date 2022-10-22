@@ -16,11 +16,11 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.navigation.AppDestination
+import com.hyperion.ui.navigation.Taxi
+import com.hyperion.ui.navigation.rememberBackstackNavigator
 import com.hyperion.ui.screen.*
 import com.hyperion.ui.theme.HyperionTheme
 import com.hyperion.ui.theme.Theme
-import com.xinto.taxi.Taxi
-import com.xinto.taxi.rememberBackstackNavigator
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -39,36 +39,72 @@ class MainActivity : ComponentActivity() {
                 isDarkTheme = preferences.theme == Theme.SYSTEM && isSystemInDarkTheme() || preferences.theme == Theme.DARK,
                 isDynamicColor = preferences.dynamicColor
             ) {
-                val navigator = rememberBackstackNavigator<AppDestination>(AppDestination.Home)
-
-                BackHandler {
-                    if (!navigator.pop()) finish()
-                }
-
                 Surface {
+                    val navigator = rememberBackstackNavigator<AppDestination>(AppDestination.Root)
+
+                    BackHandler {
+                        if (!navigator.pop()) finish()
+                    }
+
                     Taxi(
                         modifier = Modifier.fillMaxSize(),
                         navigator = navigator,
-                        transitionSpec = { fadeIn() with fadeOut() }
+                        transitionSpec = {
+                            fadeIn() with fadeOut()
+                        }
                     ) { destination ->
+                        fun onClickVideo(id: String) = navigator.push(AppDestination.Player(id))
+                        fun onClickChannel(id: String) = navigator.push(AppDestination.Channel(id))
+
                         when (destination) {
-                            is AppDestination.Home -> MainRootScreen(
-                                navigator = navigator
-                            )
-                            is AppDestination.Search -> SearchScreen(
-                                navigator = navigator
-                            )
-                            is AppDestination.Player -> PlayerScreen(
-                                navigator = navigator,
-                                videoId = destination.videoId
-                            )
-                            is AppDestination.Channel -> ChannelScreen(
-                                navigator = navigator,
-                                channelId = destination.channelId
-                            )
-                            is AppDestination.Settings -> SettingsScreen(
-                                onClickBack = navigator::pop
-                            )
+                            AppDestination.Root -> {
+                                RootScreen(
+                                    onClickSearch = { navigator.push(AppDestination.Search) },
+                                    onClickSettings = { navigator.push(AppDestination.Settings) },
+                                    onClickVideo = ::onClickVideo,
+                                    onClickChannel = ::onClickChannel
+                                )
+                            }
+
+                            AppDestination.Search -> {
+                                SearchScreen(
+                                    navigator = navigator,
+                                    onClickBack = navigator::pop,
+                                    onClickChannel = ::onClickChannel,
+                                    onClickPlaylist = { id ->
+                                        navigator.push(AppDestination.Playlist(id))
+                                    }
+                                )
+                            }
+
+                            is AppDestination.Player -> {
+                                PlayerScreen(
+                                    navigator = navigator,
+                                    videoId = destination.videoId
+                                )
+                            }
+
+                            is AppDestination.Channel -> {
+                                ChannelScreen(
+                                    navigator = navigator,
+                                    channelId = destination.channelId,
+                                    onClickBack = navigator::pop
+                                )
+                            }
+
+                            is AppDestination.Playlist -> {
+                                PlaylistScreen(
+                                    playlistId = destination.playlistId,
+                                    onClickVideo = ::onClickVideo,
+                                    onClickBack = navigator::pop
+                                )
+                            }
+
+                            AppDestination.Settings -> {
+                                SettingsScreen(
+                                    onClickBack = navigator::pop
+                                )
+                            }
                         }
                     }
                 }

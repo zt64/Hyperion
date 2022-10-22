@@ -14,53 +14,16 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.VideoSettings
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SuggestionChip
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -82,15 +45,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.R
 import com.hyperion.domain.model.DomainStream
-import com.hyperion.ui.component.ChannelThumbnail
-import com.hyperion.ui.component.Player
-import com.hyperion.ui.component.PlayerActions
-import com.hyperion.ui.component.PlayerControlsOverlay
-import com.hyperion.ui.component.VideoCard
+import com.hyperion.ui.component.*
 import com.hyperion.ui.navigation.AppDestination
+import com.hyperion.ui.navigation.BackstackNavigator
 import com.hyperion.ui.viewmodel.PlayerViewModel
 import com.hyperion.util.findActivity
-import com.xinto.taxi.BackstackNavigator
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 import kotlin.math.roundToInt
@@ -109,12 +68,14 @@ fun PlayerScreen(
         is PlayerViewModel.State.Loading -> {
             PlayerScreenLoading()
         }
+
         is PlayerViewModel.State.Loaded -> {
             PlayerScreenLoaded(
                 viewModel = viewModel,
                 navigator = navigator
             )
         }
+
         is PlayerViewModel.State.Error -> {
             PlayerScreenError(
                 exception = state.exception,
@@ -130,10 +91,12 @@ private fun PlayerScreenLoading() {
         Box(
             modifier = Modifier
                 .background(Color.Black)
+                .statusBarsPadding()
                 .aspectRatio(16f / 9f)
-                .fillMaxSize()
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            CircularProgressIndicator()
         }
     }
 }
@@ -300,13 +263,20 @@ private fun PlayerScreenLoaded(
     }
 
     when (LocalConfiguration.current.orientation) {
-        Configuration.ORIENTATION_PORTRAIT -> PlayerScreenPortrait(viewModel = viewModel, navigator = navigator)
-        Configuration.ORIENTATION_LANDSCAPE -> PlayerScreenLandscape(viewModel = viewModel, navigator = navigator)
+        Configuration.ORIENTATION_PORTRAIT -> PlayerScreenPortrait(
+            viewModel = viewModel,
+            navigator = navigator
+        )
+
+        Configuration.ORIENTATION_LANDSCAPE -> PlayerScreenLandscape(
+            viewModel = viewModel,
+            navigator = navigator
+        )
     }
 }
 
 @Composable
-fun PlayerScreenPortrait(
+private fun PlayerScreenPortrait(
     viewModel: PlayerViewModel,
     navigator: BackstackNavigator<AppDestination>
 ) {
@@ -483,6 +453,7 @@ fun PlayerScreenPortrait(
                             refresh is LoadState.Loading || append is LoadState.Loading -> {
                                 CircularProgressIndicator()
                             }
+
                             append is LoadState.Error -> {
                                 (append as LoadState.Error).error.message?.let {
                                     Text(
@@ -500,7 +471,7 @@ fun PlayerScreenPortrait(
 }
 
 @Composable
-fun PlayerScreenLandscape(
+private fun PlayerScreenLandscape(
     viewModel: PlayerViewModel,
     navigator: BackstackNavigator<AppDestination>
 ) {
@@ -512,7 +483,7 @@ fun PlayerScreenLandscape(
 }
 
 @Composable
-fun PlayerControls(
+private fun PlayerControls(
     modifier: Modifier = Modifier,
     viewModel: PlayerViewModel,
     navigator: BackstackNavigator<AppDestination>
@@ -522,6 +493,8 @@ fun PlayerControls(
 
     Box(
         modifier = modifier
+            .background(Color.Black)
+            .statusBarsPadding()
             .offset { IntOffset(0, offsetY.value.roundToInt()) }
             .pointerInput(Unit) {
                 detectTapGestures(

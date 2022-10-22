@@ -8,6 +8,7 @@ val viewModelModule = module {
     viewModelOf(::HomeViewModel)
     viewModelOf(::PlayerViewModel)
     viewModelOf(::ChannelViewModel)
+    viewModelOf(::PlaylistViewModel)
     viewModelOf(::SearchViewModel)
     viewModelOf(::SettingsViewModel)
 }

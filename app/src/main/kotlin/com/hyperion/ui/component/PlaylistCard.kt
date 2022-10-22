@@ -2,6 +2,7 @@ package com.hyperion.ui.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlaylistPlay
@@ -9,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
@@ -22,22 +24,27 @@ fun PlaylistCard(
     modifier: Modifier = Modifier,
     playlist: DomainSearch.Result.Playlist,
     onClick: () -> Unit,
+    onLongClick: () -> Unit = { },
     prefs: PreferencesManager = get()
 ) {
     ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .then(modifier),
-        onClick = onClick
+        modifier = modifier
+            .clip(CardDefaults.elevatedShape)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
     ) {
-        val compactCard = (LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE) || prefs.compactCard
+        val orientation = LocalConfiguration.current.orientation
 
-        if (compactCard) {
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE || prefs.compactCard) {
             Row(
-                modifier = Modifier.height(IntrinsicSize.Min)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
             ) {
                 Thumbnail(
-                    modifier = Modifier.width(140.dp),
+                    modifier = Modifier.width(160.dp),
                     thumbnailUrl = playlist.thumbnailUrl,
                     videoCountText = playlist.videoCountText
                 )
@@ -50,16 +57,12 @@ fun PlaylistCard(
                 ) {
                     Text(
                         text = playlist.title,
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
+                        maxLines = 2
                     )
 
                     Text(
-                        text = playlist.channelName,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-
-                    Text(
-                        text = "",
+                        text = playlist.subtitle,
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
@@ -79,12 +82,12 @@ fun PlaylistCard(
                         Text(
                             text = playlist.title,
                             style = MaterialTheme.typography.labelLarge,
-                            maxLines = 2,
+                            maxLines = 2
                         )
 
                         Text(
                             modifier = Modifier.padding(top = 4.dp),
-                            text = playlist.channelName,
+                            text = playlist.subtitle,
                             style = MaterialTheme.typography.labelSmall
                         )
                     }

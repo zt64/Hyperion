@@ -36,17 +36,21 @@ import com.hyperion.R
 import com.hyperion.domain.model.DomainSearch
 import com.hyperion.domain.model.DomainVideoPartial
 import com.hyperion.ui.component.ChannelCard
+import com.hyperion.ui.component.MixCard
 import com.hyperion.ui.component.PlaylistCard
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.navigation.AppDestination
+import com.hyperion.ui.navigation.BackstackNavigator
 import com.hyperion.ui.viewmodel.SearchViewModel
-import com.xinto.taxi.BackstackNavigator
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = getViewModel(),
-    navigator: BackstackNavigator<AppDestination>
+    navigator: BackstackNavigator<AppDestination>,
+    onClickBack: () -> Unit,
+    onClickChannel: (id: String) -> Unit,
+    onClickPlaylist: (id: String) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     var showResults by rememberSaveable { mutableStateOf(false) }
@@ -79,7 +83,7 @@ fun SearchScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = navigator::pop) {
+                    IconButton(onClick = onClickBack) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = stringResource(R.string.back)
@@ -122,21 +126,45 @@ fun SearchScreen(
                                     channel = result.channel,
                                     timestamp = result.timestamp
                                 ),
-                                onClick = { navigator.push(AppDestination.Player(result.id)) },
-                                onClickChannel = { navigator.push(AppDestination.Channel(result.channel!!.id)) }
+                                onClick = {
+                                    navigator.push(AppDestination.Player(result.id))
+                                },
+                                onClickChannel = {
+                                    onClickChannel(result.channel!!.id)
+                                }
                             )
                         }
+
                         is DomainSearch.Result.Channel -> {
                             ChannelCard(
                                 channel = result,
-                                onClick = { navigator.push(AppDestination.Channel(result.id)) },
-                                onSubscribe = { }
+                                onClick = {
+                                    onClickChannel(result.id)
+                                },
+                                onLongClick = {
+
+                                },
+                                onClickSubscribe = {
+
+                                }
                             )
                         }
+
                         is DomainSearch.Result.Playlist -> {
                             PlaylistCard(
                                 playlist = result,
-                                onClick = { /* TODO */ }
+                                onClick = {
+                                    onClickPlaylist(result.id)
+                                }
+                            )
+                        }
+
+                        is DomainSearch.Result.Mix -> {
+                            MixCard(
+                                mix = result,
+                                onClick = {
+
+                                }
                             )
                         }
                     }
@@ -148,14 +176,13 @@ fun SearchScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         results.loadState.apply {
-                            when {
-                                refresh is LoadState.Loading -> {
+                            when (results.loadState.append) {
+                                is LoadState.NotLoading -> Unit
+                                is LoadState.Loading -> {
                                     CircularProgressIndicator()
                                 }
-                                append is LoadState.Loading -> {
-                                    CircularProgressIndicator()
-                                }
-                                append is LoadState.Error -> {
+
+                                is LoadState.Error -> {
                                     (append as LoadState.Error).error.message?.let {
                                         Text(
                                             text = it,

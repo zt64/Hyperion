@@ -61,4 +61,9 @@
     <string name="channels">Channels</string>
     <string name="sponsor_block">SponsorBlock</string>
     <string name="history">History</string>
+    <string name="view_all">View all</string>
+    <string name="recently_added">Recently added</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="add_account">Add another account</string>
 </resources>

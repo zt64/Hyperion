@@ -90,7 +90,7 @@ fun MiniPlayer(
 
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth(),
-                progress = (player.contentPosition / player.contentDuration).toFloat(),
+                progress = (player.contentPosition / player.contentDuration).toFloat()
             )
         }
     }

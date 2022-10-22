@@ -51,6 +51,7 @@ fun HomeScreen(
                         refresh is LoadState.Loading || append is LoadState.Loading -> {
                             CircularProgressIndicator()
                         }
+
                         append is LoadState.Error -> {
                             (append as LoadState.Error).error.message?.let {
                                 Text(

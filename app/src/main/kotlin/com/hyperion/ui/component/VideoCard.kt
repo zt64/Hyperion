@@ -2,14 +2,17 @@ package com.hyperion.ui.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
@@ -26,11 +29,16 @@ fun VideoCard(
     video: DomainVideoPartial,
     onClick: () -> Unit,
     onClickChannel: () -> Unit = { },
+    onLongClick: () -> Unit = { },
     prefs: PreferencesManager = get()
 ) {
     ElevatedCard(
-        modifier = modifier,
-        onClick = onClick
+        modifier = modifier
+            .clip(CardDefaults.elevatedShape)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
     ) {
         val orientation = LocalConfiguration.current.orientation
 
@@ -42,7 +50,7 @@ fun VideoCard(
                     .height(IntrinsicSize.Min)
             ) {
                 Thumbnail(
-                    modifier = Modifier.width(140.dp),
+                    modifier = Modifier.width(160.dp),
                     video = video,
                     timeStampScale = prefs.timestampScale
                 )
@@ -55,7 +63,9 @@ fun VideoCard(
                 ) {
                     Text(
                         text = video.title,
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2
                     )
 
                     Row(
@@ -73,7 +83,9 @@ fun VideoCard(
 
                         Text(
                             text = video.subtitle,
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 2
                         )
                     }
                 }
@@ -102,7 +114,7 @@ fun VideoCard(
                         Text(
                             text = video.title,
                             style = MaterialTheme.typography.labelLarge,
-                            maxLines = 2,
+                            maxLines = 2
                         )
 
                         Text(
@@ -142,34 +154,21 @@ private fun Thumbnail(
         )
 
         if (video.timestamp != null) {
-            Timestamp(
-                modifier = Modifier.align(Alignment.BottomEnd),
-                text = video.timestamp,
-                scale = timeStampScale
-            )
+            Surface(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .align(Alignment.BottomEnd),
+                shape = MaterialTheme.shapes.small,
+                color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.8f)
+            ) {
+                Text(
+                    modifier = Modifier.padding(4.dp),
+                    text = video.timestamp,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    fontSize = 14.sp * timeStampScale
+                )
+            }
         }
-    }
-}
-
-@Composable
-fun Timestamp(
-    modifier: Modifier = Modifier,
-    text: String,
-    scale: Float
-) {
-    Surface(
-        modifier = Modifier
-            .padding(8.dp)
-            .then(modifier),
-        shape = MaterialTheme.shapes.small,
-        color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.8f)
-    ) {
-        Text(
-            modifier = Modifier.padding(4.dp),
-            text = text,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onTertiaryContainer,
-            fontSize = 14.sp * scale
-        )
     }
 }

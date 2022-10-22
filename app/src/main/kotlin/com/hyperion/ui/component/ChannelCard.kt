@@ -1,10 +1,12 @@
 package com.hyperion.ui.component
 
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
@@ -12,19 +14,22 @@ import com.hyperion.domain.model.DomainSearch
 
 @Composable
 fun ChannelCard(
-    modifier: Modifier = Modifier,
     channel: DomainSearch.Result.Channel,
     onClick: () -> Unit,
-    onSubscribe: () -> Unit
+    onLongClick: () -> Unit,
+    onClickSubscribe: () -> Unit
 ) {
     ElevatedCard(
         modifier = Modifier
+            .clip(CardDefaults.elevatedShape)
             .fillMaxWidth()
-            .then(modifier),
-        onClick = onClick
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
     ) {
         Row(
-            Modifier
+            modifier = Modifier
                 .heightIn(min = 70.dp)
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -60,7 +65,7 @@ fun ChannelCard(
                 }
             }
 
-            Button(onClick = onSubscribe) {
+            Button(onClick = onClickSubscribe) {
                 Text(stringResource(R.string.subscribe))
             }
         }

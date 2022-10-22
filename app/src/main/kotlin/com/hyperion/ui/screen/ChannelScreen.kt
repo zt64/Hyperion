@@ -24,11 +24,12 @@ import com.hyperion.R
 import com.hyperion.domain.model.DomainChannel
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.navigation.AppDestination
+import com.hyperion.ui.navigation.BackstackNavigator
 import com.hyperion.ui.viewmodel.ChannelViewModel
 import com.hyperion.util.shimmer
 import org.koin.androidx.compose.getViewModel
 
-enum class ChannelTab(
+private enum class ChannelTab(
     @StringRes
     val title: Int,
     val imageVector: ImageVector
@@ -36,6 +37,8 @@ enum class ChannelTab(
     HOME(R.string.home, Icons.Default.Home),
     VIDEOS(R.string.videos, Icons.Default.VideoLibrary),
     PLAYLISTS(R.string.playlists, Icons.Default.ViewList),
+    COMMUNITY(R.string.community, Icons.Default.People),
+    CHANNELS(R.string.channels, Icons.Default.AccountTree),
     ABOUT(R.string.about, Icons.Default.Info)
 }
 
@@ -43,7 +46,8 @@ enum class ChannelTab(
 fun ChannelScreen(
     viewModel: ChannelViewModel = getViewModel(),
     navigator: BackstackNavigator<AppDestination>,
-    channelId: String
+    channelId: String,
+    onClickBack: () -> Unit
 ) {
     val state = viewModel.state
 
@@ -59,15 +63,17 @@ fun ChannelScreen(
                 onClickShare = viewModel::shareChannel
             )
         }
+
         ChannelViewModel.State.Loading -> {
             ChannelScreenLoading(
-                onClickBack = navigator::pop
+                onClickBack = onClickBack
             )
         }
+
         is ChannelViewModel.State.Error -> {
             ChannelScreenError(
                 error = state.error,
-                onClickBack = navigator::pop
+                onClickBack = onClickBack
             )
         }
     }
@@ -195,6 +201,8 @@ private fun ChannelScreenLoaded(
 
                 ChannelTab.VIDEOS -> {}
                 ChannelTab.PLAYLISTS -> {}
+                ChannelTab.COMMUNITY -> {}
+                ChannelTab.CHANNELS -> {}
                 ChannelTab.ABOUT -> {}
             }
         }
@@ -288,8 +296,10 @@ private fun TabHeader(
     selectedTab: ChannelTab,
     onClick: (ChannelTab) -> Unit
 ) {
-    TabRow(
+    ScrollableTabRow(
+        modifier = Modifier.fillMaxWidth(),
         selectedTabIndex = selectedTab.ordinal,
+        edgePadding = 0.dp,
         tabs = {
             ChannelTab.values().forEach { tab ->
                 Tab(

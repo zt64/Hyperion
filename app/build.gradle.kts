@@ -50,15 +50,12 @@ android {
 }
 
 dependencies {
-    // AndroidX core
+    // AndroidX
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.core:core-splashscreen:1.0.0")
-
-    // AndroidX paging
     implementation("androidx.paging:paging-compose:1.0.0-alpha16")
-
-    // AndroidX activity
     implementation("androidx.activity:activity-compose:1.6.0")
+    implementation("androidx.navigation:navigation-compose:2.5.2")
 
     // Koin
     implementation("io.insert-koin:koin-android:3.2.2")
@@ -78,7 +75,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
     implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.2.2")
