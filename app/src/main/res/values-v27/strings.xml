@@ -10,4 +10,6 @@
     <string name="recently_added">Recently added</string>
     <string name="backup">Backup</string>
     <string name="add_account">Add another account</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="copy_stacktrace">Copy stacktrace</string>
 </resources>

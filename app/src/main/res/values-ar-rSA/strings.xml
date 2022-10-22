@@ -65,4 +65,6 @@
     <string name="backup">Backup</string>
     <string name="restore">Restore</string>
     <string name="add_account">Add another account</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="copy_stacktrace">Copy stacktrace</string>
 </resources>

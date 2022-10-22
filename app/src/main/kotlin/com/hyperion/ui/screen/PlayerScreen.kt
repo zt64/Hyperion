@@ -19,9 +19,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.VideoSettings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -77,7 +78,7 @@ fun PlayerScreen(
         }
 
         is PlayerViewModel.State.Error -> {
-            PlayerScreenError(
+            ErrorScreen(
                 exception = state.exception,
                 onClickBack = navigator::pop
             )
@@ -97,58 +98,6 @@ private fun PlayerScreenLoading() {
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
-        }
-    }
-}
-
-@Composable
-private fun PlayerScreenError(
-    exception: Exception,
-    onClickBack: () -> Unit
-) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
-                title = { Text(stringResource(R.string.error)) }
-            )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                modifier = Modifier.size(36.dp),
-                imageVector = Icons.Default.Error,
-                tint = MaterialTheme.colorScheme.error,
-                contentDescription = stringResource(R.string.error)
-            )
-
-            Text(
-                text = stringResource(R.string.error_occurred),
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            exception.localizedMessage?.let { message ->
-                SelectionContainer {
-                    Text(
-                        text = message,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
         }
     }
 }

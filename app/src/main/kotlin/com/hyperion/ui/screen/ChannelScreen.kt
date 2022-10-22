@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -71,8 +70,8 @@ fun ChannelScreen(
         }
 
         is ChannelViewModel.State.Error -> {
-            ChannelScreenError(
-                error = state.error,
+            ErrorScreen(
+                exception = state.error,
                 onClickBack = onClickBack
             )
         }
@@ -235,58 +234,6 @@ private fun ChannelScreenLoading(
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
-        }
-    }
-}
-
-@Composable
-private fun ChannelScreenError(
-    error: Exception,
-    onClickBack: () -> Unit
-) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
-                title = { Text(stringResource(R.string.error)) }
-            )
-        }
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                modifier = Modifier.size(36.dp),
-                imageVector = Icons.Default.Error,
-                tint = MaterialTheme.colorScheme.error,
-                contentDescription = stringResource(R.string.error)
-            )
-
-            Text(
-                text = stringResource(R.string.error_occurred),
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            error.localizedMessage?.let { message ->
-                SelectionContainer {
-                    Text(
-                        text = message,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
         }
     }
 }
