@@ -55,6 +55,7 @@ dependencies {
     implementation("androidx.core:core-splashscreen:1.0.0")
     implementation("androidx.paging:paging-compose:1.0.0-alpha17")
     implementation("androidx.activity:activity-compose:1.6.1")
+
     // Koin
     implementation("io.insert-koin:koin-android:3.3.0")
     implementation("io.insert-koin:koin-androidx-compose:3.3.0")
@@ -103,6 +104,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         freeCompilerArgs = freeCompilerArgs + listOf(
             "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+            "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
             "-Xcontext-receivers"
         )
     }

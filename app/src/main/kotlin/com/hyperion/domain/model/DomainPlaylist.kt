@@ -14,3 +14,11 @@ data class DomainPlaylist(
         val continuation: String?
     )
 }
+
+data class DomainPlaylistPartial(
+    val id: String,
+    val title: String,
+    val subtitle: String,
+    val videoCountText: String,
+    val thumbnailUrl: String
+) : Entity

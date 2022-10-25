@@ -2,6 +2,7 @@ package com.hyperion.domain.repository
 
 import android.icu.text.CompactDecimalFormat
 import android.os.Build
+import androidx.compose.ui.graphics.Color
 import com.hyperion.domain.mapper.toDomain
 import com.hyperion.domain.model.*
 import com.hyperion.network.dto.ApiContinuation
@@ -68,7 +69,7 @@ class InnerTubeRepository(
                     contents.mapNotNull { renderer ->
                         when (renderer) {
                             is ApiSearch.Renderer.CompactChannel -> {
-                                DomainSearch.Result.Channel(
+                                DomainChannelPartial(
                                     id = renderer.compactChannelRenderer.channelId,
                                     name = renderer.compactChannelRenderer.title.toString(),
                                     thumbnailUrl = "https:${renderer.compactChannelRenderer.thumbnail.thumbnails.last().url}",
@@ -84,7 +85,7 @@ class InnerTubeRepository(
 
                                         when (videoData) {
                                             is ApiSearch.VideoWithContextSlots.Mix -> {
-                                                DomainSearch.Result.Mix(
+                                                DomainMixPartial(
                                                     id = onTap.innertubeCommand.watchEndpoint!!.videoId!!,
                                                     title = videoData.metadata.title,
                                                     subtitle = videoData.metadata.byline,
@@ -93,7 +94,7 @@ class InnerTubeRepository(
                                             }
 
                                             is ApiSearch.VideoWithContextSlots.Playlist -> {
-                                                DomainSearch.Result.Playlist(
+                                                DomainPlaylistPartial(
                                                     id = onTap.innertubeCommand.browseEndpoint!!.browseId,
                                                     title = videoData.metadata.title,
                                                     subtitle = videoData.metadata.byline,
@@ -103,7 +104,7 @@ class InnerTubeRepository(
                                             }
 
                                             is ApiSearch.VideoWithContextSlots.Video -> {
-                                                DomainSearch.Result.Video(
+                                                DomainVideoPartial(
                                                     id = onTap.innertubeCommand.watchEndpoint!!.videoId!!,
                                                     channel = videoData.avatar?.let { avatar ->
                                                         DomainChannelPartial(
@@ -120,6 +121,17 @@ class InnerTubeRepository(
                                                 )
                                             }
                                         }
+                                    }
+
+                                    is ApiSearch.HashtagTile -> {
+                                        val (tagRenderer) = model.hashtagTileModel
+
+                                        DomainTagPartial(
+                                            name = tagRenderer.hashtag.elementsAttributedString.content,
+                                            videosCount = tagRenderer.hashtagVideoCount.elementsAttributedString.content,
+                                            channelsCount = tagRenderer.hashtagChannelCount.elementsAttributedString.content,
+                                            backgroundColor = Color(tagRenderer.hashtagBackgroundColor),
+                                        )
                                     }
 
                                     else -> null
@@ -245,7 +257,7 @@ class InnerTubeRepository(
                 id = player.videoDetails.channelId,
                 name = player.videoDetails.author,
                 avatarUrl = next.channelAvatarUrl,
-                subscriberText = next.subscribersText
+                subscriptionsText = next.subscribersText
             ),
             badges = next.badges
         )
@@ -293,6 +305,55 @@ class InnerTubeRepository(
                 } else null
             },
             continuation = playlist.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation
+        )
+    }
+
+    suspend fun getTag(tag: String): DomainTag {
+        val response = service.getTag(tag)
+
+        val (contents, continuations) = response.contents.browseResultsRenderer.content
+
+        val (header) = contents.mapNotNull { it.itemSectionRenderer }.single().contents.single().elementRenderer.model.hashtagHeaderModel
+
+        return DomainTag(
+            name = response.header.translucentHeaderRenderer.title.toString(),
+            subtitle = header.hashtagInfoText?.elementsAttributedString?.content.orEmpty(),
+            avatars = header.avatarFacepile.map { it.elementsImage.sources.first().url },
+            content = DomainTag.Content(
+                videos = contents[1].shelfRenderer!!.content.horizontalListRenderer.items.map { item ->
+                    val (onTap, videoData) = item.elementRenderer.model.videoWithContextModel.videoWithContextData
+                    val (reelEndpoint, watchEndpoint) = onTap.innertubeCommand
+
+                    DomainVideoPartial(
+                        id = watchEndpoint?.videoId ?: reelEndpoint?.videoId!!,
+                        title = videoData.metadata.title,
+                        subtitle = "${videoData.metadata.byline} • ${videoData.metadata.metadataDetails}",
+                        timestamp = videoData.thumbnail.timestampText
+                    )
+                },
+                continuation = continuations.filterIsInstance<ApiContinuation.Next>().single().continuation
+            )
+        )
+    }
+
+    suspend fun getTagContinuation(continuation: String): DomainTag.Content {
+        val response = service.getTagContinuation(continuation)
+
+        val (contents, continuations) = response.continuationContents.sectionListContinuation
+
+        return DomainTag.Content(
+            videos = contents.single().shelfRenderer!!.content.horizontalListRenderer.items.map { (elementRenderer) ->
+                val (onTap, videoData) = elementRenderer.model.videoWithContextModel.videoWithContextData
+                val (reelEndpoint, watchEndpoint) = onTap.innertubeCommand
+
+                DomainVideoPartial(
+                    id = watchEndpoint?.videoId ?: reelEndpoint?.videoId!!,
+                    title = videoData.metadata.title,
+                    subtitle = "${videoData.metadata.byline} • ${videoData.metadata.metadataDetails}",
+                    timestamp = videoData.thumbnail.timestampText
+                )
+            },
+            continuation = continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation
         )
     }
 }

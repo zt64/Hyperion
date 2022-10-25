@@ -25,8 +25,7 @@ data class ApiSearch(val contents: Contents) {
                 "compactChannelRenderer" -> CompactChannel.serializer()
                 "elementRenderer" -> Element.serializer()
                 "messageRenderer" -> Message.serializer()
-                "horizontalCardListRenderer" -> Unknown.serializer()
-                else -> throw NoWhenBranchMatchedException(element.jsonObject.toString())
+                else -> Unknown.serializer()
             }
         }
 
@@ -90,6 +89,7 @@ data class ApiSearch(val contents: Contents) {
                 "videoWithContextModel" -> VideoWithContext.serializer()
                 "inlineShortsModel" -> InlineShorts.serializer()
                 "shelfHeaderModel" -> ShelfHeader.serializer()
+                "hashtagTileModel" -> HashtagTile.serializer()
                 else -> Unknown.serializer()
             }
         }
@@ -183,6 +183,32 @@ data class ApiSearch(val contents: Contents) {
 
     @Serializable
     object ShelfHeader : Model
+
+    @Serializable
+    data class HashtagTile(val hashtagTileModel: HashtagTileModel) : Model {
+        @Serializable
+        data class HashtagTileModel(val renderer: Renderer) {
+            @Serializable
+            data class Renderer(
+                val hashtag: ElementsAttributedStringBox,
+                val hashtagChannelCount: ElementsAttributedStringBox,
+                val hashtagInfoText: ElementsAttributedStringBox,
+                val hashtagThumbnail: HashtagThumbnail,
+                val hashtagVideoCount: ElementsAttributedStringBox,
+                val hashtagBackgroundColor: Long,
+                val onTapCommand: ApiNavigationEndpoint
+            ) {
+                @Serializable
+                data class ElementsAttributedStringBox(val elementsAttributedString: ElementsAttributedString) {
+                    @Serializable
+                    data class ElementsAttributedString(val content: String)
+                }
+
+                @Serializable
+                data class HashtagThumbnail(val elementsImage: ApiImage)
+            }
+        }
+    }
 
     @Serializable
     object Unknown : Model

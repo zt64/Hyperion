@@ -11,14 +11,15 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.ktor.util.encodeBase64
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.protobuf.ProtoBuf
+import java.net.URLEncoder
 
 class InnerTubeService(
     private val httpClient: HttpClient,
@@ -50,7 +51,7 @@ class InnerTubeService(
         }
     }
 
-    private suspend fun post(endpoint: String, body: Any) = withContext(Dispatchers.IO) {
+    private suspend fun post(endpoint: String, body: Body) = withContext(Dispatchers.IO) {
         httpClient.post("$API_URL/$endpoint") {
             parameter("key", innerTubeApiKey)
             contentType(ContentType.Application.Json)
@@ -140,6 +141,23 @@ class InnerTubeService(
             continuation = continuation
         )
     ).body()
+
+    suspend fun getTag(tag: String): ApiTag = getBrowse(
+        browseId = "FEhashtag",
+        params = withContext(Dispatchers.IO) {
+            URLEncoder.encode(
+                /* s = */ ProtoBuf.encodeToByteArray(
+                    ApiTagParams(ApiTagParams.Context(tag.removePrefix("#").lowercase()))
+                ).encodeBase64(),
+                /* enc = */ Charsets.UTF_8.name()
+            )
+        }
+    )
+
+    suspend fun getTagContinuation(continuation: String): ApiTagContinuation = getBrowse(
+        browseId = "FEhashtag",
+        continuation = continuation
+    )
 
     suspend fun createComment(text: String, params: String) {
         post(

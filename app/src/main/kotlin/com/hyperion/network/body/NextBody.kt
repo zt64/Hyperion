@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NextBody(
-    val context: ApiContext,
+    override val context: ApiContext,
     val videoId: String,
     val continuation: String? = null
-)
+) : Body

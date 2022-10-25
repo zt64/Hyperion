@@ -9,6 +9,7 @@ val viewModelModule = module {
     viewModelOf(::PlayerViewModel)
     viewModelOf(::ChannelViewModel)
     viewModelOf(::PlaylistViewModel)
+    viewModelOf(::TagViewModel)
     viewModelOf(::SearchViewModel)
     viewModelOf(::SettingsViewModel)
 }

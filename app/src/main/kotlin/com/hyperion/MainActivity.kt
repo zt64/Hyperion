@@ -73,6 +73,9 @@ class MainActivity : ComponentActivity() {
                                     onClickChannel = ::onClickChannel,
                                     onClickPlaylist = { id ->
                                         navigator.push(AppDestination.Playlist(id))
+                                    },
+                                    onClickTag = { name ->
+                                        navigator.push(AppDestination.Tag(name))
                                     }
                                 )
                             }
@@ -95,6 +98,14 @@ class MainActivity : ComponentActivity() {
                             is AppDestination.Playlist -> {
                                 PlaylistScreen(
                                     playlistId = destination.playlistId,
+                                    onClickVideo = ::onClickVideo,
+                                    onClickBack = navigator::pop
+                                )
+                            }
+
+                            is AppDestination.Tag -> {
+                                TagScreen(
+                                    tag = destination.tag,
                                     onClickVideo = ::onClickVideo,
                                     onClickBack = navigator::pop
                                 )

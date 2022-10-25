@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CommentBody(
-    val context: ApiContext,
+    override val context: ApiContext,
     val commentText: String,
     val createCommentParams: String
-)
+) : Body

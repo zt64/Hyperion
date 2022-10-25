@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PlayerBody(
-    val context: ApiContext,
+    override val context: ApiContext,
     val videoId: String
-)
+) : Body

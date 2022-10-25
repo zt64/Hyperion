@@ -1,6 +1,10 @@
 package com.hyperion.ui.component
 
 import android.text.format.DateUtils
+import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi
+import androidx.compose.animation.graphics.res.animatedVectorResource
+import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
+import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.*
@@ -15,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.hyperion.R
 import kotlin.time.Duration
 
+@OptIn(ExperimentalAnimationGraphicsApi::class)
 @Composable
 fun PlayerControlsOverlay(
     modifier: Modifier = Modifier,
@@ -60,19 +65,13 @@ fun PlayerControlsOverlay(
                 modifier = Modifier.size(64.dp),
                 onClick = onClickPlayPause
             ) {
-                if (isPlaying) {
-                    Icon(
-                        modifier = Modifier.size(50.dp),
-                        imageVector = Icons.Default.Pause,
-                        contentDescription = stringResource(R.string.pause)
-                    )
-                } else {
-                    Icon(
-                        modifier = Modifier.size(50.dp),
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = stringResource(R.string.play)
-                    )
-                }
+                val image = AnimatedImageVector.animatedVectorResource(R.drawable.ic_test)
+
+                Icon(
+                    modifier = Modifier.size(50.dp),
+                    painter = rememberAnimatedVectorPainter(image, isPlaying),
+                    contentDescription = if (isPlaying) stringResource(R.string.pause) else stringResource(R.string.play)
+                )
             }
 
             IconButton(onClick = onSkipNext) {

@@ -33,12 +33,8 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.R
-import com.hyperion.domain.model.DomainSearch
-import com.hyperion.domain.model.DomainVideoPartial
-import com.hyperion.ui.component.ChannelCard
-import com.hyperion.ui.component.MixCard
-import com.hyperion.ui.component.PlaylistCard
-import com.hyperion.ui.component.VideoCard
+import com.hyperion.domain.model.*
+import com.hyperion.ui.component.*
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.navigation.BackstackNavigator
 import com.hyperion.ui.viewmodel.SearchViewModel
@@ -50,7 +46,8 @@ fun SearchScreen(
     navigator: BackstackNavigator<AppDestination>,
     onClickBack: () -> Unit,
     onClickChannel: (id: String) -> Unit,
-    onClickPlaylist: (id: String) -> Unit
+    onClickPlaylist: (id: String) -> Unit,
+    onClickTag: (name: String) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
     var showResults by rememberSaveable { mutableStateOf(false) }
@@ -117,15 +114,9 @@ fun SearchScreen(
                     if (result == null) return@items
 
                     when (result) {
-                        is DomainSearch.Result.Video -> {
+                        is DomainVideoPartial -> {
                             VideoCard(
-                                video = DomainVideoPartial(
-                                    id = result.id,
-                                    title = result.title,
-                                    subtitle = result.subtitle,
-                                    channel = result.channel,
-                                    timestamp = result.timestamp
-                                ),
+                                video = result,
                                 onClick = {
                                     navigator.push(AppDestination.Player(result.id))
                                 },
@@ -135,7 +126,7 @@ fun SearchScreen(
                             )
                         }
 
-                        is DomainSearch.Result.Channel -> {
+                        is DomainChannelPartial -> {
                             ChannelCard(
                                 channel = result,
                                 onClick = {
@@ -150,7 +141,7 @@ fun SearchScreen(
                             )
                         }
 
-                        is DomainSearch.Result.Playlist -> {
+                        is DomainPlaylistPartial -> {
                             PlaylistCard(
                                 playlist = result,
                                 onClick = {
@@ -159,11 +150,20 @@ fun SearchScreen(
                             )
                         }
 
-                        is DomainSearch.Result.Mix -> {
+                        is DomainMixPartial -> {
                             MixCard(
                                 mix = result,
                                 onClick = {
 
+                                }
+                            )
+                        }
+
+                        is DomainTagPartial -> {
+                            TagCard(
+                                tag = result,
+                                onClick = {
+                                    onClickTag(result.name)
                                 }
                             )
                         }

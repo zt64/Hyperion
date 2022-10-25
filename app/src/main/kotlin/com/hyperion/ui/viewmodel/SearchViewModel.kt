@@ -8,7 +8,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
-import com.hyperion.domain.model.DomainSearch
+import com.hyperion.domain.model.Entity
 import com.hyperion.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -18,7 +18,7 @@ class SearchViewModel(private val repository: InnerTubeRepository) : ViewModel()
         private set
     var suggestions = mutableStateListOf<String>()
         private set
-    var results by mutableStateOf(emptyFlow<PagingData<DomainSearch.Result>>())
+    var results by mutableStateOf(emptyFlow<PagingData<Entity>>())
         private set
     val focusRequester = FocusRequester()
 
@@ -39,8 +39,8 @@ class SearchViewModel(private val repository: InnerTubeRepository) : ViewModel()
 
     fun getResults() {
         results = Pager(PagingConfig(4)) {
-            object : PagingSource<String, DomainSearch.Result>() {
-                override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainSearch.Result> = try {
+            object : PagingSource<String, Entity>() {
+                override suspend fun load(params: LoadParams<String>): LoadResult<String, Entity> = try {
                     val searchResults = repository.getSearchResults(search, params.key)
 
                     LoadResult.Page(
@@ -53,7 +53,7 @@ class SearchViewModel(private val repository: InnerTubeRepository) : ViewModel()
                     LoadResult.Error(e)
                 }
 
-                override fun getRefreshKey(state: PagingState<String, DomainSearch.Result>): String? = null
+                override fun getRefreshKey(state: PagingState<String, Entity>): String? = null
             }
         }.flow.cachedIn(viewModelScope)
     }

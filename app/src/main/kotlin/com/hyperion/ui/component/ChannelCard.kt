@@ -10,11 +10,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
-import com.hyperion.domain.model.DomainSearch
+import com.hyperion.domain.model.DomainChannelPartial
 
 @Composable
 fun ChannelCard(
-    channel: DomainSearch.Result.Channel,
+    channel: DomainChannelPartial,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickSubscribe: () -> Unit
@@ -36,15 +36,12 @@ fun ChannelCard(
         ) {
             ChannelThumbnail(
                 modifier = Modifier.size(60.dp),
-                url = channel.thumbnailUrl
+                url = channel.thumbnailUrl!!
             )
 
             Spacer(Modifier.width(12.dp))
 
             Column(
-                modifier = Modifier
-                    .weight(1f, true)
-                    .padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(

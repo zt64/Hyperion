@@ -20,5 +20,8 @@ sealed interface AppDestination : Destination {
     class Playlist(val playlistId: String) : AppDestination
 
     @Parcelize
+    class Tag(val tag: String) : AppDestination
+
+    @Parcelize
     object Settings : AppDestination
 }

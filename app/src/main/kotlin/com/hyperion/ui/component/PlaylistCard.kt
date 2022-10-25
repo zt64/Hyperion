@@ -17,13 +17,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.hyperion.domain.manager.PreferencesManager
-import com.hyperion.domain.model.DomainSearch
+import com.hyperion.domain.model.DomainPlaylistPartial
 import org.koin.androidx.compose.get
 
 @Composable
 fun PlaylistCard(
     modifier: Modifier = Modifier,
-    playlist: DomainSearch.Result.Playlist,
+    playlist: DomainPlaylistPartial,
     onClick: () -> Unit,
     onLongClick: () -> Unit = { },
     prefs: PreferencesManager = get()

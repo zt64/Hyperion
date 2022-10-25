@@ -1,8 +1,8 @@
 package com.hyperion.ui.screen
 
+import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.view.WindowInsetsController
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
@@ -189,7 +189,7 @@ private fun PlayerScreenLoaded(
         val originalOrientation = activity.requestedOrientation
 
         if (viewModel.isFullscreen) {
-            insetsController.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             insetsController.hide(WindowInsetsCompat.Type.systemBars())
         } else {
             insetsController.show(WindowInsetsCompat.Type.systemBars())
@@ -211,6 +211,7 @@ private fun PlayerScreenLoaded(
         onDispose { viewModel.player.release() }
     }
 
+    @SuppressLint("SwitchIntDef")
     when (LocalConfiguration.current.orientation) {
         Configuration.ORIENTATION_PORTRAIT -> PlayerScreenPortrait(
             viewModel = viewModel,
@@ -281,7 +282,9 @@ private fun PlayerScreenPortrait(
                             SuggestionChip(
                                 modifier = Modifier.height(26.dp),
                                 label = { Text(badge) },
-                                onClick = { /* TODO: Redirect to badge page */ }
+                                onClick = {
+                                    navigator.push(AppDestination.Tag(badge))
+                                }
                             )
                         }
                     }
@@ -335,9 +338,9 @@ private fun PlayerScreenPortrait(
                                     overflow = TextOverflow.Ellipsis
                                 )
 
-                                video.author.subscriberText?.let { subscriberText ->
+                                video.author.subscriptionsText?.let { subscriptionsText ->
                                     Text(
-                                        text = subscriberText,
+                                        text = subscriptionsText,
                                         style = MaterialTheme.typography.labelSmall
                                     )
                                 }

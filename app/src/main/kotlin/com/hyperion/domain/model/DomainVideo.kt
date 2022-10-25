@@ -7,7 +7,7 @@ data class DomainVideo(
     val title: String,
     val viewCount: String,
     val uploadDate: String,
-    val description: String = "",
+    val description: String,
     val likesText: String,
     val dislikesText: String,
     val streams: List<DomainStream>,
@@ -23,6 +23,6 @@ data class DomainVideoPartial(
     val subtitle: String,
     val timestamp: String? = null,
     val channel: DomainChannelPartial? = null
-) {
+) : Entity {
     val thumbnailUrl = InnerTubeService.getVideoThumbnail(id)
 }
