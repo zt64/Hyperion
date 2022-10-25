@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.hyperion.domain.manager.PreferencesManager
@@ -50,20 +51,22 @@ fun PlaylistCard(
                 )
 
                 Column(
-                    modifier = Modifier
-                        .heightIn(min = 70.dp)
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                    modifier = Modifier.padding(12.dp),
                 ) {
                     Text(
                         text = playlist.title,
                         style = MaterialTheme.typography.labelMedium,
+                        overflow = TextOverflow.Ellipsis,
                         maxLines = 2
                     )
 
+                    Spacer(Modifier.height(2.dp))
+
                     Text(
                         text = playlist.subtitle,
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.labelSmall,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2
                     )
                 }
             }
@@ -75,20 +78,24 @@ fun PlaylistCard(
                 )
 
                 Row(
-                    modifier = Modifier.padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier.padding(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Column {
                         Text(
                             text = playlist.title,
                             style = MaterialTheme.typography.labelLarge,
+                            overflow = TextOverflow.Ellipsis,
                             maxLines = 2
                         )
 
+                        Spacer(Modifier.height(2.dp))
+
                         Text(
-                            modifier = Modifier.padding(top = 4.dp),
                             text = playlist.subtitle,
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 2
                         )
                     }
                 }

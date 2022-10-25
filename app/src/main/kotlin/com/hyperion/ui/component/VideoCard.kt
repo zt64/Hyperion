@@ -56,9 +56,7 @@ fun VideoCard(
                 )
 
                 Column(
-                    modifier = Modifier
-                        .heightIn(min = 70.dp)
-                        .padding(8.dp),
+                    modifier = Modifier.padding(12.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
@@ -98,14 +96,14 @@ fun VideoCard(
                 )
 
                 Row(
-                    modifier = Modifier.padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier.padding(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     video.channel?.avatarUrl?.let {
                         ChannelThumbnail(
                             modifier = Modifier
                                 .clickable(onClick = onClickChannel)
-                                .size(36.dp),
+                                .size(38.dp),
                             url = it
                         )
                     }
@@ -114,13 +112,17 @@ fun VideoCard(
                         Text(
                             text = video.title,
                             style = MaterialTheme.typography.labelLarge,
+                            overflow = TextOverflow.Ellipsis,
                             maxLines = 2
                         )
 
+                        Spacer(Modifier.height(2.dp))
+
                         Text(
-                            modifier = Modifier.padding(top = 4.dp),
                             text = video.subtitle,
-                            style = MaterialTheme.typography.labelSmall
+                            style = MaterialTheme.typography.labelSmall,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 2
                         )
                     }
                 }

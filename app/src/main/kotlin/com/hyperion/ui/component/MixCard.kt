@@ -49,20 +49,20 @@ fun MixCard(
                 )
 
                 Column(
-                    modifier = Modifier
-                        .heightIn(min = 70.dp)
-                        .padding(8.dp),
+                    modifier = Modifier.padding(12.dp),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
                         text = mix.title,
                         style = MaterialTheme.typography.labelMedium,
+                        overflow = TextOverflow.Ellipsis,
                         maxLines = 2
                     )
 
                     Text(
                         text = mix.subtitle,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = MaterialTheme.typography.labelSmall,
+                        overflow = TextOverflow.Ellipsis,
                         maxLines = 2
                     )
                 }
@@ -74,18 +74,22 @@ fun MixCard(
                 )
 
                 Column(
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(12.dp)
                 ) {
                     Text(
                         text = mix.title,
                         style = MaterialTheme.typography.labelLarge,
+                        overflow = TextOverflow.Ellipsis,
                         maxLines = 2
                     )
 
+                    Spacer(Modifier.height(2.dp))
+
                     Text(
-                        modifier = Modifier.padding(top = 4.dp),
                         text = mix.subtitle,
-                        style = MaterialTheme.typography.labelSmall
+                        style = MaterialTheme.typography.labelSmall,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2
                     )
                 }
             }

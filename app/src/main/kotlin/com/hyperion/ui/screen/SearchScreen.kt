@@ -110,7 +110,7 @@ fun SearchScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 14.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             if (showResults) {
                 items(results) { result ->

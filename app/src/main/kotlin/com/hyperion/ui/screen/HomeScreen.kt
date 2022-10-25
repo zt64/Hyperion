@@ -29,7 +29,7 @@ fun HomeScreen(
             .fillMaxSize()
             .padding(horizontal = 14.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(videoListItems) { video ->
             if (video == null) return@items

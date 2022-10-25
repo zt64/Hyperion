@@ -30,14 +30,16 @@ fun ChannelCard(
     ) {
         Row(
             modifier = Modifier
-                .heightIn(min = 70.dp)
-                .padding(8.dp),
+                .fillMaxWidth()
+                .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             ChannelThumbnail(
                 modifier = Modifier.size(60.dp),
                 url = channel.thumbnailUrl
             )
+
+            Spacer(Modifier.width(12.dp))
 
             Column(
                 modifier = Modifier
@@ -46,8 +48,8 @@ fun ChannelCard(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
-                    text = channel.name,
-                    style = MaterialTheme.typography.labelLarge
+                    text = channel.name!!,
+                    style = MaterialTheme.typography.titleMedium
                 )
 
                 if (channel.subscriptionsText != null) {
@@ -64,6 +66,8 @@ fun ChannelCard(
                     )
                 }
             }
+
+            Spacer(Modifier.weight(1f, true))
 
             Button(onClick = onClickSubscribe) {
                 Text(stringResource(R.string.subscribe))
