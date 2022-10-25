@@ -4,10 +4,7 @@ import com.hyperion.network.body.*
 import com.hyperion.network.dto.*
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import io.ktor.client.request.post
-import io.ktor.client.request.setBody
+import io.ktor.client.request.*
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
@@ -25,7 +22,6 @@ class InnerTubeService(
     private val httpClient: HttpClient,
     private val json: Json
 ) {
-    private var innerTubeApiKey: String
     private var innerTubeContext: ApiContext
 
     init {
@@ -39,7 +35,6 @@ class InnerTubeService(
 
             val data: InnerTubeData = json.decodeFromString(obj)
 
-            innerTubeApiKey = data.innerTubeApiKey
             innerTubeContext = data.innerTubeContext.copy(
                 client = data.innerTubeContext.client.copy(
                     clientName = CLIENT_NAME,
@@ -53,7 +48,7 @@ class InnerTubeService(
 
     private suspend fun post(endpoint: String, body: Body) = withContext(Dispatchers.IO) {
         httpClient.post("$API_URL/$endpoint") {
-            parameter("key", innerTubeApiKey)
+            parameter("key", API_KEY)
             contentType(ContentType.Application.Json)
             setBody(body)
         }
@@ -173,6 +168,9 @@ class InnerTubeService(
     companion object {
         private const val YOUTUBE_URL = "https://www.youtube.com"
         private const val API_URL = "https://www.youtube.com/youtubei/v1"
+
+        // Extracted from YouTube APK
+        private const val API_KEY = "AIzaSyCtkvNIR1HCEwzsqK6JuE6KqpyjusIRI30"
 
         private const val CLIENT_NAME = "ANDROID"
         private const val CLIENT_VERSION = "17.11.37"
