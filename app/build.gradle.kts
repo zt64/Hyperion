@@ -53,22 +53,21 @@ dependencies {
     // AndroidX
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.core:core-splashscreen:1.0.0")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha16")
-    implementation("androidx.activity:activity-compose:1.6.0")
-    implementation("androidx.navigation:navigation-compose:2.5.2")
-
+    implementation("androidx.paging:paging-compose:1.0.0-alpha17")
+    implementation("androidx.activity:activity-compose:1.6.1")
     // Koin
-    implementation("io.insert-koin:koin-android:3.2.2")
-    implementation("io.insert-koin:koin-androidx-compose:3.2.1")
+    implementation("io.insert-koin:koin-android:3.3.0")
+    implementation("io.insert-koin:koin-androidx-compose:3.3.0")
 
     // Compose
-    val composeVersion = "1.3.0-rc01"
+    val composeVersion = "1.4.0-alpha01"
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
     debugImplementation("androidx.compose.runtime:runtime-tracing:1.0.0-alpha01")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.0.0-rc01")
+    implementation("androidx.compose.material3:material3:1.1.0-alpha01")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
+    implementation("androidx.compose.animation:animation-graphics:$composeVersion")
 
     // Accompanist
     val accompanistVersion = "0.26.5-rc"
