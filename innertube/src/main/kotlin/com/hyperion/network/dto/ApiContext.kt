@@ -3,7 +3,7 @@ package com.hyperion.network.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiContext(
+internal data class ApiContext(
     val client: Client,
     val request: Request,
     val user: User

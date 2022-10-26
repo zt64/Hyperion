@@ -4,7 +4,7 @@ import com.hyperion.network.dto.ApiContext
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SearchBody(
+internal data class SearchBody(
     override val context: ApiContext,
     val query: String,
     val params: String? = null,

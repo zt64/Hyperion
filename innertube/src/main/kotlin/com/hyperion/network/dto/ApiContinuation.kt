@@ -5,6 +5,9 @@ import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 
+internal val List<ApiContinuation>.next: String?
+    get() = singleOrNull { it is ApiContinuation.Next }?.continuation
+
 @Serializable(with = ApiContinuation.Serializer::class)
 sealed interface ApiContinuation {
     val continuation: String

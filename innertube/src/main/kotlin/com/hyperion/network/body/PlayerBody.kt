@@ -4,7 +4,7 @@ import com.hyperion.network.dto.ApiContext
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PlayerBody(
+internal data class PlayerBody(
     override val context: ApiContext,
     val videoId: String
 ) : Body

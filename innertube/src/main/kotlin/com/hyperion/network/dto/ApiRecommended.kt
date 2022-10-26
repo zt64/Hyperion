@@ -5,7 +5,7 @@ import com.hyperion.network.dto.renderer.ItemSectionRenderer
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiRecommended(
+internal data class ApiRecommended(
     override val contents: Contents<SectionContent>
 ) : ApiBrowse() {
     @Serializable
@@ -19,6 +19,6 @@ data class ApiRecommended(
 }
 
 @Serializable
-data class ApiRecommendedContinuation(
+internal data class ApiRecommendedContinuation(
     override val continuationContents: ContinuationContents<ApiRecommended.SectionContent>
 ) : ApiBrowseContinuation()

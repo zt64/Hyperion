@@ -3,7 +3,7 @@ package com.hyperion.network.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiFormat(
+internal data class ApiFormat(
     val mimeType: String,
     val bitrate: Int,
     val width: Int? = null,

@@ -3,7 +3,7 @@ package com.hyperion.network.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiThumbnail(val thumbnails: List<Thumbnail>) {
+internal data class ApiThumbnail(val thumbnails: List<Thumbnail>) {
     @Serializable
     data class Thumbnail(
         val width: Int,
@@ -13,7 +13,7 @@ data class ApiThumbnail(val thumbnails: List<Thumbnail>) {
 }
 
 @Serializable
-data class ApiThumbnailTimestamp(
+internal data class ApiThumbnailTimestamp(
     val image: ApiImage,
     val timestampText: String? = null
 )

@@ -3,7 +3,7 @@ package com.hyperion.network.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiPlayer(
+internal data class ApiPlayer(
     val playbackTracking: PlaybackTracking,
     val streamingData: StreamingData,
     val videoDetails: VideoDetails

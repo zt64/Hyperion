@@ -4,10 +4,10 @@ import android.icu.text.CompactDecimalFormat
 import android.os.Build
 import com.hyperion.domain.mapper.toDomain
 import com.hyperion.domain.model.*
-import com.hyperion.network.dto.ApiContinuation
 import com.hyperion.network.dto.ApiFormat
 import com.hyperion.network.dto.ApiNext
 import com.hyperion.network.dto.ApiSearch
+import com.hyperion.network.dto.next
 import com.hyperion.network.service.InnerTubeService
 import com.hyperion.network.service.RYDService
 import kotlinx.serialization.json.jsonArray
@@ -26,10 +26,10 @@ class InnerTubeRepository(
         }
 
         return DomainTrending(
-            continuation = section.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation,
             items = section.contents.mapNotNull { (renderer) ->
                 renderer.contents.single().elementRenderer.model.videoWithContextModel?.videoWithContextData?.toDomain()
-            }
+            },
+            continuation = section.continuations.next
         )
     }
 
@@ -41,14 +41,16 @@ class InnerTubeRepository(
         }
 
         return DomainRecommended(
-            continuation = section.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation,
             items = section.contents.mapNotNull { (renderer) ->
                 renderer.contents.first().elementRenderer?.model?.videoWithContextModel?.videoWithContextData?.toDomain()
-            }
+            },
+            continuation = section.continuations.next
         )
     }
 
-    suspend fun getSubscriptions() = service.getSubscriptions()
+    suspend fun getSubscriptions() {
+        service.getSubscriptions()
+    }
 
     suspend fun getSearchSuggestions(query: String) = service.getSearchSuggestions(query).jsonArray[1].jsonArray
         .map { it.jsonArray[0].jsonPrimitive.content }
@@ -61,7 +63,6 @@ class InnerTubeRepository(
         }
 
         return DomainSearch(
-            continuation = section.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation,
             items = section.contents
                 .mapNotNull { it.itemSectionRenderer }
                 .flatMap { (contents) ->
@@ -140,7 +141,8 @@ class InnerTubeRepository(
                             else -> null
                         }
                     }
-                }
+                },
+            continuation = section.continuations.next
         )
     }
 
@@ -198,37 +200,32 @@ class InnerTubeRepository(
                 .single().buttonData.defaultButton.title,
             subscribersText = channelBar.subtitle,
             comments = DomainNext.Comments(
-                continuation = null,
-                comments = emptyList()
+                comments = emptyList(),
+                continuation = null
             ),
             relatedVideos = DomainNext.RelatedVideos(
-                continuation = next.contents.singleColumnWatchNextResults.results.results.continuations
-                    .filterIsInstance<ApiContinuation.Next>()
-                    .singleOrNull()?.continuation,
                 videos = next.contents.singleColumnWatchNextResults.results.results.contents
                     .filterIsInstance<ApiNext.Renderer.ItemSection.RelatedItems>()
                     .map { it.contents }
                     .mapNotNull { (renderer) ->
                         renderer.elementRenderer.model.videoWithContextModel?.videoWithContextData?.toDomain()
-                    }
+                    },
+                continuation = next.contents.singleColumnWatchNextResults.results.results.continuations.next
             ),
             badges = videoMetadata.badgesData.map { it.label },
         )
     }
 
     suspend fun getRelatedVideos(videoId: String, continuation: String): DomainNext.RelatedVideos {
-        val (contents) = service.getNext(videoId, continuation).continuationContents
+        val contents = service.getNext(videoId, continuation).continuationContents.sectionListContinuation
 
         return DomainNext.RelatedVideos(
-            continuation = contents.continuations
-                .filterIsInstance<ApiContinuation.Next>()
-                .singleOrNull()
-                ?.continuation,
             videos = contents.contents.flatMap { (itemSectionRenderer) ->
                 itemSectionRenderer.contents.mapNotNull { (elementRenderer) ->
                     elementRenderer.model.videoWithContextModel?.videoWithContextData?.toDomain()
                 }
-            }
+            },
+            continuation = contents.continuations.next,
         )
     }
 
@@ -285,7 +282,7 @@ class InnerTubeRepository(
                     subtitle = renderer.shortBylineText.toString()
                 )
             },
-            continuation = playlistVideoListRenderer.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation!!
+            continuation = playlistVideoListRenderer.continuations.next
         )
     }
 
@@ -302,7 +299,7 @@ class InnerTubeRepository(
                     )
                 } else null
             },
-            continuation = playlist.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation
+            continuation = playlist.continuations.next
         )
     }
 
@@ -328,7 +325,7 @@ class InnerTubeRepository(
                     timestamp = videoData.thumbnail.timestampText
                 )
             },
-            continuation = continuations.filterIsInstance<ApiContinuation.Next>().single().continuation
+            continuation = continuations.next
         )
     }
 
@@ -349,7 +346,7 @@ class InnerTubeRepository(
                     timestamp = videoData.thumbnail.timestampText
                 )
             },
-            continuation = continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation
+            continuation = continuations.next
         )
     }
 }

@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.*
 
 @Serializable
-data class ApiSearch(val contents: Contents) {
+internal data class ApiSearch(val contents: Contents) {
     @Serializable
     data class Contents(val sectionListRenderer: SectionListRenderer<Content>)
 
@@ -215,7 +215,7 @@ data class ApiSearch(val contents: Contents) {
 }
 
 @Serializable
-data class ApiSearchContinuation(val continuationContents: ContinuationContents) {
+internal data class ApiSearchContinuation(val continuationContents: ContinuationContents) {
     @Serializable
     data class ContinuationContents(val sectionListContinuation: SectionListRenderer<ApiSearch.Content>)
 }

@@ -11,7 +11,7 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 
 @Serializable
-data class ApiNext(val contents: Contents) {
+internal data class ApiNext(val contents: Contents) {
     @Serializable(with = Renderer.Serializer::class)
     sealed interface Renderer {
         companion object Serializer : KSerializer<Renderer> {
@@ -20,7 +20,6 @@ data class ApiNext(val contents: Contents) {
             override fun deserialize(decoder: Decoder): Renderer {
                 val input = decoder as JsonDecoder
                 val tree = input.decodeJsonElement().jsonObject
-                val json = input.json
 
                 val serializer = when (tree.keys.single()) {
                     "slimVideoMetadataSectionRenderer" -> SlimVideoMetadataSection.serializer()
@@ -29,12 +28,10 @@ data class ApiNext(val contents: Contents) {
                     else -> throw NoWhenBranchMatchedException()
                 }
 
-                return json.decodeFromJsonElement(serializer, tree.values.single())
+                return input.json.decodeFromJsonElement(serializer, tree.values.single())
             }
 
-            override fun serialize(encoder: Encoder, value: Renderer) {
-                TODO("Not yet implemented")
-            }
+            override fun serialize(encoder: Encoder, value: Renderer): Unit = TODO("Not yet implemented")
         }
 
         @Serializable
@@ -151,13 +148,14 @@ data class ApiNext(val contents: Contents) {
             override fun deserialize(decoder: Decoder): Button {
                 val input = decoder as JsonDecoder
                 val tree = input.decodeJsonElement().jsonObject
-                val json = input.json
 
-                return when (tree.keys.single()) {
-                    "likeButton" -> json.decodeFromJsonElement(LikeButton.serializer(), tree["likeButton"]!!)
-                    "dislikeButton" -> json.decodeFromJsonElement(DislikeButton.serializer(), tree["dislikeButton"]!!)
-                    else -> OtherButton
+                val serializer = when (tree.keys.single()) {
+                    "likeButton" -> LikeButton.serializer()
+                    "dislikeButton" -> DislikeButton.serializer()
+                    else -> OtherButton.serializer()
                 }
+
+                return input.json.decodeFromJsonElement(serializer, tree.values.single())
             }
 
             override fun serialize(encoder: Encoder, value: Button) = TODO("Not yet implemented")
@@ -181,20 +179,13 @@ data class ApiNext(val contents: Contents) {
 }
 
 @Serializable
-data class ApiNextContinuation(val continuationContents: ContinuationContents) {
+internal data class ApiNextContinuation(
+    override val continuationContents: ContinuationContents<Content>
+) : ApiBrowseContinuation() {
     @Serializable
-    data class ContinuationContents(val sectionListContinuation: SectionListContinuation) {
+    data class Content(val itemSectionRenderer: ItemSectionRenderer<Content>) {
         @Serializable
-        data class SectionListContinuation(
-            val contents: List<Content>,
-            val continuations: List<ApiContinuation>
-        )
-
-        @Serializable
-        data class Content(val itemSectionRenderer: ItemSectionRenderer<Content>) {
-            @Serializable
-            data class Content(val elementRenderer: ElementRenderer<Model>)
-        }
+        data class Content(val elementRenderer: ElementRenderer<Model>)
     }
 
     @Serializable

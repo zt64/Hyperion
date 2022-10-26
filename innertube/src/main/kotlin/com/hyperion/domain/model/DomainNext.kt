@@ -11,12 +11,12 @@ data class DomainNext(
     val badges: List<String>
 ) {
     data class Comments(
-        val continuation: String? = null,
-        val comments: List<DomainComment>
+        val comments: List<DomainComment>,
+        val continuation: String? = null
     )
 
     data class RelatedVideos(
-        val continuation: String? = null,
-        val videos: List<DomainVideoPartial>
+        val videos: List<DomainVideoPartial>,
+        val continuation: String? = null
     )
 }

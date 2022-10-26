@@ -2,10 +2,11 @@ package com.hyperion.network.dto
 
 import com.hyperion.network.dto.renderer.ElementRenderer
 import com.hyperion.network.dto.renderer.ListRenderer
+import com.hyperion.network.dto.renderer.ShelfRenderer
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiChannel(
+internal data class ApiChannel(
     val header: Header,
     override val contents: Contents<Content>,
 ) : ApiBrowse() {
@@ -22,10 +23,7 @@ data class ApiChannel(
     }
 
     @Serializable
-    data class Content(val shelfRenderer: ShelfRenderer? = null) {
-        @Serializable
-        data class ShelfRenderer(val content: ShelfRendererContent)
-    }
+    data class Content(val shelfRenderer: ShelfRenderer<ShelfRendererContent>? = null)
 
     @Serializable
     data class ShelfRendererContent(

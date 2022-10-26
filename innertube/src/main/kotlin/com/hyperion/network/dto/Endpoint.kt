@@ -3,13 +3,13 @@ package com.hyperion.network.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiWatchCommand(val watchEndpoint: ApiWatchEndpoint? = null)
+internal data class ApiWatchCommand(val watchEndpoint: ApiWatchEndpoint? = null)
 
 @Serializable
-data class ApiWatchEndpoint(val videoId: String)
+internal data class ApiWatchEndpoint(val videoId: String)
 
 @Serializable
-data class ApiBrowseEndpoint(val browseId: String)
+internal data class ApiBrowseEndpoint(val browseId: String)
 
 @Serializable
-data class ApiNavigationEndpoint(val browseEndpoint: ApiBrowseEndpoint)
+internal data class ApiNavigationEndpoint(val browseEndpoint: ApiBrowseEndpoint)

@@ -3,7 +3,7 @@ package com.hyperion.network.dto.renderer
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ElementRenderer<T>(private val newElement: NewElement<T>) {
+internal data class ElementRenderer<T>(private val newElement: NewElement<T>) {
     val model = newElement.type.componentType.model
 
     @Serializable

@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-abstract class ApiBrowse {
+internal abstract class ApiBrowse {
     abstract val contents: Contents<*>
 
     @Serializable
@@ -17,7 +17,7 @@ abstract class ApiBrowse {
 }
 
 @Serializable
-abstract class ApiBrowseContinuation {
+internal abstract class ApiBrowseContinuation {
     abstract val continuationContents: ContinuationContents<*>
 
     @Serializable

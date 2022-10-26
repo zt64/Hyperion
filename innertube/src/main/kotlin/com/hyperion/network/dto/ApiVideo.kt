@@ -3,7 +3,7 @@ package com.hyperion.network.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-class VideoData(
+internal data class VideoData(
     val avatar: ApiAvatar? = null,
     val decoratedAvatar: DecoratedAvatar? = null,
     val metadata: Metadata,
@@ -18,7 +18,7 @@ class VideoData(
 }
 
 @Serializable
-data class ApiVideo(val videoWithContextData: ContextData) {
+internal data class ApiVideo(val videoWithContextData: ContextData) {
     @Serializable
     data class ContextData(
         val videoData: VideoData,
@@ -27,7 +27,7 @@ data class ApiVideo(val videoWithContextData: ContextData) {
 }
 
 @Serializable
-data class ApiNextVideo(val videoWithContextData: ContextData) {
+internal data class ApiNextVideo(val videoWithContextData: ContextData) {
     @Serializable
     data class ContextData(
         val videoData: VideoData,

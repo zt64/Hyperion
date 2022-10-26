@@ -4,7 +4,7 @@ import com.hyperion.network.dto.renderer.SectionListRenderer
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ApiPlaylist(
+internal data class ApiPlaylist(
     val header: Header,
     override val contents: Contents<SectionContent>
 ) : ApiBrowse() {
@@ -62,7 +62,7 @@ data class ApiPlaylist(
 }
 
 @Serializable
-data class ApiPlaylistContinuation(val continuationContents: ContinuationContents) {
+internal data class ApiPlaylistContinuation(val continuationContents: ContinuationContents) {
     @Serializable
     data class ContinuationContents(val playlistVideoListContinuation: SectionListRenderer<ApiPlaylist.SectionContent.Content>)
 }

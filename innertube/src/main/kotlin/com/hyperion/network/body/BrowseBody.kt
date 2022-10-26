@@ -4,7 +4,7 @@ import com.hyperion.network.dto.ApiContext
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BrowseBody(
+internal data class BrowseBody(
     override val context: ApiContext,
     val browseId: String,
     val continuation: String? = null,

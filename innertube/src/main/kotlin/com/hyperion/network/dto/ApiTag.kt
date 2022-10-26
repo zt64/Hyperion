@@ -3,11 +3,12 @@ package com.hyperion.network.dto
 import com.hyperion.network.dto.renderer.ElementRenderer
 import com.hyperion.network.dto.renderer.ItemSectionRenderer
 import com.hyperion.network.dto.renderer.ListRenderer
+import com.hyperion.network.dto.renderer.ShelfRenderer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
-class ApiTagParams(
+internal data class ApiTagParams(
     @ProtoNumber(93)
     val context: Context
 ) {
@@ -19,7 +20,7 @@ class ApiTagParams(
 }
 
 @Serializable
-class ApiTag(
+internal class ApiTag(
     val header: Header,
     override val contents: Contents<ContentItem>
 ) : ApiBrowse() {
@@ -38,7 +39,7 @@ class ApiTag(
     @Serializable
     data class ContentItem(
         val itemSectionRenderer: ItemSectionRenderer<Content>? = null,
-        val shelfRenderer: ShelfRenderer? = null
+        val shelfRenderer: ShelfRenderer<ShelfContent>? = null
     ) {
         @Serializable
         data class Content(val elementRenderer: ElementRenderer<Model>) {
@@ -66,9 +67,6 @@ class ApiTag(
                 }
             }
         }
-
-        @Serializable
-        data class ShelfRenderer(val content: ShelfContent)
 
         @Serializable
         data class ShelfContent(val horizontalListRenderer: ListRenderer<Item>) {
@@ -118,6 +116,6 @@ class ApiTag(
 }
 
 @Serializable
-data class ApiTagContinuation(
+internal data class ApiTagContinuation(
     override val continuationContents: ContinuationContents<ApiTag.ContentItem>
 ) : ApiBrowseContinuation()

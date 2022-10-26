@@ -4,7 +4,7 @@ import com.hyperion.network.dto.ApiNavigationEndpoint
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BrowseResultsRenderer<T>(private val tabs: List<Tab<T>>) {
+internal data class BrowseResultsRenderer<T>(private val tabs: List<Tab<T>>) {
     val content = tabs[0].tabRenderer.content.sectionListRenderer
 
     @Serializable
