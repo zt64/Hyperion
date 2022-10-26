@@ -44,13 +44,13 @@ class PlaylistViewModel(
                     object : PagingSource<String, DomainVideoPartial>() {
                         override suspend fun load(params: LoadParams<String>) = try {
                             val response = if (params.key == null) {
-                                playlist!!.content
+                                playlist!!
                             } else {
                                 repository.getPlaylist(id, params.key!!)
                             }
 
                             LoadResult.Page(
-                                data = response.videos,
+                                data = response.items,
                                 prevKey = null,
                                 nextKey = response.continuation
                             )

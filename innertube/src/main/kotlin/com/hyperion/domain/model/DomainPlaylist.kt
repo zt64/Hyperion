@@ -5,14 +5,10 @@ data class DomainPlaylist(
     val name: String,
     val videoCount: String,
     val channel: DomainChannelPartial,
-    val content: Content
-) {
+    override val items: List<DomainVideoPartial>,
+    override val continuation: String?
+) : DomainBrowse<DomainVideoPartial>() {
     val shareUrl = "https://youtube.com/playlist?list=$id"
-
-    data class Content(
-        val videos: List<DomainVideoPartial>,
-        val continuation: String?
-    )
 }
 
 data class DomainPlaylistPartial(

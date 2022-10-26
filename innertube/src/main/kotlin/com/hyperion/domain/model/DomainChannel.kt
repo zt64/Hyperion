@@ -7,8 +7,9 @@ data class DomainChannel(
     val subscriberText: String?,
     val avatar: String,
     val banner: String?,
-    val videos: List<DomainVideoPartial>
-) {
+    override val items: List<DomainVideoPartial>,
+    override val continuation: String?
+) : DomainBrowse<DomainVideoPartial>() {
     val shareUrl = "https://www.youtube.com/channel/$id"
 }
 

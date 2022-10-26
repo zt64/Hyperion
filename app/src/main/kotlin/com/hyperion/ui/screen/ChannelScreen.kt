@@ -162,9 +162,9 @@ private fun ChannelScreenLoaded(
                                 style = MaterialTheme.typography.titleMedium
                             )
 
-                            if (channel.subscriberText != null) {
+                            channel.subscriberText?.let { subscriberText ->
                                 Text(
-                                    text = channel.subscriberText,
+                                    text = subscriberText,
                                     style = MaterialTheme.typography.labelSmall
                                 )
                             }
@@ -189,7 +189,7 @@ private fun ChannelScreenLoaded(
 
             when (selectedTab) {
                 ChannelTab.HOME -> {
-                    items(channel.videos) { video ->
+                    items(channel.items) { video ->
                         VideoCard(
                             modifier = Modifier.padding(horizontal = 14.dp),
                             video = video,

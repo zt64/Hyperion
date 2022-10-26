@@ -46,16 +46,16 @@ class TagViewModel(
                 videos = Pager(PagingConfig(4)) {
                     object : PagingSource<String, DomainVideoPartial>() {
                         override suspend fun load(params: LoadParams<String>) = try {
-                            val (videos, continuation) = if (params.key == null) {
-                                response.content
+                            val content = if (params.key == null) {
+                                response
                             } else {
                                 repository.getTagContinuation(params.key!!)
                             }
 
                             LoadResult.Page(
-                                data = videos,
+                                data = content.items,
                                 prevKey = null,
-                                nextKey = continuation
+                                nextKey = content.continuation
                             )
                         } catch (e: Exception) {
                             e.printStackTrace()

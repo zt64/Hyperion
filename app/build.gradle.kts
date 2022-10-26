@@ -4,7 +4,6 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-parcelize")
-    kotlin("plugin.serialization") version "1.7.20"
 }
 
 android {
@@ -50,6 +49,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":innertube"))
+
     // AndroidX
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.core:core-splashscreen:1.0.0")
@@ -80,11 +81,6 @@ dependencies {
     // Coil
     implementation("io.coil-kt:coil-compose:2.2.2")
 
-    // Kotlinx
-    val kotlinxSerializationVersion = "1.4.1"
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinxSerializationVersion")
-
     // Media3
     val media3Version = "1.0.0-beta02"
     implementation("androidx.media3:media3-exoplayer:$media3Version")
@@ -108,7 +104,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         freeCompilerArgs = freeCompilerArgs + listOf(
             "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api",
             "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi",
-            "-opt-in=kotlinx.serialization.ExperimentalSerializationApi",
             "-Xcontext-receivers"
         )
     }

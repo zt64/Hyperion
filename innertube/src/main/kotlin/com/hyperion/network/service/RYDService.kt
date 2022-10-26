@@ -9,13 +9,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class RYDService(private val httpClient: HttpClient) {
-    suspend fun getVotes(videoId: String): ApiVotes = withContext(Dispatchers.IO) {
+    internal suspend fun getVotes(videoId: String): ApiVotes = withContext(Dispatchers.IO) {
         httpClient.get("$BASE_URL/votes") {
             parameter("videoId", videoId)
         }.body()
     }
 
-    companion object {
+    private companion object {
         private const val BASE_URL = "https://returnyoutubedislikeapi.com"
     }
 }

@@ -15,7 +15,7 @@ class HomeViewModel(
                 val response = repository.getRecommendations(params.key)
 
                 LoadResult.Page(
-                    data = response.videos,
+                    data = response.items,
                     prevKey = null,
                     nextKey = response.continuation
                 )

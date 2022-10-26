@@ -7,7 +7,7 @@ import com.hyperion.network.dto.ApiFormat
 import com.hyperion.network.dto.ApiNextVideo
 import com.hyperion.network.dto.ApiVideo
 
-fun ApiVideo.ContextData.toDomain() = DomainVideoPartial(
+internal fun ApiVideo.ContextData.toDomain() = DomainVideoPartial(
     id = onTap.innertubeCommand.watchEndpoint?.videoId.orEmpty(),
     title = videoData.metadata.title,
     subtitle = videoData.metadata.metadataDetails,
@@ -23,7 +23,7 @@ fun ApiVideo.ContextData.toDomain() = DomainVideoPartial(
     )
 )
 
-fun ApiNextVideo.ContextData.toDomain() = DomainVideoPartial(
+internal fun ApiNextVideo.ContextData.toDomain() = DomainVideoPartial(
     id = onTap.innertubeCommand.watchNextWatchEndpointMutationCommand?.watchEndpoint?.watchEndpoint?.videoId.orEmpty(),
     title = videoData.metadata.title,
     subtitle = videoData.metadata.metadataDetails,
@@ -36,7 +36,7 @@ fun ApiNextVideo.ContextData.toDomain() = DomainVideoPartial(
     }
 )
 
-fun ApiFormat.toDomain() = when {
+internal fun ApiFormat.toDomain() = when {
     mimeType.startsWith("video/") -> DomainStream.Video(
         url = url,
         itag = itag,

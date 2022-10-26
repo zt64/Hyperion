@@ -8,7 +8,7 @@ sealed interface DomainStream {
         override val url: String,
         override val mimeType: String,
         val itag: Int,
-        val label: String,
+        val label: String
     ) : DomainStream
 
     data class Audio(

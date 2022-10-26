@@ -68,24 +68,24 @@ class InnerTubeService(
         )
     ).body()
 
-    suspend fun getRecommendations(): ApiRecommended = getBrowse("FEwhat_to_watch")
-    suspend fun getRecommendations(continuation: String): ApiRecommendedContinuation = getBrowse("FEwhat_to_watch", continuation)
+    internal suspend fun getRecommendations(): ApiRecommended = getBrowse("FEwhat_to_watch")
+    internal suspend fun getRecommendations(continuation: String): ApiRecommendedContinuation = getBrowse("FEwhat_to_watch", continuation)
 
-    suspend fun getPlaylist(id: String): ApiPlaylist = getBrowse(id)
-    suspend fun getPlaylist(id: String, continuation: String): ApiPlaylistContinuation = getBrowse(id, continuation)
+    internal suspend fun getPlaylist(id: String): ApiPlaylist = getBrowse(id)
+    internal suspend fun getPlaylist(id: String, continuation: String): ApiPlaylistContinuation = getBrowse(id, continuation)
 
-    suspend fun getSubscriptions(): ApiSubscriptions = getBrowse("FEsubscriptions")
-    suspend fun getSubscriptions(continuation: String): ApiSubscriptionsContinuation = getBrowse("FEsubscriptions", continuation)
+    internal suspend fun getSubscriptions(): ApiSubscriptions = getBrowse("FEsubscriptions")
+    internal suspend fun getSubscriptions(continuation: String): ApiSubscriptionsContinuation = getBrowse("FEsubscriptions", continuation)
 
-    suspend fun getTrending(): ApiTrending = getBrowse("FEtrending")
-    suspend fun getTrending(continuation: String): ApiTrendingContinuation = getBrowse("FEtrending", continuation)
+    internal suspend fun getTrending(): ApiTrending = getBrowse("FEtrending")
+    internal suspend fun getTrending(continuation: String): ApiTrendingContinuation = getBrowse("FEtrending", continuation)
 
-    suspend fun getChannel(id: String, params: String? = null): ApiChannel = getBrowse(
+    internal suspend fun getChannel(id: String, params: String? = null): ApiChannel = getBrowse(
         browseId = id,
         params = params
     )
 
-    suspend fun getSearchSuggestions(search: String): JsonElement = withContext(Dispatchers.IO) {
+    internal suspend fun getSearchSuggestions(search: String): JsonElement = withContext(Dispatchers.IO) {
         val body = httpClient.get("https://suggestqueries-clients6.youtube.com/complete/search") {
             parameter("client", "youtube")
             parameter("ds", "yt")
@@ -95,7 +95,7 @@ class InnerTubeService(
         json.parseToJsonElement(body.substringAfter("(").substringBeforeLast(")"))
     }
 
-    suspend fun getPlayer(id: String): ApiPlayer = post(
+    internal suspend fun getPlayer(id: String): ApiPlayer = post(
         endpoint = "player",
         body = PlayerBody(
             context = innerTubeContext,
@@ -103,7 +103,7 @@ class InnerTubeService(
         )
     ).body()
 
-    suspend fun getNext(id: String): ApiNext = post(
+    internal suspend fun getNext(id: String): ApiNext = post(
         endpoint = "next",
         body = NextBody(
             context = innerTubeContext,
@@ -111,7 +111,7 @@ class InnerTubeService(
         )
     ).body()
 
-    suspend fun getNext(id: String, continuation: String): ApiNextContinuation = post(
+    internal suspend fun getNext(id: String, continuation: String): ApiNextContinuation = post(
         endpoint = "next",
         body = NextBody(
             context = innerTubeContext,
@@ -120,7 +120,7 @@ class InnerTubeService(
         )
     ).body()
 
-    suspend fun getSearchResults(query: String): ApiSearch = post(
+    internal suspend fun getSearchResults(query: String): ApiSearch = post(
         endpoint = "search",
         body = SearchBody(
             context = innerTubeContext,
@@ -128,7 +128,7 @@ class InnerTubeService(
         )
     ).body()
 
-    suspend fun getSearchResults(query: String, continuation: String): ApiSearchContinuation = post(
+    internal suspend fun getSearchResults(query: String, continuation: String): ApiSearchContinuation = post(
         endpoint = "search",
         body = SearchBody(
             context = innerTubeContext,
@@ -137,7 +137,7 @@ class InnerTubeService(
         )
     ).body()
 
-    suspend fun getTag(tag: String): ApiTag = getBrowse(
+    internal suspend fun getTag(tag: String): ApiTag = getBrowse(
         browseId = "FEhashtag",
         params = withContext(Dispatchers.IO) {
             URLEncoder.encode(
@@ -149,12 +149,12 @@ class InnerTubeService(
         }
     )
 
-    suspend fun getTagContinuation(continuation: String): ApiTagContinuation = getBrowse(
+    internal suspend fun getTagContinuation(continuation: String): ApiTagContinuation = getBrowse(
         browseId = "FEhashtag",
         continuation = continuation
     )
 
-    suspend fun createComment(text: String, params: String) {
+    internal suspend fun createComment(text: String, params: String) {
         post(
             endpoint = "create_comment",
             body = CommentBody(
@@ -168,8 +168,6 @@ class InnerTubeService(
     companion object {
         private const val YOUTUBE_URL = "https://www.youtube.com"
         private const val API_URL = "https://www.youtube.com/youtubei/v1"
-
-        // Extracted from YouTube APK
         private const val API_KEY = "AIzaSyCtkvNIR1HCEwzsqK6JuE6KqpyjusIRI30"
 
         private const val CLIENT_NAME = "ANDROID"
@@ -183,6 +181,6 @@ class InnerTubeService(
 
 @Serializable
 private data class InnerTubeData(
-    @SerialName("INNERTUBE_API_KEY") val innerTubeApiKey: String,
-    @SerialName("INNERTUBE_CONTEXT") val innerTubeContext: ApiContext
+    @SerialName("INNERTUBE_CONTEXT")
+    val innerTubeContext: ApiContext
 )

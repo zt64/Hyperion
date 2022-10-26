@@ -155,7 +155,7 @@ private fun Thumbnail(
             contentDescription = stringResource(R.string.thumbnail)
         )
 
-        if (video.timestamp != null) {
+        video.timestamp?.let { timestamp ->
             Surface(
                 modifier = Modifier
                     .padding(8.dp)
@@ -165,7 +165,7 @@ private fun Thumbnail(
             ) {
                 Text(
                     modifier = Modifier.padding(4.dp),
-                    text = video.timestamp,
+                    text = timestamp,
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onTertiaryContainer,
                     fontSize = 14.sp * timeStampScale

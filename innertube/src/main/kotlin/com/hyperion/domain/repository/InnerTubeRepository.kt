@@ -2,7 +2,6 @@ package com.hyperion.domain.repository
 
 import android.icu.text.CompactDecimalFormat
 import android.os.Build
-import androidx.compose.ui.graphics.Color
 import com.hyperion.domain.mapper.toDomain
 import com.hyperion.domain.model.*
 import com.hyperion.network.dto.ApiContinuation
@@ -28,7 +27,7 @@ class InnerTubeRepository(
 
         return DomainTrending(
             continuation = section.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation,
-            videos = section.contents.mapNotNull { (renderer) ->
+            items = section.contents.mapNotNull { (renderer) ->
                 renderer.contents.single().elementRenderer.model.videoWithContextModel?.videoWithContextData?.toDomain()
             }
         )
@@ -43,7 +42,7 @@ class InnerTubeRepository(
 
         return DomainRecommended(
             continuation = section.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation,
-            videos = section.contents.mapNotNull { (renderer) ->
+            items = section.contents.mapNotNull { (renderer) ->
                 renderer.contents.first().elementRenderer?.model?.videoWithContextModel?.videoWithContextData?.toDomain()
             }
         )
@@ -130,7 +129,7 @@ class InnerTubeRepository(
                                             name = tagRenderer.hashtag.elementsAttributedString.content,
                                             videosCount = tagRenderer.hashtagVideoCount.elementsAttributedString.content,
                                             channelsCount = tagRenderer.hashtagChannelCount.elementsAttributedString.content,
-                                            backgroundColor = Color(tagRenderer.hashtagBackgroundColor),
+                                            backgroundColor = tagRenderer.hashtagBackgroundColor,
                                         )
                                     }
 
@@ -162,7 +161,7 @@ class InnerTubeRepository(
             subscriberText = channelHeaderModal.channelProfile.metadata.subscriberCountText,
             avatar = avatars.first().url,
             banner = banners?.lastOrNull()?.url,
-            videos = tabRenderer.contents
+            items = tabRenderer.contents
                 .mapNotNull { (shelfRenderer) ->
                     shelfRenderer?.content?.horizontalListRenderer?.items
                         ?.firstOrNull()?.elementRenderer?.model?.gridVideoModel
@@ -174,7 +173,8 @@ class InnerTubeRepository(
                                 timestamp = videoData.thumbnail.timestampText
                             )
                         }
-                }
+                },
+            continuation = null
         )
     }
 
@@ -276,26 +276,24 @@ class InnerTubeRepository(
                 id = headerRenderer.ownerEndpoint.browseEndpoint.browseId,
                 name = headerRenderer.ownerText.toString()
             ),
-            content = DomainPlaylist.Content(
-                videos = playlistVideoListRenderer.contents.mapNotNull { (renderer) ->
-                    if (renderer == null) return@mapNotNull null
+            items = playlistVideoListRenderer.contents.mapNotNull { (renderer) ->
+                if (renderer == null) return@mapNotNull null
 
-                    DomainVideoPartial(
-                        id = renderer.videoId,
-                        title = renderer.title.toString(),
-                        subtitle = renderer.shortBylineText.toString()
-                    )
-                },
-                continuation = playlistVideoListRenderer.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation!!
-            )
+                DomainVideoPartial(
+                    id = renderer.videoId,
+                    title = renderer.title.toString(),
+                    subtitle = renderer.shortBylineText.toString()
+                )
+            },
+            continuation = playlistVideoListRenderer.continuations.filterIsInstance<ApiContinuation.Next>().singleOrNull()?.continuation!!
         )
     }
 
-    suspend fun getPlaylist(id: String, continuation: String): DomainPlaylist.Content {
+    suspend fun getPlaylist(id: String, continuation: String): DomainBrowse<DomainVideoPartial> {
         val (playlist) = service.getPlaylist(id, continuation).continuationContents
 
-        return DomainPlaylist.Content(
-            videos = playlist.contents.mapNotNull { (renderer) ->
+        return DomainBrowse(
+            items = playlist.contents.mapNotNull { (renderer) ->
                 if (renderer != null) {
                     DomainVideoPartial(
                         id = renderer.videoId,
@@ -319,30 +317,28 @@ class InnerTubeRepository(
             name = response.header.translucentHeaderRenderer.title.toString(),
             subtitle = header.hashtagInfoText?.elementsAttributedString?.content.orEmpty(),
             avatars = header.avatarFacepile.map { it.elementsImage.sources.first().url },
-            content = DomainTag.Content(
-                videos = contents[1].shelfRenderer!!.content.horizontalListRenderer.items.map { item ->
-                    val (onTap, videoData) = item.elementRenderer.model.videoWithContextModel.videoWithContextData
-                    val (reelEndpoint, watchEndpoint) = onTap.innertubeCommand
+            items = contents[1].shelfRenderer!!.content.horizontalListRenderer.items.map { item ->
+                val (onTap, videoData) = item.elementRenderer.model.videoWithContextModel.videoWithContextData
+                val (reelEndpoint, watchEndpoint) = onTap.innertubeCommand
 
-                    DomainVideoPartial(
-                        id = watchEndpoint?.videoId ?: reelEndpoint?.videoId!!,
-                        title = videoData.metadata.title,
-                        subtitle = "${videoData.metadata.byline} • ${videoData.metadata.metadataDetails}",
-                        timestamp = videoData.thumbnail.timestampText
-                    )
-                },
-                continuation = continuations.filterIsInstance<ApiContinuation.Next>().single().continuation
-            )
+                DomainVideoPartial(
+                    id = watchEndpoint?.videoId ?: reelEndpoint?.videoId!!,
+                    title = videoData.metadata.title,
+                    subtitle = "${videoData.metadata.byline} • ${videoData.metadata.metadataDetails}",
+                    timestamp = videoData.thumbnail.timestampText
+                )
+            },
+            continuation = continuations.filterIsInstance<ApiContinuation.Next>().single().continuation
         )
     }
 
-    suspend fun getTagContinuation(continuation: String): DomainTag.Content {
+    suspend fun getTagContinuation(continuation: String): DomainBrowse<DomainVideoPartial> {
         val response = service.getTagContinuation(continuation)
 
         val (contents, continuations) = response.continuationContents.sectionListContinuation
 
-        return DomainTag.Content(
-            videos = contents.single().shelfRenderer!!.content.horizontalListRenderer.items.map { (elementRenderer) ->
+        return DomainBrowse(
+            items = contents.single().shelfRenderer!!.content.horizontalListRenderer.items.map { (elementRenderer) ->
                 val (onTap, videoData) = elementRenderer.model.videoWithContextModel.videoWithContextData
                 val (reelEndpoint, watchEndpoint) = onTap.innertubeCommand
 
