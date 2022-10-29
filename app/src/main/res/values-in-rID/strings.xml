@@ -67,5 +67,5 @@
     <string name="add_account">Tambahkan akun lainnya</string>
     <string name="copied_to_clipboard">Disalin ke clipboard</string>
     <string name="copy_stacktrace">Salin stacktrace</string>
-    <string name="tag">Tag</string>
+    <string name="tag">Label</string>
 </resources>
