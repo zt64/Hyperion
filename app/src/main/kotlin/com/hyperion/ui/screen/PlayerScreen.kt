@@ -62,7 +62,7 @@ fun PlayerScreen(
     videoId: String? = null
 ) {
     LaunchedEffect(Unit) {
-        if (videoId != null) viewModel.loadVideo(videoId)
+        if (viewModel.video == null && videoId != null) viewModel.loadVideo(videoId)
     }
 
     when (val state = viewModel.state) {
