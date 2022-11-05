@@ -10,7 +10,7 @@
     <string name="download">Endirin</string>
     <string name="share">Paylaşın</string>
     <string name="todo">Ediləcəklər</string>
-    <string name="dislike">Bəyənmirəm</string>
+    <string name="dislike">Bəyənmə</string>
     <string name="like">Bəyəndim</string>
     <string name="library">Kitabxana</string>
     <string name="subscribe">Abunə olun</string>
@@ -66,6 +66,6 @@
     <string name="restore">Bərpa et</string>
     <string name="add_account">Başqa hesab əlavə et</string>
     <string name="copied_to_clipboard">Buferə kopyalandı</string>
-    <string name="copy_stacktrace">Copy stacktrace</string>
+    <string name="copy_stacktrace">Topa izi kopyalayıcı</string>
     <string name="tag">Etiket</string>
 </resources>
