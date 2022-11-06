@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Hyperion" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.Hyperion" parent="Theme.Hyperion.SplashScreen">
         <item name="android:windowLayoutInDisplayCutoutMode">default</item>
     </style>
 </resources>

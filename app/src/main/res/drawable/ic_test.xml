@@ -1,5 +1,4 @@
-<animated-vector
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:aapt="http://schemas.android.com/aapt">
     <aapt:attr name="android:drawable">
         <vector
@@ -16,7 +15,7 @@
                     android:name="path"
                     android:fillColor="#000"
                     android:pathData="M 8.016 6.797 Q 8.016 6.234 8.532 5.953 Q 9.048 5.672 9.563 6 L 17.672 11.156 Q 18.141 11.437 18.141 12 Q 18.141 12.563 17.672 12.844 L 9.563 18 Q 9.047 18.328 8.532 18.047 Q 8.017 17.766 8.016 17.203 L 8.016 6.797 Z"
-                    android:strokeWidth="1"/>
+                    android:strokeWidth="1" />
             </group>
         </vector>
     </aapt:attr>
@@ -28,7 +27,7 @@
                 android:propertyName="pathData"
                 android:valueFrom="M 8.016 6.797 Q 8.016 6.797 8.016 6.797 Q 8.016 6.234 8.532 5.953 Q 9.048 5.672 9.563 6 Q 13.617 8.578 17.672 11.156 Q 18.141 11.437 18.141 12 Q 18.141 12.563 17.672 12.844 Q 13.617 15.422 9.563 18 Q 9.047 18.328 8.532 18.047 Q 8.017 17.766 8.016 17.203 Q 8.016 15.469 8.016 13.734 Q 8.016 12 8.016 10.266 L 8.016 6.797 M 16.009 11.999 Q 16.009 11.999 16.009 11.999 Q 16.009 11.999 16.009 11.999 Q 16.009 11.999 16.009 11.999 Q 16.009 11.999 16.009 11.999 L 16.009 11.999 Q 16.009 11.999 16.009 11.999 Q 16.009 11.999 16.009 11.999 Q 16.009 11.999 16.009 11.999 Q 16.009 11.999 16.009 11.999 L 16.009 11.999 L 16.009 11.999"
                 android:valueTo="M 6 6.984 Q 6 6.187 6.586 5.601 Q 7.172 5.015 8.016 5.015 Q 8.813 5.015 9.399 5.601 Q 9.985 6.187 9.985 6.984 Q 9.985 9.492 9.985 11.999 Q 9.985 14.507 9.985 17.015 Q 9.985 17.812 9.399 18.398 Q 8.813 18.984 8.016 18.984 Q 8.016 18.984 8.016 18.984 Q 7.172 18.984 6.586 18.398 Q 6 17.812 6 17.015 L 6 6.984 M 14.016 6.984 Q 14.016 6.187 14.602 5.601 Q 15.188 5.015 15.985 5.015 Q 16.829 5.015 17.415 5.601 Q 18.001 6.187 18.001 6.984 L 18.001 17.015 Q 18.001 17.812 17.415 18.398 Q 16.829 18.984 15.985 18.984 Q 15.188 18.984 14.602 18.398 Q 14.016 17.812 14.016 17.015 L 14.016 6.984 L 14.016 6.984"
-                android:valueType="pathType"/>
+                android:valueType="pathType" />
         </aapt:attr>
     </target>
     <target android:name="group">
@@ -39,7 +38,7 @@
                 android:propertyName="rotation"
                 android:valueFrom="0"
                 android:valueTo="0"
-                android:valueType="floatType"/>
+                android:valueType="floatType" />
         </aapt:attr>
     </target>
 </animated-vector>
