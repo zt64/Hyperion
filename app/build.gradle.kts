@@ -57,9 +57,11 @@ dependencies {
     implementation("androidx.paging:paging-compose:1.0.0-alpha17")
     implementation("androidx.activity:activity-compose:1.6.1")
 
-    // Koin
-    implementation("io.insert-koin:koin-android:3.3.0")
-    implementation("io.insert-koin:koin-androidx-compose:3.3.0")
+    @Suppress("GradleDependency")
+    implementation("io.insert-koin:koin-android:3.2.0")
+    // Koin (3.2.1+ Adds dependency on AndroidX navigation, which isn't even used in Hyperion)
+    @Suppress("GradleDependency")
+    implementation("io.insert-koin:koin-androidx-compose:3.2.0")
 
     // Compose
     val composeVersion = "1.4.0-alpha01"
