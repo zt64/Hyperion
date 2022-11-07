@@ -6,6 +6,8 @@ import com.hyperion.ui.viewmodel.SettingsViewModel
 
 context(ColumnScope)
 @Composable
-fun SponsorBlockScreen(viewModel: SettingsViewModel) {
+fun SponsorBlockScreen(
+    viewModel: SettingsViewModel
+) {
 
 }

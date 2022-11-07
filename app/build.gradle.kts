@@ -74,6 +74,9 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.animation:animation-graphics:$composeVersion")
 
+    // Navigation
+    implementation("dev.olshevski.navigation:reimagined:1.3.0")
+
     // Accompanist
     val accompanistVersion = "0.27.0"
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
@@ -96,9 +99,6 @@ dependencies {
     implementation("io.ktor:ktor-client-encoding:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-
-    // GMS
-    implementation("com.google.android.gms:play-services-auth:20.3.0")
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

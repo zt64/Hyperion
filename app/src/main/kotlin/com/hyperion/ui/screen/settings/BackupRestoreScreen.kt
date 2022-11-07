@@ -6,6 +6,8 @@ import com.hyperion.ui.viewmodel.SettingsViewModel
 
 context(ColumnScope)
 @Composable
-fun BackupRestoreScreen(viewModel: SettingsViewModel) {
+fun BackupRestoreScreen(
+    viewModel: SettingsViewModel
+) {
 
 }

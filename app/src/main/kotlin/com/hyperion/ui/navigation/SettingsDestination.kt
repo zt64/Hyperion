@@ -1,5 +1,6 @@
 package com.hyperion.ui.navigation
 
+import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -12,7 +13,7 @@ import kotlinx.parcelize.RawValue
 enum class SettingsDestination(
     val icon: @RawValue ImageVector,
     @StringRes val label: Int
-) : Destination {
+) : Parcelable {
     MAIN(Icons.Default.Settings, R.string.settings),
     GENERAL(Icons.Default.Settings, R.string.general),
     APPEARANCE(Icons.Default.Palette, R.string.appearance),

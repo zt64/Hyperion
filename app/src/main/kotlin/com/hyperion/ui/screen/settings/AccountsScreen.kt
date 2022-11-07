@@ -6,7 +6,9 @@ import com.hyperion.ui.viewmodel.SettingsViewModel
 
 context(ColumnScope)
 @Composable
-fun AccountsScreen(viewModel: SettingsViewModel) {
+fun AccountsScreen(
+    viewModel: SettingsViewModel
+) {
 
 }
 

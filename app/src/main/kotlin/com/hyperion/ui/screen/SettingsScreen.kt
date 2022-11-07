@@ -1,10 +1,6 @@
 package com.hyperion.ui.screen
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.*
-import androidx.compose.animation.core.EaseInExpo
-import androidx.compose.animation.core.EaseOutExpo
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,10 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
 import com.hyperion.ui.navigation.SettingsDestination
-import com.hyperion.ui.navigation.Taxi
-import com.hyperion.ui.navigation.rememberNavigator
+import com.hyperion.ui.navigation.currentDestination
 import com.hyperion.ui.screen.settings.*
 import com.hyperion.ui.viewmodel.SettingsViewModel
+import dev.olshevski.navigation.reimagined.*
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -34,7 +30,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = getViewModel(),
     onClickBack: () -> Unit
 ) {
-    val navigator = rememberNavigator(SettingsDestination.MAIN)
+    val navController = rememberNavController(SettingsDestination.MAIN)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
@@ -44,8 +40,8 @@ fun SettingsScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            if (navigator.currentDestination != SettingsDestination.MAIN) {
-                                navigator.replace(SettingsDestination.MAIN)
+                            if (navController.backstack.entries.last().destination != SettingsDestination.MAIN) {
+                                navController.pop()
                             } else {
                                 onClickBack()
                             }
@@ -58,7 +54,7 @@ fun SettingsScreen(
                     }
                 },
                 title = {
-                    Crossfade(navigator.currentDestination) { destination ->
+                    Crossfade(navController.currentDestination) { destination ->
                         Text(stringResource(destination.label))
                     }
                 },
@@ -66,34 +62,24 @@ fun SettingsScreen(
             )
         }
     ) { paddingValues ->
-        BackHandler(
-            enabled = navigator.currentDestination != SettingsDestination.MAIN
-        ) {
-            navigator.replace(SettingsDestination.MAIN)
-        }
+        NavBackHandler(navController)
 
-        Taxi(
+        Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            navigator = navigator,
-            transitionSpec = {
-                if (targetState == SettingsDestination.MAIN) {
-                    fadeIn() with slideOutHorizontally(
-                        animationSpec = tween(200, easing = EaseInExpo),
-                        targetOffsetX = { width -> width }
-                    ) + fadeOut()
-                } else {
-                    slideInHorizontally(
-                        animationSpec = tween(400, easing = EaseOutExpo),
-                        initialOffsetX = { width -> width }
-                    ) + fadeIn(tween(400)) with fadeOut()
-                } using SizeTransform(clip = false)
-            }
-        ) { destination ->
-            Surface(
-                modifier = Modifier.fillMaxSize()
-            ) {
+                .padding(paddingValues)
+        ) {
+            AnimatedNavHost(
+                controller = navController,
+                transitionSpec = { action, _, _ ->
+                    val direction = if (action == NavAction.Pop) {
+                        AnimatedContentScope.SlideDirection.End
+                    } else {
+                        AnimatedContentScope.SlideDirection.Start
+                    }
+                    slideIntoContainer(direction) with slideOutOfContainer(direction)
+                }
+            ) { destination ->
                 Column(
                     modifier = Modifier.verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -107,7 +93,7 @@ fun SettingsScreen(
                                 .forEach { destination ->
                                     ListItem(
                                         modifier = Modifier.clickable {
-                                            navigator.replace(destination)
+                                            navController.navigate(destination)
                                         },
                                         headlineText = {
                                             Text(stringResource(destination.label))
