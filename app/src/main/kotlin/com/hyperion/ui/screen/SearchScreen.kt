@@ -62,12 +62,11 @@ fun SearchScreen(
                 title = {
                     SearchField(
                         modifier = Modifier
-                            .fillMaxWidth()
                             .focusRequester(viewModel.focusRequester)
                             .onFocusChanged { showResults = !it.isFocused },
                         value = viewModel.search,
                         onValueChange = viewModel::getSuggestions,
-                        placeholder = { Text(stringResource(R.string.search)) },
+                        placeholder = stringResource(R.string.search),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                         keyboardActions = KeyboardActions(
                             onSearch = {
@@ -107,6 +106,7 @@ fun SearchScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 14.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             if (showResults) {
@@ -171,24 +171,18 @@ fun SearchScreen(
                 }
 
                 item {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        results.loadState.apply {
-                            when (results.loadState.append) {
-                                is LoadState.NotLoading -> Unit
-                                is LoadState.Loading -> {
-                                    CircularProgressIndicator()
-                                }
+                    results.loadState.apply {
+                        when {
+                            refresh is LoadState.Loading || append is LoadState.Loading -> {
+                                CircularProgressIndicator()
+                            }
 
-                                is LoadState.Error -> {
-                                    (append as LoadState.Error).error.message?.let {
-                                        Text(
-                                            text = it,
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
-                                    }
+                            append is LoadState.Error -> {
+                                (append as LoadState.Error).error.message?.let {
+                                    Text(
+                                        text = it,
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
                                 }
                             }
                         }
@@ -234,7 +228,7 @@ private fun SearchField(
     modifier: Modifier,
     value: String,
     onValueChange: ((String) -> Unit),
-    placeholder: @Composable () -> Unit,
+    placeholder: String,
     keyboardOptions: KeyboardOptions,
     keyboardActions: KeyboardActions
 ) {
@@ -253,9 +247,9 @@ private fun SearchField(
             TextFieldDefaults.TextFieldDecorationBox(
                 value = value,
                 innerTextField = innerTextField,
-                placeholder = placeholder,
-                trailingIcon = {
-                    if (value.isNotEmpty()) {
+                placeholder = { Text(placeholder) },
+                trailingIcon = value.takeIf(String::isNotBlank)?.let {
+                    {
                         IconButton(
                             onClick = {
                                 onValueChange("")

@@ -111,10 +111,10 @@ private fun ChannelScreenLoaded(
 
         LazyColumn(
             modifier = Modifier
-                .padding(paddingValues)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             item {
                 Column(
@@ -131,7 +131,7 @@ private fun ChannelScreenLoaded(
                                 Box(
                                     modifier = Modifier
                                         .shimmer()
-                                        .fillMaxSize(),
+                                        .fillMaxSize()
                                 )
                             },
                             success = {
@@ -142,7 +142,7 @@ private fun ChannelScreenLoaded(
                     }
 
                     Row(
-                        modifier = Modifier.padding(start = 8.dp, end = 8.dp),
+                        modifier = Modifier.padding(horizontal = 8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -183,7 +183,7 @@ private fun ChannelScreenLoaded(
             stickyHeader {
                 TabHeader(
                     selectedTab = selectedTab,
-                    onClick = { selectedTab = it }
+                    onClickTab = { selectedTab = it }
                 )
             }
 
@@ -241,7 +241,7 @@ private fun ChannelScreenLoading(
 @Composable
 private fun TabHeader(
     selectedTab: ChannelTab,
-    onClick: (ChannelTab) -> Unit
+    onClickTab: (ChannelTab) -> Unit
 ) {
     ScrollableTabRow(
         modifier = Modifier.fillMaxWidth(),
@@ -253,7 +253,7 @@ private fun TabHeader(
                     selected = selectedTab == tab,
                     text = { Text(stringResource(tab.title)) },
                     icon = { Icon(tab.imageVector, null) },
-                    onClick = { onClick(tab) }
+                    onClick = { onClickTab(tab) }
                 )
             }
         }

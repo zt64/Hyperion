@@ -42,23 +42,18 @@ fun HomeScreen(
         }
 
         item {
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                videoListItems.loadState.apply {
-                    when {
-                        refresh is LoadState.Loading || append is LoadState.Loading -> {
-                            CircularProgressIndicator()
-                        }
+            videoListItems.loadState.apply {
+                when {
+                    refresh is LoadState.Loading || append is LoadState.Loading -> {
+                        CircularProgressIndicator()
+                    }
 
-                        append is LoadState.Error -> {
-                            (append as LoadState.Error).error.message?.let {
-                                Text(
-                                    text = it,
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                            }
+                    append is LoadState.Error -> {
+                        (append as LoadState.Error).error.message?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
                     }
                 }

@@ -10,10 +10,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -242,7 +239,8 @@ private fun PlayerScreenPortrait(
 
         LazyColumn(
             modifier = Modifier.padding(horizontal = 14.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             val video = viewModel.video!!
 
@@ -396,23 +394,18 @@ private fun PlayerScreenPortrait(
             }
 
             item {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    relatedVideos.loadState.apply {
-                        when {
-                            refresh is LoadState.Loading || append is LoadState.Loading -> {
-                                CircularProgressIndicator()
-                            }
+                relatedVideos.loadState.apply {
+                    when {
+                        refresh is LoadState.Loading || append is LoadState.Loading -> {
+                            CircularProgressIndicator()
+                        }
 
-                            append is LoadState.Error -> {
-                                (append as LoadState.Error).error.message?.let {
-                                    Text(
-                                        text = it,
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                }
+                        append is LoadState.Error -> {
+                            (append as LoadState.Error).error.message?.let {
+                                Text(
+                                    text = it,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
                             }
                         }
                     }

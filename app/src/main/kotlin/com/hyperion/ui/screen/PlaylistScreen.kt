@@ -108,7 +108,8 @@ private fun PlaylistLoadedScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 14.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             item {
                 Column(
@@ -173,23 +174,18 @@ private fun PlaylistLoadedScreen(
             }
 
             item {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    videos.loadState.apply {
-                        when {
-                            refresh is LoadState.Loading || append is LoadState.Loading -> {
-                                CircularProgressIndicator()
-                            }
+                videos.loadState.apply {
+                    when {
+                        refresh is LoadState.Loading || append is LoadState.Loading -> {
+                            CircularProgressIndicator()
+                        }
 
-                            append is LoadState.Error -> {
-                                (append as LoadState.Error).error.message?.let {
-                                    Text(
-                                        text = it,
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                }
+                        append is LoadState.Error -> {
+                            (append as LoadState.Error).error.message?.let {
+                                Text(
+                                    text = it,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
                             }
                         }
                     }
