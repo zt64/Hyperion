@@ -1,7 +1,8 @@
 package com.zt.innertube.network.service
 
-import com.hyperion.network.body.*
-import com.hyperion.network.dto.*
+import com.zt.innertube.network.body.*
+import com.zt.innertube.network.dto.*
+import com.zt.innertube.network.dto.browse.*
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.*
