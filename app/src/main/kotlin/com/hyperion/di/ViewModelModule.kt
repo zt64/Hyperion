@@ -11,5 +11,9 @@ val viewModelModule = module {
     viewModelOf(::PlaylistViewModel)
     viewModelOf(::TagViewModel)
     viewModelOf(::SearchViewModel)
+    viewModelOf(::HistoryViewModel)
+    viewModelOf(::ChannelsViewModel)
+    viewModelOf(::FeedViewModel)
+    viewModelOf(::LibraryViewModel)
     viewModelOf(::SettingsViewModel)
 }

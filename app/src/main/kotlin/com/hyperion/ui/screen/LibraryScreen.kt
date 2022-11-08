@@ -17,9 +17,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.hyperion.R
+import com.hyperion.ui.viewmodel.LibraryViewModel
 
 @Composable
-fun LibraryScreen() {
+fun LibraryScreen(
+    viewModel: LibraryViewModel
+) {
     LazyColumn {
         item {
             Column {
