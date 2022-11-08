@@ -68,4 +68,5 @@
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="copy_stacktrace">Copy stacktrace</string>
     <string name="tag">Tag</string>
+    <string name="hide_nav_item_label">Hide navigation item label</string>
 </resources>

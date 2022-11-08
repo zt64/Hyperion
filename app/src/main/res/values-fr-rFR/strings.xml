@@ -68,4 +68,5 @@
     <string name="copied_to_clipboard">Copié dans le presse-papier</string>
     <string name="copy_stacktrace">Copier les traces d\'appel</string>
     <string name="tag">Tag</string>
+    <string name="hide_nav_item_label">Hide navigation item label</string>
 </resources>
