@@ -15,4 +15,5 @@ class PreferencesManager(sharedPreferences: SharedPreferences) : BasePreferenceM
     var showDownloadButton by booleanPreference("show_download_button", true)
     var downloadDirectory by stringPreference("download_directory", Environment.DIRECTORY_DOWNLOADS)
     var timestampScale by floatPreference("timestamp_scale", 1f)
+    var hideNavItemLabel by booleanPreference("hide_nav_item_label", false)
 }

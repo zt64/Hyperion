@@ -3,10 +3,7 @@ package com.hyperion.ui.screen.settings
 import android.os.Build
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Style
-import androidx.compose.material.icons.filled.VideoSettings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
@@ -60,5 +57,12 @@ fun AppearanceScreen(
         text = stringResource(R.string.show_download_button),
         icon = Icons.Default.Download,
         onCheckedChange = { preferences.showDownloadButton = it }
+    )
+
+    SwitchSetting(
+        checked = preferences.hideNavItemLabel,
+        text = stringResource(R.string.hide_nav_item_label),
+        icon = Icons.Default.Navigation,
+        onCheckedChange = { preferences.hideNavItemLabel = it }
     )
 }

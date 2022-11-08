@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
+import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.navigation.RootDestination
 import com.hyperion.ui.navigation.currentDestination
 import com.hyperion.ui.viewmodel.FeedViewModel
@@ -25,6 +26,7 @@ import com.hyperion.ui.viewmodel.LibraryViewModel
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.rememberNavController
 import dev.olshevski.navigation.reimagined.replaceAll
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -34,11 +36,12 @@ fun RootScreen(
     onClickSearch: () -> Unit,
     onClickSettings: () -> Unit,
     onClickVideo: (id: String) -> Unit,
-    onClickChannel: (id: String) -> Unit
+    onClickChannel: (id: String) -> Unit,
+    prefs: PreferencesManager = get()
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-
     val navController = rememberNavController(RootDestination.HOME)
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -73,7 +76,9 @@ fun RootScreen(
                         NavigationBarItem(
                             selected = navController.currentDestination == destination,
                             icon = { Icon(destination.icon, stringResource(destination.label)) },
-                            label = { Text(stringResource(destination.label)) },
+                            label = if (!prefs.hideNavItemLabel) {
+                                { Text(stringResource(destination.label)) }
+                            } else null,
                             onClick = { navController.replaceAll(destination) }
                         )
                     }
@@ -92,7 +97,9 @@ fun RootScreen(
                         NavigationRailItem(
                             selected = navController.currentDestination == destination,
                             icon = { Icon(destination.icon, stringResource(destination.label)) },
-                            label = { Text(stringResource(destination.label)) },
+                            label = if (!prefs.hideNavItemLabel) {
+                                { Text(stringResource(destination.label)) }
+                            } else null,
                             onClick = { navController.replaceAll(destination) }
                         )
                     }
