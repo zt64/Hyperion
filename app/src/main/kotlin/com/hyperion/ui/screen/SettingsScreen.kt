@@ -1,6 +1,9 @@
 package com.hyperion.ui.screen
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -72,12 +75,25 @@ fun SettingsScreen(
             AnimatedNavHost(
                 controller = navController,
                 transitionSpec = { action, _, _ ->
-                    val direction = if (action == NavAction.Pop) {
-                        AnimatedContentScope.SlideDirection.End
+                    if (action == NavAction.Pop) {
+                        // Leaving settings sub-screen
+                        fadeIn(tween(200)) with slideOutOfContainer(
+                            towards = AnimatedContentScope.SlideDirection.End,
+                            animationSpec = tween(
+                                durationMillis = 200,
+                                easing = FastOutLinearInEasing
+                            )
+                        )
                     } else {
-                        AnimatedContentScope.SlideDirection.Start
+                        // Entering settings sub-screen
+                        slideIntoContainer(
+                            towards = AnimatedContentScope.SlideDirection.Start,
+                            animationSpec = tween(
+                                durationMillis = 300,
+                                easing = FastOutSlowInEasing
+                            )
+                        ) with fadeOut(tween(300))
                     }
-                    slideIntoContainer(direction) with slideOutOfContainer(direction)
                 }
             ) { destination ->
                 Column(
