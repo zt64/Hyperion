@@ -147,16 +147,7 @@ class InnerTubeService(
 
     internal suspend fun getTagContinuation(continuation: String): ApiTagContinuation = getBrowse("FEhashtag", continuation)
 
-    internal suspend fun createComment(text: String, params: String) {
-        post(
-            endpoint = "create_comment",
-            body = CommentBody(
-                context = innerTubeContext,
-                commentText = text,
-                createCommentParams = params
-            )
-        )
-    }
+    internal suspend fun getSubscriptions(): ApiSubscriptions = TODO()
 
     companion object {
         private const val YOUTUBE_URL = "https://www.youtube.com"
