@@ -51,4 +51,8 @@ class ChannelViewModel(
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         })
     }
+
+    fun subscribe() {
+
+    }
 }

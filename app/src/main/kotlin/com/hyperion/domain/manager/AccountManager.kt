@@ -1,6 +1,6 @@
 package com.hyperion.domain.manager
 
-import com.hyperion.network.service.InnerTubeService
+import com.zt.innertube.network.service.InnerTubeService
 
 class AccountManager(
     private val preferencesManager: PreferencesManager,

@@ -1,4 +1,4 @@
-package com.hyperion.ui.component
+package com.hyperion.ui.component.player
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

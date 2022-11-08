@@ -1,4 +1,4 @@
-package com.hyperion.ui.component
+package com.hyperion.ui.component.player
 
 import android.text.format.DateUtils
 import androidx.compose.animation.graphics.ExperimentalAnimationGraphicsApi

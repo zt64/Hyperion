@@ -40,7 +40,7 @@ fun SettingsScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            if (navController.backstack.entries.last().destination != SettingsDestination.MAIN) {
+                            if (navController.currentDestination != SettingsDestination.MAIN) {
                                 navController.pop()
                             } else {
                                 onClickBack()

@@ -24,7 +24,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -42,12 +44,17 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.R
-import com.hyperion.domain.model.DomainStream
 import com.hyperion.ui.component.*
+import com.hyperion.ui.component.player.Player
+import com.hyperion.ui.component.player.PlayerActions
+import com.hyperion.ui.component.player.PlayerControlsOverlay
 import com.hyperion.ui.navigation.AppDestination
-import com.hyperion.ui.navigation.BackstackNavigator
 import com.hyperion.ui.viewmodel.PlayerViewModel
 import com.hyperion.util.findActivity
+import com.zt.innertube.domain.model.DomainStream
+import dev.olshevski.navigation.reimagined.NavController
+import dev.olshevski.navigation.reimagined.navigate
+import dev.olshevski.navigation.reimagined.pop
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 import kotlin.math.roundToInt
@@ -55,7 +62,7 @@ import kotlin.math.roundToInt
 @Composable
 fun PlayerScreen(
     viewModel: PlayerViewModel = getViewModel(),
-    navigator: BackstackNavigator<AppDestination>,
+    navController: NavController<AppDestination>,
     videoId: String? = null
 ) {
     LaunchedEffect(Unit) {
@@ -63,21 +70,19 @@ fun PlayerScreen(
     }
 
     when (val state = viewModel.state) {
-        is PlayerViewModel.State.Loading -> {
-            PlayerScreenLoading()
-        }
+        is PlayerViewModel.State.Loading -> PlayerScreenLoading()
 
         is PlayerViewModel.State.Loaded -> {
             PlayerScreenLoaded(
                 viewModel = viewModel,
-                navigator = navigator
+                navController = navController
             )
         }
 
         is PlayerViewModel.State.Error -> {
             ErrorScreen(
                 exception = state.exception,
-                onClickBack = navigator::pop
+                onClickBack = navController::pop
             )
         }
     }
@@ -102,7 +107,7 @@ private fun PlayerScreenLoading() {
 @Composable
 private fun PlayerScreenLoaded(
     viewModel: PlayerViewModel,
-    navigator: BackstackNavigator<AppDestination>
+    navController: NavController<AppDestination>
 ) {
     if (viewModel.showQualityPicker) {
         AlertDialog(
@@ -152,6 +157,7 @@ private fun PlayerScreenLoaded(
             }
         )
     }
+
     if (viewModel.showDownloadDialog) {
         AlertDialog(
             onDismissRequest = viewModel::hideDownloadDialog,
@@ -212,12 +218,12 @@ private fun PlayerScreenLoaded(
     when (LocalConfiguration.current.orientation) {
         Configuration.ORIENTATION_PORTRAIT -> PlayerScreenPortrait(
             viewModel = viewModel,
-            navigator = navigator
+            navController = navController
         )
 
         Configuration.ORIENTATION_LANDSCAPE -> PlayerScreenLandscape(
             viewModel = viewModel,
-            navigator = navigator
+            navController = navController
         )
     }
 }
@@ -225,7 +231,7 @@ private fun PlayerScreenLoaded(
 @Composable
 private fun PlayerScreenPortrait(
     viewModel: PlayerViewModel,
-    navigator: BackstackNavigator<AppDestination>
+    navController: NavController<AppDestination>
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -234,7 +240,7 @@ private fun PlayerScreenPortrait(
 
         PlayerControls(
             viewModel = viewModel,
-            navigator = navigator
+            navController = navController
         )
 
         LazyColumn(
@@ -281,7 +287,7 @@ private fun PlayerScreenPortrait(
                                 modifier = Modifier.height(26.dp),
                                 label = { Text(badge) },
                                 onClick = {
-                                    navigator.push(AppDestination.Tag(badge))
+                                    navController.navigate(AppDestination.Tag(badge))
                                 }
                             )
                         }
@@ -315,7 +321,7 @@ private fun PlayerScreenPortrait(
                     )
 
                     Card(
-                        onClick = { navigator.push(AppDestination.Channel(video.author.id)) }
+                        onClick = { navController.navigate(AppDestination.Channel(video.author.id)) }
                     ) {
                         Row(
                             modifier = Modifier.padding(8.dp),
@@ -389,7 +395,7 @@ private fun PlayerScreenPortrait(
                 VideoCard(
                     video = relatedVideo,
                     onClick = { viewModel.loadVideo(relatedVideo.id) },
-                    onClickChannel = { navigator.push(AppDestination.Channel(relatedVideo.channel!!.id)) }
+                    onClickChannel = { navController.navigate(AppDestination.Channel(relatedVideo.channel!!.id)) }
                 )
             }
 
@@ -418,12 +424,12 @@ private fun PlayerScreenPortrait(
 @Composable
 private fun PlayerScreenLandscape(
     viewModel: PlayerViewModel,
-    navigator: BackstackNavigator<AppDestination>
+    navController: NavController<AppDestination>
 ) {
     PlayerControls(
         modifier = Modifier.fillMaxHeight(),
         viewModel = viewModel,
-        navigator = navigator
+        navController = navController
     )
 }
 
@@ -431,10 +437,17 @@ private fun PlayerScreenLandscape(
 private fun PlayerControls(
     modifier: Modifier = Modifier,
     viewModel: PlayerViewModel,
-    navigator: BackstackNavigator<AppDestination>
+    navController: NavController<AppDestination>
 ) {
     val coroutineScope = rememberCoroutineScope()
     val offsetY = remember { Animatable(0f) }
+
+    var scale by remember { mutableStateOf(1f) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
+    val transformableState = rememberTransformableState { zoomChange, offsetChange, _ ->
+        scale *= zoomChange
+        offset += offsetChange
+    }
 
     Box(
         modifier = modifier
@@ -449,6 +462,13 @@ private fun PlayerControls(
                     }
                 )
             }
+            .graphicsLayer(
+                scaleX = scale,
+                scaleY = scale,
+                translationX = offset.x,
+                translationY = offset.y
+            )
+            .transformable(transformableState)
             .draggable(
                 orientation = Orientation.Vertical,
                 state = rememberDraggableState { dragAmount ->
@@ -491,7 +511,7 @@ private fun PlayerControls(
                     duration = viewModel.duration,
                     onSkipNext = viewModel::skipNext,
                     onSkipPrevious = viewModel::skipPrevious,
-                    onClickCollapse = navigator::pop,
+                    onClickCollapse = navController::pop,
                     onClickPlayPause = viewModel::togglePlayPause,
                     onClickFullscreen = viewModel::toggleFullscreen,
                     onClickMore = viewModel::showQualityPicker,

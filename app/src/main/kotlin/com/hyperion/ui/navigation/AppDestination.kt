@@ -1,9 +1,10 @@
 package com.hyperion.ui.navigation
 
+import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-sealed interface AppDestination : Destination {
+sealed interface AppDestination : Parcelable {
     @Parcelize
     object Root : AppDestination
 
@@ -21,6 +22,9 @@ sealed interface AppDestination : Destination {
 
     @Parcelize
     class Tag(val tag: String) : AppDestination
+
+    @Parcelize
+    object AddAccount : AppDestination
 
     @Parcelize
     object Settings : AppDestination

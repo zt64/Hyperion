@@ -1,4 +1,4 @@
-package com.hyperion.ui.component
+package com.hyperion.ui.component.player
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

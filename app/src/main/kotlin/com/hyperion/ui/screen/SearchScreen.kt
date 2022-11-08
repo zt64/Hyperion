@@ -36,14 +36,15 @@ import com.hyperion.R
 import com.zt.innertube.domain.model.*
 import com.hyperion.ui.component.*
 import com.hyperion.ui.navigation.AppDestination
-import com.hyperion.ui.navigation.BackstackNavigator
 import com.hyperion.ui.viewmodel.SearchViewModel
+import dev.olshevski.navigation.reimagined.NavController
+import dev.olshevski.navigation.reimagined.navigate
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = getViewModel(),
-    navigator: BackstackNavigator<AppDestination>,
+    navController: NavController<AppDestination>,
     onClickBack: () -> Unit,
     onClickChannel: (id: String) -> Unit,
     onClickPlaylist: (id: String) -> Unit,
@@ -118,7 +119,7 @@ fun SearchScreen(
                             VideoCard(
                                 video = result,
                                 onClick = {
-                                    navigator.push(AppDestination.Player(result.id))
+                                    navController.navigate(AppDestination.Player(result.id))
                                 },
                                 onClickChannel = {
                                     onClickChannel(result.channel!!.id)

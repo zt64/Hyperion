@@ -23,9 +23,11 @@ import com.hyperion.R
 import com.zt.innertube.domain.model.DomainChannel
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.navigation.AppDestination
-import com.hyperion.ui.navigation.BackstackNavigator
 import com.hyperion.ui.viewmodel.ChannelViewModel
 import com.hyperion.util.shimmer
+import dev.olshevski.navigation.reimagined.NavController
+import dev.olshevski.navigation.reimagined.navigate
+import dev.olshevski.navigation.reimagined.pop
 import org.koin.androidx.compose.getViewModel
 
 private enum class ChannelTab(
@@ -44,7 +46,7 @@ private enum class ChannelTab(
 @Composable
 fun ChannelScreen(
     viewModel: ChannelViewModel = getViewModel(),
-    navigator: BackstackNavigator<AppDestination>,
+    navController: NavController<AppDestination>,
     channelId: String,
     onClickBack: () -> Unit
 ) {
@@ -57,9 +59,9 @@ fun ChannelScreen(
     when (state) {
         is ChannelViewModel.State.Loaded -> {
             ChannelScreenLoaded(
-                navigator = navigator,
-                channel = state.channel,
-                onClickShare = viewModel::shareChannel
+                viewModel = viewModel,
+                navController = navController,
+                channel = state.channel
             )
         }
 
@@ -80,16 +82,16 @@ fun ChannelScreen(
 
 @Composable
 private fun ChannelScreenLoaded(
-    navigator: BackstackNavigator<AppDestination>,
-    channel: DomainChannel,
-    onClickShare: () -> Unit
+    viewModel: ChannelViewModel,
+    navController: NavController<AppDestination>,
+    channel: DomainChannel
 ) {
     Scaffold(
         topBar = {
             MediumTopAppBar(
                 title = { Text(channel.name) },
                 navigationIcon = {
-                    IconButton(onClick = navigator::pop) {
+                    IconButton(onClick = navController::pop) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = stringResource(R.string.back)
@@ -97,7 +99,7 @@ private fun ChannelScreenLoaded(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onClickShare) {
+                    IconButton(onClick = viewModel::shareChannel) {
                         Icon(
                             imageVector = Icons.Default.Share,
                             contentDescription = stringResource(R.string.share)
@@ -172,7 +174,7 @@ private fun ChannelScreenLoaded(
 
                         FilledTonalButton(
                             enabled = false,
-                            onClick = { /* TODO */ }
+                            onClick = viewModel::subscribe
                         ) {
                             Text(stringResource(R.string.subscribe))
                         }
@@ -193,7 +195,7 @@ private fun ChannelScreenLoaded(
                         VideoCard(
                             modifier = Modifier.padding(horizontal = 14.dp),
                             video = video,
-                            onClick = { navigator.push(AppDestination.Player(video.id)) }
+                            onClick = { navController.navigate(AppDestination.Player(video.id)) }
                         )
                     }
                 }

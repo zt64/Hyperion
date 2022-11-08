@@ -1,6 +1,8 @@
 package com.hyperion.ui.screen
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -14,11 +16,10 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.HomeViewModel
-import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = getViewModel(),
+    viewModel: HomeViewModel,
     onClickVideo: (videoId: String) -> Unit,
     onClickChannel: (channelId: String) -> Unit
 ) {
