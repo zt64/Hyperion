@@ -19,8 +19,8 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
-import com.hyperion.domain.model.DomainVideoPartial
 import com.hyperion.util.shimmer
+import com.zt.innertube.domain.model.DomainVideoPartial
 import org.koin.androidx.compose.get
 
 @Composable

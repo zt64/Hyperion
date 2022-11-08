@@ -33,7 +33,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.R
-import com.hyperion.domain.model.*
+import com.zt.innertube.domain.model.*
 import com.hyperion.ui.component.*
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.navigation.BackstackNavigator

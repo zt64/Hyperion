@@ -10,7 +10,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
-import com.hyperion.domain.model.DomainChannelPartial
+import com.zt.innertube.domain.model.DomainChannelPartial
 
 @Composable
 fun ChannelCard(

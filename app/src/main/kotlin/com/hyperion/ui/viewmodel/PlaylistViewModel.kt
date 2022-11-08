@@ -10,15 +10,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import com.hyperion.R
-import com.hyperion.domain.model.DomainPlaylist
-import com.hyperion.domain.model.DomainVideoPartial
-import com.hyperion.domain.repository.InnerTubeRepository
+import com.zt.innertube.domain.model.DomainPlaylist
+import com.zt.innertube.domain.model.DomainVideoPartial
+import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 class PlaylistViewModel(
     private val application: Application,
-    private val repository: InnerTubeRepository
+    private val innerTube: InnerTubeRepository
 ) : ViewModel() {
     sealed interface State {
         object Loaded : State
@@ -39,14 +39,14 @@ class PlaylistViewModel(
 
         viewModelScope.launch {
             try {
-                playlist = repository.getPlaylist(id)
+                playlist = innerTube.getPlaylist(id)
                 videos = Pager(PagingConfig(4)) {
                     object : PagingSource<String, DomainVideoPartial>() {
                         override suspend fun load(params: LoadParams<String>) = try {
                             val response = if (params.key == null) {
                                 playlist!!
                             } else {
-                                repository.getPlaylist(id, params.key!!)
+                                innerTube.getPlaylist(id, params.key!!)
                             }
 
                             LoadResult.Page(

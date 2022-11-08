@@ -7,13 +7,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
-import com.hyperion.domain.model.DomainVideoPartial
-import com.hyperion.domain.repository.InnerTubeRepository
+import com.zt.innertube.domain.model.DomainVideoPartial
+import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 class TagViewModel(
-    private val repository: InnerTubeRepository
+    private val innerTube: InnerTubeRepository
 ) : ViewModel() {
     sealed interface State {
         object Loading : State
@@ -36,7 +36,7 @@ class TagViewModel(
 
         viewModelScope.launch {
             state = try {
-                val response = repository.getTag(tagQuery)
+                val response = innerTube.getTag(tagQuery)
 
                 tag = response.name
                 subtitle = response.subtitle
@@ -49,7 +49,7 @@ class TagViewModel(
                             val content = if (params.key == null) {
                                 response
                             } else {
-                                repository.getTagContinuation(params.key!!)
+                                innerTube.getTagContinuation(params.key!!)
                             }
 
                             LoadResult.Page(

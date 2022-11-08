@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.hyperion.domain.model.DomainComment
+import com.zt.innertube.domain.model.DomainComment
 
 @Composable
 fun CommentCard(

@@ -1,0 +1,89 @@
+package com.zt.innertube.network.dto.browse
+
+import com.zt.innertube.network.dto.*
+import com.zt.innertube.network.dto.renderer.ElementRenderer
+import com.zt.innertube.network.dto.renderer.ListRenderer
+import com.zt.innertube.network.dto.renderer.ShelfRenderer
+import kotlinx.serialization.Serializable
+
+@Serializable
+internal data class ApiChannel(
+    val header: Header,
+    override val contents: Contents<Content>
+) : ApiBrowse() {
+    @Serializable
+    data class Header(val channelMobileHeaderRenderer: ChannelMobileHeaderRenderer) {
+        @Serializable
+        data class ChannelMobileHeaderRenderer(val channelHeader: ChannelHeader)
+
+        @Serializable
+        data class ChannelHeader(val elementRenderer: ElementRenderer<Model>)
+
+        @Serializable
+        data class Model(val channelHeaderModel: ChannelHeaderModel)
+    }
+
+    @Serializable
+    data class Content(val shelfRenderer: ShelfRenderer<ShelfRendererContent>? = null)
+
+    @Serializable
+    data class ShelfRendererContent(
+        val horizontalListRenderer: ListRenderer<HorizontalListItem>? = null,
+        val verticalListRenderer: ListRenderer<VerticalListItem>? = null
+    ) {
+        @Serializable
+        data class HorizontalListItem(
+            val elementRenderer: ElementRenderer<Model>? = null,
+            val gridChannelRenderer: GridChannelRenderer? = null
+        ) {
+            @Serializable
+            data class Model(val gridVideoModel: ApiVideo.ContextData? = null)
+
+            @Serializable
+            data class GridChannelRenderer(
+                val channelId: String,
+                val navigationEndpoint: ApiNavigationEndpoint,
+                val shortSubscriberCountText: ApiText? = null,
+                val subscriberCountText: ApiText? = null,
+                val thumbnail: ApiThumbnail,
+                val title: ApiText
+            )
+        }
+
+        @Serializable
+        data class VerticalListItem(val elementRenderer: ElementRenderer<Model>) {
+            @Serializable
+            data class Model(val videoWithContextModel: ApiNextVideo)
+        }
+    }
+
+    @Serializable
+    data class ChannelHeaderModel(
+        val channelBanner: ImageContainer? = null,
+        val channelProfile: ChannelProfile
+    ) {
+        @Serializable
+        data class ChannelProfile(
+            val avatarData: AvatarData,
+            val descriptionPreview: DescriptionPreview,
+            val metadata: Metadata,
+            val title: String
+        ) {
+            @Serializable
+            data class AvatarData(val avatar: ImageContainer)
+
+            @Serializable
+            data class DescriptionPreview(val description: String? = null)
+
+            @Serializable
+            data class Metadata(
+                val joinDateText: String,
+                val subscriberCountText: String? = null,
+                val videosCountText: String? = null
+            )
+        }
+    }
+}
+
+@Serializable
+internal class ApiChannelContinuation

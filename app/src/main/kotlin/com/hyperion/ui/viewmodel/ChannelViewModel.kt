@@ -7,13 +7,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hyperion.domain.model.DomainChannel
-import com.hyperion.domain.repository.InnerTubeRepository
+import com.zt.innertube.domain.model.DomainChannel
+import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.launch
 
 class ChannelViewModel(
     private val application: Application,
-    private val repository: InnerTubeRepository
+    private val innerTube: InnerTubeRepository
 ) : ViewModel() {
     sealed interface State {
         class Loaded(val channel: DomainChannel) : State
@@ -29,7 +29,7 @@ class ChannelViewModel(
 
         viewModelScope.launch {
             state = try {
-                State.Loaded(repository.getChannel(id))
+                State.Loaded(innerTube.getChannel(id))
             } catch (e: Exception) {
                 e.printStackTrace()
                 State.Error(e)

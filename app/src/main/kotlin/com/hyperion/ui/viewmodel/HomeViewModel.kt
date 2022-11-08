@@ -3,16 +3,16 @@ package com.hyperion.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
-import com.hyperion.domain.model.DomainVideoPartial
-import com.hyperion.domain.repository.InnerTubeRepository
+import com.zt.innertube.domain.model.DomainVideoPartial
+import com.zt.innertube.domain.repository.InnerTubeRepository
 
 class HomeViewModel(
-    private val repository: InnerTubeRepository
+    private val innerTube: InnerTubeRepository
 ) : ViewModel() {
     val videos = Pager(PagingConfig(4)) {
         object : PagingSource<String, DomainVideoPartial>() {
             override suspend fun load(params: LoadParams<String>) = try {
-                val response = repository.getRecommendations(params.key)
+                val response = innerTube.getRecommendations(params.key)
 
                 LoadResult.Page(
                     data = response.items,

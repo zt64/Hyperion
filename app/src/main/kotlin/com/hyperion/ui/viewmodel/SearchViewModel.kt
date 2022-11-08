@@ -8,12 +8,14 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
-import com.hyperion.domain.model.Entity
-import com.hyperion.domain.repository.InnerTubeRepository
+import com.zt.innertube.domain.model.Entity
+import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
-class SearchViewModel(private val repository: InnerTubeRepository) : ViewModel() {
+class SearchViewModel(
+    private val innerTube: InnerTubeRepository
+) : ViewModel() {
     var search by mutableStateOf("")
         private set
     var suggestions = mutableStateListOf<String>()
@@ -27,7 +29,7 @@ class SearchViewModel(private val repository: InnerTubeRepository) : ViewModel()
 
         viewModelScope.launch {
             try {
-                val searchSuggestions = repository.getSearchSuggestions(query)
+                val searchSuggestions = innerTube.getSearchSuggestions(query)
 
                 suggestions.clear()
                 suggestions.addAll(searchSuggestions)
@@ -41,7 +43,7 @@ class SearchViewModel(private val repository: InnerTubeRepository) : ViewModel()
         results = Pager(PagingConfig(4)) {
             object : PagingSource<String, Entity>() {
                 override suspend fun load(params: LoadParams<String>): LoadResult<String, Entity> = try {
-                    val searchResults = repository.getSearchResults(search, params.key)
+                    val searchResults = innerTube.getSearchResults(search, params.key)
 
                     LoadResult.Page(
                         data = searchResults.items,

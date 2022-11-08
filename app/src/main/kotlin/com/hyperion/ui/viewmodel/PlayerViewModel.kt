@@ -14,12 +14,13 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.paging.*
+import com.hyperion.domain.manager.AccountManager
 import com.hyperion.domain.manager.DownloadManager
 import com.hyperion.domain.manager.PreferencesManager
-import com.hyperion.domain.model.DomainStream
-import com.hyperion.domain.model.DomainVideo
-import com.hyperion.domain.model.DomainVideoPartial
-import com.hyperion.domain.repository.InnerTubeRepository
+import com.zt.innertube.domain.model.DomainStream
+import com.zt.innertube.domain.model.DomainVideo
+import com.zt.innertube.domain.model.DomainVideoPartial
+import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -28,7 +29,8 @@ import kotlin.time.Duration.Companion.milliseconds
 
 class PlayerViewModel(
     private val application: Application,
-    private val repository: InnerTubeRepository,
+    private val innerTube: InnerTubeRepository,
+    private val accountManager: AccountManager,
     private val downloadManager: DownloadManager,
     val preferences: PreferencesManager
 ) : ViewModel() {
@@ -210,7 +212,7 @@ class PlayerViewModel(
 
         viewModelScope.launch {
             try {
-                video = repository.getVideo(id)
+                video = innerTube.getVideo(id)
                 stream = video!!.streams.filterIsInstance<DomainStream.Video>().last()
 
                 val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory)
@@ -233,9 +235,9 @@ class PlayerViewModel(
                     object : PagingSource<String, DomainVideoPartial>() {
                         override suspend fun load(params: LoadParams<String>) = try {
                             val relatedVideosResponse = if (params.key == null) {
-                                repository.getNext(video!!.id).relatedVideos
+                                innerTube.getNext(video!!.id).relatedVideos
                             } else {
-                                repository.getRelatedVideos(video!!.id, params.key!!)
+                                innerTube.getRelatedVideos(video!!.id, params.key!!)
                             }
 
                             LoadResult.Page(

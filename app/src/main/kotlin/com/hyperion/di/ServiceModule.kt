@@ -1,7 +1,7 @@
 package com.hyperion.di
 
-import com.hyperion.network.service.InnerTubeService
-import com.hyperion.network.service.RYDService
+import com.zt.innertube.network.service.InnerTubeService
+import com.zt.innertube.network.service.RYDService
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 

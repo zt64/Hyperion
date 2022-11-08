@@ -20,7 +20,7 @@ import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.hyperion.R
-import com.hyperion.domain.model.DomainChannel
+import com.zt.innertube.domain.model.DomainChannel
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.navigation.BackstackNavigator

@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.hyperion"
+    namespace = "com.zt.innertube"
     compileSdk = 33
 
     defaultConfig {
