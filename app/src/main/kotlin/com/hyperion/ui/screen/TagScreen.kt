@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import coil.compose.AsyncImage
 import com.hyperion.R
+import com.hyperion.ui.component.ShimmerImage
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.TagViewModel
 import org.koin.androidx.compose.getViewModel
@@ -132,7 +132,7 @@ private fun TagScreenLoaded(
                         horizontalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         items(viewModel.avatars) { avatarUrl ->
-                            AsyncImage(
+                            ShimmerImage(
                                 modifier = Modifier
                                     .size(24.dp)
                                     .clip(CircleShape),

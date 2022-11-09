@@ -15,11 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.SubcomposeAsyncImage
-import coil.compose.SubcomposeAsyncImageContent
 import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
-import com.hyperion.util.shimmer
 import com.zt.innertube.domain.model.DomainVideoPartial
 import org.koin.androidx.compose.get
 
@@ -71,11 +68,12 @@ fun VideoCard(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         video.channel?.avatarUrl?.let {
-                            ChannelThumbnail(
+                            ShimmerImage(
                                 modifier = Modifier
                                     .clickable(onClick = onClickChannel)
                                     .size(28.dp),
-                                url = it
+                                model = it,
+                                contentDescription = video.channel!!.name!!
                             )
                         }
 
@@ -100,11 +98,12 @@ fun VideoCard(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     video.channel?.avatarUrl?.let {
-                        ChannelThumbnail(
+                        ShimmerImage(
                             modifier = Modifier
                                 .clickable(onClick = onClickChannel)
-                                .size(38.dp),
-                            url = it
+                                .size(28.dp),
+                            model = it,
+                            contentDescription = video.channel!!.name!!
                         )
                     }
 
@@ -138,19 +137,9 @@ private fun Thumbnail(
     timeStampScale: Float
 ) {
     Box(modifier) {
-        SubcomposeAsyncImage(
+        ShimmerImage(
             modifier = Modifier.aspectRatio(16f / 9f),
             model = video.thumbnailUrl,
-            loading = {
-                Box(
-                    modifier = modifier
-                        .shimmer()
-                        .fillMaxSize()
-                )
-            },
-            success = {
-                SubcomposeAsyncImageContent()
-            },
             contentScale = ContentScale.Crop,
             contentDescription = stringResource(R.string.thumbnail)
         )

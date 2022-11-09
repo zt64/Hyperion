@@ -34,9 +34,10 @@ fun ChannelCard(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ChannelThumbnail(
+            ShimmerImage(
                 modifier = Modifier.size(60.dp),
-                url = channel.thumbnailUrl!!
+                model = channel.thumbnailUrl!!,
+                contentDescription = channel.name!!
             )
 
             Spacer(Modifier.width(12.dp))

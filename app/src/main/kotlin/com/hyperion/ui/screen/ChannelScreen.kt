@@ -16,15 +16,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.compose.SubcomposeAsyncImage
-import coil.compose.SubcomposeAsyncImageContent
 import com.hyperion.R
-import com.zt.innertube.domain.model.DomainChannel
+import com.hyperion.ui.component.ShimmerImage
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.viewmodel.ChannelViewModel
-import com.hyperion.util.shimmer
+import com.zt.innertube.domain.model.DomainChannel
 import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
@@ -123,22 +120,12 @@ private fun ChannelScreenLoaded(
                     verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
                     if (channel.banner != null) {
-                        SubcomposeAsyncImage(
+                        ShimmerImage(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 8.dp)
                                 .clip(MaterialTheme.shapes.medium),
                             model = channel.banner,
-                            loading = {
-                                Box(
-                                    modifier = Modifier
-                                        .shimmer()
-                                        .fillMaxSize()
-                                )
-                            },
-                            success = {
-                                SubcomposeAsyncImageContent()
-                            },
                             contentDescription = channel.name
                         )
                     }
@@ -148,7 +135,7 @@ private fun ChannelScreenLoaded(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        AsyncImage(
+                        ShimmerImage(
                             modifier = Modifier
                                 .clip(CircleShape)
                                 .size(52.dp),

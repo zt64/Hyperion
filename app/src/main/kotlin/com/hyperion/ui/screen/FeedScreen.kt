@@ -18,7 +18,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import com.hyperion.ui.component.ShimmerImage
 import com.hyperion.ui.viewmodel.FeedViewModel
 
 @Composable
@@ -54,7 +54,7 @@ fun FeedScreen(
                             verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Box {
-                                AsyncImage(
+                                ShimmerImage(
                                     modifier = Modifier
                                         .size(60.dp)
                                         .clip(CircleShape),

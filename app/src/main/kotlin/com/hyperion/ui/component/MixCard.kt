@@ -15,7 +15,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.hyperion.domain.manager.PreferencesManager
 import com.zt.innertube.domain.model.DomainMixPartial
 import org.koin.androidx.compose.get
@@ -108,7 +107,7 @@ private fun Thumbnail(
             .height(IntrinsicSize.Min)
             .then(modifier)
     ) {
-        AsyncImage(
+        ShimmerImage(
             modifier = Modifier.aspectRatio(16f / 9f),
             model = thumbnailUrl,
             contentDescription = null,

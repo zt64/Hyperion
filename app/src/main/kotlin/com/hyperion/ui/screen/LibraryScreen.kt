@@ -15,8 +15,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
 import com.hyperion.R
+import com.hyperion.ui.component.ShimmerImage
 import com.hyperion.ui.viewmodel.LibraryViewModel
 
 @Composable
@@ -84,7 +84,7 @@ private fun RecentCard(
     ) {
         Column {
             Box {
-                AsyncImage(
+                ShimmerImage(
                     modifier = Modifier
                         .background(Color.Black)
                         .aspectRatio(16f / 9f),

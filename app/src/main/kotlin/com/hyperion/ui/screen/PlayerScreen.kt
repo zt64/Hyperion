@@ -328,9 +328,10 @@ private fun PlayerScreenPortrait(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            ChannelThumbnail(
+                            ShimmerImage(
                                 modifier = Modifier.size(42.dp),
-                                url = video.author.avatarUrl!!
+                                model = video.author.avatarUrl!!,
+                                contentDescription = video.author.name!!
                             )
 
                             Column(
