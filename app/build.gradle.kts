@@ -45,7 +45,7 @@ android {
     }
 
     buildFeatures.compose = true
-    composeOptions.kotlinCompilerExtensionVersion = "1.3.2"
+    composeOptions.kotlinCompilerExtensionVersion = "1.4.0-alpha01"
 }
 
 dependencies {
@@ -64,13 +64,13 @@ dependencies {
     implementation("io.insert-koin:koin-androidx-compose:3.2.0")
 
     // Compose
-    val composeVersion = "1.4.0-alpha01"
+    val composeVersion = "1.4.0-alpha02"
     implementation("androidx.compose.ui:ui:$composeVersion")
     implementation("androidx.compose.runtime:runtime:$composeVersion")
     debugImplementation("androidx.compose.runtime:runtime-tracing:1.0.0-alpha01")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.1.0-alpha01")
-    implementation("androidx.compose.material3:material3-window-size-class:1.1.0-alpha01")
+    implementation("androidx.compose.material3:material3:1.1.0-alpha02")
+    implementation("androidx.compose.material3:material3-window-size-class:1.1.0-alpha02")
     implementation("androidx.compose.material:material-icons-extended:$composeVersion")
     implementation("androidx.compose.animation:animation-graphics:$composeVersion")
 
