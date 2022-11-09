@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -70,6 +71,7 @@ fun VideoCard(
                         video.channel?.avatarUrl?.let {
                             ShimmerImage(
                                 modifier = Modifier
+                                    .clip(CircleShape)
                                     .clickable(onClick = onClickChannel)
                                     .size(28.dp),
                                 model = it,
@@ -100,8 +102,9 @@ fun VideoCard(
                     video.channel?.avatarUrl?.let {
                         ShimmerImage(
                             modifier = Modifier
+                                .clip(CircleShape)
                                 .clickable(onClick = onClickChannel)
-                                .size(28.dp),
+                                .size(38.dp),
                             model = it,
                             contentDescription = null
                         )
