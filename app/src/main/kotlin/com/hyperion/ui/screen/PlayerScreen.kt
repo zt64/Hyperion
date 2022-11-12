@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -24,6 +25,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -329,7 +331,9 @@ private fun PlayerScreenPortrait(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             ShimmerImage(
-                                modifier = Modifier.size(42.dp),
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(42.dp),
                                 model = video.author.avatarUrl!!,
                                 contentDescription = video.author.name!!
                             )
