@@ -45,7 +45,7 @@ android {
     }
 
     buildFeatures.compose = true
-    composeOptions.kotlinCompilerExtensionVersion = "1.4.0-alpha01"
+    composeOptions.kotlinCompilerExtensionVersion = "1.4.0-alpha02"
 }
 
 dependencies {
