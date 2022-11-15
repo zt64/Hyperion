@@ -24,8 +24,5 @@ sealed interface AppDestination : Parcelable {
     class Tag(val tag: String) : AppDestination
 
     @Parcelize
-    object AddAccount : AppDestination
-
-    @Parcelize
     object Settings : AppDestination
 }

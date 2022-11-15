@@ -107,12 +107,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            AppDestination.AddAccount -> {
-                                AddAccountScreen(
-                                    onClickBack = navController::pop
-                                )
-                            }
-
                             AppDestination.Settings -> {
                                 SettingsScreen(
                                     onClickBack = navController::pop
