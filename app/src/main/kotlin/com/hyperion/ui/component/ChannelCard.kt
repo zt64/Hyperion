@@ -2,6 +2,7 @@ package com.hyperion.ui.component
 
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,7 +36,9 @@ fun ChannelCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             ShimmerImage(
-                modifier = Modifier.size(60.dp),
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(60.dp),
                 model = channel.thumbnailUrl!!,
                 contentDescription = channel.name!!
             )
