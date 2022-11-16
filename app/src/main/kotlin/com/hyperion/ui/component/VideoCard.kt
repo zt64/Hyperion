@@ -75,7 +75,7 @@ fun VideoCard(
                                     .clickable(onClick = onClickChannel)
                                     .size(28.dp),
                                 model = it,
-                                contentDescription = video.channel!!.name!!
+                                contentDescription = video.channel!!.name
                             )
                         }
 
