@@ -68,5 +68,5 @@
     <string name="copied_to_clipboard">Buferə kopyalandı</string>
     <string name="copy_stacktrace">Topa izi kopyalayıcı</string>
     <string name="tag">Etiket</string>
-    <string name="hide_nav_item_label">Hide navigation item label</string>
+    <string name="hide_nav_item_label">Naviqasiya elementi etiketin gizlət</string>
 </resources>
