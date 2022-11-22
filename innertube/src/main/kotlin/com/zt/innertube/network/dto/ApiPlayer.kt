@@ -9,7 +9,7 @@ internal data class ApiPlayer(
 ) {
     @Serializable
     data class StreamingData(
-        val formats: List<ApiFormat>,
+        val formats: List<ApiFormat> = emptyList(),
         val adaptiveFormats: List<ApiFormat>
     )
 
