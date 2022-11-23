@@ -87,7 +87,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.2.2")
 
     // Media3
-    val media3Version = "1.0.0-beta02"
+    val media3Version = "1.0.0-beta03"
     implementation("androidx.media3:media3-exoplayer:$media3Version")
 
     // Ktor
