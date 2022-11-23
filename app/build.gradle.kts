@@ -77,11 +77,10 @@ dependencies {
     // Navigation
     implementation("dev.olshevski.navigation:reimagined:1.3.0")
 
-    // Accompanist
-    val accompanistVersion = "0.27.1"
-    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-swiperefresh:$accompanistVersion")
+        // Accompanist
+        val accompanistVersion = "0.27.1"
+        implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
+        implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.2.2")
