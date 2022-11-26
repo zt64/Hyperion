@@ -280,18 +280,20 @@ private fun PlayerScreenPortrait(
                         style = MaterialTheme.typography.bodySmall
                     )
 
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        items(video.badges) { badge ->
-                            SuggestionChip(
-                                modifier = Modifier.height(26.dp),
-                                label = { Text(badge) },
-                                onClick = {
-                                    navController.navigate(AppDestination.Tag(badge))
-                                }
-                            )
+                    if (video.badges.isNotEmpty()) {
+                        LazyRow(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            items(video.badges) { badge ->
+                                SuggestionChip(
+                                    modifier = Modifier.height(26.dp),
+                                    label = { Text(badge) },
+                                    onClick = {
+                                        navController.navigate(AppDestination.Tag(badge))
+                                    }
+                                )
+                            }
                         }
                     }
 
