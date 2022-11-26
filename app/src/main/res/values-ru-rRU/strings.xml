@@ -10,12 +10,12 @@
     <string name="download">Скачать</string>
     <string name="share">Поделиться</string>
     <string name="todo">Планируется</string>
-    <string name="dislike">Дизлайк</string>
-    <string name="like">Лайк</string>
+    <string name="dislike">Не нравится</string>
+    <string name="like">Нравится</string>
     <string name="library">Библиотека</string>
     <string name="subscribe">Подписаться</string>
     <string name="views">просмотров</string>
-    <string name="download_location">Расположение загрузок</string>
+    <string name="download_location">Расположение загрузки</string>
     <string name="start_screen">Начальный экран</string>
     <string name="thumbnail">Обложка</string>
     <string name="videos">Видео</string>
@@ -32,7 +32,7 @@
     <string name="back">Назад</string>
     <string name="more">Ещё</string>
     <string name="skip_next">Пропустить следующее</string>
-    <string name="skip_previous">Пропустить предыдущий</string>
+    <string name="skip_previous">Пропустить предыдущее</string>
     <string name="minimize">Свернуть</string>
     <string name="close_fullscreen">Закрыть полноэкранный режим</string>
     <string name="open_fullscreen">На полный экран</string>
@@ -46,8 +46,8 @@
     <string name="confirm">Подтвердить</string>
     <string name="quality">Качество</string>
     <string name="system">Система</string>
-    <string name="dark">Тёмный</string>
-    <string name="light">Светлый</string>
+    <string name="dark">Тёмная</string>
+    <string name="light">Светлая</string>
     <string name="clear">Очистить</string>
     <string name="filter">Фильтр</string>
     <string name="appearance">Оформление</string>
@@ -68,5 +68,5 @@
     <string name="copied_to_clipboard">Скопировано в буфер обмена</string>
     <string name="copy_stacktrace">Копировать трассировку стека</string>
     <string name="tag">Тег</string>
-    <string name="hide_nav_item_label">Hide navigation item label</string>
+    <string name="hide_nav_item_label">Скрыть подпись элемента навигации</string>
 </resources>

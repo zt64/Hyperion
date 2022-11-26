@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="home">Tuisblad</string>
-    <string name="explore">Explore</string>
+    <string name="explore">Verken</string>
     <string name="settings">Instellings</string>
     <string name="apply">Aansoek doen</string>
     <string name="theme">Tema</string>
@@ -23,7 +23,7 @@
     <string name="search">Soek</string>
     <string name="error">Fout</string>
     <string name="error_occurred">N fout het voorgekom</string>
-    <string name="unknown">Unknown</string>
+    <string name="unknown">Onbekend</string>
     <string name="compact_card">Compact card</string>
     <string name="pip">Picture-in-picture (PiP)</string>
     <string name="play">Play</string>
