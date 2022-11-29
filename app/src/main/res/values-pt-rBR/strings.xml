@@ -68,4 +68,11 @@
     <string name="copy_stacktrace">Copiar stacktrace</string>
     <string name="tag">Tag</string>
     <string name="hide_nav_item_label">Ocultar rótulo do item de navegação</string>
+    <string name="chapters">Chapters</string>
+    <string name="sign_in">Sign in</string>
+    <string name="account">Account</string>
+    <string name="library_sign_in_title">Enjoy your favorite videos</string>
+    <string name="library_sign_in_body">Sign in to access videos that your personal library of videos</string>
+    <string name="feed_sign_in_title">Don\'t miss new videos</string>
+    <string name="feed_sign_in_body">Sign in to see updates from your favorite YouTube channels</string>
 </resources>
