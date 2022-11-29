@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="sign_in">Sign in</string>
-    <string name="account">Account</string>
-    <string name="library_sign_in_title">Enjoy your favorite videos</string>
-    <string name="library_sign_in_body">Sign in to access videos that your personal library of videos</string>
-    <string name="feed_sign_in_title">Don\'t miss new videos</string>
-    <string name="feed_sign_in_body">Sign in to see updates from your favorite YouTube channels</string>
-</resources>
