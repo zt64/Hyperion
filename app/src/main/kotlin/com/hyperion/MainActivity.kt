@@ -15,6 +15,7 @@ import androidx.core.view.WindowCompat
 import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.screen.*
+import com.hyperion.ui.screen.root.RootScreen
 import com.hyperion.ui.theme.HyperionTheme
 import com.hyperion.ui.theme.Theme
 import dev.olshevski.navigation.reimagined.*

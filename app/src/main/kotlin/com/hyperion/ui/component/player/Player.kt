@@ -16,7 +16,9 @@ fun Player(
         modifier = Modifier
             .aspectRatio(16f / 9f)
             .then(modifier),
-        factory = ::SurfaceView,
+        factory = { context ->
+            SurfaceView(context)
+        },
         update = { surfaceView ->
             player.setVideoSurfaceView(surfaceView)
         }

@@ -41,9 +41,11 @@ fun TagScreen(
             exception = state.exception,
             onClickBack = onClickBack
         )
+
         TagViewModel.State.Loading -> TagScreenLoading(
             onClickBack = onClickBack
         )
+
         TagViewModel.State.Loaded -> TagScreenLoaded(
             viewModel = viewModel,
             onClickVideo = onClickVideo,

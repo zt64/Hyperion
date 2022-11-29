@@ -1,4 +1,4 @@
-package com.hyperion.ui.screen
+package com.hyperion.ui.screen.root
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Row
@@ -68,8 +68,8 @@ fun RootScreen(
         },
         bottomBar = {
             if (
-                windowSizeClass.heightSizeClass != WindowHeightSizeClass.Compact &&
-                windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
+                windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact &&
+                windowSizeClass.heightSizeClass != WindowHeightSizeClass.Compact
             ) {
                 NavigationBar {
                     RootDestination.values().forEach { destination ->
@@ -108,8 +108,8 @@ fun RootScreen(
 
             Surface(
                 modifier = Modifier
-                    .fillMaxHeight()
                     .weight(1f, true)
+                    .fillMaxHeight()
             ) {
                 val homeViewModel = getViewModel<HomeViewModel>()
                 val feedViewModel = getViewModel<FeedViewModel>()

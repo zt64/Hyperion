@@ -1,4 +1,4 @@
-package com.hyperion.ui.screen
+package com.hyperion.ui.screen.root
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
