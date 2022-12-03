@@ -68,11 +68,11 @@
     <string name="copy_stacktrace">Копировать трассировку стека</string>
     <string name="tag">Тег</string>
     <string name="hide_nav_item_label">Скрыть подпись элемента навигации</string>
-    <string name="chapters">Chapters</string>
-    <string name="sign_in">Sign in</string>
-    <string name="account">Account</string>
-    <string name="library_sign_in_title">Enjoy your favorite videos</string>
+    <string name="chapters">Главы</string>
+    <string name="sign_in">Войти</string>
+    <string name="account">Аккаунт</string>
+    <string name="library_sign_in_title">Наслаждайтесь вашими любимыми видео</string>
     <string name="library_sign_in_body">Sign in to access videos that your personal library of videos</string>
-    <string name="feed_sign_in_title">Don\'t miss new videos</string>
-    <string name="feed_sign_in_body">Sign in to see updates from your favorite YouTube channels</string>
+    <string name="feed_sign_in_title">Не пропустите новые видео</string>
+    <string name="feed_sign_in_body">Войдите, чтобы видеть обновления от ваших любимых YouTube-каналов</string>
 </resources>
