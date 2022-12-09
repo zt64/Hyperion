@@ -46,7 +46,10 @@ fun FeedScreen(
                 textAlign = TextAlign.Center
             )
 
-            Button(onClick = {}) {
+            Button(
+                enabled = false,
+                onClick = {}
+            ) {
                 Text(stringResource(R.string.sign_in))
             }
         }
