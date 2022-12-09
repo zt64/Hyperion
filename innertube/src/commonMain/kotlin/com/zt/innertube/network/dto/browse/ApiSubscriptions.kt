@@ -51,5 +51,5 @@ internal data class ApiSubscriptions(
 
 @Serializable
 internal class ApiSubscriptionsContinuation(
-    override val continuationContents: ContinuationContents<ApiSubscriptions.SectionContent>
+    override val contents: ContinuationContents<ApiSubscriptions.SectionContent>
 ) : ApiBrowseContinuation()

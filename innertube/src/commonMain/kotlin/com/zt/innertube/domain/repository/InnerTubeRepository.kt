@@ -22,7 +22,7 @@ class InnerTubeRepository(
         val section = if (continuation == null) {
             service.getTrending().contents.content
         } else {
-            service.getTrending(continuation).continuationContents.sectionListContinuation
+            service.getTrending(continuation).contents.sectionListContinuation
         }
 
         return DomainTrending(
@@ -37,12 +37,14 @@ class InnerTubeRepository(
         val section = if (continuation == null) {
             service.getRecommendations().contents.content
         } else {
-            service.getRecommendations(continuation).continuationContents.sectionListContinuation
+            service.getRecommendations(continuation).contents.sectionListContinuation
         }
 
         return DomainRecommended(
-            items = section.contents.mapNotNull { (renderer) ->
-                renderer.contents.first().elementRenderer?.model?.videoWithContextModel?.videoWithContextData?.toDomain()
+            items = section.contents.flatMap { (renderer) ->
+                renderer.contents.mapNotNull {
+                    it.elementRenderer?.model?.videoWithContextModel?.videoWithContextData?.toDomain()
+                }
             },
             continuation = section.continuations.next
         )
@@ -219,7 +221,7 @@ class InnerTubeRepository(
 
     suspend fun getRelatedVideos(videoId: String, continuation: String): DomainNext.RelatedVideos {
         val response = service.getNext(videoId, continuation)
-        val contents = response.continuationContents.contents
+        val contents = response.contents.contents
 
         return DomainNext.RelatedVideos(
             videos = contents.flatMap { (itemSectionRenderer) ->
@@ -331,7 +333,7 @@ class InnerTubeRepository(
 
     suspend fun getTagContinuation(continuation: String): DomainBrowse<DomainVideoPartial> {
         val response = service.getTagContinuation(continuation)
-        val (contents) = response.continuationContents.sectionListContinuation
+        val (contents) = response.contents.sectionListContinuation
 
         return DomainBrowse(
             items = contents.single().shelfRenderer!!.content.horizontalListRenderer.items.map { (elementRenderer) ->
