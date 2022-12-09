@@ -43,7 +43,7 @@ internal data class ShortsShelfModel(val items: List<Item>) {
                     val videoId: String
                 ) {
                     @Serializable
-                    data class Overlay(val reelPlayerOverlayRenderer: ReelPlayerOverlayRenderer) {
+                    data class Overlay(val reelPlayerOverlayRenderer: ReelPlayerOverlayRenderer? = null) {
                         @Serializable
                         data class ReelPlayerOverlayRenderer(val reelPlayerHeaderSupportedRenderers: ReelPlayerHeaderSupportedRenderers) {
                             @Serializable
@@ -67,5 +67,5 @@ internal data class ShortsShelfModel(val items: List<Item>) {
 
 @Serializable
 internal data class ApiRecommendedContinuation(
-    override val contents: ContinuationContents<ApiRecommended.SectionContent>
+    override val continuationContents: ContinuationContents<ApiRecommended.SectionContent>
 ) : ApiBrowseContinuation()

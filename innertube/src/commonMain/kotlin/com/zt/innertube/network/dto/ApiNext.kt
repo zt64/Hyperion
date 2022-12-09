@@ -181,7 +181,7 @@ internal data class ApiNext(val contents: Contents) {
 
 @Serializable
 internal data class ApiNextContinuation(
-    override val contents: ContinuationContents<Content>
+    override val continuationContents: ContinuationContents<Content>
 ) : ApiBrowseContinuation() {
     @Serializable
     data class Content(val itemSectionRenderer: ItemSectionRenderer<Content>) {

@@ -25,12 +25,13 @@ internal abstract class ApiBrowse {
 @Serializable
 internal abstract class ApiBrowseContinuation {
     val continuations: List<ApiContinuation>
-        get() = contents.sectionListContinuation.continuations
+        get() = continuationContents.sectionListContinuation.continuations
 
-    abstract val contents: ContinuationContents<*>
+    abstract val continuationContents: ContinuationContents<*>
 
     @Serializable
     class ContinuationContents<T>(val sectionListContinuation: SectionListRenderer<T>) {
-        val contents get() = sectionListContinuation.contents
+        val contents
+            get() = sectionListContinuation.contents
     }
 }

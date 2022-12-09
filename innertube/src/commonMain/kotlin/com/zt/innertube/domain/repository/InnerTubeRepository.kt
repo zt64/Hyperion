@@ -22,7 +22,7 @@ class InnerTubeRepository(
         val section = if (continuation == null) {
             service.getTrending().contents.content
         } else {
-            service.getTrending(continuation).contents.sectionListContinuation
+            service.getTrending(continuation).continuationContents.sectionListContinuation
         }
 
         return DomainTrending(
@@ -37,7 +37,7 @@ class InnerTubeRepository(
         val section = if (continuation == null) {
             service.getRecommendations().contents.content
         } else {
-            service.getRecommendations(continuation).contents.sectionListContinuation
+            service.getRecommendations(continuation).continuationContents.sectionListContinuation
         }
 
         return DomainRecommended(
@@ -221,7 +221,7 @@ class InnerTubeRepository(
 
     suspend fun getRelatedVideos(videoId: String, continuation: String): DomainNext.RelatedVideos {
         val response = service.getNext(videoId, continuation)
-        val contents = response.contents.contents
+        val contents = response.continuationContents.contents
 
         return DomainNext.RelatedVideos(
             videos = contents.flatMap { (itemSectionRenderer) ->
@@ -333,7 +333,7 @@ class InnerTubeRepository(
 
     suspend fun getTagContinuation(continuation: String): DomainBrowse<DomainVideoPartial> {
         val response = service.getTagContinuation(continuation)
-        val (contents) = response.contents.sectionListContinuation
+        val (contents) = response.continuationContents.sectionListContinuation
 
         return DomainBrowse(
             items = contents.single().shelfRenderer!!.content.horizontalListRenderer.items.map { (elementRenderer) ->

@@ -119,5 +119,5 @@ internal data class ApiTag(
 
 @Serializable
 internal data class ApiTagContinuation(
-    override val contents: ContinuationContents<ApiTag.ContentItem>
+    override val continuationContents: ContinuationContents<ApiTag.ContentItem>
 ) : ApiBrowseContinuation()

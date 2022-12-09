@@ -21,5 +21,5 @@ internal data class ApiTrending(
 
 @Serializable
 internal data class ApiTrendingContinuation(
-    override val contents: ContinuationContents<ApiTrending.SectionContent>
+    override val continuationContents: ContinuationContents<ApiTrending.SectionContent>
 ) : ApiBrowseContinuation()
