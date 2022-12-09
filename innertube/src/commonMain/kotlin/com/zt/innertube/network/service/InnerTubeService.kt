@@ -18,6 +18,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.protobuf.ProtoBuf
 import java.net.URLEncoder
+import java.util.Locale
 
 class InnerTubeService(
     private val httpClient: HttpClient,
@@ -34,12 +35,17 @@ class InnerTubeService(
                 .destructured
 
             val (context) = json.decodeFromString<InnerTubeData>(ytCfg)
+            val locale = Locale.getDefault()
 
             innerTubeContext = ApiContext(
-                client = context.client.copy(
+                client = ApiContext.Client(
                     clientName = CLIENT_NAME,
                     clientVersion = CLIENT_VERSION,
+                    gl = locale.country,
+                    hl = locale.language,
                     platform = PLATFORM,
+                    userAgent = context.client.userAgent,
+                    visitorData = context.client.visitorData,
                     clientFormFactor = FORM_FACTOR
                 ),
                 request = context.request,
