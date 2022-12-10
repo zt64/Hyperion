@@ -67,12 +67,12 @@
     <string name="copied_to_clipboard">Copiato negli appunti</string>
     <string name="copy_stacktrace">Copia stacktrace</string>
     <string name="tag">Tag</string>
-    <string name="hide_nav_item_label">Hide navigation item label</string>
-    <string name="chapters">Chapters</string>
-    <string name="sign_in">Sign in</string>
+    <string name="hide_nav_item_label">Nascondi etichetta elemento di navigazione</string>
+    <string name="chapters">Capitoli</string>
+    <string name="sign_in">Accedi</string>
     <string name="account">Account</string>
-    <string name="library_sign_in_title">Enjoy your favorite videos</string>
+    <string name="library_sign_in_title">Goditi i tuoi video preferiti</string>
     <string name="library_sign_in_body">Sign in to access videos that your personal library of videos</string>
-    <string name="feed_sign_in_title">Don\'t miss new videos</string>
-    <string name="feed_sign_in_body">Sign in to see updates from your favorite YouTube channels</string>
+    <string name="feed_sign_in_title">Non perdere i nuovi video</string>
+    <string name="feed_sign_in_body">Accedi per vedere gli aggiornamenti dai tuoi canali YouTube preferiti</string>
 </resources>

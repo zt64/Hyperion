@@ -68,11 +68,11 @@
     <string name="copy_stacktrace">Topa izi kopyalayıcı</string>
     <string name="tag">Etiket</string>
     <string name="hide_nav_item_label">Naviqasiya elementi etiketin gizlət</string>
-    <string name="chapters">Chapters</string>
-    <string name="sign_in">Sign in</string>
-    <string name="account">Account</string>
-    <string name="library_sign_in_title">Enjoy your favorite videos</string>
+    <string name="chapters">Fəsillər</string>
+    <string name="sign_in">Daxil ol</string>
+    <string name="account">Hesab</string>
+    <string name="library_sign_in_title">Sevimli videolarınızdan həzz alın</string>
     <string name="library_sign_in_body">Sign in to access videos that your personal library of videos</string>
-    <string name="feed_sign_in_title">Don\'t miss new videos</string>
-    <string name="feed_sign_in_body">Sign in to see updates from your favorite YouTube channels</string>
+    <string name="feed_sign_in_title">Yeni videoları qaçırma</string>
+    <string name="feed_sign_in_body">Sevimli YouTube kanallarınızdan yeniləmələri görmək üçün daxil olun</string>
 </resources>
