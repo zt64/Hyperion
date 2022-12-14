@@ -243,10 +243,16 @@ private fun TabHeader(
         edgePadding = 0.dp,
         tabs = {
             ChannelTab.values().forEach { tab ->
-                Tab(
+                LeadingIconTab(
                     selected = selectedTab == tab,
+                    icon = {
+                        Icon(
+                            modifier = Modifier.size(20.dp),
+                            imageVector = tab.imageVector,
+                            contentDescription = null
+                        )
+                    },
                     text = { Text(stringResource(tab.title)) },
-                    icon = { Icon(tab.imageVector, null) },
                     onClick = { onClickTab(tab) }
                 )
             }
