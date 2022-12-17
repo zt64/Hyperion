@@ -1,11 +1,10 @@
+@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    val kotlinVersion = "1.7.21"
-    val agpVersion = "7.3.1"
-
-    kotlin("multiplatform") version kotlinVersion apply false
-    kotlin("android") version kotlinVersion apply false
-    id("com.android.application") version agpVersion apply false
-    id("com.android.library") version agpVersion apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
 }
 
 subprojects {

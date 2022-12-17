@@ -58,58 +58,44 @@ android {
     }
 
     buildFeatures.compose = true
-    composeOptions.kotlinCompilerExtensionVersion = "1.4.0-alpha02"
+    composeOptions.kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
 }
 
 dependencies {
     implementation(project(":innertube"))
 
-    // AndroidX
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.core:core-splashscreen:1.0.0")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha17")
-    implementation("androidx.activity:activity-compose:1.6.1")
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.splashscreen)
+    implementation(libs.androidx.paging)
+    implementation(libs.androidx.activity)
 
-    @Suppress("GradleDependency")
-    implementation("io.insert-koin:koin-android:3.2.0")
-    // Koin (3.2.1+ Adds dependency on AndroidX navigation, which isn't even used in Hyperion)
-    @Suppress("GradleDependency")
-    implementation("io.insert-koin:koin-androidx-compose:3.2.0")
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
 
-    // Compose
-    val composeVersion = "1.4.0-alpha03"
-    implementation("androidx.compose.ui:ui:$composeVersion")
-    implementation("androidx.compose.runtime:runtime:$composeVersion")
-    debugImplementation("androidx.compose.runtime:runtime-tracing:1.0.0-alpha01")
-    debugImplementation("androidx.compose.ui:ui-tooling:$composeVersion")
-    implementation("androidx.compose.material3:material3:1.1.0-alpha03")
-    implementation("androidx.compose.material3:material3-window-size-class:1.1.0-alpha03")
-    implementation("androidx.compose.material:material-icons-extended:$composeVersion")
-    implementation("androidx.compose.animation:animation-graphics:$composeVersion")
+    implementation(libs.compose.ui)
+    debugImplementation(libs.compose.ui.tooling)
+    implementation(libs.compose.runtime)
+    debugImplementation(libs.compose.runtime.tracing)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material3.windowSizeClass)
+    implementation(libs.compose.icons.extended)
+    implementation(libs.compose.animation.graphics)
 
-    // Navigation
-    implementation("dev.olshevski.navigation:reimagined:1.3.0")
+    implementation(libs.navigation)
 
-    // Accompanist
-    val accompanistVersion = "0.28.0"
-    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
-    implementation("com.google.accompanist:accompanist-placeholder-material:$accompanistVersion")
+    implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.accompanist.placeholder)
 
-    // Coil
-    implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation(libs.coil.compose)
 
-    // Media3
-    val media3Version = "1.0.0-beta03"
-    implementation("androidx.media3:media3-exoplayer:$media3Version")
+    implementation(libs.media3.exoplayer)
 
-    // Ktor
-    val ktorVersion = "2.2.1"
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
-    implementation("io.ktor:ktor-client-android:$ktorVersion")
-    implementation("io.ktor:ktor-client-encoding:$ktorVersion")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation(libs.ktor.core)
+    implementation(libs.ktor.cio)
+    implementation(libs.ktor.android)
+    implementation(libs.ktor.encoding)
+    implementation(libs.ktor.contentnegotiation)
+    implementation(libs.ktor.serialization.json)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
