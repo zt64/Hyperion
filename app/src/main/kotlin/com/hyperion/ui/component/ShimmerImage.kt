@@ -12,7 +12,7 @@ import com.hyperion.util.shimmer
 @Composable
 fun ShimmerImage(
     modifier: Modifier = Modifier,
-    model: Any?,
+    model: String?,
     contentScale: ContentScale = ContentScale.Fit,
     contentDescription: String?
 ) {
