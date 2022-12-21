@@ -8,6 +8,7 @@ import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -109,7 +110,9 @@ fun PlayerControlsOverlay(
                 val isDragged by interactionSource.collectIsDraggedAsState()
 
                 Slider(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier
+                        .weight(1f)
+                        .systemGestureExclusion(),
                     interactionSource = interactionSource,
                     value = if (isDragged) seekPosition.toFloat() else position.inWholeMilliseconds.toFloat(),
                     valueRange = 0f..duration.inWholeMilliseconds.toFloat(),
