@@ -2,6 +2,7 @@ package com.hyperion.ui.viewmodel
 
 import android.app.Application
 import android.content.Intent
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,6 +16,7 @@ class ChannelViewModel(
     private val application: Application,
     private val innerTube: InnerTubeRepository
 ) : ViewModel() {
+    @Immutable
     sealed interface State {
         class Loaded(val channel: DomainChannel) : State
         object Loading : State

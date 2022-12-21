@@ -3,6 +3,7 @@ package com.hyperion.ui.viewmodel
 import android.app.Application
 import android.content.Intent
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -20,6 +21,7 @@ class PlaylistViewModel(
     private val application: Application,
     private val innerTube: InnerTubeRepository
 ) : ViewModel() {
+    @Immutable
     sealed interface State {
         object Loaded : State
         object Loading : State

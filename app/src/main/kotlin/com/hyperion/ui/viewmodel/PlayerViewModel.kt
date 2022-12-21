@@ -2,9 +2,7 @@ package com.hyperion.ui.viewmodel
 
 import android.app.Application
 import android.content.Intent
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.*
@@ -34,6 +32,7 @@ class PlayerViewModel(
     private val downloadManager: DownloadManager,
     val preferences: PreferencesManager
 ) : ViewModel() {
+    @Immutable
     sealed interface State {
         object Loaded : State
         object Loading : State
