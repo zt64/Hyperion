@@ -62,7 +62,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":innertube"))
+    implementation(projects.innertube)
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.splashscreen)
