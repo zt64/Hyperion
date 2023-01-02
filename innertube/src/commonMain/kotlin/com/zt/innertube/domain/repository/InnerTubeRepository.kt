@@ -186,13 +186,14 @@ class InnerTubeRepository(
 
         val (contents, continuations) = next.contents.singleColumnWatchNextResults.results.results
 
-        val slimVideoMetadataSectionRenderer = contents
+        val metadataSectionRenderer = contents
             .filterIsInstance<ApiNext.Renderer.SlimVideoMetadataSection>()
             .single()
 
-        val (videoMetadata) = slimVideoMetadataSectionRenderer.contents[0].elementRenderer.model.videoMetadataModel!!
-        val (videoActionBarButtons) = slimVideoMetadataSectionRenderer.contents[1].elementRenderer.model.videoActionBarModel!!
-        val (channelBar) = slimVideoMetadataSectionRenderer.contents[2].elementRenderer.model.channelBarModel!!
+        val models = metadataSectionRenderer.contents.map { it.elementRenderer.model }
+        val (videoMetadata) = models.find { it.videoMetadataModel != null }!!.videoMetadataModel!!
+        val (videoActionBarButtons) = models.find { it.videoActionBarModel != null }!!.videoActionBarModel!!
+        val (channelBar) = models.find { it.channelBarModel != null }!!.channelBarModel!!
 
         return DomainNext(
             viewCount = videoMetadata.subtitleData.viewCount.content,
