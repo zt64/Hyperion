@@ -10,11 +10,16 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 
 @Parcelize
-enum class SettingsDestination(
+sealed interface SettingsDestination : Parcelable {
+    @Parcelize
+    object Main : SettingsDestination
+}
+
+@Parcelize
+enum class SettingsSection(
     val icon: @RawValue ImageVector,
     @StringRes val label: Int
-) : Parcelable {
-    MAIN(Icons.Default.Settings, R.string.settings),
+) : SettingsDestination {
     GENERAL(Icons.Default.Settings, R.string.general),
     APPEARANCE(Icons.Default.Palette, R.string.appearance),
     ACCOUNTS(Icons.Default.ManageAccounts, R.string.accounts),

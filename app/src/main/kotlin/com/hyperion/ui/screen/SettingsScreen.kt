@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
 import com.hyperion.ui.navigation.SettingsDestination
+import com.hyperion.ui.navigation.SettingsSection
 import com.hyperion.ui.navigation.currentDestination
 import com.hyperion.ui.screen.settings.*
 import com.hyperion.ui.viewmodel.SettingsViewModel
@@ -33,7 +34,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = getViewModel(),
     onClickBack: () -> Unit
 ) {
-    val navController = rememberNavController(SettingsDestination.MAIN)
+    val navController = rememberNavController<SettingsDestination>(SettingsDestination.Main)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
@@ -43,10 +44,10 @@ fun SettingsScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            if (navController.currentDestination != SettingsDestination.MAIN) {
-                                navController.pop()
-                            } else {
+                            if (navController.currentDestination == SettingsDestination.Main) {
                                 onClickBack()
+                            } else {
+                                navController.pop()
                             }
                         }
                     ) {
@@ -58,7 +59,14 @@ fun SettingsScreen(
                 },
                 title = {
                     Crossfade(navController.currentDestination) { destination ->
-                        Text(stringResource(destination.label))
+                        Text(
+                            text = stringResource(
+                                id = when (destination) {
+                                    SettingsDestination.Main -> R.string.settings
+                                    is SettingsSection -> destination.label
+                                }
+                            )
+                        )
                     }
                 },
                 scrollBehavior = scrollBehavior
@@ -101,35 +109,31 @@ fun SettingsScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     when (destination) {
-                        SettingsDestination.MAIN -> {
-                            SettingsDestination.values()
-                                .toMutableList().apply {
-                                    remove(SettingsDestination.MAIN)
-                                }
-                                .forEach { destination ->
-                                    ListItem(
-                                        modifier = Modifier.clickable {
-                                            navController.navigate(destination)
-                                        },
-                                        headlineText = {
-                                            Text(stringResource(destination.label))
-                                        },
-                                        leadingContent = {
-                                            Icon(
-                                                imageVector = destination.icon,
-                                                contentDescription = stringResource(destination.label)
-                                            )
-                                        }
-                                    )
-                                }
+                        SettingsDestination.Main -> {
+                            SettingsSection.values().forEach { destination ->
+                                ListItem(
+                                    modifier = Modifier.clickable {
+                                        navController.navigate(destination)
+                                    },
+                                    headlineText = {
+                                        Text(stringResource(destination.label))
+                                    },
+                                    leadingContent = {
+                                        Icon(
+                                            imageVector = destination.icon,
+                                            contentDescription = stringResource(destination.label)
+                                        )
+                                    }
+                                )
+                            }
                         }
 
-                        SettingsDestination.GENERAL -> GeneralScreen(viewModel)
-                        SettingsDestination.APPEARANCE -> AppearanceScreen(viewModel)
-                        SettingsDestination.ACCOUNTS -> AccountsScreen(viewModel)
-                        SettingsDestination.SPONSOR_BLOCK -> SponsorBlockScreen(viewModel)
-                        SettingsDestination.BACKUP_RESTORE -> BackupRestoreScreen(viewModel)
-                        SettingsDestination.ABOUT -> AboutScreen(viewModel)
+                        SettingsSection.GENERAL -> GeneralScreen(viewModel)
+                        SettingsSection.APPEARANCE -> AppearanceScreen(viewModel)
+                        SettingsSection.ACCOUNTS -> AccountsScreen(viewModel)
+                        SettingsSection.SPONSOR_BLOCK -> SponsorBlockScreen(viewModel)
+                        SettingsSection.BACKUP_RESTORE -> BackupRestoreScreen(viewModel)
+                        SettingsSection.ABOUT -> AboutScreen(viewModel)
                     }
                 }
             }
