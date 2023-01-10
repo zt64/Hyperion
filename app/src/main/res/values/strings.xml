@@ -77,4 +77,6 @@
     <string name="library_sign_in_body">Sign in to access your personal library of videos</string>
     <string name="feed_sign_in_title">Don\'t miss new videos</string>
     <string name="feed_sign_in_body">Sign in to see updates from your favorite YouTube channels</string>
+    <string name="popular">Popular</string>
+    <string name="recently_uploaded">Recently uploaded</string>
 </resources>

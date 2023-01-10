@@ -146,7 +146,10 @@ private fun TagScreenLoaded(
                 }
             }
 
-            items(videos) { video ->
+            items(
+                items = videos,
+                key = { it.id }
+            ) { video ->
                 if (video == null) return@items
 
                 VideoCard(

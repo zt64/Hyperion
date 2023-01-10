@@ -18,8 +18,9 @@ import androidx.compose.ui.res.stringResource
 import com.hyperion.R
 import com.hyperion.ui.component.setting.RadioSetting
 import com.hyperion.ui.component.setting.SwitchSetting
-import com.hyperion.ui.navigation.RootDestination
+import com.hyperion.ui.navigation.BaseDestination
 import com.hyperion.ui.viewmodel.SettingsViewModel
+import kotlinx.collections.immutable.toImmutableMap
 
 context(ColumnScope)
 @Composable
@@ -32,9 +33,9 @@ fun GeneralScreen(
         icon = Icons.Default.Start,
         label = stringResource(R.string.start_screen),
         value = preferences.startScreen,
-        options = RootDestination.values().associateBy { destination ->
+        options = BaseDestination.values().associateBy { destination ->
             stringResource(destination.label)
-        },
+        }.toImmutableMap(),
         onConfirm = { preferences.startScreen = it }
     )
 

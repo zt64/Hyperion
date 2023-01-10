@@ -3,6 +3,7 @@ package com.hyperion.ui.screen
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -28,6 +29,7 @@ import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
 import org.koin.androidx.compose.getViewModel
 
+@Immutable
 private enum class ChannelTab(
     @StringRes
     val title: Int,
@@ -39,6 +41,12 @@ private enum class ChannelTab(
     COMMUNITY(R.string.community, Icons.Default.People),
     CHANNELS(R.string.channels, Icons.Default.AccountTree),
     ABOUT(R.string.about, Icons.Default.Info)
+}
+
+@Immutable
+private enum class Filter(@StringRes val displayName: Int) {
+    RECENTLY_UPLOADED(R.string.recently_uploaded),
+    POPULAR(R.string.popular)
 }
 
 @Composable
@@ -111,13 +119,13 @@ private fun ChannelScreenLoaded(
             )
         }
     ) { paddingValues ->
+        var selectedFilterChip by rememberSaveable { mutableStateOf(Filter.RECENTLY_UPLOADED) }
         var selectedTab by rememberSaveable { mutableStateOf(ChannelTab.HOME) }
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             item {
@@ -127,9 +135,9 @@ private fun ChannelScreenLoaded(
                     if (channel.banner != null) {
                         ShimmerImage(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp)
-                                .clip(MaterialTheme.shapes.medium),
+                                .fillMaxWidth(),
+//                                .padding(horizontal = 8.dp)
+//                                .clip(MaterialTheme.shapes.medium),
                             model = channel.banner,
                             contentDescription = channel.name
                         )
@@ -175,14 +183,50 @@ private fun ChannelScreenLoaded(
             }
 
             stickyHeader {
-                TabHeader(
-                    selectedTab = selectedTab,
-                    onClickTab = { selectedTab = it }
+                ScrollableTabRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    selectedTabIndex = selectedTab.ordinal,
+                    edgePadding = 0.dp,
+                    tabs = {
+                        ChannelTab.values().forEach { tab ->
+                            LeadingIconTab(
+                                selected = selectedTab == tab,
+                                icon = {
+                                    Icon(
+                                        modifier = Modifier.size(20.dp),
+                                        imageVector = tab.imageVector,
+                                        contentDescription = null
+                                    )
+                                },
+                                text = { Text(stringResource(tab.title)) },
+                                onClick = { selectedTab = tab }
+                            )
+                        }
+                    }
                 )
             }
 
             when (selectedTab) {
                 ChannelTab.HOME -> {
+
+                }
+
+                ChannelTab.VIDEOS -> {
+                    item {
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 14.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(Filter.values()) { filter ->
+                                FilterChip(
+                                    selected = selectedFilterChip == filter,
+                                    onClick = { selectedFilterChip = filter },
+                                    label = { Text(stringResource(filter.displayName)) }
+                                )
+                            }
+                        }
+                    }
+
                     items(channel.items) { video ->
                         VideoCard(
                             modifier = Modifier.padding(horizontal = 14.dp),
@@ -192,7 +236,6 @@ private fun ChannelScreenLoaded(
                     }
                 }
 
-                ChannelTab.VIDEOS -> {}
                 ChannelTab.PLAYLISTS -> {}
                 ChannelTab.COMMUNITY -> {}
                 ChannelTab.CHANNELS -> {}
@@ -230,32 +273,4 @@ private fun ChannelScreenLoading(
             CircularProgressIndicator()
         }
     }
-}
-
-@Composable
-private fun TabHeader(
-    selectedTab: ChannelTab,
-    onClickTab: (ChannelTab) -> Unit
-) {
-    ScrollableTabRow(
-        modifier = Modifier.fillMaxWidth(),
-        selectedTabIndex = selectedTab.ordinal,
-        edgePadding = 0.dp,
-        tabs = {
-            ChannelTab.values().forEach { tab ->
-                LeadingIconTab(
-                    selected = selectedTab == tab,
-                    icon = {
-                        Icon(
-                            modifier = Modifier.size(20.dp),
-                            imageVector = tab.imageVector,
-                            contentDescription = null
-                        )
-                    },
-                    text = { Text(stringResource(tab.title)) },
-                    onClick = { onClickTab(tab) }
-                )
-            }
-        }
-    )
 }

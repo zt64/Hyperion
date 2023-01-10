@@ -18,6 +18,7 @@ import androidx.paging.compose.items
 import com.hyperion.R
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.PlaylistViewModel
+import com.hyperion.util.rememberLazyListState
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -102,12 +103,14 @@ private fun PlaylistLoadedScreen(
         }
     ) { paddingValues ->
         val videos = viewModel.videos.collectAsLazyPagingItems()
+        val state = videos.rememberLazyListState()
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 14.dp),
+            state = state,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
@@ -164,7 +167,10 @@ private fun PlaylistLoadedScreen(
                 }
             }
 
-            items(videos) {video ->
+            items(
+                items = videos,
+                key = { it.id }
+            ) {video ->
                 if (video == null) return@items
 
                 VideoCard(

@@ -75,4 +75,6 @@
     <string name="library_sign_in_body">Sign in to access videos that your personal library of videos</string>
     <string name="feed_sign_in_title">Non perdere i nuovi video</string>
     <string name="feed_sign_in_body">Accedi per vedere gli aggiornamenti dai tuoi canali YouTube preferiti</string>
+    <string name="popular">Popular</string>
+    <string name="recently_uploaded">Recently uploaded</string>
 </resources>

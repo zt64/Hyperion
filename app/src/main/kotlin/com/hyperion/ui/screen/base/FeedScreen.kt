@@ -1,4 +1,4 @@
-package com.hyperion.ui.screen.root
+package com.hyperion.ui.screen.base
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -15,10 +15,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
 import com.hyperion.ui.viewmodel.FeedViewModel
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun FeedScreen(
-    viewModel: FeedViewModel
+    viewModel: FeedViewModel = getViewModel()
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),

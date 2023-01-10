@@ -14,8 +14,12 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.navigation.AppDestination
+import com.hyperion.ui.navigation.BaseDestination
+import com.hyperion.ui.navigation.BaseScreen
 import com.hyperion.ui.screen.*
-import com.hyperion.ui.screen.root.RootScreen
+import com.hyperion.ui.screen.base.FeedScreen
+import com.hyperion.ui.screen.base.HomeScreen
+import com.hyperion.ui.screen.base.LibraryScreen
 import com.hyperion.ui.theme.HyperionTheme
 import com.hyperion.ui.theme.Theme
 import dev.olshevski.navigation.reimagined.*
@@ -42,7 +46,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    val navController = rememberNavController<AppDestination>(AppDestination.Root)
+                    val navController = rememberNavController<AppDestination>(BaseDestination.HOME)
 
                     NavBackHandler(navController)
 
@@ -53,14 +57,25 @@ class MainActivity : ComponentActivity() {
                         fun onClickChannel(id: String) = navController.navigate(AppDestination.Channel(id))
 
                         when (destination) {
-                            AppDestination.Root -> {
-                                RootScreen(
+                            is BaseDestination -> {
+                                BaseScreen(
                                     windowSizeClass = windowSizeClass,
+                                    hideNavLabel = preferences.hideNavItemLabel,
                                     onClickSearch = { navController.navigate(AppDestination.Search) },
-                                    onClickSettings = { navController.navigate(AppDestination.Settings) },
-                                    onClickVideo = ::onClickVideo,
-                                    onClickChannel = ::onClickChannel
-                                )
+                                    onClickSettings = { navController.navigate(AppDestination.Settings) }
+                                ) { baseDestination ->
+                                    when (baseDestination) {
+                                        BaseDestination.HOME -> {
+                                            HomeScreen(
+                                                onClickVideo = ::onClickVideo,
+                                                onClickChannel = ::onClickChannel
+                                            )
+                                        }
+
+                                        BaseDestination.FEED -> FeedScreen()
+                                        BaseDestination.LIBRARY -> LibraryScreen()
+                                    }
+                                }
                             }
 
                             AppDestination.Search -> {

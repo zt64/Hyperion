@@ -1,4 +1,4 @@
-package com.hyperion.ui.screen.root
+package com.hyperion.ui.screen.base
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -19,10 +19,11 @@ import androidx.compose.ui.unit.sp
 import com.hyperion.R
 import com.hyperion.ui.component.ShimmerImage
 import com.hyperion.ui.viewmodel.LibraryViewModel
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun LibraryScreen(
-    viewModel: LibraryViewModel
+    viewModel: LibraryViewModel = getViewModel()
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -108,6 +109,7 @@ fun LibraryScreen(
 private fun RecentCard(
     title: String,
     subtitle: String,
+    duration: String,
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
@@ -115,7 +117,7 @@ private fun RecentCard(
         modifier = Modifier
             .size(
                 width = 144.dp,
-                height = 160.dp
+                height = 148.dp
             )
             .combinedClickable(
                 onClick = onClick,
@@ -142,7 +144,7 @@ private fun RecentCard(
                 ) {
                     Text(
                         modifier = Modifier.padding(2.dp),
-                        text = "5:47",
+                        text = duration,
                         color = MaterialTheme.colorScheme.onTertiaryContainer,
                         style = MaterialTheme.typography.labelSmall
                     )

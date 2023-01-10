@@ -75,4 +75,6 @@
     <string name="library_sign_in_body">Sign in to access videos that your personal library of videos</string>
     <string name="feed_sign_in_title">새로운 동영상을 놓치지 마세요.</string>
     <string name="feed_sign_in_body">좋아하는 유튜브 채널의 업데이트를 보려면 로그인하세요.</string>
+    <string name="popular">Popular</string>
+    <string name="recently_uploaded">Recently uploaded</string>
 </resources>

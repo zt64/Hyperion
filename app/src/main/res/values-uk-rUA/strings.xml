@@ -75,4 +75,6 @@
     <string name="library_sign_in_body">Увійдіть, щоб отримати доступ до відео з вашої особистої бібліотеки відео</string>
     <string name="feed_sign_in_title">Не пропустіть нові відео</string>
     <string name="feed_sign_in_body">Увійдіть, щоб переглядати оновлення з ваших улюблених каналів YouTube</string>
+    <string name="popular">Popular</string>
+    <string name="recently_uploaded">Recently uploaded</string>
 </resources>

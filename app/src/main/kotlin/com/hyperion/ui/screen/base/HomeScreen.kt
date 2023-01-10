@@ -1,4 +1,4 @@
-package com.hyperion.ui.screen.root
+package com.hyperion.ui.screen.base
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,23 +16,30 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.HomeViewModel
+import com.hyperion.util.rememberLazyListState
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel,
+    viewModel: HomeViewModel = getViewModel(),
     onClickVideo: (videoId: String) -> Unit,
     onClickChannel: (channelId: String) -> Unit
 ) {
-    val videoListItems = viewModel.videos.collectAsLazyPagingItems()
+    val videos = viewModel.videos.collectAsLazyPagingItems()
+    val state = videos.rememberLazyListState()
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 14.dp),
+        state = state,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        items(videoListItems) { video ->
+        items(
+            items = videos,
+            key = { it.id }
+        ) { video ->
             if (video == null) return@items
 
             VideoCard(
@@ -43,7 +50,7 @@ fun HomeScreen(
         }
 
         item {
-            videoListItems.loadState.apply {
+            videos.loadState.apply {
                 when {
                     refresh is LoadState.Loading || append is LoadState.Loading -> {
                         CircularProgressIndicator()

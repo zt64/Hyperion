@@ -1,10 +1,7 @@
-package com.hyperion.ui.screen.root
+package com.hyperion.ui.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -17,30 +14,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
-import com.hyperion.domain.manager.PreferencesManager
-import com.hyperion.ui.navigation.RootDestination
-import com.hyperion.ui.navigation.currentDestination
-import com.hyperion.ui.viewmodel.FeedViewModel
-import com.hyperion.ui.viewmodel.HomeViewModel
-import com.hyperion.ui.viewmodel.LibraryViewModel
-import dev.olshevski.navigation.reimagined.AnimatedNavHost
-import dev.olshevski.navigation.reimagined.rememberNavController
-import dev.olshevski.navigation.reimagined.replaceAll
-import org.koin.androidx.compose.get
-import org.koin.androidx.compose.getViewModel
+import dev.olshevski.navigation.reimagined.*
+
+private fun <T> NavController<T>.switchTo(destination: T) {
+    if (!moveToTop { it == destination }) navigate(destination)
+}
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun RootScreen(
+fun BaseScreen(
     windowSizeClass: WindowSizeClass,
+    hideNavLabel: Boolean,
     onClickSearch: () -> Unit,
     onClickSettings: () -> Unit,
-    onClickVideo: (id: String) -> Unit,
-    onClickChannel: (id: String) -> Unit,
-    prefs: PreferencesManager = get()
+    content: @Composable (BaseDestination) -> Unit
 ) {
+    val navController = rememberNavController(BaseDestination.HOME)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val navController = rememberNavController(RootDestination.HOME)
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -72,14 +62,14 @@ fun RootScreen(
                 windowSizeClass.heightSizeClass != WindowHeightSizeClass.Compact
             ) {
                 NavigationBar {
-                    RootDestination.values().forEach { destination ->
+                    BaseDestination.values().forEach { destination ->
                         NavigationBarItem(
                             selected = navController.currentDestination == destination,
-                            icon = { Icon(destination.icon, stringResource(destination.label)) },
-                            label = if (!prefs.hideNavItemLabel) {
+                            icon = { Icon(destination.icon, null) },
+                            label = if (!hideNavLabel) {
                                 { Text(stringResource(destination.label)) }
                             } else null,
-                            onClick = { navController.replaceAll(destination) }
+                            onClick = { navController.switchTo(destination) }
                         )
                     }
                 }
@@ -93,43 +83,28 @@ fun RootScreen(
         ) {
             if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact) {
                 NavigationRail {
-                    RootDestination.values().forEach { destination ->
+                    BaseDestination.values().forEach { destination ->
                         NavigationRailItem(
                             selected = navController.currentDestination == destination,
-                            icon = { Icon(destination.icon, stringResource(destination.label)) },
-                            label = if (!prefs.hideNavItemLabel) {
+                            icon = { Icon(destination.icon, null) },
+                            label = if (!hideNavLabel) {
                                 { Text(stringResource(destination.label)) }
                             } else null,
-                            onClick = { navController.replaceAll(destination) }
+                            onClick = { navController.switchTo(destination) }
                         )
                     }
                 }
             }
 
-            Surface(
+            Box(
                 modifier = Modifier
                     .weight(1f, true)
                     .fillMaxHeight()
             ) {
-                val homeViewModel = getViewModel<HomeViewModel>()
-                val feedViewModel = getViewModel<FeedViewModel>()
-                val libraryViewModel = getViewModel<LibraryViewModel>()
-
                 AnimatedNavHost(
                     controller = navController
                 ) { destination ->
-                    when (destination) {
-                        RootDestination.HOME -> {
-                            HomeScreen(
-                                viewModel = homeViewModel,
-                                onClickVideo = onClickVideo,
-                                onClickChannel = onClickChannel
-                            )
-                        }
-
-                        RootDestination.FEED -> FeedScreen(feedViewModel)
-                        RootDestination.LIBRARY -> LibraryScreen(libraryViewModel)
-                    }
+                    content(destination)
                 }
             }
         }
