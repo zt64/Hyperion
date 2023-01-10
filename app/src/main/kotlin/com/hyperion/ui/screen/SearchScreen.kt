@@ -31,9 +31,12 @@ import com.hyperion.R
 import com.hyperion.ui.component.*
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.viewmodel.SearchViewModel
+import com.hyperion.util.rememberLazyListState
 import com.zt.innertube.domain.model.*
 import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.navigate
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -49,28 +52,28 @@ fun SearchScreen(
     var showResults by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        viewModel.focusRequester.requestFocus()
+        if (viewModel.textFieldValue.text.isEmpty()) {
+            viewModel.focusRequester.requestFocus()
+        }
     }
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = {
                     TextField(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .heightIn(max = 52.dp)
+                            .heightIn(max = 54.dp)
                             .focusRequester(viewModel.focusRequester)
                             .onFocusChanged { showResults = !it.isFocused },
-                        value = viewModel.search,
-                        onValueChange = viewModel::getSuggestions,
+                        value = viewModel.textFieldValue,
+                        onValueChange = viewModel::textFieldValueChange,
                         textStyle = MaterialTheme.typography.bodyLarge,
                         placeholder = { Text(stringResource(R.string.search)) },
-                        trailingIcon = viewModel.search.takeIf { it.isNotBlank() }?.let {
+                        trailingIcon = viewModel.textFieldValue.text.takeIf(String::isNotBlank)?.let {
                             {
-                                IconButton(
-                                    onClick = { viewModel.getSuggestions("") }
-                                ) {
+                                IconButton(onClick = viewModel::clearSearch) {
                                     Icon(
                                         imageVector = Icons.Default.Clear,
                                         contentDescription = stringResource(R.string.clear)
@@ -81,8 +84,8 @@ fun SearchScreen(
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                         keyboardActions = KeyboardActions(
                             onSearch = {
-                                if (viewModel.search.isNotBlank()) {
-                                    viewModel.getResults()
+                                if (viewModel.textFieldValue.text.isNotBlank()) {
+                                    viewModel.search()
                                     focusManager.clearFocus()
                                 }
                             }
@@ -117,17 +120,22 @@ fun SearchScreen(
         }
     ) { paddingValues ->
         val results = viewModel.results.collectAsLazyPagingItems()
+        val state = results.rememberLazyListState()
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 14.dp),
+            state = state,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             if (showResults) {
-                items(results) { result ->
+                items(
+                    items = results,
+                    key = { it.hashCode() }
+                ) { result ->
                     if (result == null) return@items
 
                     when (result) {
@@ -207,12 +215,17 @@ fun SearchScreen(
                 }
             } else {
                 items(viewModel.suggestions) { suggestion ->
+                    val coroutineScope = rememberCoroutineScope()
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                viewModel.search(suggestion)
-                                focusManager.clearFocus()
+                                coroutineScope.launch {
+                                    viewModel.selectSuggestion(suggestion)
+                                    delay(10)
+                                    focusManager.clearFocus()
+                                }
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -225,7 +238,7 @@ fun SearchScreen(
 
                         IconButton(
                             onClick = {
-                                viewModel.getSuggestions(suggestion)
+                                viewModel.replaceSuggestion(suggestion)
                             }
                         ) {
                             Icon(

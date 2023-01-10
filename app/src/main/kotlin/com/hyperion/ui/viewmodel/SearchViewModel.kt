@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
@@ -16,20 +18,20 @@ import kotlinx.coroutines.launch
 class SearchViewModel(
     private val innerTube: InnerTubeRepository
 ) : ViewModel() {
-    var search by mutableStateOf("")
-        private set
     var suggestions = mutableStateListOf<String>()
         private set
     var results by mutableStateOf(emptyFlow<PagingData<Entity>>())
         private set
+    var textFieldValue by mutableStateOf(TextFieldValue())
+        private set
     val focusRequester = FocusRequester()
 
-    fun getSuggestions(query: String) {
-        search = query
+    fun textFieldValueChange(value: TextFieldValue) {
+        textFieldValue = value
 
         viewModelScope.launch {
             try {
-                val searchSuggestions = innerTube.getSearchSuggestions(query)
+                val searchSuggestions = innerTube.getSearchSuggestions(textFieldValue.text)
 
                 suggestions.clear()
                 suggestions.addAll(searchSuggestions)
@@ -39,11 +41,29 @@ class SearchViewModel(
         }
     }
 
-    fun getResults() {
+    fun replaceSuggestion(suggestion: String) {
+        textFieldValueChange(
+            TextFieldValue(
+                text = suggestion,
+                selection = TextRange(suggestion.length)
+            )
+        )
+    }
+
+    fun selectSuggestion(suggestion: String) {
+        textFieldValue = TextFieldValue(
+            text = suggestion,
+            selection = TextRange(suggestion.length)
+        )
+
+        search()
+    }
+
+    fun search() {
         results = Pager(PagingConfig(4)) {
             object : PagingSource<String, Entity>() {
-                override suspend fun load(params: LoadParams<String>): LoadResult<String, Entity> = try {
-                    val searchResults = innerTube.getSearchResults(search, params.key)
+                override suspend fun load(params: LoadParams<String>) = try {
+                    val searchResults = innerTube.getSearchResults(textFieldValue.text, params.key)
 
                     LoadResult.Page(
                         data = searchResults.items,
@@ -60,9 +80,8 @@ class SearchViewModel(
         }.flow.cachedIn(viewModelScope)
     }
 
-    fun search(query: String) {
-        search = query
-
-        getResults()
+    fun clearSearch() {
+        textFieldValue = TextFieldValue()
+        suggestions.clear()
     }
 }
