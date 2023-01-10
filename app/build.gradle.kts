@@ -96,6 +96,8 @@ dependencies {
     implementation(libs.ktor.encoding)
     implementation(libs.ktor.contentnegotiation)
     implementation(libs.ktor.serialization.json)
+
+    implementation(libs.kotlinx.collections.immutable)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
