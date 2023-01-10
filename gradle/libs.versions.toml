@@ -6,7 +6,7 @@ compose = "1.4.0-alpha03"
 compose-compiler = "1.4.0-alpha02"
 compose-material3 = "1.1.0-alpha03"
 accompanist = "0.28.0"
-ktor = "2.2.1"
+ktor = "2.2.2"
 koin = "3.2.0"
 
 [libraries]
@@ -39,7 +39,7 @@ accompanist-placeholder = { module = "com.google.accompanist:accompanist-placeho
 
 coil-compose = "io.coil-kt:coil-compose:2.2.2"
 
-navigation = "dev.olshevski.navigation:reimagined:1.3.0"
+navigation = "dev.olshevski.navigation:reimagined:1.3.1"
 
 media3-exoplayer = "androidx.media3:media3-exoplayer:1.0.0-beta03"
 
