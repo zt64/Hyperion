@@ -12,6 +12,7 @@ import com.hyperion.ui.component.setting.SliderSetting
 import com.hyperion.ui.component.setting.SwitchSetting
 import com.hyperion.ui.theme.Theme
 import com.hyperion.ui.viewmodel.SettingsViewModel
+import kotlinx.collections.immutable.toImmutableMap
 
 context(ColumnScope)
 @Composable
@@ -34,7 +35,7 @@ fun AppearanceScreen(
         label = stringResource(R.string.theme),
         description = stringResource(R.string.theme_setting_description),
         value = preferences.theme,
-        options = Theme.values().associateBy { theme -> stringResource(theme.displayName) },
+        options = Theme.values().associateBy { theme -> stringResource(theme.displayName) }.toImmutableMap(),
         onConfirm = { preferences.theme = it }
     )
 

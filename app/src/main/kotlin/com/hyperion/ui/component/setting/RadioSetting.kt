@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
+import kotlinx.collections.immutable.ImmutableMap
 
 @Composable
 fun <T> RadioSetting(
@@ -24,7 +25,7 @@ fun <T> RadioSetting(
     description: String? = null,
     icon: ImageVector? = null,
     value: T,
-    options: Map<String, T>,
+    options: ImmutableMap<String, T>,
     onConfirm: (value: T) -> Unit
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
