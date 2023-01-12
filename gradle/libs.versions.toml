@@ -2,10 +2,10 @@
 kotlin = "1.7.21"
 kotlin-serialization = "1.4.1"
 gradleplugin = "7.3.1"
-compose = "1.4.0-alpha03"
+compose = "1.4.0-alpha04"
 compose-compiler = "1.4.0-alpha02"
-compose-material3 = "1.1.0-alpha03"
-accompanist = "0.28.0"
+compose-material3 = "1.1.0-alpha04"
+accompanist = "0.29.0-alpha"
 ktor = "2.2.2"
 koin = "3.2.0"
 
