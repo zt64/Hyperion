@@ -66,15 +66,15 @@
     <string name="add_account">Tambahkan akun lainnya</string>
     <string name="copied_to_clipboard">Disalin ke clipboard</string>
     <string name="copy_stacktrace">Salin stacktrace</string>
-    <string name="tag">Label</string>
-    <string name="hide_nav_item_label">Hide navigation item label</string>
-    <string name="chapters">Chapters</string>
-    <string name="sign_in">Sign in</string>
-    <string name="account">Account</string>
-    <string name="library_sign_in_title">Enjoy your favorite videos</string>
+    <string name="tag">Tag</string>
+    <string name="hide_nav_item_label">Sembunyikan navigasi label benda</string>
+    <string name="chapters">Bab</string>
+    <string name="sign_in">Masuk</string>
+    <string name="account">Akun</string>
+    <string name="library_sign_in_title">Nikmati video favoritmu</string>
     <string name="library_sign_in_body">Sign in to access videos that your personal library of videos</string>
-    <string name="feed_sign_in_title">Don\'t miss new videos</string>
-    <string name="feed_sign_in_body">Sign in to see updates from your favorite YouTube channels</string>
+    <string name="feed_sign_in_title">Jangan lewati video baru</string>
+    <string name="feed_sign_in_body">Masuk untuk melihat update dari channel Youtube favoritmu</string>
     <string name="popular">Popular</string>
     <string name="recently_uploaded">Recently uploaded</string>
 </resources>
