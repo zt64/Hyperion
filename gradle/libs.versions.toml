@@ -1,7 +1,7 @@
 [versions]
 kotlin = "1.7.21"
 kotlin-serialization = "1.4.1"
-gradleplugin = "7.3.1"
+gradleplugin = "7.4.0"
 compose = "1.4.0-alpha04"
 compose-compiler = "1.4.0-alpha02"
 compose-material3 = "1.1.0-alpha04"
