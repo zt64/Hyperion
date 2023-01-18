@@ -94,6 +94,8 @@ class PlayerViewModel(
                 .setEnableAudioOffload(true)
                 .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
         )
+        .setWakeMode(C.WAKE_MODE_NETWORK)
+        .setHandleAudioBecomingNoisy(true)
         .setSeekBackIncrementMs(15000)
         .setSeekForwardIncrementMs(15000)
         .build()
