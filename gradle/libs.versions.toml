@@ -1,9 +1,9 @@
 [versions]
-kotlin = "1.7.21"
+kotlin = "1.8.0"
 kotlin-serialization = "1.4.1"
-gradleplugin = "7.4.0"
+agp = "7.4.0"
 compose = "1.4.0-alpha04"
-compose-compiler = "1.4.0-alpha02"
+compose-compiler = "1.4.0"
 compose-material3 = "1.1.0-alpha04"
 accompanist = "0.29.0-alpha"
 ktor = "2.2.2"
@@ -51,5 +51,5 @@ kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immut
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-android-application = { id = "com.android.application", version.ref = "gradleplugin" }
-android-library = { id = "com.android.library", version.ref = "gradleplugin" }
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
