@@ -1,6 +1,7 @@
 package com.hyperion.di
 
 import android.os.Build
+import com.zt.ktor.brotli.brotli
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.engine.cio.CIO
@@ -36,6 +37,7 @@ val httpModule = module {
         install(ContentEncoding) {
             deflate()
             gzip()
+            brotli()
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

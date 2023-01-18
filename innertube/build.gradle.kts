@@ -28,6 +28,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(projects.ktorBrotli)
+
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.serialization.protobuf)
 

@@ -63,6 +63,7 @@ android {
 
 dependencies {
     implementation(projects.innertube)
+    implementation(projects.ktorBrotli)
 
     implementation(libs.androidx.core)
     implementation(libs.androidx.splashscreen)
