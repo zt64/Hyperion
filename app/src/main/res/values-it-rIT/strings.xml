@@ -77,4 +77,5 @@
     <string name="feed_sign_in_body">Accedi per vedere gli aggiornamenti dai tuoi canali YouTube preferiti</string>
     <string name="popular">Popular</string>
     <string name="recently_uploaded">Recently uploaded</string>
+    <string name="show_related_videos">Show related videos</string>
 </resources>

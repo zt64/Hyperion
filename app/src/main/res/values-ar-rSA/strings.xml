@@ -77,4 +77,5 @@
     <string name="feed_sign_in_body">سجل الدخول لمشاهدة التحديثات من قنواتك المفضلة على YouTube</string>
     <string name="popular">Popular</string>
     <string name="recently_uploaded">Recently uploaded</string>
+    <string name="show_related_videos">Show related videos</string>
 </resources>

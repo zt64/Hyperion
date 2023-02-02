@@ -396,29 +396,31 @@ private fun PlayerScreenPortrait(
                 }
             }
 
-            items(relatedVideos) { relatedVideo ->
-                if (relatedVideo == null) return@items
+            if (viewModel.preferences.showRelatedVideos) {
+                items(relatedVideos) { relatedVideo ->
+                    if (relatedVideo == null) return@items
 
-                VideoCard(
-                    video = relatedVideo,
-                    onClick = { viewModel.loadVideo(relatedVideo.id) },
-                    onClickChannel = { navController.navigate(AppDestination.Channel(relatedVideo.channel!!.id)) }
-                )
-            }
+                    VideoCard(
+                        video = relatedVideo,
+                        onClick = { viewModel.loadVideo(relatedVideo.id) },
+                        onClickChannel = { navController.navigate(AppDestination.Channel(relatedVideo.channel!!.id)) }
+                    )
+                }
 
-            item {
-                relatedVideos.loadState.apply {
-                    when {
-                        refresh is LoadState.Loading || append is LoadState.Loading -> {
-                            CircularProgressIndicator()
-                        }
+                item {
+                    relatedVideos.loadState.apply {
+                        when {
+                            refresh is LoadState.Loading || append is LoadState.Loading -> {
+                                CircularProgressIndicator()
+                            }
 
-                        append is LoadState.Error -> {
-                            (append as LoadState.Error).error.message?.let {
-                                Text(
-                                    text = it,
-                                    style = MaterialTheme.typography.bodySmall
-                                )
+                            append is LoadState.Error -> {
+                                (append as LoadState.Error).error.message?.let {
+                                    Text(
+                                        text = it,
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
                             }
                         }
                     }

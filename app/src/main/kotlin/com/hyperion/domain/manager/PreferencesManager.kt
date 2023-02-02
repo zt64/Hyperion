@@ -13,6 +13,7 @@ class PreferencesManager(sharedPreferences: SharedPreferences) : BasePreferenceM
     var startScreen by enumPreference("start_screen", BaseDestination.HOME)
     var pictureInPicture by booleanPreference("pip", false)
     var showDownloadButton by booleanPreference("show_download_button", true)
+    var showRelatedVideos by booleanPreference("show_related_videos", true)
     var downloadDirectory by stringPreference("download_directory", Environment.DIRECTORY_DOWNLOADS)
     var timestampScale by floatPreference("timestamp_scale", 1f)
     var hideNavItemLabel by booleanPreference("hide_nav_item_label", false)

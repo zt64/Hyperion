@@ -61,6 +61,13 @@ fun AppearanceScreen(
     )
 
     SwitchSetting(
+        checked = preferences.showRelatedVideos,
+        text = stringResource(R.string.show_related_videos),
+        icon = Icons.Default.List,
+        onCheckedChange = { preferences.showRelatedVideos = it }
+    )
+
+    SwitchSetting(
         checked = preferences.hideNavItemLabel,
         text = stringResource(R.string.hide_nav_item_label),
         icon = Icons.Default.Navigation,

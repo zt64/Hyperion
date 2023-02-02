@@ -77,4 +77,5 @@
     <string name="feed_sign_in_body">Kirjaudu sisään nähdäksesi suosikki-YouTube-kanaviesi päivitykset</string>
     <string name="popular">Suositut</string>
     <string name="recently_uploaded">Hiljattain lisätyt</string>
+    <string name="show_related_videos">Show related videos</string>
 </resources>

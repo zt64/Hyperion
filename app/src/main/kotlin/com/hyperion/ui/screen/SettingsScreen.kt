@@ -59,14 +59,7 @@ fun SettingsScreen(
                 },
                 title = {
                     Crossfade(navController.currentDestination) { destination ->
-                        Text(
-                            text = stringResource(
-                                id = when (destination) {
-                                    SettingsDestination.Main -> R.string.settings
-                                    is SettingsSection -> destination.label
-                                }
-                            )
-                        )
+                        Text(stringResource(if (destination is SettingsSection) destination.label else R.string.settings))
                     }
                 },
                 scrollBehavior = scrollBehavior

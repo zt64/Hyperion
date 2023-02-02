@@ -77,4 +77,5 @@
     <string name="feed_sign_in_body">Favori YouTube kanallarınızdan güncellemeleri görmek için oturum açın</string>
     <string name="popular">Popüler</string>
     <string name="recently_uploaded">Yakın zamanda yüklenenler</string>
+    <string name="show_related_videos">Show related videos</string>
 </resources>
