@@ -75,7 +75,7 @@
     <string name="library_sign_in_body">Sign in to access videos that your personal library of videos</string>
     <string name="feed_sign_in_title">Yeni videoları qaçırma</string>
     <string name="feed_sign_in_body">Sevimli YouTube kanallarınızdan yeniləmələri görmək üçün daxil olun</string>
-    <string name="popular">Popular</string>
-    <string name="recently_uploaded">Recently uploaded</string>
+    <string name="popular">Sevimli</string>
+    <string name="recently_uploaded">Təzəlikcə yükləndi</string>
     <string name="show_related_videos">Show related videos</string>
 </resources>
