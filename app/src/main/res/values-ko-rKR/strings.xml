@@ -77,5 +77,5 @@
     <string name="feed_sign_in_body">좋아하는 유튜브 채널의 업데이트를 보려면 로그인하세요.</string>
     <string name="popular">인기</string>
     <string name="recently_uploaded">최근 업로드</string>
-    <string name="show_related_videos">Show related videos</string>
+    <string name="show_related_videos">관련 동영상 표시</string>
 </resources>
