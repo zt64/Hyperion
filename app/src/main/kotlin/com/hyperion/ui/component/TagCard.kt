@@ -58,15 +58,19 @@ fun TagCard(
                     style = MaterialTheme.typography.titleMedium
                 )
 
-                Text(
-                    text = tag.videosCount,
-                    style = MaterialTheme.typography.labelSmall
-                )
+                tag.videosCount?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
 
-                Text(
-                    text = tag.channelsCount,
-                    style = MaterialTheme.typography.labelSmall
-                )
+                tag.channelsCount?.let {
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.labelSmall
+                    )
+                }
             }
         }
     }

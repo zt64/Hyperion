@@ -48,25 +48,7 @@ internal data class ApiTag(
             @Serializable
             data class Model(val hashtagHeaderModel: HashtagHeaderModel) {
                 @Serializable
-                data class HashtagHeaderModel(val renderer: Renderer) {
-                    @Serializable
-                    data class Renderer(
-                        val avatarFacepile: List<ElementsImageContainer> = emptyList(),
-                        val backgroundColor: Long,
-                        val backgroundImage: ElementsImageContainer? = null,
-                        val hashtag: ElementsAttributedContainer,
-                        val hashtagInfoText: ElementsAttributedContainer? = null
-                    ) {
-                        @Serializable
-                        data class ElementsImageContainer(val elementsImage: ApiImage)
-
-                        @Serializable
-                        data class ElementsAttributedContainer(val elementsAttributedString: ElementsAttributedString) {
-                            @Serializable
-                            data class ElementsAttributedString(val content: String)
-                        }
-                    }
-                }
+                data class HashtagHeaderModel(val renderer: HashtagRenderer)
             }
         }
 
@@ -74,6 +56,24 @@ internal data class ApiTag(
         data class ShelfContent(val horizontalListRenderer: ListRenderer<Item>) {
             @Serializable
             data class Item(val elementRenderer: ElementRenderer<Model>)
+        }
+    }
+
+    @Serializable
+    data class HashtagRenderer(
+        val avatarFacepile: List<ElementsImageContainer> = emptyList(),
+        val backgroundColor: Long,
+        val backgroundImage: ElementsImageContainer? = null,
+        val hashtag: ElementsAttributedContainer,
+        val hashtagInfoText: ElementsAttributedContainer? = null
+    ) {
+        @Serializable
+        data class ElementsImageContainer(val elementsImage: ApiImage)
+
+        @Serializable
+        data class ElementsAttributedContainer(val elementsAttributedString: ElementsAttributedString) {
+            @Serializable
+            data class ElementsAttributedString(val content: String)
         }
     }
 

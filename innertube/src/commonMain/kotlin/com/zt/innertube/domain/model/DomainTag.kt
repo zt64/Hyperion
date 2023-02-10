@@ -10,7 +10,7 @@ data class DomainTag(
 
 data class DomainTagPartial(
     val name: String,
-    val videosCount: String,
-    val channelsCount: String,
+    val videosCount: String?,
+    val channelsCount: String?,
     val backgroundColor: Long
 ) : Entity
