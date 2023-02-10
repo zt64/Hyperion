@@ -65,13 +65,10 @@ dependencies {
     implementation(projects.innertube)
     implementation(projects.ktorBrotli)
 
-    implementation(libs.androidx.core)
-    implementation(libs.androidx.splashscreen)
-    implementation(libs.androidx.paging)
-    implementation(libs.androidx.activity)
-
-    implementation(libs.koin.android)
-    implementation(libs.koin.compose)
+    implementation(libs.bundles.androidx)
+    implementation(libs.bundles.koin)
+    implementation(libs.bundles.media3)
+    implementation(libs.bundles.accompanist)
 
     implementation(libs.compose.ui)
     debugImplementation(libs.compose.ui.tooling)
@@ -81,15 +78,8 @@ dependencies {
     implementation(libs.compose.material3.windowSizeClass)
     implementation(libs.compose.icons.extended)
     implementation(libs.compose.animation.graphics)
-
     implementation(libs.navigation)
-
-    implementation(libs.accompanist.systemuicontroller)
-    implementation(libs.accompanist.placeholder)
-
     implementation(libs.coil.compose)
-
-    implementation(libs.media3.exoplayer)
 
     implementation(libs.ktor.core)
     implementation(libs.ktor.cio)
