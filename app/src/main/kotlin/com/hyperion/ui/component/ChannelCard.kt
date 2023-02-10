@@ -70,7 +70,10 @@ fun ChannelCard(
 
             Spacer(Modifier.weight(1f, true))
 
-            Button(onClick = onClickSubscribe) {
+            Button(
+                enabled = false,
+                onClick = onClickSubscribe
+            ) {
                 Text(stringResource(R.string.subscribe))
             }
         }
