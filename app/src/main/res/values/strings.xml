@@ -80,4 +80,33 @@
     <string name="popular">Popular</string>
     <string name="recently_uploaded">Recently uploaded</string>
     <string name="show_related_videos">Show related videos</string>
+    <string name="version">Version</string>
+    <string name="sort_by">Sort by</string>
+    <string name="location">Location</string>
+    <string name="creative_commons">Creative Commons</string>
+    <string name="subtitles">Subtitles/CC</string>
+    <string name="live">Live</string>
+    <string name="uhd" translatable="false">4K</string>
+    <string name="hd" translatable="false">HD</string>
+    <string name="vr" translatable="false">VR180</string>
+    <string name="hdr" translatable="false">HDR</string>
+    <string name="spatial" translatable="false">3D</string>
+    <string name="spherical" translatable="false">360°</string>
+    <string name="features">Features</string>
+    <string name="rating">Rating</string>
+    <string name="relevance">Relevance</string>
+    <string name="upload_date">Upload date</string>
+    <string name="view_count">View count</string>
+    <string name="movie">Movie</string>
+    <string name="playlist">Playlist</string>
+    <string name="channel">Channel</string>
+    <string name="last_hour">Last hour</string>
+    <string name="video">Video</string>
+    <string name="today">Today</string>
+    <string name="this_week">This week</string>
+    <string name="this_month">This month</string>
+    <string name="this_year">This year</string>
+    <string name="long_video">Over 20 minutes</string>
+    <string name="short_video">Under 4 minutes</string>
+    <string name="medium_video">4 – 20 minutes</string>
 </resources>

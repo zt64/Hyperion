@@ -78,4 +78,27 @@
     <string name="popular">인기</string>
     <string name="recently_uploaded">최근 업로드</string>
     <string name="show_related_videos">관련 동영상 표시</string>
+    <string name="version">Version</string>
+    <string name="sort_by">Sort by</string>
+    <string name="location">Location</string>
+    <string name="creative_commons">Creative Commons</string>
+    <string name="subtitles">Subtitles/CC</string>
+    <string name="live">Live</string>
+    <string name="features">Features</string>
+    <string name="rating">Rating</string>
+    <string name="relevance">Relevance</string>
+    <string name="upload_date">Upload date</string>
+    <string name="view_count">View count</string>
+    <string name="movie">Movie</string>
+    <string name="playlist">Playlist</string>
+    <string name="channel">Channel</string>
+    <string name="last_hour">Last hour</string>
+    <string name="video">Video</string>
+    <string name="today">Today</string>
+    <string name="this_week">This week</string>
+    <string name="this_month">This month</string>
+    <string name="this_year">This year</string>
+    <string name="long_video">Over 20 minutes</string>
+    <string name="short_video">Under 4 minutes</string>
+    <string name="medium_video">4 – 20 minutes</string>
 </resources>
