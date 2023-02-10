@@ -10,6 +10,10 @@ class SettingsViewModel(
     private val application: Application,
     val preferences: PreferencesManager
 ) : ViewModel() {
+    fun checkForUpdates() {
+
+    }
+
     fun openGitHub() {
         val intent = Intent(Intent.ACTION_VIEW, "https://github.com/zt64/Hyperion".toUri()).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK

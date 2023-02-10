@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -36,6 +37,7 @@ fun SettingsScreen(
 ) {
     val navController = rememberNavController<SettingsDestination>(SettingsDestination.Main)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -64,6 +66,9 @@ fun SettingsScreen(
                 },
                 scrollBehavior = scrollBehavior
             )
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
         }
     ) { paddingValues ->
         NavBackHandler(navController)
@@ -126,7 +131,7 @@ fun SettingsScreen(
                         SettingsSection.ACCOUNTS -> AccountsScreen(viewModel)
                         SettingsSection.SPONSOR_BLOCK -> SponsorBlockScreen(viewModel)
                         SettingsSection.BACKUP_RESTORE -> BackupRestoreScreen(viewModel)
-                        SettingsSection.ABOUT -> AboutScreen(viewModel)
+                        SettingsSection.ABOUT -> AboutScreen(viewModel, snackbarHostState)
                     }
                 }
             }
