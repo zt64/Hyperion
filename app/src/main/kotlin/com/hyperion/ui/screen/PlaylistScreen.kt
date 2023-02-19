@@ -36,6 +36,7 @@ fun PlaylistScreen(
         is PlaylistViewModel.State.Loaded -> {
             PlaylistLoadedScreen(
                 viewModel = viewModel,
+                onClickVideo = onClickVideo,
                 onClickBack = onClickBack
             )
         }
@@ -58,6 +59,7 @@ fun PlaylistScreen(
 @Composable
 private fun PlaylistLoadedScreen(
     viewModel: PlaylistViewModel,
+    onClickVideo: (id: String) -> Unit,
     onClickBack: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -129,9 +131,7 @@ private fun PlaylistLoadedScreen(
                     ) {
                         Button(
                             modifier = Modifier.weight(1f, true),
-                            onClick = {
-
-                            }
+                            onClick = viewModel::play
                         ) {
                             Icon(
                                 imageVector = Icons.Default.PlayArrow,
@@ -145,9 +145,7 @@ private fun PlaylistLoadedScreen(
 
                         OutlinedButton(
                             modifier = Modifier.weight(1f, true),
-                            onClick = {
-
-                            }
+                            onClick = viewModel::shuffle
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Shuffle,
@@ -175,7 +173,7 @@ private fun PlaylistLoadedScreen(
 
                 VideoCard(
                     video = video,
-                    onClick = { /*TODO*/ }
+                    onClick = { onClickVideo(video.id) }
                 )
             }
 

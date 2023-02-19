@@ -79,4 +79,12 @@ class PlaylistViewModel(
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         })
     }
+
+    fun play() {
+
+    }
+
+    fun shuffle() {
+
+    }
 }
