@@ -100,6 +100,8 @@
     <string name="this_year">Bu il</string>
     <string name="long_video">20 dəqiqə artıq</string>
     <string name="short_video">4 dəqiqədən aşağı</string>
-    <string name="medium_video">4-20 dəqiqə</string>
+    <string name="medium_video">4–20 dəqiqə</string>
     <string name="check_for_updates">Yeniləmələri yoxlamaq üçün toxun</string>
+    <string name="type">Type</string>
+    <string name="duration">Duration</string>
 </resources>

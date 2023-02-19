@@ -102,4 +102,6 @@
     <string name="short_video">4 dakikadan az</string>
     <string name="medium_video">4 – 20 dakika</string>
     <string name="check_for_updates">Güncellemeleri kontrol etmek için dokun</string>
+    <string name="type">Type</string>
+    <string name="duration">Duration</string>
 </resources>

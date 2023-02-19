@@ -102,4 +102,6 @@
     <string name="short_video">Under 4 minutes</string>
     <string name="medium_video">4 – 20 minutes</string>
     <string name="check_for_updates">Tap to check for updates</string>
+    <string name="type">Type</string>
+    <string name="duration">Duration</string>
 </resources>

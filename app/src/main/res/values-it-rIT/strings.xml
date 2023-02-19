@@ -102,4 +102,6 @@
     <string name="short_video">Meno di 4 minuti</string>
     <string name="medium_video">4 – 20 minuti</string>
     <string name="check_for_updates">Tocca per cercare aggiornamenti</string>
+    <string name="type">Type</string>
+    <string name="duration">Duration</string>
 </resources>
