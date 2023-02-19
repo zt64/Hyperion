@@ -32,7 +32,9 @@ internal class ApiText private constructor(private val runs: List<TextRun>) {
 }
 
 @Serializable
-data class Title(val elementsAttributedString: ElementsAttributedString) {
+internal data class ElementsAttributedText(val elementsAttributedString: ElementsAttributedString) {
+    override fun toString() = elementsAttributedString.content
+
     @Serializable
     data class ElementsAttributedString(val content: String)
 }

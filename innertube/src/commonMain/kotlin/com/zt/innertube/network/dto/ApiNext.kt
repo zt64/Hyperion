@@ -259,9 +259,9 @@ internal data class ApiNext(
                 @Serializable
                 data class Renderer(
                     val onTap: OnTap,
-                    val thumbnail: Thumbnail,
-                    val timeDescription: Title,
-                    val title: Title
+                    val thumbnail: ImageContainer,
+                    val timeDescription: ElementsAttributedText,
+                    val title: ElementsAttributedText
                 ) {
                     @Serializable
                     data class OnTap(val watchEndpoint: WatchEndpoint) {
@@ -273,15 +273,6 @@ internal data class ApiNext(
                             val startTime: Duration,
                             val videoId: String
                         )
-                    }
-
-                    @Serializable
-                    data class Thumbnail(val elementsImage: ApiImage)
-
-                    @Serializable
-                    data class Title(val elementsAttributedString: ElementsAttributedString) {
-                        @Serializable
-                        data class ElementsAttributedString(val content: String)
                     }
                 }
             }

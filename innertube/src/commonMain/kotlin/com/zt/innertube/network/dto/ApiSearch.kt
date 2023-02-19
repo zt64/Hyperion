@@ -182,23 +182,14 @@ internal data class ApiSearch(val contents: Contents) {
     data class HashtagTile(val renderer: Renderer) : Model {
         @Serializable
         data class Renderer(
-            val hashtag: ElementsAttributedStringBox,
-            val hashtagChannelCount: ElementsAttributedStringBox? = null,
-            val hashtagInfoText: ElementsAttributedStringBox,
-            val hashtagThumbnail: HashtagThumbnail,
-            val hashtagVideoCount: ElementsAttributedStringBox? = null,
+            val hashtag: ElementsAttributedText,
+            val hashtagChannelCount: ElementsAttributedText? = null,
+            val hashtagInfoText: ElementsAttributedText,
+            val hashtagThumbnail: ImageContainer,
+            val hashtagVideoCount: ElementsAttributedText? = null,
             val hashtagBackgroundColor: Long,
             val onTapCommand: ApiNavigationEndpoint
-        ) {
-            @Serializable
-            data class ElementsAttributedStringBox(val elementsAttributedString: ElementsAttributedString) {
-                @Serializable
-                data class ElementsAttributedString(val content: String)
-            }
-
-            @Serializable
-            data class HashtagThumbnail(val elementsImage: ApiImage)
-        }
+        )
     }
 
     @Serializable

@@ -61,21 +61,12 @@ internal data class ApiTag(
 
     @Serializable
     data class HashtagRenderer(
-        val avatarFacepile: List<ElementsImageContainer> = emptyList(),
+        val avatarFacepile: List<ImageContainer> = emptyList(),
         val backgroundColor: Long,
-        val backgroundImage: ElementsImageContainer? = null,
-        val hashtag: ElementsAttributedContainer,
-        val hashtagInfoText: ElementsAttributedContainer? = null
-    ) {
-        @Serializable
-        data class ElementsImageContainer(val elementsImage: ApiImage)
-
-        @Serializable
-        data class ElementsAttributedContainer(val elementsAttributedString: ElementsAttributedString) {
-            @Serializable
-            data class ElementsAttributedString(val content: String)
-        }
-    }
+        val backgroundImage: ImageContainer? = null,
+        val hashtag: ElementsAttributedText,
+        val hashtagInfoText: ElementsAttributedText? = null
+    )
 
     @Serializable
     data class Model(val videoWithContextModel: VideoWithContextModel) {

@@ -128,9 +128,9 @@ class InnerTubeRepository(
                                         val (tagRenderer) = model
 
                                         DomainTagPartial(
-                                            name = tagRenderer.hashtag.elementsAttributedString.content,
-                                            videosCount = tagRenderer.hashtagVideoCount?.elementsAttributedString?.content,
-                                            channelsCount = tagRenderer.hashtagChannelCount?.elementsAttributedString?.content,
+                                            name = tagRenderer.hashtag.toString(),
+                                            videosCount = tagRenderer.hashtagVideoCount?.toString(),
+                                            channelsCount = tagRenderer.hashtagChannelCount?.toString(),
                                             backgroundColor = tagRenderer.hashtagBackgroundColor
                                         )
                                     }
@@ -215,8 +215,8 @@ class InnerTubeRepository(
                     val chapter = renderer.model.macroMarkersListItemModel?.renderer ?: return@mapNotNull null
 
                     DomainChapter(
-                        title = chapter.title.elementsAttributedString.content,
-                        thumbnail = chapter.thumbnail.elementsImage.sources.last().url,
+                        title = chapter.title.toString(),
+                        thumbnail = chapter.thumbnail.sources.last().url,
                         start = chapter.onTap.watchEndpoint.startTime
                     )
                 } ?: emptyList()
@@ -325,8 +325,8 @@ class InnerTubeRepository(
 
         return DomainTag(
             name = response.header.translucentHeaderRenderer.title.text,
-            subtitle = header.hashtagInfoText?.elementsAttributedString?.content.orEmpty(),
-            avatars = header.avatarFacepile.map { it.elementsImage.sources.first().url },
+            subtitle = header.hashtagInfoText?.toString().orEmpty(),
+            avatars = header.avatarFacepile.map { it.sources.first().url },
             items = contents[1].shelfRenderer!!.content.horizontalListRenderer.items.map { (elementRenderer) ->
                 val (onTap, videoData) = elementRenderer.model.videoWithContextModel.videoWithContextData
                 val (reelEndpoint, watchEndpoint) = onTap.innertubeCommand
