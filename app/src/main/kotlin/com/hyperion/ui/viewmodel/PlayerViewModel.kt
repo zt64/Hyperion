@@ -15,7 +15,7 @@ import androidx.paging.*
 import com.hyperion.domain.manager.AccountManager
 import com.hyperion.domain.manager.DownloadManager
 import com.hyperion.domain.manager.PreferencesManager
-import com.zt.innertube.domain.model.DomainStream
+import com.hyperion.domain.paging.BrowsePagingSource
 import com.zt.innertube.domain.model.DomainVideo
 import com.zt.innertube.domain.model.DomainVideoPartial
 import com.zt.innertube.domain.repository.InnerTubeRepository
@@ -30,6 +30,7 @@ class PlayerViewModel(
     private val innerTube: InnerTubeRepository,
     private val accountManager: AccountManager,
     private val downloadManager: DownloadManager,
+    private val pagingConfig: PagingConfig,
     val preferences: PreferencesManager
 ) : ViewModel() {
     @Immutable
@@ -232,26 +233,13 @@ class PlayerViewModel(
                 player.prepare()
                 player.play()
 
-                relatedVideos = Pager(PagingConfig(4)) {
-                    object : PagingSource<String, DomainVideoPartial>() {
-                        override suspend fun load(params: LoadParams<String>) = try {
-                            val relatedVideosResponse = if (params.key == null) {
-                                innerTube.getNext(video!!.id).relatedVideos
-                            } else {
-                                innerTube.getRelatedVideos(video!!.id, params.key!!)
-                            }
-
-                            LoadResult.Page(
-                                data = relatedVideosResponse.videos,
-                                prevKey = null,
-                                nextKey = relatedVideosResponse.continuation
-                            )
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            LoadResult.Error(e)
+                relatedVideos = Pager(pagingConfig) {
+                    BrowsePagingSource { key ->
+                        if (key == null) {
+                            innerTube.getNext(video!!.id).relatedVideos
+                        } else {
+                            innerTube.getRelatedVideos(video!!.id, key)
                         }
-
-                        override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
                     }
                 }.flow.cachedIn(viewModelScope)
 

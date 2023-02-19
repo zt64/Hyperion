@@ -8,14 +8,19 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.hyperion.domain.paging.BrowsePagingSource
 import com.zt.innertube.domain.model.Entity
 import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    private val innerTube: InnerTubeRepository
+    private val innerTube: InnerTubeRepository,
+    private val pagingConfig: PagingConfig
 ) : ViewModel() {
     var suggestions = mutableStateListOf<String>()
         private set
@@ -59,23 +64,8 @@ class SearchViewModel(
     }
 
     fun search() {
-        results = Pager(PagingConfig(4)) {
-            object : PagingSource<String, Entity>() {
-                override suspend fun load(params: LoadParams<String>) = try {
-                    val searchResults = innerTube.getSearchResults(textFieldValue.text, params.key)
-
-                    LoadResult.Page(
-                        data = searchResults.items,
-                        prevKey = null,
-                        nextKey = searchResults.continuation
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    LoadResult.Error(e)
-                }
-
-                override fun getRefreshKey(state: PagingState<String, Entity>): String? = null
-            }
+        results = Pager(pagingConfig) {
+            BrowsePagingSource { key -> innerTube.getSearchResults(textFieldValue.text, key) }
         }.flow.cachedIn(viewModelScope)
     }
 

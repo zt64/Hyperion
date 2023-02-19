@@ -9,8 +9,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.hyperion.R
+import com.hyperion.domain.paging.BrowsePagingSource
 import com.zt.innertube.domain.model.DomainPlaylist
 import com.zt.innertube.domain.model.DomainVideoPartial
 import com.zt.innertube.domain.repository.InnerTubeRepository
@@ -19,7 +23,8 @@ import kotlinx.coroutines.launch
 
 class PlaylistViewModel(
     private val application: Application,
-    private val innerTube: InnerTubeRepository
+    private val innerTube: InnerTubeRepository,
+    private val pagingConfig: PagingConfig
 ) : ViewModel() {
     @Immutable
     sealed interface State {
@@ -42,27 +47,9 @@ class PlaylistViewModel(
         viewModelScope.launch {
             try {
                 playlist = innerTube.getPlaylist(id)
-                videos = Pager(PagingConfig(4)) {
-                    object : PagingSource<String, DomainVideoPartial>() {
-                        override suspend fun load(params: LoadParams<String>) = try {
-                            val response = if (params.key == null) {
-                                playlist!!
-                            } else {
-                                innerTube.getPlaylist(id, params.key!!)
-                            }
-
-                            LoadResult.Page(
-                                data = response.items,
-                                prevKey = null,
-                                nextKey = response.continuation
-                            )
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-
-                            LoadResult.Error(e)
-                        }
-
-                        override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
+                videos = Pager(pagingConfig) {
+                    BrowsePagingSource { key ->
+                        if (key == null) playlist!! else innerTube.getPlaylist(id, key)
                     }
                 }.flow.cachedIn(viewModelScope)
 

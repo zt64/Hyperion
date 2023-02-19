@@ -13,7 +13,14 @@ class HyperionApplication : Application(), ImageLoaderFactory {
 
         startKoin {
             androidContext(this@HyperionApplication)
-            modules(httpModule, serviceModule, repositoryModule, viewModelModule, managerModule)
+            modules(
+                appModule,
+                httpModule,
+                serviceModule,
+                repositoryModule,
+                viewModelModule,
+                managerModule
+            )
         }
     }
 

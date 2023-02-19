@@ -3,14 +3,19 @@ package com.hyperion.ui.viewmodel
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.hyperion.domain.paging.BrowsePagingSource
 import com.zt.innertube.domain.model.DomainVideoPartial
 import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 class TagViewModel(
-    private val innerTube: InnerTubeRepository
+    private val innerTube: InnerTubeRepository,
+    private val pagingConfig: PagingConfig
 ) : ViewModel() {
     @Immutable
     sealed interface State {
@@ -41,27 +46,9 @@ class TagViewModel(
                 avatars.clear()
                 avatars.addAll(response.avatars)
 
-                videos = Pager(PagingConfig(4)) {
-                    object : PagingSource<String, DomainVideoPartial>() {
-                        override suspend fun load(params: LoadParams<String>) = try {
-                            val content = if (params.key == null) {
-                                response
-                            } else {
-                                innerTube.getTagContinuation(params.key!!)
-                            }
-
-                            LoadResult.Page(
-                                data = content.items,
-                                prevKey = null,
-                                nextKey = content.continuation
-                            )
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-
-                            LoadResult.Error(e)
-                        }
-
-                        override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
+                videos = Pager(pagingConfig) {
+                    BrowsePagingSource { key ->
+                        if (key == null) response else innerTube.getTagContinuation(key)
                     }
                 }.flow.cachedIn(viewModelScope)
 
