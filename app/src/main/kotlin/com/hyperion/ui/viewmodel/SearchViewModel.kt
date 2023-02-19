@@ -23,6 +23,7 @@ class SearchViewModel(
         private set
     var textFieldValue by mutableStateOf(TextFieldValue())
         private set
+    var showFilterSheet by mutableStateOf(false)
 
     fun textFieldValueChange(value: TextFieldValue) {
         textFieldValue = value

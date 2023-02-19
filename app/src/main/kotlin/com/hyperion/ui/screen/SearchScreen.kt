@@ -1,6 +1,7 @@
 package com.hyperion.ui.screen
 
-import androidx.compose.foundation.clickable
+import androidx.annotation.StringRes
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -8,10 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.NorthWest
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,6 +19,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -30,6 +29,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.R
+import com.hyperion.domain.model.search.SearchFilter
 import com.hyperion.ui.component.*
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.viewmodel.SearchViewModel
@@ -41,6 +41,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = getViewModel(),
@@ -60,6 +61,98 @@ fun SearchScreen(
             focusRequester.requestFocus()
         }
     }
+
+    if (viewModel.showFilterSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { viewModel.showFilterSheet = false }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 160.dp)
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(28.dp)
+            ) {
+                @Composable
+                fun FilterFlowRow(
+                    @StringRes title: Int,
+                    icon: ImageVector,
+                    items: Array<out SearchFilter>
+                ) {
+                    Column {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = null,
+                            )
+
+                            Text(
+                                text = stringResource(title),
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
+
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start),
+                        ) {
+                            items.forEach { filter ->
+                                var selected by rememberSaveable {
+                                    mutableStateOf(false)
+                                }
+
+                                FilterChip(
+                                    selected = selected,
+                                    onClick = {
+                                        selected = !selected
+                                    },
+                                    label = {
+                                        Text(stringResource(filter.displayName))
+                                    },
+                                    enabled = true
+                                )
+                            }
+                        }
+                    }
+                }
+
+                FilterFlowRow(
+                    title = R.string.upload_date,
+                    icon = Icons.Default.CalendarToday,
+                    items = SearchFilter.UploadDate.values()
+                )
+
+                FilterFlowRow(
+                    title = R.string.type,
+                    icon = Icons.Default.FilterList,
+                    items = SearchFilter.Type.values()
+                )
+
+                FilterFlowRow(
+                    title = R.string.duration,
+                    icon = Icons.Default.Timer,
+                    items = SearchFilter.Duration.values()
+                )
+
+                FilterFlowRow(
+                    title = R.string.features,
+                    icon = Icons.Default.Star,
+                    items = SearchFilter.Feature.values()
+                )
+
+                FilterFlowRow(
+                    title = R.string.sort_by,
+                    icon = Icons.Default.Sort,
+                    items = SearchFilter.Sort.values()
+                )
+            }
+        }
+    }
+
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -113,7 +206,7 @@ fun SearchScreen(
                 },
                 actions = {
                     IconButton(
-                        onClick = { }
+                        onClick = { viewModel.showFilterSheet = true }
                     ) {
                         Icon(
                             imageVector = Icons.Default.FilterList,
@@ -123,6 +216,9 @@ fun SearchScreen(
                 },
                 scrollBehavior = scrollBehavior
             )
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
         }
     ) { paddingValues ->
         val results = viewModel.results.collectAsLazyPagingItems()
