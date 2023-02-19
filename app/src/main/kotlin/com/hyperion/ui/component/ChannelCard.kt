@@ -39,7 +39,7 @@ fun ChannelCard(
                 modifier = Modifier
                     .clip(CircleShape)
                     .size(60.dp),
-                model = channel.thumbnailUrl!!,
+                url = channel.thumbnailUrl!!,
                 contentDescription = channel.name!!
             )
 

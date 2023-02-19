@@ -114,7 +114,7 @@ private fun ChannelScreenLoaded(
                         ShimmerImage(
                             modifier = Modifier
                                 .aspectRatio(banner.width.toFloat() / banner.height.toFloat()),
-                            model = banner.url,
+                            url = banner.url,
                             contentDescription = channel.name
                         )
                     }
@@ -128,7 +128,7 @@ private fun ChannelScreenLoaded(
                             modifier = Modifier
                                 .clip(CircleShape)
                                 .size(52.dp),
-                            model = channel.avatar,
+                            url = channel.avatar,
                             contentDescription = channel.name
                         )
 

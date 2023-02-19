@@ -138,7 +138,7 @@ private fun TagScreenLoaded(
                                 modifier = Modifier
                                     .size(24.dp)
                                     .clip(CircleShape),
-                                model = avatarUrl,
+                                url = avatarUrl,
                                 contentDescription = null
                             )
                         }

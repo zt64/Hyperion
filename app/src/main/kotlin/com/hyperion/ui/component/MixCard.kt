@@ -109,7 +109,7 @@ private fun Thumbnail(
     ) {
         ShimmerImage(
             modifier = Modifier.aspectRatio(16f / 9f),
-            model = thumbnailUrl,
+            url = thumbnailUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop
         )

@@ -305,7 +305,7 @@ private fun PlayerScreenPortrait(
                                             Column {
                                                 ShimmerImage(
                                                     modifier = Modifier.aspectRatio(16f / 9f),
-                                                    model = chapter.thumbnail,
+                                                    url = chapter.thumbnail,
                                                     contentDescription = null
                                                 )
 
@@ -350,7 +350,7 @@ private fun PlayerScreenPortrait(
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .size(42.dp),
-                                model = video.author.avatarUrl!!,
+                                url = video.author.avatarUrl!!,
                                 contentDescription = video.author.name!!
                             )
 

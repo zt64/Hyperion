@@ -130,7 +130,7 @@ private fun RecentCard(
                     modifier = Modifier
                         .background(Color.Black)
                         .aspectRatio(16f / 9f),
-                    model = "https://cdn.discordapp.com/avatars/556614860931072012/f50b1c6daf6f00827f827113e9920677.webp?size=480",
+                    url = "https://cdn.discordapp.com/avatars/556614860931072012/f50b1c6daf6f00827f827113e9920677.webp?size=480",
                     contentScale = ContentScale.Fit,
                     contentDescription = null
                 )

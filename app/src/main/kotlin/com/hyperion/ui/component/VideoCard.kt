@@ -74,7 +74,7 @@ fun VideoCard(
                                     .clip(CircleShape)
                                     .clickable(onClick = onClickChannel)
                                     .size(28.dp),
-                                model = it,
+                                url = it,
                                 contentDescription = video.channel!!.name
                             )
                         }
@@ -105,7 +105,7 @@ fun VideoCard(
                                 .clip(CircleShape)
                                 .clickable(onClick = onClickChannel)
                                 .size(38.dp),
-                            model = it,
+                            url = it,
                             contentDescription = null
                         )
                     }
@@ -142,7 +142,7 @@ private fun Thumbnail(
     Box(modifier) {
         ShimmerImage(
             modifier = Modifier.aspectRatio(16f / 9f),
-            model = video.thumbnailUrl,
+            url = video.thumbnailUrl,
             contentScale = ContentScale.Crop,
             contentDescription = stringResource(R.string.thumbnail)
         )
