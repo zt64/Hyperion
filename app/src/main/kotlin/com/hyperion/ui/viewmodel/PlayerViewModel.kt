@@ -1,30 +1,38 @@
 package com.hyperion.ui.viewmodel
 
 import android.app.Application
+import android.content.ComponentName
 import android.content.Intent
+import androidx.annotation.OptIn
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.*
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
-import androidx.media3.exoplayer.DefaultRenderersFactory
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionToken
 import androidx.paging.*
+import com.google.common.util.concurrent.MoreExecutors
 import com.hyperion.domain.manager.AccountManager
 import com.hyperion.domain.manager.DownloadManager
 import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.domain.paging.BrowsePagingSource
+import com.hyperion.player.PlaybackService
+import com.zt.innertube.domain.model.DomainFormat
 import com.zt.innertube.domain.model.DomainVideo
 import com.zt.innertube.domain.model.DomainVideoPartial
 import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
+@OptIn(UnstableApi::class)
 class PlayerViewModel(
     private val application: Application,
     private val innerTube: InnerTubeRepository,
@@ -44,8 +52,10 @@ class PlayerViewModel(
         private set
     var video by mutableStateOf<DomainVideo?>(null)
         private set
-    var stream by mutableStateOf<DomainStream?>(null)
+    var videoFormats = mutableStateListOf<DomainFormat.Video>()
         private set
+    private var audioSource: ProgressiveMediaSource? = null
+    private var videoFormat: DomainFormat.Video? = null
     var isFullscreen by mutableStateOf(false)
         private set
     var showFullDescription by mutableStateOf(false)
@@ -58,10 +68,6 @@ class PlayerViewModel(
         private set
 
     private val listener: Player.Listener = object : Player.Listener {
-        override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
-            this@PlayerViewModel.playWhenReady = playWhenReady
-        }
-
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             this@PlayerViewModel.isPlaying = isPlaying
         }
@@ -70,7 +76,7 @@ class PlayerViewModel(
             this@PlayerViewModel.isLoading = isLoading
         }
 
-        override fun onPlaybackStateChanged(playbackState: Int) {
+        override fun onPlaybackStateChanged(@Player.State playbackState: Int) {
             this@PlayerViewModel.playbackState = playbackState
         }
 
@@ -81,40 +87,13 @@ class PlayerViewModel(
 
     private val dataSourceFactory = DefaultHttpDataSource.Factory()
 
-    val player = ExoPlayer.Builder(application)
-        .setAudioAttributes(
-            AudioAttributes.Builder()
-                .setUsage(C.USAGE_MEDIA)
-                .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
-                .build(),
-            /* handleAudioFocus = */ true
-        )
-        .setRenderersFactory(
-            DefaultRenderersFactory(application)
-                .setEnableAudioTrackPlaybackParams(true)
-                .setEnableAudioOffload(true)
-                .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON)
-        )
-        .setWakeMode(C.WAKE_MODE_NETWORK)
-        .setHandleAudioBecomingNoisy(true)
-        .setSeekBackIncrementMs(15000)
-        .setSeekForwardIncrementMs(15000)
-        .build()
-        .apply {
-            playWhenReady = true
-
-            addListener(listener)
-        }
-
-    var playWhenReady by mutableStateOf(player.playWhenReady)
+    var isPlaying by mutableStateOf(false)
         private set
-    var isPlaying by mutableStateOf(player.isPlaying)
-        private set
-    var isLoading by mutableStateOf(player.isLoading)
+    var isLoading by mutableStateOf(false)
         private set
 
     @get:Player.State
-    var playbackState by mutableStateOf(player.playbackState)
+    var playbackState by mutableStateOf(Player.STATE_IDLE)
         private set
     var duration by mutableStateOf(Duration.ZERO)
         private set
@@ -123,19 +102,32 @@ class PlayerViewModel(
     var relatedVideos = emptyFlow<PagingData<DomainVideoPartial>>()
         private set
 
-    private val job = viewModelScope.launch {
-        while (true) {
-            duration = player.duration.takeUnless { it == C.TIME_UNSET }?.milliseconds ?: Duration.ZERO
-            position = player.currentPosition.milliseconds
-            delay(500)
-        }
+    lateinit var player: MediaController
+
+    init {
+        val sessionToken = SessionToken(application, ComponentName(application, PlaybackService::class.java))
+        val controllerFuture = MediaController.Builder(application, sessionToken).buildAsync()
+
+        controllerFuture.addListener(
+            /* listener = */ {
+                player = controllerFuture.get()
+                player.addListener(listener)
+                player.prepare()
+
+                viewModelScope.launch {
+                    while (isActive) {
+                        duration = player.duration.takeUnless { it == C.TIME_UNSET }?.milliseconds ?: Duration.ZERO
+                        position = player.currentPosition.milliseconds
+                        delay(500)
+                    }
+                }
+            },
+            /* executor = */ MoreExecutors.directExecutor()
+        )
     }
 
-//    TODO: Add some form of history for next/previous video navigation
-//    val videoStack = mutableStateListOf<String>()
-
     override fun onCleared() {
-        job.cancel()
+        player.release()
     }
 
     fun shareVideo() {
@@ -166,7 +158,6 @@ class PlayerViewModel(
     }
 
     fun togglePlayPause() {
-        isPlaying = !isPlaying
         player.playWhenReady = !player.playWhenReady
     }
 
@@ -209,29 +200,41 @@ class PlayerViewModel(
         }
     }
 
+    private fun setFormat(format: DomainFormat.Video) {
+        val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(format.url))
+
+        val mergingMediaSource = MergingMediaSource(
+            /* adjustPeriodTimeOffsets = */ true,
+            /* clipDurations = */ true,
+            /* ...mediaSources = */ videoSource, audioSource!!
+        )
+
+        player.setMediaItem(
+            mergingMediaSource.mediaItem.let {
+                it.buildUpon().setMediaId(it.localConfiguration!!.uri.toString()).build()
+            }
+        )
+    }
+
     fun loadVideo(id: String) {
         state = State.Loading
 
         viewModelScope.launch {
             try {
                 video = innerTube.getVideo(id)
-                stream = video!!.streams.filterIsInstance<DomainStream.Video>().last()
 
-                val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(MediaItem.fromUri(stream!!.url))
+                state = State.Loaded
 
-                val audioSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-                    .createMediaSource(MediaItem.fromUri(stream!!.url))
+                videoFormats.clear()
+                videoFormats.addAll(video!!.formats.filterIsInstance<DomainFormat.Video>())
+                videoFormat = videoFormats.first()
 
-                val mergingMediaSource = MergingMediaSource(
-                    /* adjustPeriodTimeOffsets = */ true,
-                    /* clipDurations = */ true,
-                    /* ...mediaSources = */ videoSource, audioSource
-                )
+                val audioStream = video!!.formats.filterIsInstance<DomainFormat.Audio>().last()
+                audioSource = ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(MediaItem.fromUri(audioStream.url))
 
-                player.setMediaSource(mergingMediaSource)
-                player.prepare()
-                player.play()
+                setFormat(videoFormat!!)
 
                 relatedVideos = Pager(pagingConfig) {
                     BrowsePagingSource { key ->
@@ -242,8 +245,6 @@ class PlayerViewModel(
                         }
                     }
                 }.flow.cachedIn(viewModelScope)
-
-                state = State.Loaded
             } catch (e: Exception) {
                 e.printStackTrace()
                 state = State.Error(e)
@@ -272,5 +273,10 @@ class PlayerViewModel(
 
     fun showComments() {
 
+    }
+
+    fun selectFormat(selectedFormat: DomainFormat.Video) {
+        setFormat(selectedFormat)
+        hideQualityPicker()
     }
 }

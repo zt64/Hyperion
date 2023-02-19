@@ -20,9 +20,9 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.VideoSettings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +38,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsCompat
@@ -53,7 +54,6 @@ import com.hyperion.ui.component.player.PlayerControlsOverlay
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.viewmodel.PlayerViewModel
 import com.hyperion.util.findActivity
-import com.zt.innertube.domain.model.DomainStream
 import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
@@ -112,52 +112,23 @@ private fun PlayerScreenLoaded(
     navController: NavController<AppDestination>
 ) {
     if (viewModel.showQualityPicker) {
-        AlertDialog(
-            onDismissRequest = viewModel::hideQualityPicker,
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.VideoSettings,
-                    contentDescription = null
-                )
-            },
-            title = { Text(stringResource(R.string.quality)) },
-            text = {
-                var selectedStream by remember { mutableStateOf(viewModel.stream!!) }
-
-                LazyColumn(
-                    modifier = Modifier.heightIn(max = 400.dp)
-                ) {
-                    items(viewModel.video!!.streams.filterIsInstance<DomainStream.Video>()) { stream ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { selectedStream = stream },
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = stream == selectedStream,
-                                onClick = { selectedStream = stream }
-                            )
-
-                            Text(
-                                text = "${stream.label} ${stream.mimeType}",
-                                style = MaterialTheme.typography.labelLarge
-                            )
+        ModalBottomSheet(onDismissRequest = viewModel::hideQualityPicker) {
+            LazyColumn {
+                items(viewModel.videoFormats) { format ->
+                    ListItem(
+                        modifier = Modifier.clickable {
+                            viewModel.selectFormat(format)
+                        },
+                        headlineText = {
+                            Text(format.qualityLabel)
+                        },
+                        overlineText = {
+                            Text(format.mimeType)
                         }
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = viewModel::hideQualityPicker) {
-                    Text(stringResource(R.string.confirm))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = viewModel::hideQualityPicker) {
-                    Text(stringResource(R.string.dismiss))
+                    )
                 }
             }
-        )
+        }
     }
 
     if (viewModel.showDownloadDialog) {
@@ -297,20 +268,63 @@ private fun PlayerScreenPortrait(
                         }
                     }
 
-                    ClickableText(
-                        modifier = Modifier.animateContentSize(),
-                        text = description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        maxLines = if (viewModel.showFullDescription) Int.MAX_VALUE else 3,
-                        overflow = TextOverflow.Ellipsis
-                    ) { offset ->
-                        val annotation = description.getStringAnnotations(
-                            tag = "URL",
-                            start = offset,
-                            end = offset
-                        ).firstOrNull()
+                    Column(
+                        modifier = Modifier
+                            .animateContentSize()
+                            .requiredHeightIn(max = if (viewModel.showFullDescription) Dp.Unspecified else 100.dp)
+                    ) {
+                        ClickableText(
+                            text = description,
+                            style = MaterialTheme.typography.bodyMedium,
+                            overflow = TextOverflow.Ellipsis
+                        ) { offset ->
+                            val annotation = description.getStringAnnotations(
+                                tag = "URL",
+                                start = offset,
+                                end = offset
+                            ).firstOrNull()
 
-                        if (annotation == null) viewModel.toggleDescription() else uriHandler.openUri(annotation.item)
+                            if (annotation == null) viewModel.toggleDescription() else uriHandler.openUri(annotation.item)
+                        }
+
+                        BoxWithConstraints {
+                            if (maxHeight >= 160.dp) {
+                                LazyRow(
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                ) {
+                                    items(video.chapters) { chapter ->
+                                        OutlinedCard(
+                                            modifier = Modifier.size(
+                                                width = 144.dp,
+                                                height = 160.dp
+                                            ),
+                                            onClick = {
+                                                // TODO: Seek to chapter
+                                            }
+                                        ) {
+                                            Column {
+                                                ShimmerImage(
+                                                    modifier = Modifier.aspectRatio(16f / 9f),
+                                                    model = chapter.thumbnail,
+                                                    contentDescription = null
+                                                )
+
+                                                Text(
+                                                    modifier = Modifier.padding(
+                                                        horizontal = 10.dp,
+                                                        vertical = 4.dp
+                                                    ),
+                                                    text = chapter.title,
+                                                    style = MaterialTheme.typography.titleSmall,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     PlayerActions(
@@ -451,10 +465,10 @@ private fun PlayerControls(
     val coroutineScope = rememberCoroutineScope()
     val offsetY = remember { Animatable(0f) }
 
-    var scale by remember { mutableStateOf(1f) }
+    var scale by rememberSaveable { mutableStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     val transformableState = rememberTransformableState { zoomChange, offsetChange, _ ->
-        scale *= zoomChange
+        scale = (scale * zoomChange).coerceIn(1f..10f)
         offset += offsetChange
     }
 
@@ -471,13 +485,6 @@ private fun PlayerControls(
                     }
                 )
             }
-            .graphicsLayer(
-                scaleX = scale,
-                scaleY = scale,
-                translationX = offset.x,
-                translationY = offset.y
-            )
-            .transformable(transformableState)
             .draggable(
                 orientation = Orientation.Vertical,
                 state = rememberDraggableState { dragAmount ->
@@ -500,7 +507,17 @@ private fun PlayerControls(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Player(player = viewModel.player)
+        Player(
+            modifier = Modifier
+                .graphicsLayer(
+                    scaleX = scale,
+                    scaleY = scale,
+                    translationX = offset.x,
+                    translationY = offset.y
+                )
+                .transformable(transformableState),
+            player = viewModel.player
+        )
 
         AnimatedVisibility(
             modifier = Modifier.matchParentSize(),
