@@ -15,8 +15,6 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "0.0.1"
-
-        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -71,15 +69,15 @@ dependencies {
     implementation(libs.bundles.accompanist)
 
     implementation(libs.compose.ui)
-    debugImplementation(libs.compose.ui.tooling)
     implementation(libs.compose.runtime)
-    debugImplementation(libs.compose.runtime.tracing)
     implementation(libs.compose.material3)
     implementation(libs.compose.material3.windowSizeClass)
     implementation(libs.compose.icons.extended)
     implementation(libs.compose.animation.graphics)
     implementation(libs.navigation)
     implementation(libs.coil.compose)
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.runtime.tracing)
 
     implementation(libs.ktor.core)
     implementation(libs.ktor.cio)
