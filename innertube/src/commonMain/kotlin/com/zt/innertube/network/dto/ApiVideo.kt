@@ -18,25 +18,19 @@ internal data class VideoData(
 }
 
 @Serializable
-internal data class ApiVideo(val videoWithContextData: ContextData) {
+internal data class ApiVideo(val videoWithContextData: ContextData<ApiWatchCommand>)
+
+@Serializable
+internal data class ApiNextVideo(val videoWithContextData: ContextData<InnertubeCommand>) {
     @Serializable
-    data class ContextData(
-        val videoData: VideoData,
-        val onTap: OnTap<ApiWatchCommand>
-    )
+    data class InnertubeCommand(val watchNextWatchEndpointMutationCommand: MutationCommand? = null) {
+        @Serializable
+        data class MutationCommand(val watchEndpoint: ApiWatchCommand)
+    }
 }
 
 @Serializable
-internal data class ApiNextVideo(val videoWithContextData: ContextData) {
-    @Serializable
-    data class ContextData(
-        val videoData: VideoData,
-        val onTap: OnTap<InnertubeCommand>
-    ) {
-        @Serializable
-        data class InnertubeCommand(val watchNextWatchEndpointMutationCommand: MutationCommand? = null) {
-            @Serializable
-            data class MutationCommand(val watchEndpoint: ApiWatchCommand)
-        }
-    }
-}
+internal data class ContextData<T>(
+    val videoData: VideoData,
+    val onTap: OnTap<T>
+)

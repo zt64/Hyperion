@@ -3,7 +3,7 @@ package com.zt.innertube.network.dto.renderer
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class ElementRenderer<T>(private val newElement: NewElement<T>) {
+internal open class ElementRenderer<T>(private val newElement: NewElement<T>) {
     val model = newElement.type.componentType.model
 
     @Serializable

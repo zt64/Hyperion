@@ -1,12 +1,14 @@
 package com.zt.innertube.domain.model
 
+import com.zt.innertube.network.dto.ApiImageSource
+
 data class DomainChannel(
     val id: String,
     val name: String,
     val description: String?,
     val subscriberText: String?,
     val avatar: String,
-    val banner: String?,
+    val banner: ApiImageSource?,
     override val items: List<DomainVideoPartial>,
     override val continuation: String?
 ) : DomainBrowse<DomainVideoPartial>() {

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 // TODO: Switch to typealias for serialization to simplify API usage
 //internal typealias ApiText = @Serializable(ApiTextSerializer::class) String
 //
-//private object ApiTextSerializer : KSerializer<String> {
+//internal object ApiTextSerializer : KSerializer<String> {
 //    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("ApiText", PrimitiveKind.STRING)
 //
 //    override fun deserialize(decoder: Decoder): String {
@@ -29,4 +29,10 @@ internal class ApiText private constructor(private val runs: List<TextRun>) {
     data class TextRun(val text: String)
 
     override fun toString() = text
+}
+
+@Serializable
+data class Title(val elementsAttributedString: ElementsAttributedString) {
+    @Serializable
+    data class ElementsAttributedString(val content: String)
 }

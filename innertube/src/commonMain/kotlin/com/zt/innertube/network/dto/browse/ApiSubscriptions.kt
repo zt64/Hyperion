@@ -28,20 +28,13 @@ internal data class ApiSubscriptions(
                 data class VideoData(
                     val avatar: ApiAvatar,
                     val metadata: Metadata,
-                    val thumbnail: Thumbnail
+                    val thumbnail: ApiThumbnailTimestamp
                 ) {
                     @Serializable
                     data class Metadata(
                         val title: String,
                         val metadataDetails: String,
                         val isVideoWithContext: Boolean
-                    )
-
-                    @Serializable
-                    data class Thumbnail(
-                        val image: ApiImage,
-                        val isVideoWithContext: Boolean,
-                        val timestampText: String
                     )
                 }
             }

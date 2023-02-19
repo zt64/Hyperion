@@ -1,14 +1,22 @@
 package com.zt.innertube.domain.mapper
 
 import com.zt.innertube.domain.model.DomainChannelPartial
-import com.zt.innertube.domain.model.DomainStream
 import com.zt.innertube.domain.model.DomainVideoPartial
-import com.zt.innertube.network.dto.ApiFormat
 import com.zt.innertube.network.dto.ApiNextVideo
 import com.zt.innertube.network.dto.ApiVideo
+import com.zt.innertube.network.dto.ContextData
 
-internal fun ApiVideo.ContextData.toDomain() = DomainVideoPartial(
-    id = onTap.innertubeCommand.watchEndpoint?.videoId.orEmpty(),
+internal fun ApiVideo.toDomain() = videoWithContextData.toDomain(
+    id = videoWithContextData.onTap.innertubeCommand.watchEndpoint?.videoId.orEmpty()
+)
+
+internal fun ApiNextVideo.toDomain() = videoWithContextData.toDomain(
+    id = videoWithContextData.onTap.innertubeCommand.watchNextWatchEndpointMutationCommand
+        ?.watchEndpoint?.watchEndpoint?.videoId.orEmpty()
+)
+
+private fun ContextData<*>.toDomain(id: String) = DomainVideoPartial(
+    id = id,
     title = videoData.metadata.title,
     subtitle = videoData.metadata.metadataDetails,
     timestamp = videoData.thumbnail.timestampText,
@@ -19,34 +27,6 @@ internal fun ApiVideo.ContextData.toDomain() = DomainVideoPartial(
         )
     } ?: DomainChannelPartial(
         id = videoData.channelId!!,
-        avatarUrl = videoData.decoratedAvatar!!.avatar.image.sources.last().url
+        avatarUrl = videoData.decoratedAvatar!!.sources.last().url
     )
 )
-
-internal fun ApiNextVideo.ContextData.toDomain() = DomainVideoPartial(
-    id = onTap.innertubeCommand.watchNextWatchEndpointMutationCommand?.watchEndpoint?.watchEndpoint?.videoId.orEmpty(),
-    title = videoData.metadata.title,
-    subtitle = videoData.metadata.metadataDetails,
-    timestamp = videoData.thumbnail.timestampText,
-    channel = videoData.avatar?.let { avatar ->
-        DomainChannelPartial(
-            id = avatar.endpoint.innertubeCommand.browseEndpoint.browseId,
-            avatarUrl = avatar.image.sources.last().url
-        )
-    }
-)
-
-internal fun ApiFormat.toDomain() = when {
-    mimeType.startsWith("video/") -> DomainStream.Video(
-        url = url,
-        itag = itag,
-        label = qualityLabel!!,
-        mimeType = mimeType
-    )
-    mimeType.startsWith("audio/") -> DomainStream.Audio(
-        url = url,
-        itag = itag,
-        mimeType = mimeType
-    )
-    else -> throw NoWhenBranchMatchedException(toString())
-}

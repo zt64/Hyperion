@@ -96,7 +96,7 @@ internal data class ApiTag(
             @Serializable
             data class VideoData(
                 val metadata: Metadata,
-                val thumbnail: Thumbnail
+                val thumbnail: ApiThumbnailTimestamp
             ) {
                 @Serializable
                 data class Metadata(
@@ -104,13 +104,6 @@ internal data class ApiTag(
                     val isVideoWithContext: Boolean,
                     val metadataDetails: String,
                     val title: String
-                )
-
-                @Serializable
-                data class Thumbnail(
-                    val image: ApiImage,
-                    val isVideoWithContext: Boolean,
-                    val timestampText: String? = null
                 )
             }
         }

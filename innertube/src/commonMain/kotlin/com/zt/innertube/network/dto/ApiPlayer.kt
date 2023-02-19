@@ -1,17 +1,17 @@
 package com.zt.innertube.network.dto
 
+import com.zt.innertube.domain.model.DomainFormat
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class ApiPlayer(
     val streamingData: StreamingData,
-    val videoDetails: VideoDetails
+    val videoDetails: VideoDetails,
+    val playabilityStatus: PlayabilityStatus
 ) {
     @Serializable
-    data class StreamingData(
-        val formats: List<ApiFormat> = emptyList(),
-        val adaptiveFormats: List<ApiFormat>
-    )
+    data class StreamingData(val adaptiveFormats: List<DomainFormat>)
 
     @Serializable
     data class VideoDetails(
@@ -22,9 +22,21 @@ internal data class ApiPlayer(
         val isPrivate: Boolean,
         val lengthSeconds: String,
         val shortDescription: String,
-        val thumbnail: ApiThumbnail,
+        val thumbnail: ApiImage,
         val title: String,
         val videoId: String,
         val viewCount: String? = null
     )
+
+    @Serializable
+    data class PlayabilityStatus(val status: Status)
+}
+
+@Serializable
+internal enum class Status {
+    @SerialName("OK")
+    OK,
+
+    @SerialName("ERROR")
+    ERROR
 }

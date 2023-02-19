@@ -1,12 +1,19 @@
 package com.zt.innertube.network.dto
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonTransformingSerializer
+import kotlinx.serialization.json.jsonObject
 
 @Serializable
 internal data class ApiAvatar(
     val endpoint: OnTap<ApiNavigationEndpoint>,
     val image: ApiImage
 )
+internal typealias DecoratedAvatar = @Serializable(DecoratedAvatarSerializer::class) ApiImage
 
-@Serializable
-internal data class DecoratedAvatar(val avatar: ImageContainer)
+internal class DecoratedAvatarSerializer : JsonTransformingSerializer<ApiImage>(ApiImage.serializer()) {
+    override fun transformDeserialize(element: JsonElement) = element
+        .jsonObject["avatar"]!!
+        .jsonObject["image"]!!
+}

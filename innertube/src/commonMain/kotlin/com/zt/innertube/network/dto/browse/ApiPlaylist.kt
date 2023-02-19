@@ -1,10 +1,46 @@
 package com.zt.innertube.network.dto.browse
 
+import com.zt.innertube.network.dto.ApiImage
 import com.zt.innertube.network.dto.ApiNavigationEndpoint
 import com.zt.innertube.network.dto.ApiText
-import com.zt.innertube.network.dto.ApiThumbnail
 import com.zt.innertube.network.dto.renderer.SectionListRenderer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.protobuf.ProtoNumber
+
+@Serializable
+internal class PlaylistContinuation private constructor(
+    @ProtoNumber(80226972)
+    val continuation: Continuation
+) {
+    constructor(id: String, page: Int) : this(
+        continuation = Continuation(
+            playlistIdRaw = "VL$id",
+            unknown = Continuation.Unknown(
+                page = page,
+                unknown = "PT:CGo"
+            ),
+            playlistId = id
+        )
+    )
+
+    @Serializable
+    data class Continuation(
+        @ProtoNumber(2)
+        val playlistId: String,
+        @ProtoNumber(3)
+        val unknown: Unknown,
+        @ProtoNumber(35)
+        val playlistIdRaw: String,
+    ) {
+        @Serializable
+        data class Unknown(
+            @ProtoNumber(1)
+            val page: Int,
+            @ProtoNumber(15)
+            val unknown: String
+        )
+    }
+}
 
 @Serializable
 internal data class ApiPlaylist(
@@ -37,7 +73,7 @@ internal data class ApiPlaylist(
                 val lengthText: ApiText,
                 val navigationEndpoint: NavigationEndpoint,
                 val shortBylineText: ApiText,
-                val thumbnail: ApiThumbnail,
+                val thumbnail: ApiImage,
                 val thumbnailOverlays: List<ThumbnailOverlay>,
                 val title: ApiText,
                 val videoId: String

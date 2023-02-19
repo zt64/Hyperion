@@ -10,6 +10,9 @@ import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.singleOf
@@ -38,6 +41,10 @@ val httpModule = module {
             deflate()
             gzip()
             brotli()
+        }
+
+        defaultRequest {
+            contentType(ContentType.Application.Json)
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

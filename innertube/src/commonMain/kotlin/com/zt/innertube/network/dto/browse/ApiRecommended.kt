@@ -39,19 +39,19 @@ internal data class ShortsShelfModel(val items: List<Item>) {
                 @Serializable
                 data class ReelWatchEndpoint(
                     val overlay: Overlay,
-                    val thumbnail: ApiThumbnail,
+                    val thumbnail: ApiImage,
                     val videoId: String
                 ) {
                     @Serializable
                     data class Overlay(val reelPlayerOverlayRenderer: ReelPlayerOverlayRenderer? = null) {
                         @Serializable
-                        data class ReelPlayerOverlayRenderer(val reelPlayerHeaderSupportedRenderers: ReelPlayerHeaderSupportedRenderers) {
+                        data class ReelPlayerOverlayRenderer(val reelPlayerHeaderSupportedRenderers: ReelPlayerHeaderSupportedRenderers? = null) {
                             @Serializable
                             data class ReelPlayerHeaderSupportedRenderers(val reelPlayerHeaderRenderer: ReelPlayerHeaderRenderer) {
                                 @Serializable
                                 data class ReelPlayerHeaderRenderer(
                                     val channelNavigationEndpoint: ApiNavigationEndpoint,
-                                    val channelThumbnail: ApiThumbnail,
+                                    val channelThumbnail: ApiImage,
                                     val channelTitleText: ApiText,
                                     val reelTitleText: ApiText,
                                     val timestampText: ApiText

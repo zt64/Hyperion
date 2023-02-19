@@ -8,15 +8,16 @@ data class DomainNext(
     val subscribersText: String? = null,
     val comments: Comments,
     val relatedVideos: RelatedVideos,
-    val badges: List<String>
-) {
-    data class Comments(
-        val comments: List<DomainComment>,
-        val continuation: String? = null
-    )
+    val badges: List<String>,
+    val chapters: List<DomainChapter>
+)
 
-    data class RelatedVideos(
-        val videos: List<DomainVideoPartial>,
-        val continuation: String? = null
-    )
-}
+data class Comments(
+    override val items: List<DomainComment>,
+    override val continuation: String? = null
+) : DomainBrowse<DomainComment>()
+
+data class RelatedVideos(
+    override val items: List<DomainVideoPartial>,
+    override val continuation: String? = null
+) : DomainBrowse<DomainVideoPartial>()

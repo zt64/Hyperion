@@ -8,7 +8,7 @@ import kotlinx.serialization.json.jsonObject
 internal val List<ApiContinuation>.next: String?
     get() = singleOrNull { it is ApiContinuation.Next }?.continuation
 
-@Serializable(with = ApiContinuation.Serializer::class)
+@Serializable(ApiContinuation.Serializer::class)
 internal sealed interface ApiContinuation {
     val continuation: String
 

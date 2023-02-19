@@ -12,11 +12,11 @@ internal data class ApiTrending(
     @Serializable
     data class SectionContent(val itemSectionRenderer: ItemSectionRenderer<Content>) {
         @Serializable
-        data class Content(val elementRenderer: ElementRenderer<Model>) {
-            @Serializable
-            data class Model(val videoWithContextModel: ApiVideo? = null)
-        }
+        data class Content(val elementRenderer: ElementRenderer<Model>)
     }
+
+    @Serializable
+    data class Model(val videoWithContextModel: ApiVideo? = null)
 }
 
 @Serializable
