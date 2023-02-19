@@ -97,7 +97,7 @@ private fun ChannelScreenLoaded(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            MediumTopAppBar(
+            TopAppBar(
                 title = { Text(channel.name) },
                 navigationIcon = {
                     IconButton(onClick = navController::pop) {
