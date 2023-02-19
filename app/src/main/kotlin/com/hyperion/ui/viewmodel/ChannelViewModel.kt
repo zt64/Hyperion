@@ -8,13 +8,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hyperion.domain.manager.AccountManager
+import com.hyperion.domain.model.channel.ChannelTab
+import com.hyperion.domain.model.channel.VideoSort
 import com.zt.innertube.domain.model.DomainChannel
 import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.launch
 
 class ChannelViewModel(
     private val application: Application,
-    private val innerTube: InnerTubeRepository
+    private val innerTube: InnerTubeRepository,
+    private val accountManager: AccountManager
 ) : ViewModel() {
     @Immutable
     sealed interface State {
@@ -25,6 +29,9 @@ class ChannelViewModel(
 
     var state by mutableStateOf<State>(State.Loading)
         private set
+
+    var tab by mutableStateOf(ChannelTab.HOME)
+    var videoSort by mutableStateOf(VideoSort.RECENTLY_UPLOADED)
 
     fun getChannel(id: String) {
         state = State.Loading
