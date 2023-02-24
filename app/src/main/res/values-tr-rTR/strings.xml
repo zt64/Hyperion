@@ -104,4 +104,9 @@
     <string name="check_for_updates">Güncellemeleri kontrol etmek için dokun</string>
     <string name="type">Type</string>
     <string name="duration">Duration</string>
+    <string name="captions">Captions</string>
+    <string name="loop">Loop video</string>
+    <string name="playback_speed">Playback speed</string>
+    <string name="off">Off</string>
+    <string name="on">On</string>
 </resources>
