@@ -64,7 +64,6 @@ dependencies {
     implementation(projects.ktorBrotli)
 
     implementation(libs.bundles.androidx)
-    implementation(libs.bundles.koin)
     implementation(libs.bundles.media3)
     implementation(libs.bundles.accompanist)
 
@@ -87,6 +86,7 @@ dependencies {
     implementation(libs.ktor.serialization.json)
 
     implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.koin.compose)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

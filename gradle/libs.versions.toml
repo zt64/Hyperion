@@ -2,12 +2,11 @@
 kotlin = "1.8.10"
 kotlin-serialization = "1.5.0-RC"
 agp = "7.4.1"
-compose = "1.4.0-beta01"
+compose = "1.4.0-beta02"
 compose-compiler = "1.4.2"
-compose-material3 = "1.1.0-alpha06"
+compose-material3 = "1.1.0-alpha07"
 accompanist = "0.29.1-alpha"
 ktor = "2.2.3"
-koin = "3.2.0"
 media3 = "1.0.0-rc01"
 
 [libraries]
@@ -23,8 +22,8 @@ ktor-contentnegotiation = { module = "io.ktor:ktor-client-content-negotiation", 
 ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = "ktor" }
 
-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
-koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+#noinspection GradleDependency Wait until transient navigation dependency dropped
+koin-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.2.0" }
 
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
@@ -53,7 +52,6 @@ brotli = "org.brotli:dec:0.1.2"
 
 [bundles]
 androidx = ["androidx-core", "androidx-splashscreen", "androidx-activity", "androidx-paging"]
-koin = ["koin-android", "koin-compose"]
 media3 = ["media3-exoplayer", "media3-session"]
 accompanist = ["accompanist-systemuicontroller", "accompanist-placeholder"]
 
