@@ -20,7 +20,7 @@
     <string name="thumbnail">Pienoiskuva</string>
     <string name="videos">Videot</string>
     <string name="playlists">Soittolistat</string>
-    <string name="search">Hae</string>
+    <string name="search">Etsi</string>
     <string name="error">Virhe</string>
     <string name="error_occurred">Tapahtui virhe</string>
     <string name="unknown">Tuntematon</string>
@@ -104,9 +104,9 @@
     <string name="check_for_updates">Tarkasta päivitykset napauttamalla</string>
     <string name="type">Tyyppi</string>
     <string name="duration">Kesto</string>
-    <string name="captions">Captions</string>
-    <string name="loop">Loop video</string>
-    <string name="playback_speed">Playback speed</string>
-    <string name="off">Off</string>
-    <string name="on">On</string>
+    <string name="captions">Tekstitykset</string>
+    <string name="loop">Toista video</string>
+    <string name="playback_speed">Toistonopeus</string>
+    <string name="off">Pois</string>
+    <string name="on">Päälle</string>
 </resources>
