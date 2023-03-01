@@ -147,22 +147,20 @@ private fun Thumbnail(
             contentDescription = stringResource(R.string.thumbnail)
         )
 
-        video.timestamp?.let { timestamp ->
-            Surface(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .align(Alignment.BottomEnd),
-                shape = MaterialTheme.shapes.small,
-                color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.8f)
-            ) {
-                Text(
-                    modifier = Modifier.padding(4.dp),
-                    text = timestamp,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onTertiaryContainer,
-                    fontSize = 14.sp * timeStampScale
-                )
-            }
+        Surface(
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.BottomEnd),
+            shape = MaterialTheme.shapes.small,
+            color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.8f)
+        ) {
+            Text(
+                modifier = Modifier.padding(4.dp),
+                text = video.timestamp ?: stringResource(R.string.live),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onTertiaryContainer,
+                fontSize = 14.sp * timeStampScale
+            )
         }
     }
 }
