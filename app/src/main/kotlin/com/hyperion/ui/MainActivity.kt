@@ -1,4 +1,4 @@
-package com.hyperion
+package com.hyperion.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
