@@ -1,6 +1,6 @@
 [versions]
 kotlin = "1.8.10"
-kotlin-serialization = "1.5.0-RC"
+kotlin-serialization = "1.5.0"
 agp = "7.4.1"
 compose = "1.4.0-beta02"
 compose-compiler = "1.4.2"
@@ -28,7 +28,7 @@ koin-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.2
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "compose" }
-compose-runtime-tracing = { module = "androidx.compose.runtime:runtime-tracing", version = "1.0.0-alpha02" }
+compose-runtime-tracing = { module = "androidx.compose.runtime:runtime-tracing", version = "1.0.0-alpha03" }
 compose-animation-graphics = { module = "androidx.compose.animation:animation-graphics", version.ref = "compose" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
 compose-material3-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "compose-material3" }
