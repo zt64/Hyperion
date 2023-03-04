@@ -102,11 +102,11 @@
     <string name="short_video">4 dəqiqədən aşağı</string>
     <string name="medium_video">4–20 dəqiqə</string>
     <string name="check_for_updates">Yeniləmələri yoxlamaq üçün toxun</string>
-    <string name="type">Type</string>
-    <string name="duration">Duration</string>
-    <string name="captions">Captions</string>
-    <string name="loop">Loop video</string>
-    <string name="playback_speed">Playback speed</string>
-    <string name="off">Off</string>
-    <string name="on">On</string>
+    <string name="type">Növ</string>
+    <string name="duration">Müddət</string>
+    <string name="captions">Altyazılar</string>
+    <string name="loop">Video təkrarla</string>
+    <string name="playback_speed">Oynatma sürəti</string>
+    <string name="off">Bağla</string>
+    <string name="on">Aç</string>
 </resources>

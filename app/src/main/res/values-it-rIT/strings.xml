@@ -104,9 +104,9 @@
     <string name="check_for_updates">Tocca per cercare aggiornamenti</string>
     <string name="type">Tipo</string>
     <string name="duration">Durata</string>
-    <string name="captions">Captions</string>
-    <string name="loop">Loop video</string>
-    <string name="playback_speed">Playback speed</string>
+    <string name="captions">Sottotitoli</string>
+    <string name="loop">Loop del video</string>
+    <string name="playback_speed">Velocità di riproduzione</string>
     <string name="off">Off</string>
     <string name="on">On</string>
 </resources>
