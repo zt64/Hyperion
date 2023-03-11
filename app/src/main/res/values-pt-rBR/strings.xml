@@ -102,11 +102,11 @@
     <string name="short_video">Menos de 4 minutos</string>
     <string name="medium_video">4 a 20 minutos</string>
     <string name="check_for_updates">Toque para procurar por atualizações</string>
-    <string name="type">Type</string>
-    <string name="duration">Duration</string>
-    <string name="captions">Captions</string>
-    <string name="loop">Loop video</string>
-    <string name="playback_speed">Playback speed</string>
+    <string name="type">Tipo</string>
+    <string name="duration">Duração</string>
+    <string name="captions">Legendas</string>
+    <string name="loop">Repetir Vídeo</string>
+    <string name="playback_speed">Velocidade de reprodução</string>
     <string name="off">Off</string>
     <string name="on">On</string>
 </resources>
