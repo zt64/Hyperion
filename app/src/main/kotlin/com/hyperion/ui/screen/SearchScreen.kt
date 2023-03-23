@@ -316,7 +316,10 @@ fun SearchScreen(
                     }
                 }
             } else {
-                items(viewModel.suggestions) { suggestion ->
+                items(
+                    items = viewModel.suggestions,
+                    key = { it }
+                ) { suggestion ->
                     val coroutineScope = rememberCoroutineScope()
 
                     Row(
@@ -325,7 +328,7 @@ fun SearchScreen(
                             .clickable {
                                 coroutineScope.launch {
                                     viewModel.selectSuggestion(suggestion)
-                                    delay(10)
+                                    delay(50) // Avoids race condition
                                     focusManager.clearFocus()
                                 }
                             },
