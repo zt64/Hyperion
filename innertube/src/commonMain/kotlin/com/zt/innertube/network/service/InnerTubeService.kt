@@ -1,22 +1,35 @@
 package com.zt.innertube.network.service
 
+import android.os.Build
 import com.zt.innertube.network.body.*
 import com.zt.innertube.network.dto.*
 import com.zt.innertube.network.dto.auth.AccessToken
 import com.zt.innertube.network.dto.auth.RefreshToken
 import com.zt.innertube.network.dto.auth.UserCode
 import com.zt.innertube.network.dto.browse.*
+import com.zt.ktor.brotli.brotli
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.engine.android.Android
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.BrowserUserAgent
+import io.ktor.client.plugins.HttpRequestRetry
+import io.ktor.client.plugins.cache.HttpCache
+import io.ktor.client.plugins.compression.ContentEncoding
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.cookies.HttpCookies
+import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.*
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.http.userAgent
+import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.encodeBase64
 import io.ktor.utils.io.charsets.Charsets
 import io.ktor.utils.io.charsets.name
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
@@ -25,9 +38,7 @@ import kotlinx.serialization.protobuf.ProtoBuf
 import java.net.URLEncoder
 import java.util.Locale
 
-class InnerTubeService(
-    private val httpClient: HttpClient
-) {
+class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + SupervisorJob()) {
     private val json = Json {
         ignoreUnknownKeys = true
 
@@ -37,14 +48,54 @@ class InnerTubeService(
         }
     }
 
+    private val httpClient = HttpClient(
+        engineFactory = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) CIO else Android
+    ) {
+        BrowserUserAgent()
+
+        install(ContentNegotiation) {
+            json(json)
+        }
+
+        install(HttpRequestRetry) {
+            retryOnServerErrors(maxRetries = 5)
+            exponentialDelay()
+        }
+
+        install(ContentEncoding) {
+            deflate()
+            gzip()
+            brotli()
+        }
+
+        install(HttpCookies)
+
+        defaultRequest {
+            contentType(ContentType.Application.Json)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            install(HttpCache)
+        }
+    }
+
     private val protobuf = ProtoBuf {
         encodeDefaults = true
     }
 
-    private var innerTubeContext: ApiContext
+    private lateinit var innerTubeContext: ApiContext
+    val state = MutableStateFlow<State>(State.Uninitialized)
+
+    sealed interface State {
+        object Uninitialized : State
+        object Initializing : State
+        object Initialized : State
+    }
 
     init {
-        runBlocking(Dispatchers.IO) {
+        launch {
+            state.emit(State.Initializing)
+
             val body = httpClient.get(YOUTUBE_URL).bodyAsText()
             val (ytCfg) = """ytcfg\.set\((.*?)\);""".toRegex()
                 .findAll(body)
@@ -68,13 +119,15 @@ class InnerTubeService(
                 request = context.request,
                 user = context.user
             )
+
+            state.emit(State.Initialized)
         }
     }
 
-    private suspend inline fun <reified T> post(endpoint: String, body: Body) = withContext(Dispatchers.IO) {
+    private suspend inline fun <reified T> post(endpoint: String, crossinline body: () -> Body) = withContext(Dispatchers.IO) {
         httpClient.post("$API_URL/$endpoint") {
             parameter("key", API_KEY)
-            setBody(body)
+            setBody(body())
         }.body<T>()
     }
 
@@ -82,23 +135,20 @@ class InnerTubeService(
         browseId: String,
         continuation: String? = null,
         params: String? = null
-    ): T = post(
-        endpoint = "browse",
-        body = BrowseBody(
+    ): T = post("browse") {
+        BrowseBody(
             context = innerTubeContext,
             browseId = browseId,
             continuation = continuation,
             params = params
         )
-    )
+    }
 
-    private suspend inline fun <reified T> encodeProtobuf(value: T): String {
-        return withContext(Dispatchers.IO) {
-            URLEncoder.encode(
-                /* s = */ protobuf.encodeToByteArray(value).encodeBase64(),
-                /* enc = */ Charsets.UTF_8.name
-            )
-        }
+    private suspend inline fun <reified T> encodeProtobuf(value: T) = withContext(Dispatchers.IO) {
+        URLEncoder.encode(
+            /* s = */ protobuf.encodeToByteArray(value).encodeBase64(),
+            /* enc = */ Charsets.UTF_8.name
+        )
     }
 
     suspend fun getClientInfo(): ClientInfo = withContext(Dispatchers.IO) {
@@ -147,7 +197,7 @@ class InnerTubeService(
     internal suspend fun getRecommendations(): ApiRecommended = getBrowse("FEwhat_to_watch")
     internal suspend fun getRecommendations(continuation: String): ApiRecommendedContinuation = getBrowse("FEwhat_to_watch", continuation)
 
-    internal suspend fun getPlaylist(id: String): ApiPlaylist = getBrowse(id)
+    internal suspend fun getPlaylist(id: String): ApiPlaylist = getBrowse("VL$id")
     internal suspend fun getPlaylist(id: String, continuation: String): ApiPlaylistContinuation = getBrowse(id, continuation)
 
     internal suspend fun getTrending(): ApiTrending = getBrowse("FEtrending")
@@ -165,52 +215,47 @@ class InnerTubeService(
         json.parseToJsonElement(body.substringAfter("(").substringBeforeLast(")"))
     }
 
-    internal suspend fun getPlayer(id: String): ApiPlayer = post(
-        endpoint = "player",
-        body = PlayerBody(
+    internal suspend fun getPlayer(id: String): ApiPlayer = post("player") {
+        PlayerBody(
             context = innerTubeContext,
             videoId = id
         )
-    )
+    }
 
-    internal suspend fun getNext(id: String): ApiNext = post(
-        endpoint = "next",
-        body = NextBody(
+    internal suspend fun getNext(id: String): ApiNext = post("next") {
+        NextBody(
             context = innerTubeContext,
             videoId = id
         )
-    )
+    }
 
-    internal suspend fun getNext(id: String, continuation: String): ApiNextContinuation = post(
-        endpoint = "next",
-        body = NextBody(
+    internal suspend fun getNext(id: String, continuation: String): ApiNextContinuation = post("next") {
+        NextBody(
             context = innerTubeContext,
             videoId = id,
             continuation = continuation
         )
-    )
+    }
 
     internal suspend fun getComments(id: String, page: Int = 1) = getNext(
         id = id,
         continuation = encodeProtobuf(CommentParams(id, page))
     )
 
-    internal suspend fun getSearchResults(query: String): ApiSearch = post(
-        endpoint = "search",
-        body = SearchBody(
+    internal suspend fun getSearchResults(query: String): ApiSearch = post("search") {
+        SearchBody(
             context = innerTubeContext,
             query = query
         )
-    )
+    }
 
-    internal suspend fun getSearchResults(query: String, continuation: String): ApiSearchContinuation = post(
-        endpoint = "search",
-        body = SearchBody(
+    internal suspend fun getSearchResults(query: String, continuation: String): ApiSearchContinuation = post("search") {
+        SearchBody(
             context = innerTubeContext,
             query = query,
             continuation = continuation
         )
-    )
+    }
 
     internal suspend fun getTag(tag: String): ApiTag = getBrowse(
         browseId = "FEhashtag",
@@ -250,11 +295,10 @@ class InnerTubeService(
         private const val API_URL = "https://www.youtube.com/youtubei/v1"
         private const val API_KEY = "AIzaSyCtkvNIR1HCEwzsqK6JuE6KqpyjusIRI30"
 
-        // TODO: Use web client for fetching data
-        private const val CLIENT_NAME = "ANDROID"
-        private const val CLIENT_VERSION = "17.11.37"
-        private const val PLATFORM = "MOBILE"
-        private const val FORM_FACTOR = "SMALL_FORM_FACTOR"
+        private const val CLIENT_NAME = "WEB"
+        private const val CLIENT_VERSION = "2.20230221.01.00"
+        private const val PLATFORM = "DESKTOP"
+        private const val FORM_FACTOR = "UNKNOWN_FORM_FACTOR"
 
         private const val OAUTH_URL = "https://www.youtube.com/o/oauth2"
         private const val TV_USER_AGENT = "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version"

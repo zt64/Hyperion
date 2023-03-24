@@ -2,10 +2,10 @@ package com.zt.innertube.network.dto
 
 import com.zt.innertube.network.dto.browse.ApiBrowse
 import com.zt.innertube.network.dto.browse.ApiBrowseContinuation
-import com.zt.innertube.network.dto.renderer.ElementRenderer
-import com.zt.innertube.network.dto.renderer.ItemSectionRenderer
-import com.zt.innertube.network.dto.renderer.ListRenderer
-import com.zt.innertube.network.dto.renderer.ShelfRenderer
+import com.zt.innertube.network.dto.browse.VideoRenderer
+import com.zt.innertube.network.dto.renderer.*
+import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoNumber
 
@@ -24,84 +24,31 @@ internal data class ApiTagParams(
 @Serializable
 internal data class ApiTag(
     val header: Header,
-    override val contents: Contents<ContentItem>
+    override val contents: Contents<@Serializable(with = Renderer.Serializer::class) Renderer>
 ) : ApiBrowse() {
     @Serializable
-    data class Header(val translucentHeaderRenderer: TranslucentHeaderRenderer) {
+    data class Header(val hashtagHeaderRenderer: HashtagHeaderRenderer) {
         @Serializable
-        data class TranslucentHeaderRenderer(
-            val actionBarColor: Int,
-            val primaryTitleColor: Long,
-            val shouldHideTitleOnTranslucentHeader: Boolean,
-            val statusBarColor: Long,
-            val title: ApiText
+        data class HashtagHeaderRenderer(
+            val hashtag: SimpleText,
+            val hashtagInfoText: SimpleText
         )
     }
 
     @Serializable
-    data class ContentItem(
-        val itemSectionRenderer: ItemSectionRenderer<Content>? = null,
-        val shelfRenderer: ShelfRenderer<ShelfContent>? = null
-    ) {
-        @Serializable
-        data class Content(val elementRenderer: ElementRenderer<Model>) {
-            @Serializable
-            data class Model(val hashtagHeaderModel: HashtagHeaderModel) {
-                @Serializable
-                data class HashtagHeaderModel(val renderer: HashtagRenderer)
-            }
-        }
-
-        @Serializable
-        data class ShelfContent(val horizontalListRenderer: ListRenderer<Item>) {
-            @Serializable
-            data class Item(val elementRenderer: ElementRenderer<Model>)
-        }
+    sealed interface Renderer {
+        object Serializer : SingletonMapPolymorphicSerializer<Renderer>(serializer())
     }
 
     @Serializable
-    data class HashtagRenderer(
-        val avatarFacepile: List<ImageContainer> = emptyList(),
-        val backgroundColor: Long,
-        val backgroundImage: ImageContainer? = null,
-        val hashtag: ElementsAttributedText,
-        val hashtagInfoText: ElementsAttributedText? = null
-    )
-
-    @Serializable
-    data class Model(val videoWithContextModel: VideoWithContextModel) {
+    @SerialName("richItemRenderer")
+    data class RichItemRenderer(val content: Content) : Renderer {
         @Serializable
-        data class VideoWithContextModel(val videoWithContextData: VideoWithContextData) {
-            @Serializable
-            data class VideoWithContextData(
-                val onTap: OnTap<InnertubeCommand>,
-                val videoData: VideoData
-            )
-
-            @Serializable
-            data class InnertubeCommand(
-                val reelWatchEndpoint: ApiWatchEndpoint? = null,
-                val watchEndpoint: ApiWatchEndpoint? = null
-            )
-
-            @Serializable
-            data class VideoData(
-                val metadata: Metadata,
-                val thumbnail: ApiThumbnailTimestamp
-            ) {
-                @Serializable
-                data class Metadata(
-                    val byline: String,
-                    val isVideoWithContext: Boolean,
-                    val metadataDetails: String,
-                    val title: String
-                )
-            }
-        }
+        data class Content(val videoRenderer: VideoRenderer? = null)
     }
 }
 
 @Serializable
 internal data class ApiTagContinuation(
-    override val continuationContents: ContinuationContents<ApiTag.ContentItem>
+    override val onResponseReceivedActions: List<ContinuationContents<@Serializable(with = ApiTag.Renderer.Serializer::class) ApiTag.Renderer>>
 ) : ApiBrowseContinuation()

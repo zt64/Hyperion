@@ -44,5 +44,5 @@ internal data class ApiHistory(
 
 @Serializable
 internal data class ApiHistoryContinuation(
-    override val continuationContents: ContinuationContents<ApiHistory.SectionContent>
+    override val onResponseReceivedActions: List<ContinuationContents<ApiTrending.SectionContent>>
 ) : ApiBrowseContinuation()

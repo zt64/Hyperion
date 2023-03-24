@@ -1,48 +1,14 @@
 package com.zt.innertube.network.dto.browse
 
-import com.zt.innertube.network.dto.*
-import com.zt.innertube.network.dto.renderer.ElementRenderer
-import com.zt.innertube.network.dto.renderer.ItemSectionRenderer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
 @Serializable
 internal data class ApiSubscriptions(
-    override val contents: Contents<SectionContent>
-) : ApiBrowse() {
-    @Serializable
-    data class SectionContent(val itemSectionRenderer: ItemSectionRenderer<Content>? = null) {
-        @Serializable
-        data class Content(val elementRenderer: ElementRenderer<Model>)
-    }
-
-    @Serializable
-    data class Model(val videoWithContextModel: VideoWithContextModel) {
-        @Serializable
-        data class VideoWithContextModel(val videoWithContextData: VideoWithContextData) {
-            @Serializable
-            data class VideoWithContextData(
-                val onTap: OnTap<ApiWatchCommand>,
-                val videoData: VideoData
-            ) {
-                @Serializable
-                data class VideoData(
-                    val avatar: ApiAvatar,
-                    val metadata: Metadata,
-                    val thumbnail: ApiThumbnailTimestamp
-                ) {
-                    @Serializable
-                    data class Metadata(
-                        val title: String,
-                        val metadataDetails: String,
-                        val isVideoWithContext: Boolean
-                    )
-                }
-            }
-        }
-    }
-}
+    override val contents: Contents<JsonElement>
+) : ApiBrowse()
 
 @Serializable
 internal class ApiSubscriptionsContinuation(
-    override val continuationContents: ContinuationContents<ApiSubscriptions.SectionContent>
+    override val onResponseReceivedActions: List<ContinuationContents<JsonElement>>
 ) : ApiBrowseContinuation()

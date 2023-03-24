@@ -1,71 +1,101 @@
 package com.zt.innertube.network.dto.browse
 
 import com.zt.innertube.network.dto.*
-import com.zt.innertube.network.dto.renderer.ElementRenderer
-import com.zt.innertube.network.dto.renderer.ItemSectionRenderer
+import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonTransformingSerializer
+import kotlinx.serialization.json.jsonObject
 
 @Serializable
 internal data class ApiRecommended(
-    override val contents: Contents<SectionContent>
+    override val contents: Contents<@Serializable(Renderer.Serializer::class) Renderer>
 ) : ApiBrowse() {
     @Serializable
-    data class SectionContent(val itemSectionRenderer: ItemSectionRenderer<Content>) {
-        @Serializable
-        data class Content(val elementRenderer: ElementRenderer<Model>? = null) {
-            @Serializable
-            data class Model(
-                val shortsShelfModel: ShortsShelfModel? = null,
-                val videoWithContextModel: ApiVideo? = null
-            )
-        }
+    sealed interface Renderer {
+        object Serializer : SingletonMapPolymorphicSerializer<Renderer>(serializer())
     }
-}
 
-@Serializable
-internal data class ShortsShelfModel(val items: List<Item>) {
     @Serializable
-    data class Item(
-        val bottomText: String,
-        val id: String,
-        val onTap: OnTap,
-        val thumbnail: ApiImage,
-        val videoTitle: String
-    ) {
+    @SerialName("richItemRenderer")
+    data class RichItemRenderer(val content: Content) : Renderer {
         @Serializable
-        data class OnTap(val innertubeCommand: InnertubeCommand) {
-            @Serializable
-            data class InnertubeCommand(val reelWatchEndpoint: ReelWatchEndpoint) {
-                @Serializable
-                data class ReelWatchEndpoint(
-                    val overlay: Overlay,
-                    val thumbnail: ApiImage,
-                    val videoId: String
-                ) {
-                    @Serializable
-                    data class Overlay(val reelPlayerOverlayRenderer: ReelPlayerOverlayRenderer? = null) {
-                        @Serializable
-                        data class ReelPlayerOverlayRenderer(val reelPlayerHeaderSupportedRenderers: ReelPlayerHeaderSupportedRenderers? = null) {
-                            @Serializable
-                            data class ReelPlayerHeaderSupportedRenderers(val reelPlayerHeaderRenderer: ReelPlayerHeaderRenderer) {
-                                @Serializable
-                                data class ReelPlayerHeaderRenderer(
-                                    val channelNavigationEndpoint: ApiNavigationEndpoint,
-                                    val channelThumbnail: ApiImage,
-                                    val channelTitleText: ApiText,
-                                    val reelTitleText: ApiText,
-                                    val timestampText: ApiText
-                                )
-                            }
-                        }
-                    }
-                }
+        data class Content(val videoRenderer: VideoRenderer? = null)
+    }
+
+    @Serializable
+    @SerialName("richSectionRenderer")
+    object RichSectionRenderer : Renderer
+
+    @Serializable
+    @SerialName("continuationItemRenderer")
+    data class ContinuationItem(
+        @Serializable(TokenSerializer::class)
+        @SerialName("continuationEndpoint")
+        val token: String
+    ) : Renderer {
+        private class TokenSerializer : JsonTransformingSerializer<String>(String.serializer()) {
+            override fun transformDeserialize(element: JsonElement): JsonElement {
+                return element.jsonObject["continuationCommand"]!!.jsonObject["token"]!!
             }
         }
     }
 }
 
 @Serializable
+internal data class VideoRenderer(
+    val channelThumbnailSupportedRenderers: ChannelThumbnailSupportedRenderers? = null,
+    val lengthText: SimpleText? = null,
+    val navigationEndpoint: NavigationEndpoint,
+    val ownerText: ApiText,
+    val publishedTimeText: SimpleText? = null,
+    @Serializable(ViewCountSerializer::class)
+    val shortViewCountText: String,
+    val thumbnail: ApiImage,
+    val title: ApiText,
+    val videoId: String,
+    val viewCountText: SimpleText? = null
+) {
+    @Serializable
+    data class ChannelThumbnailSupportedRenderers(val channelThumbnailWithLinkRenderer: ChannelThumbnailWithLinkRenderer) {
+        @Serializable
+        data class ChannelThumbnailWithLinkRenderer(
+            val navigationEndpoint: ApiNavigationEndpoint,
+            val thumbnail: ApiImage
+        )
+    }
+
+    private class ViewCountSerializer : KSerializer<String> {
+        override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Hell")
+
+        override fun deserialize(decoder: Decoder): String {
+            decoder as JsonDecoder
+
+            val json = decoder.decodeJsonElement().jsonObject
+
+            return if (json.contains("runs")) {
+                decoder.json.decodeFromJsonElement(ApiText.serializer(), json).text
+            } else {
+                decoder.json.decodeFromJsonElement(SimpleText.serializer(), json).simpleText
+            }
+        }
+
+        override fun serialize(encoder: Encoder, value: String) = TODO()
+    }
+
+    @Serializable
+    data class NavigationEndpoint(val watchEndpoint: ApiWatchEndpoint)
+}
+
+@Serializable
 internal data class ApiRecommendedContinuation(
-    override val continuationContents: ContinuationContents<ApiRecommended.SectionContent>
+    override val onResponseReceivedActions: List<ContinuationContents<@Serializable(ApiRecommended.Renderer.Serializer::class) ApiRecommended.Renderer>>
 ) : ApiBrowseContinuation()

@@ -1,6 +1,9 @@
 package com.zt.innertube.network.dto
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.*
 
 // TODO: Switch to typealias for serialization to simplify API usage
 //internal typealias ApiText = @Serializable(ApiTextSerializer::class) String
@@ -22,19 +25,45 @@ import kotlinx.serialization.Serializable
 //}
 
 @Serializable
-internal class ApiText private constructor(private val runs: List<TextRun>) {
-    val text = runs.joinToString(separator = "", transform = TextRun::text)
-
-    @Serializable
-    data class TextRun(val text: String)
-
+internal open class ApiText(
+    @Serializable(Serializer::class)
+    @SerialName("runs")
+    val text: String
+) {
     override fun toString() = text
+
+    private class Serializer : JsonTransformingSerializer<String>(String.serializer()) {
+        override fun transformDeserialize(element: JsonElement) = JsonPrimitive(
+            element.jsonArray.joinToString(separator = "") {
+                it.jsonObject["text"]!!.jsonPrimitive.content
+            }
+        )
+    }
 }
 
 @Serializable
-internal data class ElementsAttributedText(val elementsAttributedString: ElementsAttributedString) {
-    override fun toString() = elementsAttributedString.content
-
+internal data class ApiTextClickable(val runs: List<Run>) {
     @Serializable
-    data class ElementsAttributedString(val content: String)
+    data class Run(
+        val navigationEndpoint: ApiNavigationEndpoint,
+        val text: String
+    )
+}
+
+@Serializable
+internal class ElementsAttributedText private constructor(
+    @Serializable(Serializer::class)
+    @SerialName("elementsAttributedString")
+    val text: String
+) {
+    override fun toString() = text
+
+    private class Serializer : JsonTransformingSerializer<String>(String.serializer()) {
+        override fun transformDeserialize(element: JsonElement) = element.jsonObject["content"]!!
+    }
+}
+
+@Serializable
+internal class SimpleText(val simpleText: String = "AAAA") {
+    override fun toString() = simpleText
 }

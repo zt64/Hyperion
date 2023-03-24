@@ -1,10 +1,15 @@
 package com.zt.innertube.network.dto.browse
 
-import com.zt.innertube.network.dto.ApiImage
-import com.zt.innertube.network.dto.ApiNavigationEndpoint
-import com.zt.innertube.network.dto.ApiText
+import com.zt.innertube.network.dto.*
+import com.zt.innertube.network.dto.renderer.ItemSectionRenderer
 import com.zt.innertube.network.dto.renderer.SectionListRenderer
+import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonTransformingSerializer
+import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
@@ -30,7 +35,7 @@ internal class PlaylistContinuation private constructor(
         @ProtoNumber(3)
         val unknown: Unknown,
         @ProtoNumber(35)
-        val playlistIdRaw: String,
+        val playlistIdRaw: String
     ) {
         @Serializable
         data class Unknown(
@@ -45,53 +50,57 @@ internal class PlaylistContinuation private constructor(
 @Serializable
 internal data class ApiPlaylist(
     val header: Header,
-    override val contents: Contents<SectionContent>
+    override val contents: Contents<G>
 ) : ApiBrowse() {
     @Serializable
     data class Header(val playlistHeaderRenderer: PlaylistHeaderRenderer) {
         @Serializable
         data class PlaylistHeaderRenderer(
-            val briefStats: List<ApiText> = emptyList(),
-            val isEditable: Boolean,
-            val numVideosText: ApiText,
-            val ownerEndpoint: ApiNavigationEndpoint,
+            val title: SimpleText,
             val ownerText: ApiText,
-            val playlistId: String,
-            val title: ApiText,
-            val viewCountText: ApiText
+            val viewCountText: SimpleText,
+            val ownerEndpoint: ApiNavigationEndpoint
         )
     }
 
     @Serializable
-    data class SectionContent(val playlistVideoListRenderer: SectionListRenderer<Content>) {
-        @Serializable
-        data class Content(val playlistVideoRenderer: VideoRenderer? = null) {
-            @Serializable
-            data class VideoRenderer(
-                val isPlayable: Boolean,
-                val lengthSeconds: String,
-                val lengthText: ApiText,
-                val navigationEndpoint: NavigationEndpoint,
-                val shortBylineText: ApiText,
-                val thumbnail: ApiImage,
-                val thumbnailOverlays: List<ThumbnailOverlay>,
-                val title: ApiText,
-                val videoId: String
-            ) {
-                @Serializable
-                data class NavigationEndpoint(val watchEndpoint: WatchEndpoint) {
-                    @Serializable
-                    data class WatchEndpoint(
-                        val params: String,
-                        val playlistId: String,
-                        val videoId: String
-                    )
-                }
+    data class G(val itemSectionRenderer: ItemSectionRenderer<SectionContent>)
 
-                @Serializable
-                data class ThumbnailOverlay(val thumbnailOverlayTimeStatusRenderer: ThumbnailOverlayTimeStatusRenderer) {
-                    @Serializable
-                    data class ThumbnailOverlayTimeStatusRenderer(val text: ApiText)
+    @Serializable
+    data class SectionContent(
+        val playlistVideoListRenderer: SectionListRenderer<@Serializable(Renderer.Serializer::class) Renderer>
+    ) {
+        @Serializable
+        sealed interface Renderer {
+            object Serializer : SingletonMapPolymorphicSerializer<Renderer>(serializer())
+        }
+
+        @Serializable
+        @SerialName("playlistVideoRenderer")
+        data class PlaylistVideo(
+            val isPlayable: Boolean,
+            val lengthText: SimpleText,
+            val navigationEndpoint: NavigationEndpoint,
+            val shortBylineText: ApiText,
+            val thumbnail: ApiImage,
+            val title: ApiText,
+            val videoId: String,
+            val videoInfo: ApiText
+        ) : Renderer {
+            @Serializable
+            data class NavigationEndpoint(val watchEndpoint: ApiWatchEndpoint)
+        }
+
+        @Serializable
+        @SerialName("continuationItemRenderer")
+        data class ContinuationItem(
+            @Serializable(TokenSerializer::class)
+            @SerialName("continuationEndpoint")
+            val token: String
+        ) : Renderer {
+            private class TokenSerializer : JsonTransformingSerializer<String>(String.serializer()) {
+                override fun transformDeserialize(element: JsonElement): JsonElement {
+                    return element.jsonObject["continuationCommand"]!!.jsonObject["token"]!!
                 }
             }
         }
@@ -99,7 +108,6 @@ internal data class ApiPlaylist(
 }
 
 @Serializable
-internal data class ApiPlaylistContinuation(val continuationContents: ContinuationContents) {
-    @Serializable
-    data class ContinuationContents(val playlistVideoListContinuation: SectionListRenderer<ApiPlaylist.SectionContent.Content>)
-}
+internal data class ApiPlaylistContinuation(
+    override val onResponseReceivedActions: List<ContinuationContents<@Serializable(ApiPlaylist.SectionContent.Renderer.Serializer::class) ApiPlaylist.SectionContent.Renderer>>
+) : ApiBrowseContinuation()

@@ -19,7 +19,6 @@ data class DomainChannelPartial(
     val id: String,
     val name: String? = null,
     val avatarUrl: String? = null,
-    val thumbnailUrl: String? = null,
     val subscriptionsText: String? = null,
     val videoCountText: String? = null
 ) : Entity

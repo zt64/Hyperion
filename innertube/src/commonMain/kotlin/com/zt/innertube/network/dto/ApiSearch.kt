@@ -1,19 +1,20 @@
 package com.zt.innertube.network.dto
 
-import com.zt.innertube.network.dto.renderer.ChipCloudRenderer
-import com.zt.innertube.network.dto.renderer.ElementRenderer
-import com.zt.innertube.network.dto.renderer.ItemSectionRenderer
 import com.zt.innertube.network.dto.renderer.SectionListRenderer
 import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
-import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.*
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 import kotlinx.serialization.modules.SerializersModule
 
 internal val searchModule = SerializersModule {
-    polymorphicDefaultDeserializer(ApiSearch.Model::class ) {
-        ApiSearch.UnknownModel.serializer()
+    polymorphicDefaultDeserializer(ApiSearch.Renderer::class ) {
+        ApiSearch.UnknownRenderer.serializer()
     }
 }
 
@@ -23,201 +24,126 @@ internal class ApiSearchParams
 @Serializable
 internal data class ApiSearch(val contents: Contents) {
     @Serializable
-    data class Contents(val sectionListRenderer: SectionListRenderer<Content>)
+    data class Contents(val twoColumnSearchResultsRenderer: TwoColumnSearchResultsRenderer)
 
     @Serializable
-    data class Content(val itemSectionRenderer: ItemSectionRenderer<Renderer>? = null)
+    data class TwoColumnSearchResultsRenderer(val primaryContents: PrimaryContents)
 
-    @Serializable(with = Renderer.Serializer::class)
+    @Serializable
+    data class PrimaryContents(val sectionListRenderer: SectionListRenderer<@Serializable(Item.Serializer::class) Item>)
+
+    @Serializable
+    sealed interface Item {
+        object Serializer : SingletonMapPolymorphicSerializer<Item>(serializer())
+    }
+
+    @Serializable
+    @SerialName("itemSectionRenderer")
+    data class ItemSection(val contents: List<@Serializable(Renderer.Serializer::class) Renderer>) : Item
+
+    @Serializable
+    @SerialName("continuationItemRenderer")
+    data class ContinuationItem(
+        @Serializable(TokenSerializer::class)
+        @SerialName("continuationEndpoint")
+        val token: String
+    ) : Item {
+        private class TokenSerializer : JsonTransformingSerializer<String>(String.serializer()) {
+            override fun transformDeserialize(element: JsonElement): JsonElement {
+                return element.jsonObject["continuationCommand"]!!.jsonObject["token"]!!
+            }
+        }
+    }
+
+    @Serializable
     sealed interface Renderer {
-        companion object Serializer : JsonContentPolymorphicSerializer<Renderer>(Renderer::class) {
-            override fun selectDeserializer(element: JsonElement) = when (element.jsonObject.keys.single()) {
-                "chipCloudRenderer" -> ChipCloud.serializer()
-                "compactChannelRenderer" -> CompactChannel.serializer()
-                "elementRenderer" -> Element.serializer()
-                "messageRenderer" -> Message.serializer()
-                else -> Unknown.serializer()
-            }
-        }
-
-        @Serializable
-        data class ChipCloud(val chipCloudRenderer: ChipCloudRenderer<Chip>) : Renderer
-
-        @Serializable
-        data class CompactChannel(val compactChannelRenderer: CompactChannelRenderer) : Renderer
-
-        @Serializable
-        data class Element(val elementRenderer: ElementRenderer<@Serializable(with = Model.Serializer::class) Model>) : Renderer
-
-        @Serializable
-        data class Message(val messageRenderer: MessageRenderer) : Renderer
-
-        @Serializable
-        object Unknown : Renderer
+        object Serializer : SingletonMapPolymorphicSerializer<Renderer>(serializer())
     }
 
     @Serializable
-    data class Chip(
-        @SerialName("chipCloudChipRenderer")
-        val chipRenderer: ChipRenderer
-    ) {
-        @Serializable
-        data class ChipRenderer(
-            val text: ApiText,
-            val navigationEndpoint: NavigationEndpoint? = null
-        ) {
-            @Serializable
-            data class NavigationEndpoint(val searchEndpoint: SearchEndpoint) {
-                @Serializable
-                data class SearchEndpoint(
-                    val originalChipQuery: String,
-                    val params: String,
-                    val query: String
-                )
-            }
-        }
-    }
-
-    @Serializable
-    data class CompactChannelRenderer(
+    @SerialName("channelRenderer")
+    data class ChannelRenderer(
         val channelId: String,
-        val displayName: ApiText,
-        val navigationEndpoint: ApiNavigationEndpoint,
-        val subscriberCountText: ApiText? = null,
+        val title: SimpleText,
+        val thumbnail: ApiImage,
+        @SerialName("videoCountText") // YouTube moment
+        val subscriberCountText: SimpleText? = null
+    ) : Renderer
+
+    @Serializable
+    @SerialName("videoRenderer")
+    data class VideoRenderer(
+        val channelThumbnailSupportedRenderers: ChannelThumbnailSupportedRenderers? = null,
+        val videoId: String,
         val thumbnail: ApiImage,
         val title: ApiText,
-        val videoCountText: ApiText? = null
-    )
+        val publishedTimeText: SimpleText? = null,
+        val longBylineText: ApiText,
+        @Serializable(ViewCountSerializer::class)
+        val shortViewCountText: String,
+        val lengthText: SimpleText? = null,
+        val ownerText: ApiText
+    ) : Renderer {
+        private class ViewCountSerializer : KSerializer<String> {
+            override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Hell")
 
-    @Serializable
-    data class MessageRenderer(val text: ApiText)
+            override fun deserialize(decoder: Decoder): String {
+                decoder as JsonDecoder
 
-    @Serializable
-    sealed interface Model {
-        object Serializer : SingletonMapPolymorphicSerializer<Model>(serializer())
-    }
+                val json = decoder.decodeJsonElement().jsonObject
 
-    @Serializable
-    @SerialName("videoWithContextSlotsModel")
-    data class VideoWithContextSlots(val videoWithContextData: VideoWithContextData) : Model {
-        @Serializable
-        data class VideoWithContextData(
-            val onTap: OnTap<InnertubeCommand>,
-            val videoData: Node
-        )
-
-        @Serializable
-        data class InnertubeCommand(
-            val watchEndpoint: WatchEndpoint? = null,
-            val browseEndpoint: ApiBrowseEndpoint? = null
-        ) {
-            @Serializable
-            data class WatchEndpoint(
-                val continuePlayback: Boolean = false,
-                val params: String,
-                val playlistId: String? = null,
-                val videoId: String? = null
-            )
-        }
-
-        @Serializable(Node.Serializer::class)
-        sealed interface Node {
-            companion object Serializer : JsonContentPolymorphicSerializer<Node>(Node::class) {
-                override fun selectDeserializer(element: JsonElement): DeserializationStrategy<Node> {
-                    val thumbnail = element.jsonObject["thumbnail"]!!.jsonObject
-
-                    return when {
-                        thumbnail["isMix"]?.jsonPrimitive?.boolean == true -> Mix.serializer()
-                        thumbnail["isPlaylist"]?.jsonPrimitive?.boolean == true -> Playlist.serializer()
-                        else -> Video.serializer()
-                    }
+                return if (json.contains("runs")) {
+                    decoder.json.decodeFromJsonElement(ApiText.serializer(), json).text
+                } else {
+                    decoder.json.decodeFromJsonElement(SimpleText.serializer(), json).simpleText
                 }
             }
+
+            override fun serialize(encoder: Encoder, value: String) = TODO()
         }
 
         @Serializable
-        data class Video(
-            val avatar: ApiAvatar? = null,
-            val decoratedAvatar: DecoratedAvatar? = null,
-            val metadata: VideoData.Metadata,
-            val thumbnail: ApiThumbnailTimestamp,
-            val channelId: String? = null
-        ) : Node
-
-        @Serializable
-        data class Metadata(val title: String, val byline: String)
-
-        @Serializable
-        data class Mix(val metadata: Metadata, val thumbnail: ImageContainer) : Node
-
-        @Serializable
-        data class Playlist(val metadata: Metadata, val thumbnail: Thumbnail) : Node {
+        data class ChannelThumbnailSupportedRenderers(val channelThumbnailWithLinkRenderer: ChannelThumbnailWithLinkRenderer) {
             @Serializable
-            data class Thumbnail(val videoCount: String, val image: ApiImage)
+            data class ChannelThumbnailWithLinkRenderer(
+                val navigationEndpoint: ApiNavigationEndpoint,
+                val thumbnail: ApiImage
+            )
         }
     }
 
     @Serializable
-    @SerialName("videoWithContextModel")
-    object VideoWithContext : Model
+    @SerialName("hashtagTileRenderer")
+    data class HashtagTileRenderer(
+        val hashtag: SimpleText,
+        val hashtagInfoText: SimpleText,
+        val hashtagBackgroundColor: Long
+    ) : Renderer
 
     @Serializable
-    @SerialName("inlineShortsModel")
-    object InlineShorts : Model
+    @SerialName("playlistRenderer")
+    data class PlaylistRenderer(
+        val playlistId: String,
+        val thumbnails: List<ApiImage>,
+        val title: SimpleText,
+        val videoCount: String,
+        val shortBylineText: ApiText
+    ) : Renderer
 
     @Serializable
-    @SerialName("shelfHeaderModel")
-    object ShelfHeader : Model
-
-    @Serializable
-    @SerialName("postShelfModel")
-    object PostShelf : Model
-
-    @Serializable
-    @SerialName("horizontalVideoShelfModel")
-    object HorizontalVideoShelf : Model
-
-    @Serializable
-    @SerialName("hashtagTileModel")
-    data class HashtagTile(val renderer: Renderer) : Model {
-        @Serializable
-        data class Renderer(
-            val hashtag: ElementsAttributedText,
-            val hashtagChannelCount: ElementsAttributedText? = null,
-            val hashtagInfoText: ElementsAttributedText,
-            val hashtagThumbnail: ImageContainer,
-            val hashtagVideoCount: ElementsAttributedText? = null,
-            val hashtagBackgroundColor: Long,
-            val onTapCommand: ApiNavigationEndpoint
-        )
-    }
-
-    @Serializable
-    @SerialName("cellDividerModel")
-    object CellDivider : Model
-
-    @Serializable
-    @SerialName("videoDisplayFullLayoutModel")
-    object VideoDisplayFullLayout : Model
-
-    @Serializable
-    @SerialName("videoDisplayFullButtonedLayoutModel")
-    object VideoDisplayFullButtonedLayout : Model
-
-    @Serializable
-    @SerialName("shortsShelfModel")
-    object ShortsShelf : Model
-
-    @Serializable
-    @SerialName("browsyBarModel")
-    object BrowsyBar : Model
-
-    @Serializable
-    object UnknownModel : Model
+    object UnknownRenderer : Renderer
 }
 
 @Serializable
-internal data class ApiSearchContinuation(val continuationContents: ContinuationContents) {
+internal data class ApiSearchContinuation(val onResponseReceivedCommands: List<Command>) {
     @Serializable
-    data class ContinuationContents(val sectionListContinuation: SectionListRenderer<ApiSearch.Content>)
+    data class Command(
+        @Serializable(ContinuationItemsSerializer::class)
+        @SerialName("appendContinuationItemsAction")
+        val items: List<@Serializable(ApiSearch.Item.Serializer::class) ApiSearch.Item>
+    ) {
+        private class ContinuationItemsSerializer : JsonTransformingSerializer<List<ApiSearch.Item>>(ListSerializer(ApiSearch.Item.Serializer)) {
+            override fun transformDeserialize(element: JsonElement) = element.jsonObject["continuationItems"]!!
+        }
+    }
 }

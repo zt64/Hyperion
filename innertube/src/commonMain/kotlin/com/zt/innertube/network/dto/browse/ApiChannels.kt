@@ -25,5 +25,5 @@ internal data class ApiChannels(
 
 @Serializable
 internal data class ApiChannelsContinuation(
-    override val continuationContents: ContinuationContents<ApiChannels.SectionContent>
+    override val onResponseReceivedActions: List<ContinuationContents<ApiChannels.SectionContent>>
 ) : ApiBrowseContinuation()

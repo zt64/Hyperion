@@ -1,28 +1,25 @@
 package com.zt.innertube.network.dto
 
 import com.zt.innertube.network.dto.browse.ApiBrowseContinuation
-import com.zt.innertube.network.dto.renderer.ElementRenderer
-import com.zt.innertube.network.dto.renderer.ItemSectionRenderer
-import com.zt.innertube.network.dto.renderer.SectionListRenderer
-import com.zt.innertube.serializer.DurationAsSecondsSerializer
 import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.*
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.descriptors.PolymorphicKind
+import kotlinx.serialization.descriptors.buildSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.protobuf.ProtoNumber
-import kotlin.time.Duration
+import kotlin.reflect.KClass
 
 internal val nextModule = SerializersModule {
     polymorphicDefaultDeserializer(ApiNext.EngagementPanel::class) {
         ApiNext.UnknownPanel.serializer()
     }
-    polymorphicDefaultDeserializer(ApiNext.Renderer.ItemSection::class) {
-        ApiNext.Renderer.Separator.serializer()
+    polymorphicDefaultDeserializer(ApiNext.ItemSection::class) {
+        ApiNext.Separator.serializer()
     }
 }
 
@@ -56,6 +53,7 @@ internal class CommentParams private constructor(
         @ProtoNumber(5)
         val offset: Int,
         @ProtoNumber(8)
+        @EncodeDefault
         val section: String = "engagement-panel-comments-section"
     ) {
         @Serializable
@@ -69,231 +67,148 @@ internal class CommentParams private constructor(
 @Serializable
 internal data class ApiNext(
     val contents: Contents,
-    val engagementPanels: List<@Serializable(EngagementPanel.Serializer::class) EngagementPanel>
+    val engagementPanels: List<@Serializable(EngagementPanelSerializer::class) EngagementPanel>
 ) {
-    @Serializable(with = Renderer.Serializer::class)
-    sealed interface Renderer {
-        companion object Serializer : KSerializer<Renderer> {
-            override val descriptor = buildClassSerialDescriptor("Renderer")
-
-            override fun deserialize(decoder: Decoder): Renderer {
-                val input = decoder as JsonDecoder
-                val tree = input.decodeJsonElement().jsonObject
-
-                val serializer = when (tree.keys.single()) {
-                    "slimVideoMetadataSectionRenderer" -> SlimVideoMetadataSection.serializer()
-                    "itemSectionRenderer" -> ItemSection.serializer()
-                    "shelfRenderer" -> Shelf.serializer()
-                    else -> throw NoWhenBranchMatchedException()
-                }
-
-                return input.json.decodeFromJsonElement(serializer, tree.values.single())
+    @Serializable
+    data class Contents(val twoColumnWatchNextResults: WatchNextResults) {
+        @Serializable
+        data class WatchNextResults(
+            val results: @Serializable(ResultsSerializer::class) List<Result>,
+            val secondaryResults: @Serializable(SecondaryResultsSerializer::class) List<SecondaryResult>
+        ) {
+            private object ResultsSerializer : JsonTransformingSerializer<List<Result>>(ListSerializer(Result.serializer())) {
+                override fun transformDeserialize(element: JsonElement) = element.jsonObject["results"]!!.jsonObject["contents"]!!
             }
 
-            override fun serialize(encoder: Encoder, value: Renderer): Unit = TODO("Not yet implemented")
-        }
-
-        @Serializable
-        data class SlimVideoMetadataSection(val contents: List<Content>) : Renderer {
-            @Serializable
-            data class Content(val elementRenderer: ElementRenderer<Model>)
-        }
-
-        @Serializable
-        object Shelf : Renderer
-
-        @Serializable
-        @JsonClassDiscriminator("sectionIdentifier")
-        sealed interface ItemSection : Renderer
-
-        @Serializable
-        @SerialName("comments-entry-point")
-        data class CommentsEntry(val contents: List<Content>) : ItemSection {
-            @Serializable
-            data class Content(val elementRenderer: ElementRenderer<Model>)
-
-            @Serializable
-            data class Model(val commentsCompositeEntryPointModel: EntryPointModel) {
-                @Serializable
-                data class EntryPointModel(val data: Data) {
-                    @Serializable
-                    data class Data(val teasers: List<Teaser> = emptyList()) {
-                        @Serializable
-                        data class Teaser(
-                            val avatar: ImageContainer,
-                            val teaserText: TeaserText
-                        ) {
-                            @Serializable
-                            data class TeaserText(val content: String)
-                        }
-                    }
-                }
+            private object SecondaryResultsSerializer : JsonTransformingSerializer<List<SecondaryResult>>(ListSerializer(SecondaryResult.serializer())) {
+                override fun transformDeserialize(element: JsonElement) = element.jsonObject["secondaryResults"]!!.jsonObject["results"]!!
             }
         }
-
-        @Serializable
-        @SerialName("related-items")
-        data class RelatedItems(val contents: List<Content>) : ItemSection {
-            @Serializable
-            data class Content(val elementRenderer: ElementRenderer<Model>)
-
-            @Serializable
-            data class Model(val videoWithContextModel: ApiNextVideo? = null)
-        }
-
-        @Serializable
-        object Separator : ItemSection
     }
 
-    @Serializable
-    data class Contents(val singleColumnWatchNextResults: SingleColumnWatchNextResults) {
-        @Serializable
-        data class SingleColumnWatchNextResults(val results: Results) {
-            @Serializable
-            data class Results(val results: SectionListRenderer<Renderer>)
+    @Serializable(with = Result.Serializer::class)
+    sealed interface Result {
+        companion object Serializer : RendererSerializer<Result>(Result::class) {
+            override fun selectDeserializer(key: String) = when (key) {
+                "videoPrimaryInfoRenderer" -> VideoPrimaryInfoRenderer.serializer()
+                "videoSecondaryInfoRenderer" -> VideoSecondaryInfoRenderer.serializer()
+                "itemSectionRenderer" -> ItemSection.serializer()
+                else -> UnknownRenderer.serializer()
+            }
         }
     }
 
     @Serializable
-    data class Model(
-        val videoMetadataModel: VideoMetadataModel? = null,
-        val channelBarModel: ChannelBarModel? = null,
-        val videoActionBarModel: VideoActionBarModel? = null
+    @SerialName("videoPrimaryInfoRenderer")
+    data class VideoPrimaryInfoRenderer(
+        val title: ApiText,
+        val viewCount: ViewCount,
+        val relativeDateText: SimpleText,
+        @Serializable(VideoActionsSerializer::class)
+        @SerialName("videoActions")
+        val likesText: String
+    ) : Result {
+        @Serializable
+        data class ViewCount(val videoViewCountRenderer: Renderer) {
+            @Serializable
+            data class Renderer(
+                val shortViewCount: SimpleText,
+                val viewCount: SimpleText
+            )
+        }
+
+        private object VideoActionsSerializer : JsonTransformingSerializer<String>(String.serializer()) {
+            override fun transformDeserialize(element: JsonElement) = element
+                .jsonObject["menuRenderer"]!!
+                .jsonObject["topLevelButtons"]!!
+                .jsonArray
+                .find { "segmentedLikeDislikeButtonRenderer" in it.jsonObject }!!
+                .jsonObject["segmentedLikeDislikeButtonRenderer"]!!
+                .jsonObject["likeButton"]!!
+                .jsonObject["toggleButtonRenderer"]!!
+                .jsonObject["defaultText"]!!
+                .jsonObject["simpleText"]!!
+        }
+    }
+
+    @Serializable
+    @SerialName("videoSecondaryInfoRenderer")
+    data class VideoSecondaryInfoRenderer(
+        // val description: ApiText? = null,
+        // val attributedDescription: String? = null,
+        val owner: Owner
+    ) : Result {
+        @Serializable
+        data class Owner(val videoOwnerRenderer: Renderer) {
+            @Serializable
+            data class Renderer(
+                val navigationEndpoint: ApiNavigationEndpoint,
+                val subscriberCountText: SimpleText,
+                val thumbnail: ApiImage,
+                val title: ApiText
+            )
+        }
+    }
+
+    @Serializable
+    object UnknownRenderer : Result
+
+    @Serializable
+    @JsonClassDiscriminator("sectionIdentifier")
+    sealed interface ItemSection : Result
+
+    @Serializable
+    object Separator : ItemSection
+
+    @Serializable
+    sealed interface SecondaryResultRenderer {
+        object Serializer : SingletonMapPolymorphicSerializer<SecondaryResultRenderer>(serializer())
+    }
+
+    @Serializable
+    data class SecondaryResult(val compactVideoRenderer: CompactVideoRenderer? = null)
+
+    @Serializable
+    @SerialName("compactVideoRenderer")
+    data class CompactVideoRenderer(
+        val channelThumbnail: ApiImage,
+        val lengthText: SimpleText? = null,
+        val longBylineText: ApiText,
+        val navigationEndpoint: NavigationEndpoint,
+        val publishedTimeText: SimpleText? = null,
+        val shortBylineText: ApiText,
+        val shortViewCountText: SimpleText,
+        val title: SimpleText,
+        val videoId: String,
+        val viewCountText: SimpleText
     ) {
         @Serializable
-        data class VideoMetadataModel(val videoMetadata: VideoMetadata)
-
-        @Serializable
-        data class ChannelBarModel(val videoChannelBarData: VideoChannelBarData)
-
-        @Serializable
-        data class VideoActionBarModel(
-            val buttons: List<@Serializable(with = Button.Serializer::class) Button>
-        )
-    }
-
-    @Serializable
-    data class VideoMetadata(
-        val title: Text,
-        val subtitleData: SubtitleData,
-        val badgesData: List<Badge> = emptyList()
-    ) {
-        @Serializable
-        data class Text(val content: String)
-
-        @Serializable
-        data class SubtitleData(
-            val viewCount: Text,
-            val date: Text
-        )
-
-        @Serializable
-        data class Badge(val label: String)
-    }
-
-    @Serializable
-    data class VideoChannelBarData(
-        val avatar: ImageContainer,
-        val subtitle: String? = null
-    )
-
-    @Serializable
-    sealed interface Button {
-        object Serializer : KSerializer<Button> by SingletonMapPolymorphicSerializer(serializer())
-
-        @Serializable
-        data class ButtonData(val defaultButton: DefaultButton) {
-            @Serializable
-            data class DefaultButton(val title: String)
-        }
-
-        @Serializable
-        @SerialName("likeButton")
-        data class LikeButton(val buttonData: ButtonData) : Button
-
-        @Serializable
-        @SerialName("dislikeButton")
-        data class DislikeButton(val buttonData: ButtonData) : Button
-
-        @Serializable
-        @SerialName("actionButton")
-        object ActionButton : Button
-
-        @Serializable
-        @SerialName("downloadButton")
-        object DownloadButton : Button
-
-        @Serializable
-        @SerialName("saveToPlaylistButton")
-        object SaveToPlaylistButton : Button
+        data class NavigationEndpoint(val watchEndpoint: ApiWatchEndpoint)
     }
 
     @Serializable
     @JsonClassDiscriminator("panelIdentifier")
-    sealed interface EngagementPanel {
-        object Serializer : TransformingSerializer(serializer())
+    sealed interface EngagementPanel
 
-        open class TransformingSerializer(nextSerializer: KSerializer<EngagementPanel>) : JsonTransformingSerializer<EngagementPanel>(nextSerializer) {
-            override fun transformDeserialize(element: JsonElement): JsonElement {
-                return element.jsonObject["engagementPanelSectionListRenderer"]!!
+    private object EngagementPanelSerializer : JsonContentPolymorphicSerializer<EngagementPanel>(EngagementPanel::class) {
+        override fun selectDeserializer(element: JsonElement): DeserializationStrategy<EngagementPanel> {
+            val s = when (element.jsonObject["panelIdentifier"]?.jsonPrimitive?.content) {
+                "engagement-panel-macro-markers-description-chapters" -> Chapters.serializer()
+                else -> UnknownPanel.serializer()
             }
+
+            @Suppress("UNCHECKED_CAST")
+            return TransformingSerializer(s as KSerializer<EngagementPanel>)
         }
+    }
+
+    private class TransformingSerializer(nextSerializer: KSerializer<EngagementPanel>) : JsonTransformingSerializer<EngagementPanel>(nextSerializer) {
+        override fun transformDeserialize(element: JsonElement) = element.jsonObject["engagementPanelSectionListRenderer"]!!
     }
 
     @Serializable
     @SerialName("engagement-panel-macro-markers-description-chapters")
-    class Chapters(val content: Content) : EngagementPanel {
-        @Serializable
-        data class Content(val sectionListRenderer: SectionListRenderer<Content>) {
-            @Serializable
-            data class Content(val itemSectionRenderer: ItemSectionRenderer<Content>) {
-                @Serializable
-                data class Content(val elementRenderer: ElementRenderer<Model>)
-            }
-        }
-
-        @Serializable
-        data class Model(val macroMarkersListItemModel: MacroMarkersListItemModel? = null) {
-            @Serializable
-            data class MacroMarkersListItemModel(val renderer: Renderer) {
-                @Serializable
-                data class Renderer(
-                    val onTap: OnTap,
-                    val thumbnail: ImageContainer,
-                    val timeDescription: ElementsAttributedText,
-                    val title: ElementsAttributedText
-                ) {
-                    @Serializable
-                    data class OnTap(val watchEndpoint: WatchEndpoint) {
-                        @Serializable
-                        data class WatchEndpoint(
-                            val continuePlayback: Boolean,
-                            @Serializable(with = DurationAsSecondsSerializer::class)
-                            @SerialName("startTimeSeconds")
-                            val startTime: Duration,
-                            val videoId: String
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    @Serializable
-    @SerialName("video-description-ep-identifier")
-    object VideoDescription : EngagementPanel
-
-    @Serializable
-    @SerialName("comment-item-section")
-    object CommentItemSection : EngagementPanel
-
-    @Serializable
-    @SerialName("live-chat-item-section")
-    object LiveChatItemSection : EngagementPanel
-
-    @Serializable
-    @SerialName("engagement-panel-searchable-transcript")
-    object SearchableTranscript : EngagementPanel
+    object Chapters : EngagementPanel
 
     @Serializable
     object UnknownPanel : EngagementPanel
@@ -301,14 +216,41 @@ internal data class ApiNext(
 
 @Serializable
 internal data class ApiNextContinuation(
-    override val continuationContents: ContinuationContents<Content>
+    override val onResponseReceivedActions: List<ContinuationContents<Content>>
 ) : ApiBrowseContinuation() {
     @Serializable
-    data class Content(val itemSectionRenderer: ItemSectionRenderer<Content>) {
-        @Serializable
-        data class Content(val elementRenderer: ElementRenderer<Model>)
+    class Content
+}
+
+@OptIn(ExperimentalSerializationApi::class, InternalSerializationApi::class)
+internal abstract class RendererSerializer<T : Any>(private val baseClass: KClass<T>) : KSerializer<T> {
+    override val descriptor = buildSerialDescriptor("JsonContentPolymorphicSerializer<${baseClass.simpleName}>", PolymorphicKind.SEALED)
+
+    final override fun serialize(encoder: Encoder, value: T) {
+        val actualSerializer =
+            encoder.serializersModule.getPolymorphic(baseClass, value)
+                ?: value::class.serializerOrNull()
+                ?: throwSubtypeNotRegistered(value::class, baseClass)
+        @Suppress("UNCHECKED_CAST")
+        (actualSerializer as KSerializer<T>).serialize(encoder, value)
     }
 
-    @Serializable
-    data class Model(val videoWithContextModel: ApiNextVideo? = null)
+    final override fun deserialize(decoder: Decoder): T {
+        val input = decoder as JsonDecoder
+        val (key, value) = input.decodeJsonElement().jsonObject.entries.single()
+
+        val actualSerializer = selectDeserializer(key) as KSerializer<T>
+        return input.json.decodeFromJsonElement(actualSerializer, value)
+    }
+
+    protected abstract fun selectDeserializer(key: String): DeserializationStrategy<T>
+
+    private fun throwSubtypeNotRegistered(subClass: KClass<*>, baseClass: KClass<*>): Nothing {
+        val subClassName = subClass.simpleName ?: "$subClass"
+        val scope = "in the scope of '${baseClass.simpleName}'"
+        throw SerializationException(
+            "Class '${subClassName}' is not registered for polymorphic serialization $scope.\n" +
+                "Mark the base class as 'sealed' or register the serializer explicitly."
+        )
+    }
 }
