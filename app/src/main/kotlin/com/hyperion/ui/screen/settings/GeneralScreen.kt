@@ -56,8 +56,8 @@ fun GeneralScreen(
 
     ListItem(
         modifier = Modifier.clickable { directoryChooser.launch(null) },
-        headlineText = { Text(stringResource(R.string.download_location)) },
-        supportingText = { Text(preferences.downloadDirectory) },
+        headlineContent = { Text(stringResource(R.string.download_location)) },
+        supportingContent = { Text(preferences.downloadDirectory) },
         leadingContent = {
             Icon(
                 imageVector = Icons.Default.Download,

@@ -30,7 +30,6 @@ class TagViewModel(
         private set
     var subtitle by mutableStateOf<String?>(null)
         private set
-    val avatars = mutableStateListOf<String>()
     var videos by mutableStateOf(emptyFlow<PagingData<DomainVideoPartial>>())
         private set
 
@@ -43,8 +42,6 @@ class TagViewModel(
 
                 tag = response.name
                 subtitle = response.subtitle
-                avatars.clear()
-                avatars.addAll(response.avatars)
 
                 videos = Pager(pagingConfig) {
                     BrowsePagingSource { key ->

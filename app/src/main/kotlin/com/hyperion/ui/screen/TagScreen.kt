@@ -2,9 +2,6 @@ package com.hyperion.ui.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -12,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -20,7 +16,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import com.hyperion.R
-import com.hyperion.ui.component.ShimmerImage
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.TagViewModel
 import org.koin.androidx.compose.getViewModel
@@ -121,29 +116,10 @@ private fun TagScreenLoaded(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = viewModel.subtitle!!,
-                        style = MaterialTheme.typography.titleMedium
-                    )
-
-                    LazyRow(
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        items(viewModel.avatars) { avatarUrl ->
-                            ShimmerImage(
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .clip(CircleShape),
-                                url = avatarUrl,
-                                contentDescription = null
-                            )
-                        }
-                    }
-                }
+                Text(
+                    text = viewModel.subtitle!!,
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
 
             items(

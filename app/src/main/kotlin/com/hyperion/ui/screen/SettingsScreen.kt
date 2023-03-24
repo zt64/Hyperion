@@ -35,7 +35,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = getViewModel(),
     onClickBack: () -> Unit
 ) {
-    val navController = rememberNavController<SettingsDestination>(SettingsDestination.Main)
+    val navController = rememberNavController<SettingsDestination>(SettingsSection)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -46,7 +46,7 @@ fun SettingsScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            if (navController.currentDestination == SettingsDestination.Main) {
+                            if (navController.currentDestination == SettingsSection) {
                                 onClickBack()
                             } else {
                                 navController.pop()
@@ -60,7 +60,10 @@ fun SettingsScreen(
                     }
                 },
                 title = {
-                    Crossfade(navController.currentDestination) { destination ->
+                    Crossfade(
+                        targetState = navController.currentDestination,
+                        label = "Title"
+                    ) { destination ->
                         Text(stringResource(if (destination is SettingsSection) destination.label else R.string.settings))
                     }
                 },
@@ -107,13 +110,13 @@ fun SettingsScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     when (destination) {
-                        SettingsDestination.Main -> {
+                        SettingsSection -> {
                             SettingsSection.values().forEach { destination ->
                                 ListItem(
                                     modifier = Modifier.clickable {
                                         navController.navigate(destination)
                                     },
-                                    headlineText = {
+                                    headlineContent = {
                                         Text(stringResource(destination.label))
                                     },
                                     leadingContent = {

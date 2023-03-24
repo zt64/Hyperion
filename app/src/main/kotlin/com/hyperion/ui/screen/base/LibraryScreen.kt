@@ -67,7 +67,7 @@ fun LibraryScreen(
 //            item {
 //                Column {
 //                    ListItem(
-//                        headlineText = {
+//                        headlineContent = {
 //                            Text(stringResource(R.string.history))
 //                        },
 //                        trailingContent = {
@@ -91,7 +91,7 @@ fun LibraryScreen(
 //
 //            item {
 //                ListItem(
-//                    headlineText = {
+//                    headlineContent = {
 //                        Text(stringResource(R.string.playlists))
 //                    },
 //                    trailingContent = {

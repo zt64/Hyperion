@@ -74,9 +74,7 @@ fun ErrorScreen(
                     onClick = {
                         clipboardManager.setText(AnnotatedString(exception.stackTraceToString()))
                         coroutineScope.launch {
-                            snackbarHostState.showSnackbar(
-                                message = context.getString(R.string.copied_to_clipboard)
-                            )
+                            snackbarHostState.showSnackbar(context.getString(R.string.copied_to_clipboard))
                         }
                     }
                 ) {

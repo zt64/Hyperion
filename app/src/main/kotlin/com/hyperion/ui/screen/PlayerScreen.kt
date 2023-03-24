@@ -18,17 +18,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +39,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.media3.common.Player
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -112,23 +109,10 @@ private fun PlayerScreenLoaded(
     navController: NavController<AppDestination>
 ) {
     if (viewModel.showQualityPicker) {
-        ModalBottomSheet(onDismissRequest = viewModel::hideQualityPicker) {
-            LazyColumn {
-                items(viewModel.videoFormats) { format ->
-                    ListItem(
-                        modifier = Modifier.clickable {
-                            viewModel.selectFormat(format)
-                        },
-                        headlineText = {
-                            Text(format.qualityLabel)
-                        },
-                        overlineText = {
-                            Text(format.mimeType)
-                        }
-                    )
-                }
-            }
-        }
+        PlayerSheet(
+            viewModel = viewModel,
+            onDismissRequest = viewModel::hideQualityPicker
+        )
     }
 
     if (viewModel.showDownloadDialog) {
@@ -465,13 +449,6 @@ private fun PlayerControls(
     val coroutineScope = rememberCoroutineScope()
     val offsetY = remember { Animatable(0f) }
 
-    var scale by rememberSaveable { mutableStateOf(1f) }
-    var offset by remember { mutableStateOf(Offset.Zero) }
-    val transformableState = rememberTransformableState { zoomChange, offsetChange, _ ->
-        scale = (scale * zoomChange).coerceIn(1f..10f)
-        offset += offsetChange
-    }
-
     Box(
         modifier = modifier
             .background(Color.Black)
@@ -484,8 +461,26 @@ private fun PlayerControls(
                         if (offset.x > size.width / 2) viewModel.skipForward() else viewModel.skipBackward()
                     }
                 )
+                detectDragGestures { change, dragAmount ->
+                    // split up into three horizontal equally sized drag zones
+                    val zoneWidth = size.width / 3
+
+                    when {
+                        change.position.x < zoneWidth -> viewModel.skipBackward()
+                        change.position.x > zoneWidth * 2 -> viewModel.skipForward()
+                        else -> {
+                            val offset = offsetY.value + dragAmount.y
+
+                            if (viewModel.isFullscreen && offset in 0f..200f || !viewModel.isFullscreen && offset in -200f..0f) {
+                                coroutineScope.launch {
+                                    offsetY.snapTo(offset)
+                                }
+                            }
+                        }
+                    }
+                }
             }
-            .draggable(
+            /*.draggable(
                 orientation = Orientation.Vertical,
                 state = rememberDraggableState { dragAmount ->
                     val offset = offsetY.value + dragAmount
@@ -504,18 +499,10 @@ private fun PlayerControls(
 
                     offsetY.animateTo(0f)
                 }
-            ),
+            )*/,
         contentAlignment = Alignment.Center
     ) {
         Player(
-            modifier = Modifier
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    translationX = offset.x,
-                    translationY = offset.y
-                )
-                .transformable(transformableState),
             player = viewModel.player
         )
 
@@ -546,15 +533,118 @@ private fun PlayerControls(
             }
         }
 
-//            SeekBar(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .align(Alignment.BottomStart),
-//                duration = Duration.ZERO,
-//                value = viewModel.position.inWholeMilliseconds.toFloat(),
-//                valueRange = 0f..viewModel.duration.inWholeMilliseconds.toFloat(),
-//                onSeek = viewModel::seekTo,
-//                onSeekFinished = { }
-//            )
+        //            SeekBar(
+        //                modifier = Modifier
+        //                    .fillMaxWidth()
+        //                    .align(Alignment.BottomStart),
+        //                duration = Duration.ZERO,
+        //                value = viewModel.position.inWholeMilliseconds.toFloat(),
+        //                valueRange = 0f..viewModel.duration.inWholeMilliseconds.toFloat(),
+        //                onSeek = viewModel::seekTo,
+        //                onSeekFinished = { }
+        //            )
+    }
+}
+
+@Composable
+private fun PlayerSheet(
+    viewModel: PlayerViewModel,
+    onDismissRequest: () -> Unit
+) {
+    ModalBottomSheet(onDismissRequest) {
+        //        LazyColumn {
+        //            items(viewModel.videoFormats) { format ->
+        //                ListItem(
+        //                    modifier = Modifier.clickable {
+        //                        viewModel.selectFormat(format)
+        //                    },
+        //                    headlineContent = {
+        //                        Text(format.qualityLabel)
+        //                    },
+        //                    supportingContent = {
+        //                        Text(format.mimeType)
+        //                    }
+        //                )
+        //            }
+        //        }
+
+        Column(
+            modifier = Modifier.padding(bottom = 8.dp)
+        ) {
+            ListItem(
+                modifier = Modifier.clickable {
+
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = stringResource(R.string.quality)
+                    )
+                },
+                headlineContent = {
+                    Text(stringResource(R.string.quality))
+                },
+                supportingContent = {
+                    Text(viewModel.videoFormat!!.qualityLabel)
+                }
+            )
+
+            ListItem(
+                modifier = Modifier.clickable {
+
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.ClosedCaption,
+                        contentDescription = stringResource(R.string.captions)
+                    )
+                },
+                headlineContent = {
+                    Text(stringResource(R.string.captions))
+                }
+            )
+
+            ListItem(
+                modifier = Modifier.clickable(onClick = viewModel::toggleLoop),
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.Loop,
+                        contentDescription = stringResource(R.string.loop)
+                    )
+                },
+                headlineContent = {
+                    Text(stringResource(R.string.loop))
+                },
+                supportingContent = {
+                    Text(
+                        stringResource(
+                            if (viewModel.repeatMode == Player.REPEAT_MODE_OFF) {
+                                R.string.off
+                            } else {
+                                R.string.on
+                            }
+                        )
+                    )
+                }
+            )
+
+            ListItem(
+                modifier = Modifier.clickable {
+
+                },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.Speed,
+                        contentDescription = stringResource(R.string.playback_speed)
+                    )
+                },
+                headlineContent = {
+                    Text(stringResource(R.string.playback_speed))
+                },
+                supportingContent = {
+                    Text("1.0x")
+                }
+            )
+        }
     }
 }

@@ -95,10 +95,10 @@ fun <T> RadioSetting(
         modifier = modifier.clickable {
             showDialog = true
         },
-        headlineText = {
+        headlineContent = {
             Text(label)
         },
-        supportingText = description?.let {
+        supportingContent = description?.let {
             {
                 Text(description)
             }

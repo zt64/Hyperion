@@ -50,8 +50,8 @@ fun AboutScreen(
                 )
             }
         },
-        headlineText = { Text(stringResource(R.string.version)) },
-        supportingText = { Text(stringResource(R.string.check_for_updates)) }
+        headlineContent = { Text(stringResource(R.string.version)) },
+        supportingContent = { Text(stringResource(R.string.check_for_updates)) }
     )
 
     ListItem(
@@ -62,6 +62,6 @@ fun AboutScreen(
                 contentDescription = stringResource(R.string.github)
             )
         },
-        headlineText = { Text(stringResource(R.string.github)) }
+        headlineContent = { Text(stringResource(R.string.github)) }
     )
 }

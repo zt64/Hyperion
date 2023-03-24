@@ -27,8 +27,8 @@ fun SliderSetting(
 ) {
     ListItem(
         modifier = modifier,
-        headlineText = { Text(text) },
-        supportingText = {
+        headlineContent = { Text(text) },
+        supportingContent = {
             var sliderValue by rememberSaveable { mutableStateOf(value) }
 
             Row(

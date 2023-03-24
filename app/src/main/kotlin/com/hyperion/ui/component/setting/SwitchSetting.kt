@@ -16,15 +16,15 @@ fun SwitchSetting(
     checked: Boolean,
     icon: ImageVector? = null,
     text: String,
-    supportingText: String? = null,
+    supportingContent: String? = null,
     onCheckedChange: (value: Boolean) -> Unit
 ) {
     ListItem(
         modifier = modifier.clickable(enabled) {
             onCheckedChange(!checked)
         },
-        headlineText = { Text(text) },
-        supportingText = supportingText?.let { { Text(it) } },
+        headlineContent = { Text(text) },
+        supportingContent = supportingContent?.let { { Text(it) } },
         leadingContent = icon?.let { imageVector ->
             {
                 Icon(

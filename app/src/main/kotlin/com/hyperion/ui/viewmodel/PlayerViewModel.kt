@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.*
+import androidx.media3.common.Player.RepeatMode
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.source.MergingMediaSource
@@ -55,7 +56,7 @@ class PlayerViewModel(
     var videoFormats = mutableStateListOf<DomainFormat.Video>()
         private set
     private var audioSource: ProgressiveMediaSource? = null
-    private var videoFormat: DomainFormat.Video? = null
+    var videoFormat: DomainFormat.Video? = null
     var isFullscreen by mutableStateOf(false)
         private set
     var showFullDescription by mutableStateOf(false)
@@ -83,6 +84,10 @@ class PlayerViewModel(
         override fun onPlayerError(error: PlaybackException) {
             state = State.Error(error)
         }
+
+        override fun onRepeatModeChanged(repeatMode: Int) {
+            this@PlayerViewModel.repeatMode = repeatMode
+        }
     }
 
     private val dataSourceFactory = DefaultHttpDataSource.Factory()
@@ -98,6 +103,9 @@ class PlayerViewModel(
     var duration by mutableStateOf(Duration.ZERO)
         private set
     var position by mutableStateOf(Duration.ZERO)
+        private set
+    @get:RepeatMode
+    var repeatMode by mutableStateOf(Player.REPEAT_MODE_OFF)
         private set
     var relatedVideos = emptyFlow<PagingData<DomainVideoPartial>>()
         private set
@@ -278,5 +286,14 @@ class PlayerViewModel(
     fun selectFormat(selectedFormat: DomainFormat.Video) {
         setFormat(selectedFormat)
         hideQualityPicker()
+    }
+
+    fun toggleLoop() {
+        player.repeatMode = if (player.repeatMode == Player.REPEAT_MODE_ONE) {
+            Player.REPEAT_MODE_OFF
+        } else {
+            Player.REPEAT_MODE_ONE
+        }
+        showQualityPicker = false
     }
 }
