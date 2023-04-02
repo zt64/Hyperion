@@ -183,7 +183,7 @@ internal data class ApiNext(
         val viewCountText: SimpleText
     ) {
         @Serializable
-        data class NavigationEndpoint(val watchEndpoint: ApiWatchEndpoint)
+        data class NavigationEndpoint(val watchEndpoint: ApiWatchEndpoint? = null)
     }
 
     @Serializable

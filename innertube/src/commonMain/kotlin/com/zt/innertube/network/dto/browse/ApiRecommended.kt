@@ -58,7 +58,7 @@ internal data class VideoRenderer(
     val ownerText: ApiText,
     val publishedTimeText: SimpleText? = null,
     @Serializable(ViewCountSerializer::class)
-    val shortViewCountText: String,
+    val shortViewCountText: String? = null,
     val thumbnail: ApiImage,
     val title: ApiText,
     val videoId: String,
