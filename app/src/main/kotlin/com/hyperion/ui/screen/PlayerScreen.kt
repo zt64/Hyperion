@@ -395,7 +395,10 @@ private fun PlayerScreenPortrait(
             }
 
             if (viewModel.preferences.showRelatedVideos) {
-                items(relatedVideos) { relatedVideo ->
+                items(
+                    items = relatedVideos,
+                    key = { it.id }
+                ) { relatedVideo ->
                     if (relatedVideo == null) return@items
 
                     VideoCard(
