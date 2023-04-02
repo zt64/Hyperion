@@ -129,16 +129,13 @@ fun BaseScreen(
                     }
                 }
 
-                Box(
+                AnimatedNavHost(
                     modifier = Modifier
                         .weight(1f, true)
-                        .fillMaxHeight()
-                ) {
-                    AnimatedNavHost(
-                        controller = navController
-                    ) { destination ->
-                        content(destination)
-                    }
+                        .fillMaxHeight(),
+                    controller = navController
+                ) { destination ->
+                    content(destination)
                 }
             }
         }

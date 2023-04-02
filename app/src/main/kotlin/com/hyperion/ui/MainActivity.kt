@@ -69,6 +69,7 @@ class MainActivity : ComponentActivity() {
                         NavBackHandler(navController)
 
                         AnimatedNavHost(
+                            modifier = Modifier.fillMaxSize(),
                             controller = navController
                         ) { destination ->
                             fun onClickVideo(id: String) = navController.navigate(AppDestination.Player(id))
@@ -151,8 +152,6 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-
-
                 }
             }
         }

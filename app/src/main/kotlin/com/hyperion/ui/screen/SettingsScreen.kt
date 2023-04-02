@@ -76,66 +76,63 @@ fun SettingsScreen(
     ) { paddingValues ->
         NavBackHandler(navController)
 
-        Surface(
+        AnimatedNavHost(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            AnimatedNavHost(
-                controller = navController,
-                transitionSpec = { action, _, _ ->
-                    if (action == NavAction.Pop) {
-                        // Leaving settings sub-screen
-                        fadeIn(tween(200)) with slideOutOfContainer(
-                            towards = AnimatedContentScope.SlideDirection.End,
-                            animationSpec = tween(
-                                durationMillis = 200,
-                                easing = FastOutLinearInEasing
-                            )
+                .padding(paddingValues),
+            controller = navController,
+            transitionSpec = { action, _, _ ->
+                if (action == NavAction.Pop) {
+                    // Leaving settings sub-screen
+                    fadeIn(tween(200)) with slideOutOfContainer(
+                        towards = AnimatedContentScope.SlideDirection.End,
+                        animationSpec = tween(
+                            durationMillis = 200,
+                            easing = FastOutLinearInEasing
                         )
-                    } else {
-                        // Entering settings sub-screen
-                        slideIntoContainer(
-                            towards = AnimatedContentScope.SlideDirection.Start,
-                            animationSpec = tween(
-                                durationMillis = 300,
-                                easing = FastOutSlowInEasing
-                            )
-                        ) with fadeOut(tween(300))
-                    }
+                    )
+                } else {
+                    // Entering settings sub-screen
+                    slideIntoContainer(
+                        towards = AnimatedContentScope.SlideDirection.Start,
+                        animationSpec = tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
+                        )
+                    ) with fadeOut(tween(300))
                 }
-            ) { destination ->
-                Column(
-                    modifier = Modifier.verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    when (destination) {
-                        SettingsSection -> {
-                            SettingsSection.values().forEach { destination ->
-                                ListItem(
-                                    modifier = Modifier.clickable {
-                                        navController.navigate(destination)
-                                    },
-                                    headlineContent = {
-                                        Text(stringResource(destination.label))
-                                    },
-                                    leadingContent = {
-                                        Icon(
-                                            imageVector = destination.icon,
-                                            contentDescription = stringResource(destination.label)
-                                        )
-                                    }
-                                )
-                            }
+            }
+        ) { destination ->
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                when (destination) {
+                    SettingsSection -> {
+                        SettingsSection.values().forEach { destination ->
+                            ListItem(
+                                modifier = Modifier.clickable {
+                                    navController.navigate(destination)
+                                },
+                                headlineContent = {
+                                    Text(stringResource(destination.label))
+                                },
+                                leadingContent = {
+                                    Icon(
+                                        imageVector = destination.icon,
+                                        contentDescription = stringResource(destination.label)
+                                    )
+                                }
+                            )
                         }
-
-                        SettingsSection.GENERAL -> GeneralScreen(viewModel)
-                        SettingsSection.APPEARANCE -> AppearanceScreen(viewModel)
-                        SettingsSection.ACCOUNTS -> AccountsScreen(viewModel)
-                        SettingsSection.SPONSOR_BLOCK -> SponsorBlockScreen(viewModel)
-                        SettingsSection.BACKUP_RESTORE -> BackupRestoreScreen(viewModel)
-                        SettingsSection.ABOUT -> AboutScreen(viewModel, snackbarHostState)
                     }
+
+                    SettingsSection.GENERAL -> GeneralScreen(viewModel)
+                    SettingsSection.APPEARANCE -> AppearanceScreen(viewModel)
+                    SettingsSection.ACCOUNTS -> AccountsScreen(viewModel)
+                    SettingsSection.SPONSOR_BLOCK -> SponsorBlockScreen(viewModel)
+                    SettingsSection.BACKUP_RESTORE -> BackupRestoreScreen(viewModel)
+                    SettingsSection.ABOUT -> AboutScreen(viewModel, snackbarHostState)
                 }
             }
         }

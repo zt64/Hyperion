@@ -38,7 +38,7 @@ accompanist-placeholder = { module = "com.google.accompanist:accompanist-placeho
 
 coil-compose = "io.coil-kt:coil-compose:2.3.0"
 
-navigation = "dev.olshevski.navigation:reimagined:1.3.1"
+navigation = "dev.olshevski.navigation:reimagined:1.4.0"
 
 media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
 media3-session = { module = "androidx.media3:media3-session", version.ref = "media3" }
