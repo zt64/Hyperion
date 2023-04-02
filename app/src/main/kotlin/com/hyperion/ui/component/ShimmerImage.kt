@@ -10,6 +10,7 @@ import androidx.compose.material3.LocalAbsoluteTonalElevation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -20,10 +21,20 @@ import coil.compose.SubcomposeAsyncImageContent
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.size.Precision
-import coil.size.Size
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
+import coil.size.Size as CoilSize
+
+@JvmInline
+@Immutable
+value class Size(val size: CoilSize?) {
+    constructor(width: Int, height: Int) : this(CoilSize(width, height))
+
+    companion object {
+        val ORIGINAL = Size(CoilSize.ORIGINAL)
+    }
+}
 
 @Composable
 fun ShimmerImage(
@@ -41,7 +52,7 @@ fun ShimmerImage(
             .diskCachePolicy(CachePolicy.ENABLED)
             .memoryCachePolicy(CachePolicy.ENABLED)
             .memoryCacheKey(url)
-            .size(size)
+            .size(size.size ?: CoilSize.ORIGINAL)
             .precision(Precision.EXACT)
             .build(),
         contentScale = contentScale,
