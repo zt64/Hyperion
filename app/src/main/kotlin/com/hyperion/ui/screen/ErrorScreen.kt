@@ -71,6 +71,7 @@ fun ErrorScreen(
                 )
 
                 Button(
+                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                     onClick = {
                         clipboardManager.setText(AnnotatedString(exception.stackTraceToString()))
                         coroutineScope.launch {

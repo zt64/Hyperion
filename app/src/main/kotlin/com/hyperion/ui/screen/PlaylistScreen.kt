@@ -131,6 +131,7 @@ private fun PlaylistLoadedScreen(
                     ) {
                         Button(
                             modifier = Modifier.weight(1f, true),
+                            contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                             onClick = viewModel::play
                         ) {
                             Icon(
@@ -145,6 +146,7 @@ private fun PlaylistLoadedScreen(
 
                         OutlinedButton(
                             modifier = Modifier.weight(1f, true),
+                            contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                             onClick = viewModel::shuffle
                         ) {
                             Icon(

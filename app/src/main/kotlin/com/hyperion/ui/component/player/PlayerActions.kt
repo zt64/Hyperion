@@ -35,6 +35,7 @@ fun PlayerActions(
     ) {
         FilledTonalButton(
             enabled = voteEnabled,
+            contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
             onClick = { }
         ) {
             Icon(
@@ -49,6 +50,7 @@ fun PlayerActions(
 
         FilledTonalButton(
             enabled = voteEnabled,
+            contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
             onClick = { }
         ) {
             Icon(

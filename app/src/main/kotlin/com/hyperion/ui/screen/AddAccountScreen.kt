@@ -116,7 +116,10 @@ private fun AddAccountScreenLoaded(
                     )
                 }
 
-                OutlinedButton(onClick = onClickActivate) {
+                OutlinedButton(
+                    onClick = onClickActivate,
+                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding
+                ) {
                     Icon(
                         imageVector = Icons.Default.OpenInBrowser,
                         contentDescription = null
