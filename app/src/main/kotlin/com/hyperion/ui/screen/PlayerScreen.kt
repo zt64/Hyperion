@@ -9,7 +9,6 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -39,7 +38,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.media3.common.Player
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
@@ -49,6 +47,8 @@ import com.hyperion.ui.component.player.Player
 import com.hyperion.ui.component.player.PlayerActions
 import com.hyperion.ui.component.player.PlayerControlsOverlay
 import com.hyperion.ui.navigation.AppDestination
+import com.hyperion.ui.sheet.DownloadSheet
+import com.hyperion.ui.sheet.PlayerSheet
 import com.hyperion.ui.viewmodel.PlayerViewModel
 import com.hyperion.util.findActivity
 import dev.olshevski.navigation.reimagined.NavController
@@ -116,29 +116,7 @@ private fun PlayerScreenLoaded(
     }
 
     if (viewModel.showDownloadDialog) {
-        AlertDialog(
-            onDismissRequest = viewModel::hideDownloadDialog,
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.Download,
-                    contentDescription = stringResource(R.string.download)
-                )
-            },
-            title = { Text(stringResource(R.string.download)) },
-            text = {
-
-            },
-            confirmButton = {
-                TextButton(onClick = viewModel::hideDownloadDialog) {
-                    Text(stringResource(R.string.download))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = viewModel::hideDownloadDialog) {
-                    Text(stringResource(R.string.dismiss))
-                }
-            }
-        )
+        DownloadSheet(onDismissRequest = viewModel::hideDownloadDialog)
     }
 
     val context = LocalContext.current
@@ -213,15 +191,18 @@ private fun PlayerScreenPortrait(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     val uriHandler = LocalUriHandler.current
+                    val colorScheme = MaterialTheme.colorScheme
 
                     // TODO: Add automatic hyperlinks
-                    val description = buildAnnotatedString {
-                        withStyle(
-                            style = SpanStyle(
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                        ) {
-                            append(video.description)
+                    val description = remember {
+                        buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = colorScheme.onSurface
+                                )
+                            ) {
+                                append(video.description)
+                            }
                         }
                     }
 
@@ -483,31 +464,29 @@ private fun PlayerControls(
                     }
                 }
             }
-            /*.draggable(
-                orientation = Orientation.Vertical,
-                state = rememberDraggableState { dragAmount ->
-                    val offset = offsetY.value + dragAmount
+        /*.draggable(
+            orientation = Orientation.Vertical,
+            state = rememberDraggableState { dragAmount ->
+                val offset = offsetY.value + dragAmount
 
-                    if (viewModel.isFullscreen && offset in 0f..200f || !viewModel.isFullscreen && offset in -200f..0f) {
-                        coroutineScope.launch {
-                            offsetY.snapTo(offset)
-                        }
+                if (viewModel.isFullscreen && offset in 0f..200f || !viewModel.isFullscreen && offset in -200f..0f) {
+                    coroutineScope.launch {
+                        offsetY.snapTo(offset)
                     }
-                },
-                onDragStopped = {
-                    when {
-                        offsetY.value > 150 -> viewModel.exitFullscreen()
-                        offsetY.value < -150 -> viewModel.enterFullscreen()
-                    }
-
-                    offsetY.animateTo(0f)
                 }
-            )*/,
+            },
+            onDragStopped = {
+                when {
+                    offsetY.value > 150 -> viewModel.exitFullscreen()
+                    offsetY.value < -150 -> viewModel.enterFullscreen()
+                }
+
+                offsetY.animateTo(0f)
+            }
+        )*/,
         contentAlignment = Alignment.Center
     ) {
-        Player(
-            player = viewModel.player
-        )
+        Player(player = viewModel.player)
 
         AnimatedVisibility(
             modifier = Modifier.matchParentSize(),
@@ -546,108 +525,5 @@ private fun PlayerControls(
         //                onSeek = viewModel::seekTo,
         //                onSeekFinished = { }
         //            )
-    }
-}
-
-@Composable
-private fun PlayerSheet(
-    viewModel: PlayerViewModel,
-    onDismissRequest: () -> Unit
-) {
-    ModalBottomSheet(onDismissRequest) {
-        //        LazyColumn {
-        //            items(viewModel.videoFormats) { format ->
-        //                ListItem(
-        //                    modifier = Modifier.clickable {
-        //                        viewModel.selectFormat(format)
-        //                    },
-        //                    headlineContent = {
-        //                        Text(format.qualityLabel)
-        //                    },
-        //                    supportingContent = {
-        //                        Text(format.mimeType)
-        //                    }
-        //                )
-        //            }
-        //        }
-
-        Column(
-            modifier = Modifier.padding(bottom = 8.dp)
-        ) {
-            ListItem(
-                modifier = Modifier.clickable {
-
-                },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(R.string.quality)
-                    )
-                },
-                headlineContent = {
-                    Text(stringResource(R.string.quality))
-                },
-                supportingContent = {
-                    Text(viewModel.videoFormat!!.qualityLabel)
-                }
-            )
-
-            ListItem(
-                modifier = Modifier.clickable {
-
-                },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Default.ClosedCaption,
-                        contentDescription = stringResource(R.string.captions)
-                    )
-                },
-                headlineContent = {
-                    Text(stringResource(R.string.captions))
-                }
-            )
-
-            ListItem(
-                modifier = Modifier.clickable(onClick = viewModel::toggleLoop),
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Default.Loop,
-                        contentDescription = stringResource(R.string.loop)
-                    )
-                },
-                headlineContent = {
-                    Text(stringResource(R.string.loop))
-                },
-                supportingContent = {
-                    Text(
-                        stringResource(
-                            if (viewModel.repeatMode == Player.REPEAT_MODE_OFF) {
-                                R.string.off
-                            } else {
-                                R.string.on
-                            }
-                        )
-                    )
-                }
-            )
-
-            ListItem(
-                modifier = Modifier.clickable {
-
-                },
-                leadingContent = {
-                    Icon(
-                        imageVector = Icons.Default.Speed,
-                        contentDescription = stringResource(R.string.playback_speed)
-                    )
-                },
-                headlineContent = {
-                    Text(stringResource(R.string.playback_speed))
-                },
-                supportingContent = {
-                    Text("1.0x")
-                }
-            )
-        }
     }
 }

@@ -10,7 +10,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.media3.common.*
 import androidx.media3.common.Player.RepeatMode
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.*
+import androidx.media3.datasource.HttpDataSource.*
 import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.session.MediaController
@@ -104,6 +105,7 @@ class PlayerViewModel(
         private set
     var position by mutableStateOf(Duration.ZERO)
         private set
+
     @get:RepeatMode
     var repeatMode by mutableStateOf(Player.REPEAT_MODE_OFF)
         private set
@@ -169,7 +171,9 @@ class PlayerViewModel(
         player.playWhenReady = !player.playWhenReady
     }
 
-    fun toggleFullscreen() = if (isFullscreen) exitFullscreen() else enterFullscreen()
+    fun toggleFullscreen() {
+        isFullscreen = !isFullscreen
+    }
 
     fun showQualityPicker() {
         showQualityPicker = true
@@ -269,14 +273,6 @@ class PlayerViewModel(
                 e.printStackTrace()
             }
         }
-    }
-
-    fun enterFullscreen() {
-        isFullscreen = true
-    }
-
-    fun exitFullscreen() {
-        isFullscreen = false
     }
 
     fun showComments() {
