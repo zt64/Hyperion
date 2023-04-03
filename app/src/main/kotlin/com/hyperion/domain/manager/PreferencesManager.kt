@@ -17,4 +17,14 @@ class PreferencesManager(sharedPreferences: SharedPreferences) : BasePreferenceM
     var downloadDirectory by stringPreference("download_directory", Environment.DIRECTORY_DOWNLOADS)
     var timestampScale by floatPreference("timestamp_scale", 1f)
     var hideNavItemLabel by booleanPreference("hide_nav_item_label", false)
+
+    // Gestures
+    var swipeToSeek by booleanPreference("swipe_to_seek", true)
+    var swipeToSeekSensitivity by floatPreference("swipe_to_seek_sensitivity", 1f)
+    var brightnessGesture by booleanPreference("brightness_gesture", true)
+    var volumeGesture by booleanPreference("volume_gesture", true)
+    var doubleTapToSeek by booleanPreference("double_tap_to_seek", true)
+    var doubleTapToSeekDuration by intPreference("double_tap_to_seek_duration", 10)
+
+    var sponsorBlockEnabled by booleanPreference("sponsor_block_enabled", true)
 }

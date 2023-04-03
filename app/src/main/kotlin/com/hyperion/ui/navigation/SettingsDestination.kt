@@ -23,6 +23,7 @@ enum class SettingsSection(
 ) : SettingsDestination {
     GENERAL(Icons.Default.Settings, R.string.general),
     APPEARANCE(Icons.Default.Palette, R.string.appearance),
+    GESTURES(Icons.Default.Gesture, R.string.gestures),
     ACCOUNTS(Icons.Default.ManageAccounts, R.string.accounts),
     SPONSOR_BLOCK(Icons.Default.MoneyOff, R.string.sponsor_block),
     BACKUP_RESTORE(Icons.Default.SettingsBackupRestore, R.string.backup_restore),

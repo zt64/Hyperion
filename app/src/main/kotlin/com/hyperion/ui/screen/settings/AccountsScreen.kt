@@ -2,13 +2,11 @@ package com.hyperion.ui.screen.settings
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
-import com.hyperion.ui.viewmodel.SettingsViewModel
+import com.hyperion.domain.manager.PreferencesManager
 
 context(ColumnScope)
 @Composable
-fun AccountsScreen(
-    viewModel: SettingsViewModel
-) {
+fun AccountsScreen(preferences: PreferencesManager) {
 
 }
 

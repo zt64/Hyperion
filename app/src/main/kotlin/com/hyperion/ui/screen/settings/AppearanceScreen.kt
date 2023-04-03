@@ -7,20 +7,16 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
+import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.component.setting.RadioSetting
 import com.hyperion.ui.component.setting.SliderSetting
 import com.hyperion.ui.component.setting.SwitchSetting
 import com.hyperion.ui.theme.Theme
-import com.hyperion.ui.viewmodel.SettingsViewModel
 import kotlinx.collections.immutable.toImmutableMap
 
 context(ColumnScope)
 @Composable
-fun AppearanceScreen(
-    viewModel: SettingsViewModel
-) {
-    val preferences = viewModel.preferences
-
+fun AppearanceScreen(preferences: PreferencesManager) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         SwitchSetting(
             checked = preferences.dynamicColor,

@@ -15,23 +15,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.BuildConfig
 import com.hyperion.R
-import com.hyperion.ui.viewmodel.SettingsViewModel
-import kotlinx.coroutines.launch
 
 context(ColumnScope)
 @Composable
 fun AboutScreen(
-    viewModel: SettingsViewModel,
-    snackbarHostState: SnackbarHostState
+    onClickUpdate: () -> Unit,
+    onClickGithub: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     ListItem(
-        modifier = Modifier.clickable {
-            coroutineScope.launch {
-                snackbarHostState.showSnackbar("Updating not yet implemented!")
-            }
-        },
+        modifier = Modifier.clickable(onClick = onClickUpdate),
         leadingContent = {
             Icon(
                 imageVector = Icons.Default.Update,
@@ -55,7 +49,7 @@ fun AboutScreen(
     )
 
     ListItem(
-        modifier = Modifier.clickable(onClick = viewModel::openGitHub),
+        modifier = Modifier.clickable(onClick = onClickGithub),
         leadingContent = {
             Icon(
                 imageVector = Icons.Default.Code,

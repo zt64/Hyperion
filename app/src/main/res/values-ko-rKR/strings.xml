@@ -109,4 +109,12 @@
     <string name="playback_speed">재생 속도</string>
     <string name="off">끔</string>
     <string name="on">켬</string>
+    <string name="gestures">Gestures</string>
+    <string name="enabled">Enabled</string>
+    <string name="swipe_to_seek">Swipe to seek</string>
+    <string name="swipe_sensitivity">Swipe sensitivity</string>
+    <string name="double_tap_to_seek">Double tap to seek</string>
+    <string name="double_tap_to_seek_amount">Seek duration</string>
+    <string name="volume_gesture">Swipe to adjust volume</string>
+    <string name="brightness_gesture">Swipe to adjust brightness</string>
 </resources>

@@ -23,7 +23,9 @@ fun SliderSetting(
     steps: Int = 10,
     onValueChange: (value: Float) -> Unit = { },
     onValueChangeFinished: (value: Float) -> Unit,
-    trailingContent: (@Composable () -> Unit)? = null
+    label: @Composable ((Float) -> Unit) = {
+        Text("%.1f".format(it))
+    }
 ) {
     ListItem(
         modifier = modifier,
@@ -47,9 +49,8 @@ fun SliderSetting(
                     onValueChangeFinished = { onValueChangeFinished(sliderValue) }
                 )
 
-                Text("${"%.1f".format(sliderValue)}x")
+                label(sliderValue)
             }
-        },
-        trailingContent = trailingContent
+        }
     )
 }

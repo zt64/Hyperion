@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -27,6 +28,7 @@ import com.hyperion.ui.navigation.currentDestination
 import com.hyperion.ui.screen.settings.*
 import com.hyperion.ui.viewmodel.SettingsViewModel
 import dev.olshevski.navigation.reimagined.*
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -107,6 +109,9 @@ fun SettingsScreen(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+                val preferences = viewModel.preferences
+                val coroutineScope = rememberCoroutineScope()
+
                 when (destination) {
                     SettingsSection -> {
                         SettingsSection.values().forEach { destination ->
@@ -127,12 +132,20 @@ fun SettingsScreen(
                         }
                     }
 
-                    SettingsSection.GENERAL -> GeneralScreen(viewModel)
-                    SettingsSection.APPEARANCE -> AppearanceScreen(viewModel)
-                    SettingsSection.ACCOUNTS -> AccountsScreen(viewModel)
-                    SettingsSection.SPONSOR_BLOCK -> SponsorBlockScreen(viewModel)
-                    SettingsSection.BACKUP_RESTORE -> BackupRestoreScreen(viewModel)
-                    SettingsSection.ABOUT -> AboutScreen(viewModel, snackbarHostState)
+                    SettingsSection.GENERAL -> GeneralScreen(preferences)
+                    SettingsSection.APPEARANCE -> AppearanceScreen(preferences)
+                    SettingsSection.GESTURES -> GesturesScreen(preferences)
+                    SettingsSection.ACCOUNTS -> AccountsScreen(preferences)
+                    SettingsSection.SPONSOR_BLOCK -> SponsorBlockScreen(preferences)
+                    SettingsSection.BACKUP_RESTORE -> BackupRestoreScreen(preferences)
+                    SettingsSection.ABOUT -> AboutScreen(
+                        onClickUpdate = {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Updating not yet implemented!")
+                            }
+                        },
+                        onClickGithub = viewModel::openGitHub,
+                    )
                 }
             }
         }
