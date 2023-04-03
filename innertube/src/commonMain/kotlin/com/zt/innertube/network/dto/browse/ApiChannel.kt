@@ -4,6 +4,7 @@ import com.zt.innertube.network.dto.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -121,11 +122,15 @@ internal data class ApiChannel(
             val videosCountText: SimpleText
         ) {
             @Serializable
-            data class Badge(val metadataBadgeRenderer: MetadataBadgeRenderer) {
-                @Serializable
-                data class MetadataBadgeRenderer(val icon: Icon) {
-                    @Serializable
-                    data class Icon(val iconType: String)
+            data class Badge(
+                @SerialName("metadataBadgeRenderer")
+                @Serializable(TypeSerializer::class)
+                val type: String
+            ) {
+                private object TypeSerializer : JsonTransformingSerializer<String>(String.serializer()) {
+                    override fun transformDeserialize(element: JsonElement): JsonElement {
+                        return element.jsonObject["icon"]!!.jsonObject["iconType"]!!
+                    }
                 }
             }
 
@@ -139,13 +144,14 @@ internal data class ApiChannel(
                     @Serializable
                     data class Link(
                         val icon: ApiImage,
-                        val navigationEndpoint: NavigationEndpoint,
+                        @Serializable(EndpointSerializer::class)
+                        val navigationEndpoint: String,
                         val title: SimpleText
                     ) {
-                        @Serializable
-                        data class NavigationEndpoint(val urlEndpoint: UrlEndpoint) {
-                            @Serializable
-                            data class UrlEndpoint(val url: String)
+                        private object EndpointSerializer : JsonTransformingSerializer<String>(String.serializer()) {
+                            override fun transformDeserialize(element: JsonElement): JsonElement {
+                                return element.jsonObject["urlEndpoint"]!!.jsonObject["url"]!!
+                            }
                         }
                     }
                 }

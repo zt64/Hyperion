@@ -29,13 +29,13 @@ internal abstract class ApiBrowse {
                 override fun transformDeserialize(element: JsonElement) = JsonArray(
                     element
                         .jsonArray
-                        .map {
+                        .mapNotNull {
                             it
-                                .jsonObject["tabRenderer"]!!
-                                .jsonObject["content"]!!
-                                .jsonObject
-                                .values
-                                .last()
+                                .jsonObject["tabRenderer"]
+                                ?.jsonObject?.get("content")
+                                ?.jsonObject
+                                ?.values
+                                ?.last()
                         }
                 )
             }
