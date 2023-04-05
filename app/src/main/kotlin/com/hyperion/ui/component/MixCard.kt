@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.hyperion.domain.manager.PreferencesManager
 import com.zt.innertube.domain.model.DomainMixPartial
-import org.koin.androidx.compose.get
+import org.koin.compose.koinInject
 
 @Composable
 fun MixCard(
@@ -25,7 +25,7 @@ fun MixCard(
     mix: DomainMixPartial,
     onClick: () -> Unit,
     onLongClick: () -> Unit = { },
-    prefs: PreferencesManager = get()
+    prefs: PreferencesManager = koinInject()
 ) {
     ElevatedCard(
         modifier = modifier

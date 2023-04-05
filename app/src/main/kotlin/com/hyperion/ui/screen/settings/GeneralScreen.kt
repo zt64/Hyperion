@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Minimize
 import androidx.compose.material.icons.filled.PictureInPicture
 import androidx.compose.material.icons.filled.Start
 import androidx.compose.material3.Icon
@@ -24,9 +25,7 @@ import kotlinx.collections.immutable.toImmutableMap
 
 context(ColumnScope)
 @Composable
-fun GeneralScreen(
-    preferences: PreferencesManager
-) {
+fun GeneralScreen(preferences: PreferencesManager) {
     RadioSetting(
         icon = Icons.Default.Start,
         label = stringResource(R.string.start_screen),
@@ -46,6 +45,13 @@ fun GeneralScreen(
             onCheckedChange = { preferences.pictureInPicture = it }
         )
     }
+
+    SwitchSetting(
+        checked = preferences.miniPlayer,
+        text = stringResource(R.string.mini_player),
+        icon = Icons.Default.Minimize,
+        onCheckedChange = { preferences.miniPlayer = it }
+    )
 
     val directoryChooser =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->

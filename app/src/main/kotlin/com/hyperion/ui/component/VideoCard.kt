@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
 import com.zt.innertube.domain.model.DomainVideoPartial
-import org.koin.androidx.compose.get
+import org.koin.compose.koinInject
 
 @Composable
 fun VideoCard(
@@ -28,7 +28,7 @@ fun VideoCard(
     onClick: () -> Unit,
     onClickChannel: () -> Unit = { },
     onLongClick: () -> Unit = { },
-    prefs: PreferencesManager = get()
+    prefs: PreferencesManager = koinInject()
 ) {
     ElevatedCard(
         modifier = modifier

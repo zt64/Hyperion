@@ -135,6 +135,7 @@ fun SettingsScreen(
                     SettingsSection.GENERAL -> GeneralScreen(preferences)
                     SettingsSection.APPEARANCE -> AppearanceScreen(preferences)
                     SettingsSection.GESTURES -> GesturesScreen(preferences)
+                    SettingsSection.NOTIFICATIONS -> NotificationsScreen(preferences)
                     SettingsSection.ACCOUNTS -> AccountsScreen(preferences)
                     SettingsSection.SPONSOR_BLOCK -> SponsorBlockScreen(preferences)
                     SettingsSection.BACKUP_RESTORE -> BackupRestoreScreen(preferences)

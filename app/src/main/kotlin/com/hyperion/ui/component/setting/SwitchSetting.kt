@@ -16,7 +16,7 @@ fun SwitchSetting(
     checked: Boolean,
     icon: ImageVector? = null,
     text: String,
-    supportingContent: String? = null,
+    description: String? = null,
     onCheckedChange: (value: Boolean) -> Unit
 ) {
     ListItem(
@@ -24,7 +24,7 @@ fun SwitchSetting(
             onCheckedChange(!checked)
         },
         headlineContent = { Text(text) },
-        supportingContent = supportingContent?.let { { Text(it) } },
+        supportingContent = description?.let { { Text(it) } },
         leadingContent = icon?.let { imageVector ->
             {
                 Icon(
