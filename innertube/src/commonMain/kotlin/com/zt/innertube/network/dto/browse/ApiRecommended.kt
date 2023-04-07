@@ -92,7 +92,7 @@ internal data class VideoRenderer(
     }
 
     @Serializable
-    data class NavigationEndpoint(val watchEndpoint: ApiWatchEndpoint)
+    data class NavigationEndpoint(val watchEndpoint: ApiWatchEndpoint? = null)
 }
 
 @Serializable
