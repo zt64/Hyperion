@@ -2,6 +2,7 @@ package com.hyperion.ui.sheet
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ClosedCaption
@@ -43,7 +44,9 @@ fun PlayerSheet(
         //        }
 
         Column(
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier
+                .navigationBarsPadding() // workaround bug
+                .padding(12.dp),
         ) {
             ListItem(
                 modifier = Modifier.clickable {

@@ -2,7 +2,7 @@
 kotlin = "1.8.10"
 kotlin-serialization = "1.5.0"
 agp = "7.4.2"
-compose = "1.4.0"
+compose = "1.4.1"
 compose-compiler = "1.4.4"
 compose-material3 = "1.1.0-beta01"
 accompanist = "0.30.1"
@@ -10,7 +10,7 @@ ktor = "2.2.4"
 media3 = "1.0.0"
 
 [libraries]
-androidx-core = "androidx.core:core-ktx:1.9.0"
+androidx-core = "androidx.core:core-ktx:1.10.0"
 androidx-splashscreen = "androidx.core:core-splashscreen:1.0.0"
 androidx-activity = "androidx.activity:activity-compose:1.7.0"
 androidx-paging = "androidx.paging:paging-compose:1.0.0-alpha18"

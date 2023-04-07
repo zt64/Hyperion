@@ -118,8 +118,8 @@ class InnerTubeRepository(
                     is ApiSearch.HashtagTileRenderer -> {
                         DomainTagPartial(
                             name = renderer.hashtag.simpleText,
-                            channelsCount = "",
-                            videosCount = "",
+                            channelsCount = renderer.hashtagChannelCount.simpleText,
+                            videosCount = renderer.hashtagVideoCount.simpleText,
                             backgroundColor = renderer.hashtagBackgroundColor,
                         )
                     }

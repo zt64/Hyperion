@@ -37,9 +37,7 @@ fun TagScreen(
             onClickBack = onClickBack
         )
 
-        TagViewModel.State.Loading -> TagScreenLoading(
-            onClickBack = onClickBack
-        )
+        TagViewModel.State.Loading -> TagScreenLoading(onClickBack)
 
         TagViewModel.State.Loaded -> TagScreenLoaded(
             viewModel = viewModel,

@@ -63,93 +63,9 @@ fun SearchScreen(
     }
 
     if (viewModel.showFilterSheet) {
-        ModalBottomSheet(
+        FilterSheet(
             onDismissRequest = { viewModel.showFilterSheet = false }
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = 160.dp)
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.Start,
-                verticalArrangement = Arrangement.spacedBy(28.dp)
-            ) {
-                @Composable
-                fun FilterFlowRow(
-                    @StringRes title: Int,
-                    icon: ImageVector,
-                    items: Array<out SearchFilter>
-                ) {
-                    Column {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = icon,
-                                contentDescription = null,
-                            )
-
-                            Text(
-                                text = stringResource(title),
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                        }
-
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start),
-                        ) {
-                            items.forEach { filter ->
-                                var selected by rememberSaveable {
-                                    mutableStateOf(false)
-                                }
-
-                                FilterChip(
-                                    selected = selected,
-                                    onClick = {
-                                        selected = !selected
-                                    },
-                                    label = {
-                                        Text(stringResource(filter.displayName))
-                                    },
-                                    enabled = true
-                                )
-                            }
-                        }
-                    }
-                }
-
-                FilterFlowRow(
-                    title = R.string.upload_date,
-                    icon = Icons.Default.CalendarToday,
-                    items = SearchFilter.UploadDate.values()
-                )
-
-                FilterFlowRow(
-                    title = R.string.type,
-                    icon = Icons.Default.FilterList,
-                    items = SearchFilter.Type.values()
-                )
-
-                FilterFlowRow(
-                    title = R.string.duration,
-                    icon = Icons.Default.Timer,
-                    items = SearchFilter.Duration.values()
-                )
-
-                FilterFlowRow(
-                    title = R.string.features,
-                    icon = Icons.Default.Star,
-                    items = SearchFilter.Feature.values()
-                )
-
-                FilterFlowRow(
-                    title = R.string.sort_by,
-                    icon = Icons.Default.Sort,
-                    items = SearchFilter.Sort.values()
-                )
-            }
-        }
+        )
     }
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -354,6 +270,96 @@ fun SearchScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun FilterSheet(onDismissRequest: () -> Unit) {
+    ModalBottomSheet(onDismissRequest = onDismissRequest) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 160.dp)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(28.dp)
+        ) {
+            @Composable
+            fun FilterFlowRow(
+                @StringRes title: Int,
+                icon: ImageVector,
+                items: Array<out SearchFilter>
+            ) {
+                Column {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = null,
+                        )
+
+                        Text(
+                            text = stringResource(title),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                    }
+
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.Start),
+                    ) {
+                        items.forEach { filter ->
+                            var selected by rememberSaveable {
+                                mutableStateOf(false)
+                            }
+
+                            FilterChip(
+                                selected = selected,
+                                onClick = {
+                                    selected = !selected
+                                },
+                                label = {
+                                    Text(stringResource(filter.displayName))
+                                },
+                                enabled = true
+                            )
+                        }
+                    }
+                }
+            }
+
+            FilterFlowRow(
+                title = R.string.upload_date,
+                icon = Icons.Default.CalendarToday,
+                items = SearchFilter.UploadDate.values()
+            )
+
+            FilterFlowRow(
+                title = R.string.type,
+                icon = Icons.Default.FilterList,
+                items = SearchFilter.Type.values()
+            )
+
+            FilterFlowRow(
+                title = R.string.duration,
+                icon = Icons.Default.Timer,
+                items = SearchFilter.Duration.values()
+            )
+
+            FilterFlowRow(
+                title = R.string.features,
+                icon = Icons.Default.Star,
+                items = SearchFilter.Feature.values()
+            )
+
+            FilterFlowRow(
+                title = R.string.sort_by,
+                icon = Icons.Default.Sort,
+                items = SearchFilter.Sort.values()
+            )
         }
     }
 }

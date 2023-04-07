@@ -117,7 +117,9 @@ internal data class ApiSearch(val contents: Contents) {
     data class HashtagTileRenderer(
         val hashtag: SimpleText,
         val hashtagInfoText: SimpleText,
-        val hashtagBackgroundColor: Long
+        val hashtagBackgroundColor: Long,
+        val hashtagVideoCount: SimpleText,
+        val hashtagChannelCount: SimpleText
     ) : Renderer
 
     @Serializable
