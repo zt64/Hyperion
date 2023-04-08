@@ -2,6 +2,7 @@ package com.hyperion.ui.component.setting
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -28,7 +29,7 @@ fun SliderSetting(
     }
 ) {
     ListItem(
-        modifier = modifier,
+        modifier = modifier.systemGestureExclusion(),
         headlineContent = { Text(text) },
         supportingContent = {
             var sliderValue by rememberSaveable { mutableStateOf(value) }
