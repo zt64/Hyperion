@@ -91,6 +91,12 @@ private fun PlaylistLoadedScreen(
                             contentDescription = stringResource(R.string.share)
                         )
                     }
+                    IconButton(onClick = viewModel::download) {
+                        Icon(
+                            imageVector = Icons.Default.Download,
+                            contentDescription = stringResource(R.string.download)
+                        )
+                    }
                 },
                 scrollBehavior = scrollBehavior
             )

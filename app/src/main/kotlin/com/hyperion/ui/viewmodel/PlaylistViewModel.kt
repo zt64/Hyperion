@@ -30,7 +30,7 @@ class PlaylistViewModel(
     sealed interface State {
         object Loaded : State
         object Loading : State
-        class Error(val exception: Exception) : State
+        data class Error(val exception: Exception) : State
     }
 
     var state by mutableStateOf<State>(State.Loading)
@@ -85,6 +85,10 @@ class PlaylistViewModel(
     }
 
     fun shuffle() {
+
+    }
+
+    fun download() {
 
     }
 }
