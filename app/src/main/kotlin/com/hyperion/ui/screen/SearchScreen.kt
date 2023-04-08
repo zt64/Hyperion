@@ -1,6 +1,8 @@
 package com.hyperion.ui.screen
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,7 +43,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = getViewModel(),
@@ -54,7 +56,6 @@ fun SearchScreen(
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
-    var showResults by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (viewModel.textFieldValue.text.isEmpty()) {
@@ -80,7 +81,7 @@ fun SearchScreen(
                             .fillMaxWidth()
                             .heightIn(max = 54.dp)
                             .focusRequester(focusRequester)
-                            .onFocusChanged { showResults = !it.isFocused },
+                            .onFocusChanged { viewModel.searchActive = it.isFocused },
                         value = viewModel.textFieldValue,
                         onValueChange = viewModel::textFieldValueChange,
                         textStyle = MaterialTheme.typography.bodyLarge,
@@ -137,135 +138,146 @@ fun SearchScreen(
             SnackbarHost(snackbarHostState)
         }
     ) { paddingValues ->
-        val results = viewModel.results.collectAsLazyPagingItems()
-        val state = results.rememberLazyListState()
+        AnimatedContent(
+            modifier = Modifier.padding(paddingValues),
+            targetState = viewModel.searchActive,
+            label = "Search"
+        ) { searchActive ->
+            if (searchActive) {
+                val coroutineScope = rememberCoroutineScope()
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 14.dp),
-            state = state,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            if (showResults) {
-                items(
-                    items = results,
-                    key = { it.hashCode() }
-                ) { result ->
-                    if (result == null) return@items
-
-                    when (result) {
-                        is DomainVideoPartial -> {
-                            VideoCard(
-                                video = result,
-                                onClick = {
-                                    navController.navigate(AppDestination.Player(result.id))
-                                },
-                                onClickChannel = {
-                                    onClickChannel(result.channel!!.id)
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(
+                        items = viewModel.suggestions,
+                        key = { it }
+                    ) { suggestion ->
+                        Row(
+                            modifier = Modifier
+                                .clickable {
+                                    coroutineScope.launch {
+                                        viewModel.selectSuggestion(suggestion)
+                                        delay(50)
+                                        focusManager.clearFocus()
+                                    }
                                 }
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = suggestion,
+                                style = MaterialTheme.typography.bodyLarge
                             )
-                        }
 
-                        is DomainChannelPartial -> {
-                            ChannelCard(
-                                channel = result,
+                            Spacer(Modifier.weight(1f, true))
+
+                            IconButton(
                                 onClick = {
-                                    onClickChannel(result.id)
-                                },
-                                onLongClick = {
-
-                                },
-                                onClickSubscribe = {
-
+                                    viewModel.replaceSuggestion(suggestion)
                                 }
-                            )
-                        }
-
-                        is DomainPlaylistPartial -> {
-                            PlaylistCard(
-                                playlist = result,
-                                onClick = {
-                                    onClickPlaylist(result.id)
-                                }
-                            )
-                        }
-
-                        is DomainMixPartial -> {
-                            MixCard(
-                                mix = result,
-                                onClick = {
-
-                                }
-                            )
-                        }
-
-                        is DomainTagPartial -> {
-                            TagCard(
-                                tag = result,
-                                onClick = {
-                                    onClickTag(result.name)
-                                }
-                            )
-                        }
-                    }
-                }
-
-                item {
-                    results.loadState.apply {
-                        when {
-                            refresh is LoadState.Loading || append is LoadState.Loading -> {
-                                CircularProgressIndicator()
-                            }
-
-                            append is LoadState.Error -> {
-                                (append as LoadState.Error).error.message?.let {
-                                    Text(
-                                        text = it,
-                                        style = MaterialTheme.typography.bodySmall
-                                    )
-                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.NorthWest,
+                                    contentDescription = null
+                                )
                             }
                         }
                     }
                 }
             } else {
-                items(
-                    items = viewModel.suggestions,
-                    key = { it }
-                ) { suggestion ->
-                    val coroutineScope = rememberCoroutineScope()
+                val results = viewModel.results.collectAsLazyPagingItems()
+                val state = results.rememberLazyListState()
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                coroutineScope.launch {
-                                    viewModel.selectSuggestion(suggestion)
-                                    delay(50) // Avoids race condition
-                                    focusManager.clearFocus()
-                                }
-                            },
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = suggestion,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    items(
+                        items = results,
+                        key = Entity::hashCode
+                    ) { result ->
+                        if (result == null) return@items
 
-                        Spacer(Modifier.weight(1f, true))
-
-                        IconButton(
-                            onClick = {
-                                viewModel.replaceSuggestion(suggestion)
+                        when (result) {
+                            is DomainVideoPartial -> {
+                                VideoCard(
+                                    video = result,
+                                    onClick = {
+                                        navController.navigate(AppDestination.Player(result.id))
+                                    },
+                                    onClickChannel = {
+                                        onClickChannel(result.channel!!.id)
+                                    }
+                                )
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.NorthWest,
-                                contentDescription = null
-                            )
+
+                            is DomainChannelPartial -> {
+                                ChannelCard(
+                                    channel = result,
+                                    onClick = {
+                                        onClickChannel(result.id)
+                                    },
+                                    onLongClick = {
+
+                                    },
+                                    onClickSubscribe = {
+
+                                    }
+                                )
+                            }
+
+                            is DomainPlaylistPartial -> {
+                                PlaylistCard(
+                                    playlist = result,
+                                    onClick = {
+                                        onClickPlaylist(result.id)
+                                    }
+                                )
+                            }
+
+                            is DomainMixPartial -> {
+                                MixCard(
+                                    mix = result,
+                                    onClick = {
+
+                                    }
+                                )
+                            }
+
+                            is DomainTagPartial -> {
+                                TagCard(
+                                    tag = result,
+                                    onClick = {
+                                        onClickTag(result.name)
+                                    }
+                                )
+                            }
+                        }
+                    }
+
+                    item {
+                        results.loadState.source.apply {
+                            when {
+                                refresh is LoadState.Loading || append is LoadState.Loading -> {
+                                    CircularProgressIndicator()
+                                }
+
+                                append is LoadState.Error -> {
+                                    (append as LoadState.Error).error.message?.let {
+                                        Text(
+                                            text = it,
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -277,7 +289,7 @@ fun SearchScreen(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun FilterSheet(onDismissRequest: () -> Unit) {
-    ModalBottomSheet(onDismissRequest = onDismissRequest) {
+    ModalBottomSheet(onDismissRequest) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

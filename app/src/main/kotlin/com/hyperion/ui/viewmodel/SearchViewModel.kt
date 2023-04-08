@@ -29,6 +29,7 @@ class SearchViewModel(
     var textFieldValue by mutableStateOf(TextFieldValue())
         private set
     var showFilterSheet by mutableStateOf(false)
+    var searchActive by mutableStateOf(true)
 
     fun textFieldValueChange(value: TextFieldValue) {
         textFieldValue = value
@@ -67,6 +68,8 @@ class SearchViewModel(
         results = Pager(pagingConfig) {
             BrowsePagingSource { key -> innerTube.getSearchResults(textFieldValue.text, key) }
         }.flow.cachedIn(viewModelScope)
+
+        searchActive = false
     }
 
     fun clearSearch() {
