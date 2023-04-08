@@ -272,7 +272,7 @@ class InnerTubeRepository(
         val (videoListRenderer) = playlist.contents.content.contents.single().itemSectionRenderer.contents.single()
 
         val videos = videoListRenderer.contents.filterIsInstance<ApiPlaylist.SectionContent.PlaylistVideo>()
-        val continuation = videoListRenderer.contents.lastOrNull() as ApiPlaylist.SectionContent.ContinuationItem?
+        val continuation = videoListRenderer.contents.lastOrNull() as? ApiPlaylist.SectionContent.ContinuationItem?
 
         return DomainPlaylist(
             id = id,
