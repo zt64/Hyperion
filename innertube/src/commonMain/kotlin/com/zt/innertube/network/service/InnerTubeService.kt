@@ -105,19 +105,15 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
             val (context) = json.decodeFromString<InnerTubeData>(ytCfg)
             val locale = Locale.getDefault()
 
-            innerTubeContext = ApiContext(
-                client = ApiContext.Client(
-                    clientName = CLIENT_NAME,
-                    clientVersion = CLIENT_VERSION,
+            innerTubeContext = context.copy(
+                client = context.client.copy(
+                    clientName = CLIENT_NAME_WEB,
+                    clientVersion = CLIENT_VERSION_WEB,
                     gl = locale.country,
                     hl = locale.language,
-                    platform = PLATFORM,
-                    userAgent = context.client.userAgent,
-                    visitorData = context.client.visitorData,
-                    clientFormFactor = FORM_FACTOR
-                ),
-                request = context.request,
-                user = context.user
+                    platform = PLATFORM_WEB,
+                    clientFormFactor = FORM_FACTOR_WEB
+                )
             )
 
             state.emit(State.Initialized)
@@ -151,7 +147,7 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
         )
     }
 
-    suspend fun getClientInfo(): ClientInfo = withContext(Dispatchers.IO) {
+    suspend fun getClientInfo() = withContext(Dispatchers.IO) {
         val body = httpClient.get("https://www.youtube.com/tv") {
             userAgent(TV_USER_AGENT)
         }.bodyAsText()
@@ -217,7 +213,13 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
 
     internal suspend fun getPlayer(id: String): ApiPlayer = post("player") {
         PlayerBody(
-            context = innerTubeContext,
+            context = innerTubeContext.copy(
+                client = innerTubeContext.client.copy(
+                    clientName = CLIENT_NAME_ANDROID,
+                    platform = PLATFORM_ANDROID,
+                    clientVersion = CLIENT_VERSION_ANDROID
+                )
+            ),
             videoId = id
         )
     }
@@ -295,10 +297,14 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
         private const val API_URL = "https://www.youtube.com/youtubei/v1"
         private const val API_KEY = "AIzaSyCtkvNIR1HCEwzsqK6JuE6KqpyjusIRI30"
 
-        private const val CLIENT_NAME = "WEB"
-        private const val CLIENT_VERSION = "2.20230221.01.00"
-        private const val PLATFORM = "DESKTOP"
-        private const val FORM_FACTOR = "UNKNOWN_FORM_FACTOR"
+        private const val CLIENT_NAME_WEB = "WEB"
+        private const val CLIENT_VERSION_WEB = "2.20230221.01.00"
+        private const val PLATFORM_WEB = "DESKTOP"
+        private const val FORM_FACTOR_WEB = "UNKNOWN_FORM_FACTOR"
+
+        private const val CLIENT_NAME_ANDROID = "ANDROID"
+        private const val CLIENT_VERSION_ANDROID = "17.11.37"
+        private const val PLATFORM_ANDROID = "MOBILE"
 
         private const val OAUTH_URL = "https://www.youtube.com/o/oauth2"
         private const val TV_USER_AGENT = "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version"
