@@ -1,8 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    kotlin("android")
-    id("com.android.application")
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.android.application)
     id("kotlin-parcelize")
 }
 
