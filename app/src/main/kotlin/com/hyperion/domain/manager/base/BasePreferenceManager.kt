@@ -36,50 +36,35 @@ abstract class BasePreferenceManager(private val prefs: SharedPreferences) {
         }
     }
 
-    protected fun stringPreference(
-        key: String,
-        defaultValue: String
-    ) = Preference(
+    protected fun preference(key: String, defaultValue: String) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = ::getString,
         setter = ::putString
     )
 
-    protected fun booleanPreference(
-        key: String,
-        defaultValue: Boolean
-    ) = Preference(
+    protected fun preference(key: String, defaultValue: Boolean) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = ::getBoolean,
         setter = ::putBoolean
     )
 
-    protected fun intPreference(
-        key: String,
-        defaultValue: Int
-    ) = Preference(
+    protected fun preference(key: String, defaultValue: Int) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = ::getInt,
         setter = ::putInt
     )
 
-    protected fun floatPreference(
-        key: String,
-        defaultValue: Float
-    ) = Preference(
+    protected fun preference(key: String, defaultValue: Float) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = ::getFloat,
         setter = ::putFloat
     )
 
-    protected inline fun <reified E : Enum<E>> enumPreference(
-        key: String,
-        defaultValue: E
-    ) = Preference(
+    protected inline fun <reified E : Enum<E>> preference(key: String, defaultValue: E) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = ::getEnum,
