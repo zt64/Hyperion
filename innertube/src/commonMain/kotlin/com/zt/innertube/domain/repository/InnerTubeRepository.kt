@@ -50,19 +50,14 @@ class InnerTubeRepository(
 
                 DomainVideoPartial(
                     id = v.videoId,
-                    title = v.title.text,
+                    title = v.title,
                     subtitle = listOfNotNull(
                         v.ownerText,
                         v.shortViewCountText,
                         v.publishedTimeText
-                    ).joinToString(" • "),
-                    timestamp = v.lengthText?.simpleText,
-                    channel = v.channelThumbnailSupportedRenderers?.let {
-                        DomainChannelPartial(
-                            id = it.channelThumbnailWithLinkRenderer.navigationEndpoint.browseEndpoint.browseId,
-                            avatarUrl = it.channelThumbnailWithLinkRenderer.thumbnail.sources.last().url
-                        )
-                    }
+                    ).joinToString(SEPARATOR),
+                    timestamp = v.lengthText,
+                    channel = v.channelThumbnailSupportedRenderers?.toDomain()
                 )
             },
             continuation = continuationItem?.token
@@ -83,7 +78,7 @@ class InnerTubeRepository(
             service.getSearchResults(query).contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents
         }
 
-        val itemSection = contents.filterIsInstance<ApiSearch.ItemSection>().single()
+        val itemSection = contents.filterIsInstance<ApiSearch.ItemSection>().last()
         val continuationItem = contents.filterIsInstance<ApiSearch.ContinuationItem>().singleOrNull()
 
         return DomainSearch(
@@ -92,34 +87,31 @@ class InnerTubeRepository(
                     is ApiSearch.ChannelRenderer -> {
                         DomainChannelPartial(
                             id = renderer.channelId,
-                            name = renderer.title.simpleText,
+                            name = renderer.title,
                             avatarUrl = "https:${renderer.thumbnail.sources.last().url}",
-                            subscriptionsText = renderer.subscriberCountText?.simpleText
+                            subscriptionsText = renderer.subscriberCountText
                         )
                     }
 
                     is ApiSearch.VideoRenderer -> {
                         DomainVideoPartial(
                             id = renderer.videoId,
-                            title = renderer.title.text,
+                            title = renderer.title,
                             subtitle = listOfNotNull(
                                 renderer.longBylineText,
                                 renderer.shortViewCountText,
                                 renderer.publishedTimeText
-                            ).joinToString(" • "),
-                            timestamp = renderer.lengthText?.simpleText,
-                            channel = DomainChannelPartial(
-                                id = "",
-                                avatarUrl = renderer.channelThumbnailSupportedRenderers?.channelThumbnailWithLinkRenderer?.thumbnail?.sources?.last()?.url
-                            )
+                            ).joinToString(SEPARATOR),
+                            timestamp = renderer.lengthText,
+                            channel = renderer.channelThumbnailSupportedRenderers?.toDomain()
                         )
                     }
 
                     is ApiSearch.HashtagTileRenderer -> {
                         DomainTagPartial(
-                            name = renderer.hashtag.simpleText,
-                            channelsCount = renderer.hashtagChannelCount.simpleText,
-                            videosCount = renderer.hashtagVideoCount.simpleText,
+                            name = renderer.hashtag,
+                            channelsCount = renderer.hashtagChannelCount,
+                            videosCount = renderer.hashtagVideoCount,
                             backgroundColor = renderer.hashtagBackgroundColor,
                         )
                     }
@@ -127,8 +119,8 @@ class InnerTubeRepository(
                     is ApiSearch.PlaylistRenderer -> {
                         DomainPlaylistPartial(
                             id = renderer.playlistId,
-                            title = renderer.title.simpleText,
-                            subtitle = renderer.shortBylineText.text,
+                            title = renderer.title,
+                            subtitle = renderer.shortBylineText,
                             videoCountText = renderer.videoCount,
                             thumbnailUrl = renderer.thumbnails.first().sources.last().url
                         )
@@ -149,9 +141,9 @@ class InnerTubeRepository(
             id = id,
             name = header.title,
             description = "",
-            subscriberText = header.subscriberCountText.simpleText,
+            subscriberText = header.subscriberCountText,
             avatar = header.avatar.sources.last().url,
-            banner = header.banner.sources.last(),
+            banner = header.banner?.sources?.last(),
             items = emptyList(),
             continuation = null
         )
@@ -174,11 +166,11 @@ class InnerTubeRepository(
             .single()
 
         return DomainNext(
-            viewCount = primaryInfoRenderer.viewCount.videoViewCountRenderer.shortViewCount.simpleText,
-            uploadDate = primaryInfoRenderer.relativeDateText.simpleText,
+            viewCount = primaryInfoRenderer.viewCount.videoViewCountRenderer.shortViewCount,
+            uploadDate = primaryInfoRenderer.relativeDateText,
             channelAvatarUrl = secondaryInfoRenderer.owner.videoOwnerRenderer.thumbnail.sources.first().url,
             likesText = primaryInfoRenderer.likesText,
-            subscribersText = secondaryInfoRenderer.owner.videoOwnerRenderer.subscriberCountText.simpleText,
+            subscribersText = secondaryInfoRenderer.owner.videoOwnerRenderer.subscriberCountText,
             comments = Comments(
                 items = emptyList(),
                 continuation = null
@@ -189,13 +181,13 @@ class InnerTubeRepository(
                     .map {
                         DomainVideoPartial(
                             id = it.videoId,
-                            title = it.title.simpleText,
+                            title = it.title,
                             subtitle = listOfNotNull(
                                 it.shortBylineText,
                                 it.shortViewCountText,
                                 it.publishedTimeText
-                            ).joinToString(" • "),
-                            timestamp = it.lengthText?.simpleText,
+                            ).joinToString(SEPARATOR),
+                            timestamp = it.lengthText,
                             channel = DomainChannelPartial(
                                 id = "",
                                 avatarUrl = it.channelThumbnail.sources.last().url
@@ -260,9 +252,9 @@ class InnerTubeRepository(
     private fun List<ApiPlaylist.SectionContent.PlaylistVideo>.buildPlaylistItems(): List<DomainVideoPartial> = map {
         DomainVideoPartial(
             id = it.videoId,
-            title = it.title.text,
-            subtitle = "${it.shortBylineText} • ${it.videoInfo}",
-            timestamp = it.lengthText.simpleText
+            title = it.title,
+            subtitle = "${it.shortBylineText}$SEPARATOR${it.videoInfo}",
+            timestamp = it.lengthText
         )
     }
 
@@ -276,11 +268,11 @@ class InnerTubeRepository(
 
         return DomainPlaylist(
             id = id,
-            name = headerRenderer.title.simpleText,
+            name = headerRenderer.title,
             videoCount = "",
             channel = DomainChannelPartial(
                 id = headerRenderer.ownerEndpoint.browseEndpoint.browseId,
-                name = headerRenderer.ownerText.text
+                name = headerRenderer.ownerText
             ),
             items = videos.buildPlaylistItems(),
             continuation = continuation?.token
@@ -304,26 +296,21 @@ class InnerTubeRepository(
         val items = contents.content.contents.filterIsInstance<ApiTag.RichItemRenderer>()
 
         return DomainTag(
-            name = header.hashtagHeaderRenderer.hashtag.simpleText,
-            subtitle = header.hashtagHeaderRenderer.hashtagInfoText.simpleText,
+            name = header.hashtagHeaderRenderer.hashtag,
+            subtitle = header.hashtagHeaderRenderer.hashtagInfoText,
             items = items.mapNotNull { renderer ->
                 val v = renderer.content.videoRenderer ?: return@mapNotNull null
 
                 DomainVideoPartial(
                     id = v.videoId,
-                    title = v.title.text,
+                    title = v.title,
                     subtitle = listOfNotNull(
                         v.ownerText,
                         v.shortViewCountText,
                         v.publishedTimeText
-                    ).joinToString(" • "),
-                    timestamp = v.lengthText?.simpleText,
-                    channel = v.channelThumbnailSupportedRenderers?.let {
-                        DomainChannelPartial(
-                            id = it.channelThumbnailWithLinkRenderer.navigationEndpoint.browseEndpoint.browseId,
-                            avatarUrl = it.channelThumbnailWithLinkRenderer.thumbnail.sources.last().url
-                        )
-                    }
+                    ).joinToString(SEPARATOR),
+                    timestamp = v.lengthText,
+                    channel = v.channelThumbnailSupportedRenderers?.toDomain()
                 )
             },
             continuation = null
@@ -342,13 +329,13 @@ class InnerTubeRepository(
 
                 DomainVideoPartial(
                     id = v.videoId,
-                    title = v.title.text,
+                    title = v.title,
                     subtitle = listOfNotNull(
                         v.ownerText,
                         v.shortViewCountText,
                         v.publishedTimeText
-                    ).joinToString(" • "),
-                    timestamp = v.lengthText?.simpleText,
+                    ).joinToString(SEPARATOR),
+                    timestamp = v.lengthText,
                     channel = v.channelThumbnailSupportedRenderers?.let {
                         DomainChannelPartial(
                             id = it.channelThumbnailWithLinkRenderer.navigationEndpoint.browseEndpoint.browseId,
@@ -359,5 +346,9 @@ class InnerTubeRepository(
             },
             continuation = null
         )
+    }
+
+    companion object {
+        const val SEPARATOR = " • "
     }
 }

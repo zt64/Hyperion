@@ -97,7 +97,7 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
             state.emit(State.Initializing)
 
             val body = httpClient.get(YOUTUBE_URL).bodyAsText()
-            val (ytCfg) = """ytcfg\.set\((.*?)\);""".toRegex()
+            val (ytCfg) = ytCfgRegex
                 .findAll(body)
                 .elementAt(1)
                 .destructured
@@ -308,6 +308,8 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
 
         private const val OAUTH_URL = "https://www.youtube.com/o/oauth2"
         private const val TV_USER_AGENT = "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version"
+
+        private val ytCfgRegex = """ytcfg\.set\((.*?)\);""".toRegex()
         private val tvBaseJsRegex = """<script id="base-js" src="(.*?)" nonce=".*?"></script>""".toRegex()
         private val tvClientRegex = """clientId:"([-\w]+\.apps\.googleusercontent\.com)",\w+:"(\w+)"""".toRegex()
 

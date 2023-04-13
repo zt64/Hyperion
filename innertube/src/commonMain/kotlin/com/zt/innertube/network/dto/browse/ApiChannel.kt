@@ -113,10 +113,10 @@ internal data class ApiChannel(
         data class C4TabbedHeaderRenderer(
             val channelId: String,
             val avatar: ApiImage,
-            val badges: List<Badge>,
-            val banner: ApiImage,
+            val badges: List<Badge> = emptyList(),
+            val banner: ApiImage? = null,
             val channelHandleText: ApiText,
-            val headerLinks: HeaderLinks,
+            val headerLinks: HeaderLinks? = null,
             val subscriberCountText: SimpleText,
             val title: String,
             val videosCountText: SimpleText
@@ -138,8 +138,8 @@ internal data class ApiChannel(
             data class HeaderLinks(val channelHeaderLinksRenderer: ChannelHeaderLinksRenderer) {
                 @Serializable
                 data class ChannelHeaderLinksRenderer(
-                    val primaryLinks: List<Link>,
-                    val secondaryLinks: List<Link>
+                    val primaryLinks: List<Link> = emptyList(),
+                    val secondaryLinks: List<Link> = emptyList()
                 ) {
                     @Serializable
                     data class Link(

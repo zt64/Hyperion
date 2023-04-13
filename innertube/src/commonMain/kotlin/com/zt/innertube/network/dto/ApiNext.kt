@@ -236,11 +236,11 @@ internal abstract class RendererSerializer<T : Any>(private val baseClass: KClas
     }
 
     final override fun deserialize(decoder: Decoder): T {
-        val input = decoder as JsonDecoder
-        val (key, value) = input.decodeJsonElement().jsonObject.entries.single()
+        decoder as JsonDecoder
+        val (key, value) = decoder.decodeJsonElement().jsonObject.entries.single()
 
         val actualSerializer = selectDeserializer(key) as KSerializer<T>
-        return input.json.decodeFromJsonElement(actualSerializer, value)
+        return decoder.json.decodeFromJsonElement(actualSerializer, value)
     }
 
     protected abstract fun selectDeserializer(key: String): DeserializationStrategy<T>

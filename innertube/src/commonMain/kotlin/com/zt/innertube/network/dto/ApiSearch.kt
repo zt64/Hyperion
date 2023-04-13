@@ -1,12 +1,11 @@
 package com.zt.innertube.network.dto
 
+import com.zt.innertube.network.dto.browse.ChannelThumbnailSupportedRenderers
 import com.zt.innertube.network.dto.renderer.SectionListRenderer
 import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
 import kotlinx.serialization.*
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
@@ -85,30 +84,18 @@ internal data class ApiSearch(val contents: Contents) {
         val ownerText: ApiText
     ) : Renderer {
         private class ViewCountSerializer : KSerializer<String> {
-            override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Hell")
+            override val descriptor = String.serializer().descriptor
 
             override fun deserialize(decoder: Decoder): String {
                 decoder as JsonDecoder
 
                 val json = decoder.decodeJsonElement().jsonObject
+                val serializer = if (json.contains("runs")) ApiTextSerializer else SimpleTextSerializer
 
-                return if (json.contains("runs")) {
-                    decoder.json.decodeFromJsonElement(ApiText.serializer(), json).text
-                } else {
-                    decoder.json.decodeFromJsonElement(SimpleText.serializer(), json).simpleText
-                }
+                return decoder.json.decodeFromJsonElement(serializer, json)
             }
 
-            override fun serialize(encoder: Encoder, value: String) = TODO()
-        }
-
-        @Serializable
-        data class ChannelThumbnailSupportedRenderers(val channelThumbnailWithLinkRenderer: ChannelThumbnailWithLinkRenderer) {
-            @Serializable
-            data class ChannelThumbnailWithLinkRenderer(
-                val navigationEndpoint: ApiNavigationEndpoint,
-                val thumbnail: ApiImage
-            )
+            override fun serialize(encoder: Encoder, value: String) = error("Not implemented")
         }
     }
 

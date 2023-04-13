@@ -1,13 +1,12 @@
 package com.zt.innertube.network.dto.browse
 
+import com.zt.innertube.domain.model.DomainChannelPartial
 import com.zt.innertube.network.dto.*
 import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
@@ -64,31 +63,19 @@ internal data class VideoRenderer(
     val videoId: String,
     val viewCountText: SimpleText? = null
 ) {
-    @Serializable
-    data class ChannelThumbnailSupportedRenderers(val channelThumbnailWithLinkRenderer: ChannelThumbnailWithLinkRenderer) {
-        @Serializable
-        data class ChannelThumbnailWithLinkRenderer(
-            val navigationEndpoint: ApiNavigationEndpoint,
-            val thumbnail: ApiImage
-        )
-    }
-
     private class ViewCountSerializer : KSerializer<String> {
-        override val descriptor: SerialDescriptor = buildClassSerialDescriptor("Hell")
+        override val descriptor = String.serializer().descriptor
 
         override fun deserialize(decoder: Decoder): String {
             decoder as JsonDecoder
 
             val json = decoder.decodeJsonElement().jsonObject
+            val serializer = if (json.contains("runs")) ApiTextSerializer else SimpleTextSerializer
 
-            return if (json.contains("runs")) {
-                decoder.json.decodeFromJsonElement(ApiText.serializer(), json).text
-            } else {
-                decoder.json.decodeFromJsonElement(SimpleText.serializer(), json).simpleText
-            }
+            return decoder.json.decodeFromJsonElement(serializer, json)
         }
 
-        override fun serialize(encoder: Encoder, value: String) = TODO()
+        override fun serialize(encoder: Encoder, value: String) = error("Not implemented")
     }
 
     @Serializable
@@ -99,3 +86,17 @@ internal data class VideoRenderer(
 internal data class ApiRecommendedContinuation(
     override val onResponseReceivedActions: List<ContinuationContents<@Serializable(ApiRecommended.Renderer.Serializer::class) ApiRecommended.Renderer>>
 ) : ApiBrowseContinuation()
+
+@Serializable
+internal data class ChannelThumbnailSupportedRenderers(val channelThumbnailWithLinkRenderer: ChannelThumbnailWithLinkRenderer) {
+    fun toDomain() = DomainChannelPartial(
+        id = channelThumbnailWithLinkRenderer.navigationEndpoint.browseEndpoint.browseId,
+        avatarUrl = channelThumbnailWithLinkRenderer.thumbnail.sources.last().url
+    )
+
+    @Serializable
+    data class ChannelThumbnailWithLinkRenderer(
+        val navigationEndpoint: ApiNavigationEndpoint,
+        val thumbnail: ApiImage
+    )
+}
