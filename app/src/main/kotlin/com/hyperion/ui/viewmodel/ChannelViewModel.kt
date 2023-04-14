@@ -2,10 +2,7 @@ package com.hyperion.ui.viewmodel
 
 import android.app.Application
 import android.content.Intent
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hyperion.domain.manager.AccountManager
@@ -15,6 +12,7 @@ import com.zt.innertube.domain.model.DomainChannel
 import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.launch
 
+@Stable
 class ChannelViewModel(
     private val application: Application,
     private val innerTube: InnerTubeRepository,

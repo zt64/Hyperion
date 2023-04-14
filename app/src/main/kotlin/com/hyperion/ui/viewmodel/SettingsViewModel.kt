@@ -2,10 +2,12 @@ package com.hyperion.ui.viewmodel
 
 import android.app.Application
 import android.content.Intent
+import androidx.compose.runtime.Stable
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import com.hyperion.domain.manager.PreferencesManager
 
+@Stable
 class SettingsViewModel(
     private val application: Application,
     val preferences: PreferencesManager

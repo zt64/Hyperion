@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.hyperion.domain.manager.AccountManager
 import kotlinx.coroutines.launch
 
+@Stable
 class AddAccountViewModel(
     private val application: Application,
     private val accountManager: AccountManager
