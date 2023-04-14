@@ -25,9 +25,6 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.userAgent
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.util.encodeBase64
-import io.ktor.utils.io.charsets.Charsets
-import io.ktor.utils.io.charsets.name
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.serialization.*
@@ -35,8 +32,9 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.protobuf.ProtoBuf
-import java.net.URLEncoder
 import java.util.Locale
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + SupervisorJob()) {
     private val json = Json {
@@ -140,11 +138,9 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
         )
     }
 
+    @OptIn(ExperimentalEncodingApi::class)
     private suspend inline fun <reified T> encodeProtobuf(value: T) = withContext(Dispatchers.IO) {
-        URLEncoder.encode(
-            /* s = */ protobuf.encodeToByteArray(value).encodeBase64(),
-            /* enc = */ Charsets.UTF_8.name
-        )
+        Base64.UrlSafe.encode(protobuf.encodeToByteArray(value))
     }
 
     suspend fun getClientInfo() = withContext(Dispatchers.IO) {
