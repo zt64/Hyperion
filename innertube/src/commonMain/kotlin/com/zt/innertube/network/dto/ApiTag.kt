@@ -5,12 +5,9 @@ import com.zt.innertube.network.dto.browse.ApiBrowseContinuation
 import com.zt.innertube.network.dto.browse.VideoRenderer
 import com.zt.innertube.network.dto.renderer.*
 import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
+import com.zt.innertube.serializer.TokenSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonTransformingSerializer
-import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
@@ -57,13 +54,7 @@ internal data class ApiTag(
         @Serializable(TokenSerializer::class)
         @SerialName("continuationEndpoint")
         val token: String
-    ) : Renderer {
-        private class TokenSerializer : JsonTransformingSerializer<String>(String.serializer()) {
-            override fun transformDeserialize(element: JsonElement): JsonElement {
-                return element.jsonObject["continuationCommand"]!!.jsonObject["token"]!!
-            }
-        }
-    }
+    ) : Renderer
 }
 
 @Serializable

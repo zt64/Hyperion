@@ -3,6 +3,7 @@ package com.zt.innertube.network.dto.browse
 import com.zt.innertube.domain.model.DomainChannelPartial
 import com.zt.innertube.network.dto.*
 import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
+import com.zt.innertube.serializer.TokenSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -10,8 +11,6 @@ import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonDecoder
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonTransformingSerializer
 import kotlinx.serialization.json.jsonObject
 
 @Serializable
@@ -40,13 +39,7 @@ internal data class ApiRecommended(
         @Serializable(TokenSerializer::class)
         @SerialName("continuationEndpoint")
         val token: String
-    ) : Renderer {
-        private class TokenSerializer : JsonTransformingSerializer<String>(String.serializer()) {
-            override fun transformDeserialize(element: JsonElement): JsonElement {
-                return element.jsonObject["continuationCommand"]!!.jsonObject["token"]!!
-            }
-        }
-    }
+    ) : Renderer
 }
 
 @Serializable

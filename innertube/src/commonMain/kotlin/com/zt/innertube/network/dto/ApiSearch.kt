@@ -3,6 +3,7 @@ package com.zt.innertube.network.dto
 import com.zt.innertube.network.dto.browse.ChannelThumbnailSupportedRenderers
 import com.zt.innertube.network.dto.renderer.SectionListRenderer
 import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
+import com.zt.innertube.serializer.TokenSerializer
 import kotlinx.serialization.*
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
@@ -46,13 +47,7 @@ internal data class ApiSearch(val contents: Contents) {
         @Serializable(TokenSerializer::class)
         @SerialName("continuationEndpoint")
         val token: String
-    ) : Item {
-        private class TokenSerializer : JsonTransformingSerializer<String>(String.serializer()) {
-            override fun transformDeserialize(element: JsonElement): JsonElement {
-                return element.jsonObject["continuationCommand"]!!.jsonObject["token"]!!
-            }
-        }
-    }
+    ) : Item
 
     @Serializable
     sealed interface Renderer {
