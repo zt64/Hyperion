@@ -1,5 +1,6 @@
 package com.hyperion.ui.screen
 
+import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -69,7 +70,13 @@ private fun PlaylistLoadedScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             MediumTopAppBar(
-                title = { Text(playlist.name) },
+                title = {
+                    Text(
+                        modifier = Modifier.basicMarquee(),
+                        text = playlist.name,
+                        softWrap = false
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onClickBack) {
                         Icon(
