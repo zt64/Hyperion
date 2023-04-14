@@ -6,6 +6,10 @@ plugins {
     id("kotlin-parcelize")
 }
 
+kotlin {
+    jvmToolchain(11)
+}
+
 android {
     namespace = "com.hyperion"
     compileSdk = 33
@@ -29,11 +33,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-
-    packagingOptions {
+    packaging {
         resources {
             // Reflection symbol list (https://stackoverflow.com/a/41073782/13964629)
             excludes += "/**/*.kotlin_builtins"
@@ -55,7 +55,11 @@ android {
         }
     }
 
-    buildFeatures.compose = true
+    buildFeatures {
+        buildConfig = true
+        compose = true
+    }
+
     composeOptions.kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
 }
 

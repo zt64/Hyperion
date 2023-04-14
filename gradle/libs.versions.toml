@@ -1,7 +1,7 @@
 [versions]
 kotlin = "1.8.20"
 kotlin-serialization = "1.5.0"
-agp = "7.4.2"
+agp = "8.0.0"
 compose = "1.4.1"
 compose-compiler = "1.4.5"
 compose-material3 = "1.1.0-beta02"
@@ -42,6 +42,7 @@ navigation = "dev.olshevski.navigation:reimagined:1.4.0"
 
 media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
 media3-session = { module = "androidx.media3:media3-session", version.ref = "media3" }
+media3-compose = "com.github.fengdai.compose:media:0.4.0"
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin-serialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlin-serialization" }
@@ -51,7 +52,7 @@ brotli = "org.brotli:dec:0.1.2"
 
 [bundles]
 androidx = ["androidx-core", "androidx-splashscreen", "androidx-activity", "androidx-paging"]
-media3 = ["media3-exoplayer", "media3-session"]
+media3 = ["media3-exoplayer", "media3-session", "media3-compose"]
 accompanist = ["accompanist-systemuicontroller", "accompanist-placeholder"]
 
 [plugins]
