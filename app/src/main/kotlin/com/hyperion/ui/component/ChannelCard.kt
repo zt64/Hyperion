@@ -46,6 +46,7 @@ fun ChannelCard(
             Spacer(Modifier.width(12.dp))
 
             Column(
+                modifier = Modifier.weight(1f, true),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
@@ -67,8 +68,6 @@ fun ChannelCard(
                     )
                 }
             }
-
-            Spacer(Modifier.weight(1f, true))
 
             Button(
                 enabled = false,
