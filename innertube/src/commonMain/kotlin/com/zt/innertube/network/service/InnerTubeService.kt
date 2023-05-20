@@ -94,25 +94,21 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
         launch {
             state.emit(State.Initializing)
 
-            val body = httpClient.get(YOUTUBE_URL).bodyAsText()
-            val (ytCfg) = ytCfgRegex
-                .findAll(body)
-                .elementAt(1)
-                .destructured
-
-            val (context) = json.decodeFromString<InnerTubeData>(ytCfg)
             val locale = Locale.getDefault()
 
-            innerTubeContext = context.copy(
-                client = context.client.copy(
+            innerTubeContext = InnerTubeContext(
+                client = InnerTubeContext.Client(
                     clientName = CLIENT_NAME_WEB,
                     clientVersion = CLIENT_VERSION_WEB,
                     gl = locale.country,
                     hl = locale.language,
                     platform = PLATFORM_WEB,
-                    clientFormFactor = FORM_FACTOR_WEB
-                )
+                    userAgent = TV_USER_AGENT
+                ),
+                user = InnerTubeContext.User(safetyMode)
             )
+
+            innerTubeContext.client.visitorData = getVisitorData()
 
             state.emit(State.Initialized)
         }
@@ -288,6 +284,10 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
         }.body()
     }
 
+    private suspend fun getVisitorData(): String = withContext(Dispatchers.IO) {
+        post<VisitorId>("visitor_id") { Body(innerTubeContext) }.responseContext.visitorData
+    }
+
     companion object {
         private const val YOUTUBE_URL = "https://www.youtube.com"
         private const val API_URL = "https://www.youtube.com/youtubei/v1"
@@ -314,7 +314,7 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
 }
 
 @Serializable
-private data class InnerTubeData(
-    @SerialName("INNERTUBE_CONTEXT")
-    val innerTubeContext: ApiContext
-)
+private data class VisitorId(val responseContext: ResponseContext) {
+    @Serializable
+    data class ResponseContext(val visitorData: String)
+}

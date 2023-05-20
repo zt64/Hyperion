@@ -1,9 +1,9 @@
 package com.zt.innertube.network.body
 
-import com.zt.innertube.network.dto.ApiContext
+import com.zt.innertube.network.dto.InnerTubeContext
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal sealed interface Body {
-    val context: ApiContext
-}
+internal class Body(
+    override val context: InnerTubeContext
+) : IBody
