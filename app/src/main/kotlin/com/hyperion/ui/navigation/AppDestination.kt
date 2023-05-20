@@ -12,13 +12,27 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
 
 @Parcelize
-enum class BaseDestination(
-    val icon: @RawValue ImageVector,
-    @StringRes val label: Int
-) : AppDestination {
-    HOME(Icons.Default.Home, R.string.home),
-    FEED(Icons.Default.Subscriptions, R.string.feed),
-    LIBRARY(Icons.Default.VideoLibrary, R.string.library)
+enum class BaseDestination : AppDestination {
+    HOME,
+    FEED,
+    LIBRARY;
+
+    @Stable
+    val icon: ImageVector
+        get() = when (this) {
+            HOME -> Icons.Default.Home
+            FEED -> Icons.Default.Subscriptions
+            LIBRARY -> Icons.Default.VideoLibrary
+        }
+
+    @Stable
+    val label: Int
+        @StringRes
+        get() = when (this) {
+            HOME -> R.string.home
+            FEED -> R.string.feed
+            LIBRARY -> R.string.library
+        }
 }
 
 @Parcelize

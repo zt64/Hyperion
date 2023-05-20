@@ -1,7 +1,9 @@
 package com.hyperion.ui.navigation
 
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
@@ -11,6 +13,7 @@ import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -95,14 +98,16 @@ fun BaseScreen(
                 ) {
                     NavigationBar {
                         BaseDestination.values().forEach { destination ->
-                            NavigationBarItem(
-                                selected = navController.currentDestination == destination,
-                                icon = { Icon(destination.icon, null) },
-                                label = if (!hideNavLabel) {
-                                    { Text(stringResource(destination.label)) }
-                                } else null,
-                                onClick = { navController.switchTo(destination) }
-                            )
+                            key(destination) {
+                                NavigationBarItem(
+                                    selected = navController.currentDestination == destination,
+                                    icon = { Icon(destination.icon, null) },
+                                    label = if (!hideNavLabel) {
+                                        { Text(stringResource(destination.label)) }
+                                    } else null,
+                                    onClick = { navController.switchTo(destination) }
+                                )
+                            }
                         }
                     }
                 }
