@@ -36,7 +36,21 @@ import java.util.Locale
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + SupervisorJob()) {
+/**
+ * TODO
+ *
+ * @constructor
+ * TODO
+ *
+ * @param engineFactory
+ * @param cookiesStorage
+ * @param safetyMode
+ */
+class InnerTubeService(
+    engineFactory: HttpClientEngineFactory<*>,
+    cookiesStorage: CookiesStorage = AcceptAllCookiesStorage(),
+    safetyMode: Boolean
+) : CoroutineScope by CoroutineScope(Dispatchers.IO + SupervisorJob()) {
     private val json = Json {
         ignoreUnknownKeys = true
 
@@ -46,9 +60,8 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
         }
     }
 
-    private val httpClient = HttpClient(
-        engineFactory = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) CIO else Android
-    ) {
+    private val httpClient = HttpClient(engineFactory) {
+        // TODO: Use a custom user agent
         BrowserUserAgent()
 
         install(ContentNegotiation) {
@@ -66,14 +79,16 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
             brotli()
         }
 
-        install(HttpCookies)
-
-        defaultRequest {
-            contentType(ContentType.Application.Json)
+        install(HttpCookies) {
+            storage = cookiesStorage
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             install(HttpCache)
+        }
+
+        defaultRequest {
+            contentType(ContentType.Application.Json)
         }
     }
 
@@ -81,7 +96,7 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
         encodeDefaults = true
     }
 
-    private lateinit var innerTubeContext: ApiContext
+    private lateinit var innerTubeContext: InnerTubeContext
     val state = MutableStateFlow<State>(State.Uninitialized)
 
     sealed interface State {
@@ -114,7 +129,7 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
         }
     }
 
-    private suspend inline fun <reified T> post(endpoint: String, crossinline body: () -> Body) = withContext(Dispatchers.IO) {
+    private suspend inline fun <reified T> post(endpoint: String, crossinline body: () -> Any) = withContext(Dispatchers.IO) {
         httpClient.post("$API_URL/$endpoint") {
             parameter("key", API_KEY)
             setBody(body())
@@ -209,7 +224,8 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
                 client = innerTubeContext.client.copy(
                     clientName = CLIENT_NAME_ANDROID,
                     platform = PLATFORM_ANDROID,
-                    clientVersion = CLIENT_VERSION_ANDROID
+                    clientVersion = CLIENT_VERSION_ANDROID,
+                    clientFormFactor = FORM_FACTOR_ANDROID
                 )
             ),
             videoId = id
@@ -289,7 +305,6 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
     }
 
     companion object {
-        private const val YOUTUBE_URL = "https://www.youtube.com"
         private const val API_URL = "https://www.youtube.com/youtubei/v1"
         private const val API_KEY = "AIzaSyCtkvNIR1HCEwzsqK6JuE6KqpyjusIRI30"
 
@@ -301,6 +316,7 @@ class InnerTubeService : CoroutineScope by CoroutineScope(Dispatchers.IO + Super
         private const val CLIENT_NAME_ANDROID = "ANDROID"
         private const val CLIENT_VERSION_ANDROID = "17.11.37"
         private const val PLATFORM_ANDROID = "MOBILE"
+        private const val FORM_FACTOR_ANDROID = "SMALL_FORM_FACTOR"
 
         private const val OAUTH_URL = "https://www.youtube.com/o/oauth2"
         private const val TV_USER_AGENT = "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version"
