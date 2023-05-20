@@ -12,9 +12,9 @@ internal data class AccountsList(val contents: Contents) {
             val footers: List<Footer>
         ) {
             @Serializable
-            data class Content(val accountItemSectionRenderer: AccountItemSectionRenderer) {
+            data class Content(val accountItemSectionRenderer: Renderer) {
                 @Serializable
-                data class AccountItemSectionRenderer(
+                data class Renderer(
                     val contents: List<Content>,
                     val header: Header
                 ) {
@@ -22,17 +22,17 @@ internal data class AccountsList(val contents: Contents) {
                     data class Content(val accountItem: AccountItem)
 
                     @Serializable
-                    data class Header(val accountItemSectionHeaderRenderer: AccountItemSectionHeaderRenderer) {
+                    data class Header(val accountItemSectionHeaderRenderer: Renderer) {
                         @Serializable
-                        data class AccountItemSectionHeaderRenderer(val title: ApiText)
+                        data class Renderer(val title: ApiText)
                     }
                 }
             }
 
             @Serializable
-            data class Footer(val accountChannelRenderer: AccountChannelRenderer) {
+            data class Footer(val accountChannelRenderer: Renderer) {
                 @Serializable
-                data class AccountChannelRenderer(
+                data class Renderer(
                     val navigationEndpoint: ApiNavigationEndpoint,
                     val title: ApiText
                 )

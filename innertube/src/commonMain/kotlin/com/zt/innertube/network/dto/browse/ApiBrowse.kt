@@ -14,47 +14,36 @@ internal abstract class ApiBrowse {
     @Serializable
     data class Contents<T>(
         @SerialName("twoColumnBrowseResultsRenderer")
-        val browseResultsRenderer: BrowseResultsRenderer<SectionListRenderer<T>>
+        @Serializable(TabsSerializer::class)
+        val tabs: List<SectionListRenderer<T>>
     ) {
-        val content = browseResultsRenderer.content
+        val content = tabs.first()
 
-        @Serializable
-        data class BrowseResultsRenderer<T>(
-            @Serializable(TabsSerializer::class)
-            private val tabs: List<T>
-        ) {
-            val content = tabs.first()
-
-            private class TabsSerializer<T : Any>(tSerializer: KSerializer<T>) : JsonTransformingSerializer<List<T>>(ListSerializer(tSerializer)) {
-                override fun transformDeserialize(element: JsonElement) = JsonArray(
-                    element
-                        .jsonArray
-                        .mapNotNull {
-                            it
-                                .jsonObject["tabRenderer"]
-                                ?.jsonObject?.get("content")
-                                ?.jsonObject
-                                ?.values
-                                ?.last()
-                        }
-                )
-            }
+        private class TabsSerializer<T : Any>(
+            tSerializer: KSerializer<T>
+        ) : JsonTransformingSerializer<List<T>>(ListSerializer(tSerializer)) {
+            override fun transformDeserialize(element: JsonElement) = element
+                .jsonObject["tabs"]!!.jsonArray
+                .mapNotNull {
+                    it
+                        .jsonObject["tabRenderer"]
+                        ?.jsonObject?.get("content")
+                        ?.jsonObject
+                        ?.values
+                        ?.last()
+                }
+                .let(::JsonArray)
         }
     }
 }
 
-@Serializable
-internal abstract class ApiBrowseContinuation {
-    abstract val onResponseReceivedActions: List<ContinuationContents<*>>
+internal typealias ApiBrowseContinuation<T> = @Serializable(ContinuationSerializer::class) List<T>
 
-    @Serializable
-    data class ContinuationContents<T>(
-        @Serializable(ContinuationItemsSerializer::class)
-        @SerialName("appendContinuationItemsAction")
-        val items: List<T>
-    ) {
-        private class ContinuationItemsSerializer<T>(tSerializer: KSerializer<T>) : JsonTransformingSerializer<List<T>>(ListSerializer(tSerializer)) {
-            override fun transformDeserialize(element: JsonElement) = element.jsonObject["continuationItems"]!!
-        }
-    }
+private class ContinuationSerializer<T : Any>(tSerializer: KSerializer<T>) : JsonTransformingSerializer<List<T>>(ListSerializer(tSerializer)) {
+    override fun transformDeserialize(element: JsonElement) = element
+        .jsonObject["onResponseReceivedActions"]!!
+        .jsonObject["appendContinuationItemsAction"]!!
+        .jsonArray
+        .map { it.jsonObject["continuationItems"]!! }
+        .let(::JsonArray)
 }

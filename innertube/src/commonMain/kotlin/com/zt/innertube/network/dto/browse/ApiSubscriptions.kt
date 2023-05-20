@@ -8,7 +8,4 @@ internal data class ApiSubscriptions(
     override val contents: Contents<JsonElement>
 ) : ApiBrowse()
 
-@Serializable
-internal class ApiSubscriptionsContinuation(
-    override val onResponseReceivedActions: List<ContinuationContents<JsonElement>>
-) : ApiBrowseContinuation()
+internal typealias ApiSubscriptionsContinuation = ApiBrowseContinuation<JsonElement>

@@ -12,7 +12,7 @@ internal data class ApiAvatar(
 )
 internal typealias DecoratedAvatar = @Serializable(DecoratedAvatarSerializer::class) ApiImage
 
-internal class DecoratedAvatarSerializer : JsonTransformingSerializer<ApiImage>(ApiImage.serializer()) {
+internal object DecoratedAvatarSerializer : JsonTransformingSerializer<ApiImage>(ApiImage.serializer()) {
     override fun transformDeserialize(element: JsonElement) = element
         .jsonObject["avatar"]!!
         .jsonObject["image"]!!

@@ -1,16 +1,11 @@
 package com.zt.innertube.network.dto.browse
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
 
 @Serializable
-internal data class ApiTrending(
-    override val contents: Contents<SectionContent>
-) : ApiBrowse() {
-    @Serializable
-    object SectionContent
-}
+internal class ApiTrending(
+    override val contents: Contents<JsonElement>
+) : ApiBrowse()
 
-@Serializable
-internal data class ApiTrendingContinuation(
-    override val onResponseReceivedActions: List<ContinuationContents<ApiTrending.SectionContent>>
-) : ApiBrowseContinuation()
+internal typealias ApiTrendingContinuation = ApiBrowseContinuation<JsonElement>

@@ -46,7 +46,7 @@ internal class ElementsAttributedText private constructor(
 ) {
     override fun toString() = text
 
-    private class Serializer : JsonTransformingSerializer<String>(String.serializer()) {
+    private object Serializer : JsonTransformingSerializer<String>(String.serializer()) {
         override fun transformDeserialize(element: JsonElement) = element.jsonObject["content"]!!
     }
 }

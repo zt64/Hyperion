@@ -2,8 +2,6 @@ package com.hyperion.ui.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -18,32 +16,29 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
-import com.hyperion.domain.model.channel.ChannelTab
-import com.hyperion.domain.model.channel.VideoSort
+import com.hyperion.domain.model.channel.imageVector
+import com.hyperion.domain.model.channel.title
 import com.hyperion.ui.component.ShimmerImage
-import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.viewmodel.ChannelViewModel
 import com.zt.innertube.domain.model.DomainChannel
+import com.zt.innertube.network.dto.browse.ChannelTab
 import dev.olshevski.navigation.reimagined.NavController
-import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ChannelScreen(
+    channelId: String,
     viewModel: ChannelViewModel = getViewModel(),
     navController: NavController<AppDestination>,
-    channelId: String,
     onClickBack: () -> Unit
 ) {
-    val state = viewModel.state
-
     LaunchedEffect(Unit) {
         viewModel.getChannel(channelId)
     }
 
-    when (state) {
+    when (val state = viewModel.state) {
         is ChannelViewModel.State.Loaded -> {
             ChannelScreenLoaded(
                 viewModel = viewModel,
@@ -162,58 +157,33 @@ private fun ChannelScreenLoaded(
                 ScrollableTabRow(
                     modifier = Modifier.fillMaxWidth(),
                     selectedTabIndex = viewModel.tab.ordinal,
-                    edgePadding = 0.dp,
-                    tabs = {
-                        ChannelTab.values().forEach { tab ->
-                            LeadingIconTab(
-                                selected = viewModel.tab == tab,
-                                icon = {
-                                    Icon(
-                                        modifier = Modifier.size(20.dp),
-                                        imageVector = tab.imageVector,
-                                        contentDescription = null
-                                    )
-                                },
-                                text = { Text(stringResource(tab.title)) },
-                                onClick = { viewModel.tab = tab }
-                            )
-                        }
-                    }
-                )
-            }
-
-            when (viewModel.tab) {
-                ChannelTab.HOME -> {
-
-                }
-
-                ChannelTab.VIDEOS -> {
-                    item {
-                        LazyRow(
-                            contentPadding = PaddingValues(horizontal = 14.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(VideoSort.values()) { sort ->
-                                FilterChip(
-                                    selected = viewModel.videoSort == sort,
-                                    onClick = { viewModel.videoSort = sort },
-                                    label = { Text(stringResource(sort.displayName)) }
+                    edgePadding = 0.dp
+                ) {
+                    ChannelTab.values().forEach { tab ->
+                        LeadingIconTab(
+                            selected = viewModel.tab == tab,
+                            icon = {
+                                Icon(
+                                    modifier = Modifier.size(20.dp),
+                                    imageVector = tab.imageVector,
+                                    contentDescription = null
                                 )
-                            }
-                        }
-                    }
-
-                    items(channel.items) { video ->
-                        VideoCard(
-                            modifier = Modifier.padding(horizontal = 14.dp),
-                            video = video,
-                            onClick = { navController.navigate(AppDestination.Player(video.id)) }
+                            },
+                            text = { Text(stringResource(tab.title)) },
+                            onClick = { viewModel.getChannelTab(tab) }
                         )
                     }
                 }
+            }
 
+            when (viewModel.tab) {
+                ChannelTab.HOME -> {}
+                ChannelTab.VIDEOS -> {}
+                ChannelTab.SHORTS -> {}
+                ChannelTab.LIVE -> {}
                 ChannelTab.PLAYLISTS -> {}
                 ChannelTab.COMMUNITY -> {}
+                ChannelTab.STORE -> {}
                 ChannelTab.CHANNELS -> {}
                 ChannelTab.ABOUT -> {}
             }

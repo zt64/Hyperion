@@ -50,9 +50,9 @@ internal data class ApiPlaylist(
     override val contents: Contents<G>
 ) : ApiBrowse() {
     @Serializable
-    data class Header(val playlistHeaderRenderer: PlaylistHeaderRenderer) {
+    data class Header(val playlistHeaderRenderer: Renderer) {
         @Serializable
-        data class PlaylistHeaderRenderer(
+        data class Renderer(
             val title: SimpleText,
             val ownerText: ApiText,
             val viewCountText: SimpleText,
@@ -98,7 +98,4 @@ internal data class ApiPlaylist(
     }
 }
 
-@Serializable
-internal data class ApiPlaylistContinuation(
-    override val onResponseReceivedActions: List<ContinuationContents<@Serializable(ApiPlaylist.SectionContent.Renderer.Serializer::class) ApiPlaylist.SectionContent.Renderer>>
-) : ApiBrowseContinuation()
+internal typealias ApiPlaylistContinuation = ApiBrowseContinuation<@Serializable(ApiPlaylist.SectionContent.Renderer.Serializer::class) ApiPlaylist.SectionContent.Renderer>

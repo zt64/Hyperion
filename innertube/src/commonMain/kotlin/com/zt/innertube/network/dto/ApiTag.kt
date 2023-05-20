@@ -3,7 +3,6 @@ package com.zt.innertube.network.dto
 import com.zt.innertube.network.dto.browse.ApiBrowse
 import com.zt.innertube.network.dto.browse.ApiBrowseContinuation
 import com.zt.innertube.network.dto.browse.VideoRenderer
-import com.zt.innertube.network.dto.renderer.*
 import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
 import com.zt.innertube.serializer.TokenSerializer
 import kotlinx.serialization.SerialName
@@ -57,7 +56,4 @@ internal data class ApiTag(
     ) : Renderer
 }
 
-@Serializable
-internal data class ApiTagContinuation(
-    override val onResponseReceivedActions: List<ContinuationContents<@Serializable(with = ApiTag.Renderer.Serializer::class) ApiTag.Renderer>>
-) : ApiBrowseContinuation()
+internal typealias ApiTagContinuation = ApiBrowseContinuation<@Serializable(ApiTag.Renderer.Serializer::class) ApiTag.Renderer>

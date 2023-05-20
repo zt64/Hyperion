@@ -21,9 +21,21 @@ data class DomainVideo(
 data class DomainVideoPartial(
     val id: String,
     val title: String,
-    val subtitle: String,
+    val viewCount: String?,
+    val publishedTimeText: String?, // null if live
+    val ownerText: String? = null,
     val timestamp: String? = null,
     val channel: DomainChannelPartial? = null
 ) : Entity {
     val thumbnailUrl = InnerTubeService.getVideoThumbnail(id)
+    val isLive = publishedTimeText == null
+    val subtitle = listOfNotNull(
+        ownerText,
+        publishedTimeText,
+        viewCount
+    ).joinToString(SEPARATOR)
+
+    private companion object {
+        private const val SEPARATOR = " • "
+    }
 }

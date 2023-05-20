@@ -8,6 +8,7 @@ import com.zt.innertube.network.dto.ApiSearch
 import com.zt.innertube.network.dto.ApiTag
 import com.zt.innertube.network.dto.browse.ApiPlaylist
 import com.zt.innertube.network.dto.browse.ApiRecommended
+import com.zt.innertube.network.dto.browse.ChannelTab
 import com.zt.innertube.network.service.InnerTubeService
 import com.zt.innertube.network.service.RYDService
 import kotlinx.serialization.json.jsonArray
@@ -20,13 +21,13 @@ class InnerTubeRepository(
 ) {
     suspend fun getTrendingVideos(continuation: String? = null): DomainTrending {
         val contents = if (continuation == null) {
-            service.getTrending().contents.content.contents
+            service.getTrending().contents.content
         } else {
-            service.getTrending(continuation).onResponseReceivedActions.single().items
+            service.getTrending(continuation)
         }
 
         val items = contents.filterIsInstance<ApiRecommended.RichItemRenderer>()
-        val continuationItem = contents.filterIsInstance<ApiRecommended.ContinuationItem>().singleOrNull()
+        val continuationItem = contents.singleInstanceOrNull<ApiRecommended.ContinuationItem>()
 
         return DomainTrending(
             items = emptyList(),
@@ -36,13 +37,13 @@ class InnerTubeRepository(
 
     suspend fun getRecommendations(continuation: String? = null): DomainRecommended {
         val contents = if (continuation == null) {
-            service.getRecommendations().contents.content.contents
+            service.getRecommendations().contents.content
         } else {
-            service.getRecommendations(continuation).onResponseReceivedActions.single().items
+            service.getRecommendations(continuation)
         }
 
         val items = contents.filterIsInstance<ApiRecommended.RichItemRenderer>()
-        val continuationItem = contents.filterIsInstance<ApiRecommended.ContinuationItem>().singleOrNull()
+        val continuationItem = contents.singleInstanceOrNull<ApiRecommended.ContinuationItem>()
 
         return DomainRecommended(
             items = items.mapNotNull { renderer ->
@@ -51,11 +52,9 @@ class InnerTubeRepository(
                 DomainVideoPartial(
                     id = v.videoId,
                     title = v.title,
-                    subtitle = listOfNotNull(
-                        v.ownerText,
-                        v.shortViewCountText,
-                        v.publishedTimeText
-                    ).joinToString(SEPARATOR),
+                    viewCount = v.shortViewCountText,
+                    publishedTimeText = v.publishedTimeText,
+                    ownerText = v.ownerText,
                     timestamp = v.lengthText,
                     channel = v.channelThumbnailSupportedRenderers?.toDomain()
                 )
@@ -75,11 +74,11 @@ class InnerTubeRepository(
         val contents = if (continuation != null) {
             service.getSearchResults(query, continuation).onResponseReceivedCommands.single().items
         } else {
-            service.getSearchResults(query).contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents
+            service.getSearchResults(query).contents
         }
 
         val itemSection = contents.filterIsInstance<ApiSearch.ItemSection>().last()
-        val continuationItem = contents.filterIsInstance<ApiSearch.ContinuationItem>().singleOrNull()
+        val continuationItem = contents.singleInstanceOrNull<ApiSearch.ContinuationItem>()
 
         return DomainSearch(
             items = itemSection.contents.mapNotNull { renderer ->
@@ -97,11 +96,9 @@ class InnerTubeRepository(
                         DomainVideoPartial(
                             id = renderer.videoId,
                             title = renderer.title,
-                            subtitle = listOfNotNull(
-                                renderer.longBylineText,
-                                renderer.shortViewCountText,
-                                renderer.publishedTimeText
-                            ).joinToString(SEPARATOR),
+                            viewCount = renderer.shortViewCountText,
+                            publishedTimeText = renderer.publishedTimeText,
+                            ownerText = renderer.ownerText,
                             timestamp = renderer.lengthText,
                             channel = renderer.channelThumbnailSupportedRenderers?.toDomain()
                         )
@@ -136,6 +133,7 @@ class InnerTubeRepository(
     suspend fun getChannel(id: String): DomainChannel {
         val channel = service.getChannel(id)
         val header = channel.header.c4TabbedHeaderRenderer
+        //        val tabs = channel.contents.tabs.map { it.type }
 
         return DomainChannel(
             id = id,
@@ -144,26 +142,22 @@ class InnerTubeRepository(
             subscriberText = header.subscriberCountText,
             avatar = header.avatar.sources.last().url,
             banner = header.banner?.sources?.last(),
-            items = emptyList(),
-            continuation = null
+            tabs = emptyList()
         )
+    }
+
+    suspend fun getChannel(id: String, tab: ChannelTab) {
+        val channel = service.getChannel(id, tab)
+        val header = channel.header.c4TabbedHeaderRenderer
     }
 
     suspend fun getNext(videoId: String): DomainNext {
         val (contents, engagementPanels) = service.getNext(videoId)
         val (results, secondaryResults) = contents.twoColumnWatchNextResults
 
-        val primaryInfoRenderer = results
-            .filterIsInstance<ApiNext.VideoPrimaryInfoRenderer>()
-            .single()
-
-        val secondaryInfoRenderer = results
-            .filterIsInstance<ApiNext.VideoSecondaryInfoRenderer>()
-            .single()
-
-        val relatedItemsContinuationItemRenderer = results
-            .filterIsInstance<ApiNext.VideoSecondaryInfoRenderer>()
-            .single()
+        val primaryInfoRenderer: ApiNext.VideoPrimaryInfoRenderer = results.singleInstance()
+        val secondaryInfoRenderer: ApiNext.VideoSecondaryInfoRenderer = results.singleInstance()
+        val relatedItemsContinuationItemRenderer: ApiNext.VideoSecondaryInfoRenderer = results.singleInstance()
 
         return DomainNext(
             viewCount = primaryInfoRenderer.viewCount.videoViewCountRenderer.shortViewCount,
@@ -176,34 +170,37 @@ class InnerTubeRepository(
                 continuation = null
             ),
             relatedVideos = RelatedVideos(
-                items = secondaryResults
-                    .mapNotNull { it.compactVideoRenderer }
-                    .map {
-                        DomainVideoPartial(
-                            id = it.videoId,
-                            title = it.title,
-                            subtitle = listOfNotNull(
-                                it.shortBylineText,
-                                it.shortViewCountText,
-                                it.publishedTimeText
-                            ).joinToString(SEPARATOR),
-                            timestamp = it.lengthText,
-                            channel = DomainChannelPartial(
-                                id = "",
-                                avatarUrl = it.channelThumbnail.sources.last().url
-                            )
+                items = secondaryResults.mapNotNull { (renderer) ->
+                    if (renderer == null) return@mapNotNull null
+
+                    DomainVideoPartial(
+                        id = renderer.videoId,
+                        title = renderer.title,
+                        timestamp = renderer.lengthText,
+                        viewCount = renderer.shortViewCountText,
+                        publishedTimeText = renderer.publishedTimeText,
+                        ownerText = renderer.shortBylineText,
+                        channel = DomainChannelPartial(
+                            id = "",
+                            avatarUrl = renderer.channelThumbnail.sources.last().url
                         )
-                    },
+                    )
+                },
                 continuation = null
             ),
             badges = emptyList(),
-            chapters = emptyList()
+            chapters = engagementPanels.singleInstanceOrNull<ApiNext.Chapters>()?.chapters?.map {
+                DomainChapter(
+                    title = it.title,
+                    start = it.start,
+                    thumbnail = it.thumbnail.sources.last().url
+                )
+            }.orEmpty()
         )
     }
 
     suspend fun getRelatedVideos(videoId: String, continuation: String): RelatedVideos {
         val response = service.getNext(videoId, continuation)
-        val contents = response.onResponseReceivedActions.single().items
 
         return RelatedVideos(
             items = emptyList(),
@@ -249,11 +246,12 @@ class InnerTubeRepository(
         //        comments.continuationContents.sectionListContinuation.contents.map {  }
     }
 
-    private fun List<ApiPlaylist.SectionContent.PlaylistVideo>.buildPlaylistItems(): List<DomainVideoPartial> = map {
+    private fun List<ApiPlaylist.SectionContent.PlaylistVideo>.buildPlaylistItems() = map {
         DomainVideoPartial(
             id = it.videoId,
             title = it.title,
-            subtitle = "${it.shortBylineText}$SEPARATOR${it.videoInfo}",
+            viewCount = it.videoInfo,
+            publishedTimeText = it.shortBylineText,
             timestamp = it.lengthText
         )
     }
@@ -261,10 +259,10 @@ class InnerTubeRepository(
     suspend fun getPlaylist(id: String): DomainPlaylist {
         val playlist = service.getPlaylist(id)
         val (headerRenderer) = playlist.header
-        val (videoListRenderer) = playlist.contents.content.contents.single().itemSectionRenderer.contents.single()
+        val (videoListRenderer) = playlist.contents.content.single()
 
-        val videos = videoListRenderer.contents.filterIsInstance<ApiPlaylist.SectionContent.PlaylistVideo>()
-        val continuation = videoListRenderer.contents.lastOrNull() as? ApiPlaylist.SectionContent.ContinuationItem?
+        val videos = videoListRenderer.filterIsInstance<ApiPlaylist.SectionContent.PlaylistVideo>()
+        val continuation = videoListRenderer.lastOrNull() as? ApiPlaylist.SectionContent.ContinuationItem?
 
         return DomainPlaylist(
             id = id,
@@ -280,7 +278,7 @@ class InnerTubeRepository(
     }
 
     suspend fun getPlaylist(id: String, continuation: String): DomainBrowse<DomainVideoPartial> {
-        val (items) = service.getPlaylist(id, continuation).onResponseReceivedActions.single()
+        val items = service.getPlaylist(id, continuation)
 
         val videos = items.filterIsInstance<ApiPlaylist.SectionContent.PlaylistVideo>()
         val continuationItem = items.lastOrNull() as ApiPlaylist.SectionContent.ContinuationItem?
@@ -293,62 +291,60 @@ class InnerTubeRepository(
 
     suspend fun getTag(tag: String): DomainTag {
         val (header, contents) = service.getTag(tag)
-        val items = contents.content.contents.filterIsInstance<ApiTag.RichItemRenderer>()
 
         return DomainTag(
             name = header.hashtagHeaderRenderer.hashtag,
             subtitle = header.hashtagHeaderRenderer.hashtagInfoText,
-            items = items.mapNotNull { renderer ->
-                val v = renderer.content.videoRenderer ?: return@mapNotNull null
+            items = contents
+                .content
+                .filterIsInstance<ApiTag.RichItemRenderer>()
+                .mapNotNull { renderer ->
+                    val v = renderer.content.videoRenderer ?: return@mapNotNull null
 
-                DomainVideoPartial(
-                    id = v.videoId,
-                    title = v.title,
-                    subtitle = listOfNotNull(
-                        v.ownerText,
-                        v.shortViewCountText,
-                        v.publishedTimeText
-                    ).joinToString(SEPARATOR),
-                    timestamp = v.lengthText,
-                    channel = v.channelThumbnailSupportedRenderers?.toDomain()
-                )
-            },
+                    DomainVideoPartial(
+                        id = v.videoId,
+                        title = v.title,
+                        viewCount = v.shortViewCountText,
+                        publishedTimeText = v.publishedTimeText,
+                        ownerText = v.ownerText,
+                        timestamp = v.lengthText,
+                        channel = v.channelThumbnailSupportedRenderers?.toDomain()
+                    )
+                },
             continuation = null
         )
     }
 
     suspend fun getTagContinuation(continuation: String): DomainBrowse<DomainVideoPartial> {
-        val response = service.getTagContinuation(continuation)
-        val contents = response.onResponseReceivedActions.single().items
-
-        val items = contents.filterIsInstance<ApiTag.RichItemRenderer>()
+        val contents = service.getTagContinuation(continuation)
 
         return DomainBrowse(
-            items = items.mapNotNull { renderer ->
-                val v = renderer.content.videoRenderer ?: return@mapNotNull null
+            items = contents
+                .filterIsInstance<ApiTag.RichItemRenderer>()
+                .mapNotNull { renderer ->
+                    val v = renderer.content.videoRenderer ?: return@mapNotNull null
 
-                DomainVideoPartial(
-                    id = v.videoId,
-                    title = v.title,
-                    subtitle = listOfNotNull(
-                        v.ownerText,
-                        v.shortViewCountText,
-                        v.publishedTimeText
-                    ).joinToString(SEPARATOR),
-                    timestamp = v.lengthText,
-                    channel = v.channelThumbnailSupportedRenderers?.let {
-                        DomainChannelPartial(
-                            id = it.channelThumbnailWithLinkRenderer.navigationEndpoint.browseEndpoint.browseId,
-                            avatarUrl = it.channelThumbnailWithLinkRenderer.thumbnail.sources.last().url
-                        )
-                    }
-                )
-            },
+                    DomainVideoPartial(
+                        id = v.videoId,
+                        title = v.title,
+                        viewCount = v.shortViewCountText,
+                        publishedTimeText = v.publishedTimeText,
+                        timestamp = v.lengthText,
+                        channel = v.channelThumbnailSupportedRenderers?.let {
+                            DomainChannelPartial(
+                                id = it.channelThumbnailWithLinkRenderer.navigationEndpoint.browseEndpoint.browseId,
+                                name = v.ownerText,
+                                avatarUrl = it.channelThumbnailWithLinkRenderer.thumbnail.sources.last().url
+                            )
+                        }
+                    )
+                },
             continuation = null
         )
     }
 
-    companion object {
-        const val SEPARATOR = " • "
+    private companion object {
+        private inline fun <reified T> Iterable<*>.singleInstance(): T = first { it is T } as T
+        private inline fun <reified T> Iterable<*>.singleInstanceOrNull(): T? = firstOrNull { it is T } as T?
     }
 }

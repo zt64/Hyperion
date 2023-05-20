@@ -10,13 +10,14 @@ import com.zt.innertube.network.dto.browse.*
 import com.zt.ktor.brotli.brotli
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.android.Android
-import io.ktor.client.engine.cio.CIO
+import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.plugins.BrowserUserAgent
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
+import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.*
@@ -27,7 +28,8 @@ import io.ktor.http.userAgent
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.modules.SerializersModule
@@ -206,7 +208,10 @@ class InnerTubeService(
     internal suspend fun getTrending(): ApiTrending = getBrowse("FEtrending")
     internal suspend fun getTrending(continuation: String): ApiTrendingContinuation = getBrowse("FEtrending", continuation)
 
+    internal suspend fun getChannel(id: String): ApiChannel = getBrowse(id)
     internal suspend fun getChannel(id: String, tab: ChannelTab = ChannelTab.VIDEOS): ApiChannel = getBrowse(id, params = encodeProtobuf(ChannelParams(tab)))
+    internal suspend fun getChannel(id: String, tab: ChannelTab = ChannelTab.VIDEOS, continuation: String): ApiChannelContinuation =
+        getBrowse(id, continuation, encodeProtobuf(ChannelParams(tab)))
 
     internal suspend fun getSearchSuggestions(search: String): JsonElement = withContext(Dispatchers.IO) {
         val body = httpClient.get("https://suggestqueries-clients6.youtube.com/complete/search") {

@@ -42,7 +42,4 @@ internal data class ApiHistory(
     }
 }
 
-@Serializable
-internal data class ApiHistoryContinuation(
-    override val onResponseReceivedActions: List<ContinuationContents<ApiTrending.SectionContent>>
-) : ApiBrowseContinuation()
+internal typealias ApiHistoryContinuation = ApiBrowseContinuation<ApiHistory.SectionContent>

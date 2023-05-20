@@ -1,6 +1,8 @@
 package com.zt.innertube.network.dto.browse
 
-import com.zt.innertube.network.dto.*
+import com.zt.innertube.network.dto.ApiImage
+import com.zt.innertube.network.dto.ApiText
+import com.zt.innertube.network.dto.SimpleText
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -13,7 +15,10 @@ import kotlinx.serialization.json.*
 import kotlinx.serialization.protobuf.ProtoNumber
 
 @Serializable
-internal enum class ChannelTab {
+enum class ChannelTab {
+    @SerialName("home")
+    HOME,
+
     @SerialName("videos")
     VIDEOS,
 
@@ -29,10 +34,16 @@ internal enum class ChannelTab {
     @SerialName("community")
     COMMUNITY,
 
+    @SerialName("store")
+    STORE,
+
+    @SerialName("channels")
+    CHANNELS,
+
     @SerialName("about")
     ABOUT;
 
-    object Serializer : KSerializer<ChannelTab> {
+    internal object Serializer : KSerializer<ChannelTab> {
         override val descriptor = PrimitiveSerialDescriptor(serializer().descriptor.serialName, PrimitiveKind.STRING)
 
         override fun serialize(encoder: Encoder, value: ChannelTab) {
@@ -163,7 +174,4 @@ internal data class ApiChannel(
     class Content
 }
 
-@Serializable
-internal class ApiChannelContinuation(
-    override val onResponseReceivedActions: List<ContinuationContents<ApiChannel.Content>>
-) : ApiBrowseContinuation()
+internal typealias ApiChannelContinuation = ApiBrowseContinuation<ApiChannel.Content>

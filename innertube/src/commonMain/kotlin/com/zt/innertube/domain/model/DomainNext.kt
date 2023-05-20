@@ -12,12 +12,6 @@ data class DomainNext(
     val chapters: List<DomainChapter>
 )
 
-data class Comments(
-    override val items: List<DomainComment>,
-    override val continuation: String? = null
-) : DomainBrowse<DomainComment>()
+typealias Comments = DomainBrowse<DomainComment>
 
-data class RelatedVideos(
-    override val items: List<DomainVideoPartial>,
-    override val continuation: String? = null
-) : DomainBrowse<DomainVideoPartial>()
+typealias RelatedVideos = DomainBrowse<DomainVideoPartial>

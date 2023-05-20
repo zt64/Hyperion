@@ -1,36 +1,60 @@
 package com.zt.innertube.network.dto
 
 import com.zt.innertube.network.dto.browse.ChannelThumbnailSupportedRenderers
-import com.zt.innertube.network.dto.renderer.SectionListRenderer
+import com.zt.innertube.network.dto.renderer.ItemSectionRendererSerializer
 import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
 import com.zt.innertube.serializer.TokenSerializer
-import kotlinx.serialization.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.*
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonTransformingSerializer
+import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.protobuf.ProtoNumber
 
 internal val searchModule = SerializersModule {
-    polymorphicDefaultDeserializer(ApiSearch.Renderer::class ) {
+    polymorphicDefaultDeserializer(ApiSearch.Renderer::class) {
         ApiSearch.UnknownRenderer.serializer()
     }
 }
 
 @Serializable
-internal class ApiSearchParams
+internal class ApiSearchParams(
+    @ProtoNumber(1) val sortBy: Int? = null,
+    @ProtoNumber(2) val filters: Filters? = null,
+    @ProtoNumber(19) val noFilter: Int? = null
+) {
+    @Serializable
+    data class Filters(
+        @ProtoNumber(1) val uploadDate: Int? = null,
+        @ProtoNumber(2) val type: Int? = null,
+        @ProtoNumber(3) val duration: Int? = null,
+        @ProtoNumber(4) val featuresHd: Int? = null,
+        @ProtoNumber(5) val featuresSubtitles: Int? = null,
+        @ProtoNumber(6) val featuresCreativeCommons: Int? = null,
+        @ProtoNumber(7) val features3d: Int? = null,
+        @ProtoNumber(8) val featuresLive: Int? = null,
+        @ProtoNumber(9) val featuresPurchased: Int? = null,
+        @ProtoNumber(14) val features4k: Int? = null,
+        @ProtoNumber(15) val features360: Int? = null,
+        @ProtoNumber(23) val featuresLocation: Int? = null,
+        @ProtoNumber(25) val featuresHdr: Int? = null,
+        @ProtoNumber(26) val featuresVr180: Int? = null
+    )
+}
 
 @Serializable
-internal data class ApiSearch(val contents: Contents) {
-    @Serializable
-    data class Contents(val twoColumnSearchResultsRenderer: TwoColumnSearchResultsRenderer)
-
-    @Serializable
-    data class TwoColumnSearchResultsRenderer(val primaryContents: PrimaryContents)
-
-    @Serializable
-    data class PrimaryContents(val sectionListRenderer: SectionListRenderer<@Serializable(Item.Serializer::class) Item>)
+internal data class ApiSearch(
+    @Serializable(ContentsSerializer::class)
+    val contents: List<Item>
+) {
+    private object ContentsSerializer : JsonTransformingSerializer<List<Item>>(ItemSectionRendererSerializer(Item.Serializer)) {
+        override fun transformDeserialize(element: JsonElement) = element
+            .jsonObject["twoColumnSearchResultsRenderer"]!!
+            .jsonObject["primaryContents"]!!
+            .jsonObject["sectionListRenderer"]!!
+    }
 
     @Serializable
     sealed interface Item {
@@ -73,26 +97,10 @@ internal data class ApiSearch(val contents: Contents) {
         val title: ApiText,
         val publishedTimeText: SimpleText? = null,
         val longBylineText: ApiText,
-        @Serializable(ViewCountSerializer::class)
-        val shortViewCountText: String,
+        val shortViewCountText: ViewCount,
         val lengthText: SimpleText? = null,
         val ownerText: ApiText
-    ) : Renderer {
-        private class ViewCountSerializer : KSerializer<String> {
-            override val descriptor = String.serializer().descriptor
-
-            override fun deserialize(decoder: Decoder): String {
-                decoder as JsonDecoder
-
-                val json = decoder.decodeJsonElement().jsonObject
-                val serializer = if (json.contains("runs")) ApiTextSerializer else SimpleTextSerializer
-
-                return decoder.json.decodeFromJsonElement(serializer, json)
-            }
-
-            override fun serialize(encoder: Encoder, value: String) = error("Not implemented")
-        }
-    }
+    ) : Renderer
 
     @Serializable
     @SerialName("hashtagTileRenderer")
@@ -126,7 +134,7 @@ internal data class ApiSearchContinuation(val onResponseReceivedCommands: List<C
         @SerialName("appendContinuationItemsAction")
         val items: List<@Serializable(ApiSearch.Item.Serializer::class) ApiSearch.Item>
     ) {
-        private class ContinuationItemsSerializer : JsonTransformingSerializer<List<ApiSearch.Item>>(ListSerializer(ApiSearch.Item.Serializer)) {
+        private object ContinuationItemsSerializer : JsonTransformingSerializer<List<ApiSearch.Item>>(ListSerializer(ApiSearch.Item.Serializer)) {
             override fun transformDeserialize(element: JsonElement) = element.jsonObject["continuationItems"]!!
         }
     }

@@ -1,10 +1,10 @@
 package com.zt.innertube.network.dto
 
 import com.zt.innertube.network.dto.browse.ApiBrowseContinuation
+import com.zt.innertube.serializer.DurationAsSecondsSerializer
 import com.zt.innertube.serializer.SingletonMapPolymorphicSerializer
 import kotlinx.serialization.*
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.buildSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -13,6 +13,7 @@ import kotlinx.serialization.json.*
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.protobuf.ProtoNumber
 import kotlin.reflect.KClass
+import kotlin.time.Duration
 
 internal val nextModule = SerializersModule {
     polymorphicDefaultDeserializer(ApiNext.EngagementPanel::class) {
@@ -26,14 +27,14 @@ internal val nextModule = SerializersModule {
 @Serializable
 internal class CommentParams private constructor(
     @ProtoNumber(2)
-    private val unknown1: Unknown1,
+    private val context: Context,
     @ProtoNumber(3)
     private val unknown2: Int = 6,
     @ProtoNumber(6)
     private val unknown3: Unknown3
 ) {
     internal constructor(videoId: String, page: Int) : this(
-        unknown1 = Unknown1(videoId),
+        context = Context(videoId),
         unknown3 = Unknown3(
             unknown1 = Unknown3.Unknown1(videoId),
             offset = (page * 20) - 20
@@ -41,7 +42,7 @@ internal class CommentParams private constructor(
     )
 
     @Serializable
-    private data class Unknown1(
+    private data class Context(
         @ProtoNumber(2)
         val videoId: String
     )
@@ -117,7 +118,7 @@ internal data class ApiNext(
             )
         }
 
-        private object VideoActionsSerializer : JsonTransformingSerializer<String>(String.serializer()) {
+        private object VideoActionsSerializer : JsonTransformingSerializer<String>(SimpleTextSerializer) {
             override fun transformDeserialize(element: JsonElement) = element
                 .jsonObject["menuRenderer"]!!
                 .jsonObject["topLevelButtons"]!!
@@ -127,7 +128,6 @@ internal data class ApiNext(
                 .jsonObject["likeButton"]!!
                 .jsonObject["toggleButtonRenderer"]!!
                 .jsonObject["defaultText"]!!
-                .jsonObject["simpleText"]!!
         }
     }
 
@@ -208,19 +208,44 @@ internal data class ApiNext(
 
     @Serializable
     @SerialName("engagement-panel-macro-markers-description-chapters")
-    object Chapters : EngagementPanel
+    data class Chapters(
+        @Serializable(ChaptersSerializer::class)
+        @SerialName("content")
+        val chapters: List<MacroMarkersListItemRenderer>
+    ) : EngagementPanel {
+        @Serializable
+        data class MacroMarkersListItemRenderer(
+            val title: SimpleText,
+            @Serializable(OnTapSerializer::class)
+            @SerialName("onTap")
+            val start: Duration,
+            val thumbnail: ApiImage,
+        ) {
+            private object OnTapSerializer : JsonTransformingSerializer<Duration>(DurationAsSecondsSerializer) {
+                override fun transformDeserialize(element: JsonElement): JsonElement {
+                    return element.jsonObject["watchEndpoint"]!!.jsonObject["startTimeSeconds"]!!
+                }
+            }
+        }
+
+        private object ChaptersSerializer :
+            JsonTransformingSerializer<List<MacroMarkersListItemRenderer>>(ListSerializer(MacroMarkersListItemRenderer.serializer())) {
+            override fun transformDeserialize(element: JsonElement) = JsonArray(
+                element.jsonObject["macroMarkersListRenderer"]!!.jsonObject["contents"]!!.jsonArray.map {
+                    it.jsonObject["macroMarkersListItemRenderer"]!!
+                }
+            )
+        }
+    }
 
     @Serializable
     object UnknownPanel : EngagementPanel
 }
 
+internal typealias ApiNextContinuation = ApiBrowseContinuation<ApiNextContinuationContent>
+
 @Serializable
-internal data class ApiNextContinuation(
-    override val onResponseReceivedActions: List<ContinuationContents<Content>>
-) : ApiBrowseContinuation() {
-    @Serializable
-    class Content
-}
+internal class ApiNextContinuationContent
 
 @OptIn(ExperimentalSerializationApi::class, InternalSerializationApi::class)
 internal abstract class RendererSerializer<T : Any>(private val baseClass: KClass<T>) : KSerializer<T> {

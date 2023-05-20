@@ -1,6 +1,7 @@
 package com.zt.innertube.domain.model
 
 import com.zt.innertube.network.dto.ApiImageSource
+import com.zt.innertube.network.dto.browse.ChannelTab
 
 data class DomainChannel(
     val id: String,
@@ -9,9 +10,8 @@ data class DomainChannel(
     val subscriberText: String?,
     val avatar: String,
     val banner: ApiImageSource?,
-    override val items: List<DomainVideoPartial>,
-    override val continuation: String?
-) : DomainBrowse<DomainVideoPartial>() {
+    val tabs: List<ChannelTab>
+) {
     val shareUrl = "https://www.youtube.com/channel/$id"
 }
 

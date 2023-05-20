@@ -21,7 +21,7 @@ data class ApiImageSource(
 
 internal typealias ImageContainer = @Serializable(ImageContainerSerializer::class) ApiImage
 
-private class ImageContainerSerializer : JsonTransformingSerializer<ApiImage>(ApiImage.serializer()) {
+private object ImageContainerSerializer : JsonTransformingSerializer<ApiImage>(ApiImage.serializer()) {
     override fun transformDeserialize(element: JsonElement): JsonElement {
         return element.jsonObject["image"] ?: element.jsonObject["elementsImage"]!!
     }
