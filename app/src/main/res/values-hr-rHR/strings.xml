@@ -129,4 +129,5 @@
     <string name="shared_content_notification_desc">Notify me when others share my content on their channels</string>
     <string name="reply_notification_desc">Notify me about replies to my comments</string>
     <string name="cancel">Cancel</string>
+    <string name="store">Store</string>
 </resources>
