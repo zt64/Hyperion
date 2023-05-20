@@ -14,10 +14,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.hyperion.R
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.TagViewModel
+import com.hyperion.util.rememberLazyListState
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -105,12 +107,14 @@ private fun TagScreenLoaded(
         }
     ) { paddingValues ->
         val videos = viewModel.videos.collectAsLazyPagingItems()
+        val state = videos.rememberLazyListState()
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 14.dp),
+            state = state,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
@@ -121,10 +125,11 @@ private fun TagScreenLoaded(
             }
 
             items(
-                items = videos,
-                key = { it.id }
-            ) { video ->
-                if (video == null) return@items
+                count = videos.itemCount,
+                key = videos.itemKey { it.id },
+                contentType = videos.itemContentType()
+            ) { index ->
+                val video = videos[index] ?: return@items
 
                 VideoCard(
                     video = video,

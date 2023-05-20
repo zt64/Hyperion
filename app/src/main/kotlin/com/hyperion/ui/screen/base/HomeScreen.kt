@@ -13,7 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.HomeViewModel
 import com.hyperion.util.rememberLazyListState
@@ -37,10 +38,11 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(
-            items = videos,
-            key = { it.id }
-        ) { video ->
-            if (video == null) return@items
+            count = videos.itemCount,
+            key = videos.itemKey { it.id },
+            contentType = videos.itemContentType()
+        ) { index ->
+            val video = videos[index] ?: return@items
 
             VideoCard(
                 video = video,

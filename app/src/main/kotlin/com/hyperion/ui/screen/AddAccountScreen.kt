@@ -22,9 +22,7 @@ fun AddAccountScreen(
 ) {
     when (val state = viewModel.state) {
         AddAccountViewModel.State.Loading -> {
-            AddAccountScreenLoading(
-                onClickBack = onClickBack
-            )
+            AddAccountScreenLoading(onClickBack)
         }
 
         is AddAccountViewModel.State.Loaded -> {
@@ -45,9 +43,7 @@ fun AddAccountScreen(
 }
 
 @Composable
-private fun AddAccountScreenLoading(
-    onClickBack: () -> Unit
-) {
+private fun AddAccountScreenLoading(onClickBack: () -> Unit) {
     Scaffold(
         topBar = {
             LargeTopAppBar(

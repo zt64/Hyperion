@@ -24,7 +24,6 @@ private fun <T> NavController<T>.switchTo(destination: T) {
     if (!moveToTop { it == destination }) navigate(destination)
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BaseScreen(
     windowSizeClass: WindowSizeClass,

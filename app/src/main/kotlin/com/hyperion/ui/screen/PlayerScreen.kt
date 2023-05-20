@@ -40,7 +40,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.hyperion.R
 import com.hyperion.ui.component.*
 import com.hyperion.ui.component.player.Player
@@ -365,6 +366,7 @@ private fun PlayerScreenPortrait(
                                     imageVector = Icons.Default.AccountCircle,
                                     contentDescription = null
                                 )
+
                                 Text(
                                     text = "Some top comment here",
                                     style = MaterialTheme.typography.bodyMedium
@@ -377,10 +379,11 @@ private fun PlayerScreenPortrait(
 
             if (viewModel.preferences.showRelatedVideos) {
                 items(
-                    items = relatedVideos,
-                    key = { it.id }
-                ) { relatedVideo ->
-                    if (relatedVideo == null) return@items
+                    count = relatedVideos.itemCount,
+                    key = relatedVideos.itemKey { it.id },
+                    contentType = relatedVideos.itemContentType()
+                ) { index ->
+                    val relatedVideo = relatedVideos[index] ?: return@items
 
                     VideoCard(
                         video = relatedVideo,

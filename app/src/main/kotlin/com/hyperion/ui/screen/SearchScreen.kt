@@ -3,7 +3,7 @@ package com.hyperion.ui.screen
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.*
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,7 +29,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.hyperion.R
 import com.hyperion.domain.model.search.SearchFilter
 import com.hyperion.ui.component.*
@@ -107,9 +108,9 @@ fun SearchScreen(
                         ),
                         singleLine = true,
                         shape = CircleShape,
-                        colors = TextFieldDefaults.textFieldColors(
+                        colors = TextFieldDefaults.colors(
+                            focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent
                         )
                     )
                 },
@@ -200,10 +201,11 @@ fun SearchScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(
-                        items = results,
-                        key = Entity::hashCode
-                    ) { result ->
-                        if (result == null) return@items
+                        count = results.itemCount,
+                        key = results.itemKey { it.hashCode() },
+                        contentType = results.itemContentType()
+                    ) { index ->
+                        val result = results[index] ?: return@items
 
                         when (result) {
                             is DomainVideoPartial -> {

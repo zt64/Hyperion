@@ -86,8 +86,8 @@ fun SettingsScreen(
             transitionSpec = { action, _, _ ->
                 if (action == NavAction.Pop) {
                     // Leaving settings sub-screen
-                    fadeIn(tween(200)) with slideOutOfContainer(
-                        towards = AnimatedContentScope.SlideDirection.End,
+                    fadeIn(tween(200)) togetherWith slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.End,
                         animationSpec = tween(
                             durationMillis = 200,
                             easing = FastOutLinearInEasing
@@ -96,12 +96,12 @@ fun SettingsScreen(
                 } else {
                     // Entering settings sub-screen
                     slideIntoContainer(
-                        towards = AnimatedContentScope.SlideDirection.Start,
+                        towards = AnimatedContentTransitionScope.SlideDirection.Start,
                         animationSpec = tween(
                             durationMillis = 300,
                             easing = FastOutSlowInEasing
                         )
-                    ) with fadeOut(tween(300))
+                    ) togetherWith fadeOut(tween(300))
                 }
             }
         ) { destination ->
