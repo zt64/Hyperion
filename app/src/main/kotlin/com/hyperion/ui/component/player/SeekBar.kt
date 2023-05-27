@@ -5,31 +5,30 @@
 
 package com.hyperion.ui.component.player
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.indication
-import androidx.compose.foundation.interaction.DragInteraction
-import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
-import androidx.compose.material3.tokens.SliderTokens
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import com.zt.innertube.domain.model.DomainChapter
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -38,20 +37,76 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
-enum class Category {
-    SPONSOR,
-    SELF_PROMO,
-    INTERACTION,
-    INTRO,
-    OUTRO,
-    PREVIEW,
-    MUSIC_OFF_TOPIC,
-    FILLER
+enum class SkipOption {
+    DISABLE,
+    SHOW,
+    MANUAL,
+    AUTO
+}
+
+enum class SponsorBlockCategory(
+    val description: String,
+    val color: Color
+) {
+    SPONSOR(
+        description = "Paid promotion, paid referrals and direct advertisements. Not for self-promotion or free shoutouts to causes/creators/websites/products they like.",
+        color = Color(0x7800D400)
+    ) {
+        override fun toString() = "Sponsor"
+    },
+    SELF_PROMO(
+        description = "Similar to \"sponsor\" except for unpaid or self promotion. This includes sections about merchandise, donations, or information about who they collaborated with.",
+        color = Color(0x78FFFF00)
+    ) {
+        override fun toString() = "Unpaid/Self Promotion"
+    },
+    INTERACTION(
+        description = "Asking for likes, comments, or subscribers. This includes asking for engagement in the video, comments, or social media.",
+        color = Color(0x78CC00FF)
+    ) {
+        override fun toString() = "Interaction Reminder"
+    },
+    HIGHLIGHT(
+        description = "The part of the video that most people are looking for. Similar to \"Video starts at x\" comments.",
+        color = Color(0x78FF0000)
+    ) {
+        override fun toString() = "Highlight"
+    },
+    INTRO(
+        description = "The introduction to the video. This includes the intro animation, intro music, and the creator introducing themselves.",
+        color = Color(0x7800FFFF)
+    ) {
+        override fun toString() = "Intro"
+    },
+    OUTRO(
+        description = "Credits or when the YouTube endcards appear. Not for conclusions with information.",
+        color = Color(0x780202ED)
+    ) {
+        override fun toString() = "Endcards/Credits"
+    },
+    FILLER(
+        description = "Tangential scenes added only for filler or humor that are not required to understand the main content of the video.",
+        color = Color(0x787300FF)
+    ) {
+        override fun toString() = "Filler Tangent/Jokes"
+    },
+    PREVIEW(
+        description = "Collection of clips that show what is coming up in in this video or other videos in a series where all information is repeated later in the video.",
+        color = Color(0x78008FD6)
+    ) {
+        override fun toString() = "Preview/Recap"
+    },
+    MUSIC_OFF_TOPIC(
+        description = "Only for use in music videos. This only should be used for sections of music videos that aren't already covered by another category.",
+        color = Color(0x78FF9900)
+    ) {
+        override fun toString() = "Music: Non-Music Section"
+    }
 }
 
 @Stable
 data class Segment(
-    val category: Category,
+    val category: SponsorBlockCategory,
     val range: ClosedFloatingPointRange<Float>,
 )
 
@@ -76,7 +131,39 @@ fun SeekBar(
         onValueChangeFinished = onSeekFinished,
         interactionSource = interactionSource,
         thumb = {
-            Thumb(
+            val isDragged by interactionSource.collectIsDraggedAsState()
+            val visible = remember {
+                MutableTransitionState(false)
+            }
+
+            visible.targetState = isDragged
+
+            if (visible.currentState || visible.targetState || !visible.isIdle) {
+                Popup(
+                    alignment = Alignment.BottomCenter,
+                    offset = IntOffset(0, -80)
+                ) {
+                    AnimatedVisibility(
+                        visibleState = visible,
+                        enter = fadeIn(),
+                        exit = fadeOut()
+                    ) {
+                        Surface(
+                            modifier = Modifier,
+                            shape = MaterialTheme.shapes.medium,
+                            tonalElevation = 3.dp
+                        ) {
+                            Box(
+                                modifier = Modifier.padding(8.dp)
+                            ) {
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            SliderDefaults.Thumb(
                 interactionSource = interactionSource,
                 colors = colors
             )
@@ -84,7 +171,7 @@ fun SeekBar(
         track = { sliderPositions ->
             Track(
                 segments = segments,
-                sliderPositions = sliderPositions,
+                sliderState = sliderPositions,
                 buffered = (buffered / duration).toFloat(),
                 colors = colors
             )
@@ -102,53 +189,11 @@ private fun SeekBarPreview() {
         progress = progress,
         buffered = 60.minutes,
         segments = persistentListOf(
-            Segment(Category.INTRO, 0.0f..0.1f),
-            Segment(Category.SPONSOR, 0.7f..0.75f),
-            Segment(Category.OUTRO, 0.8f..1.0f),
+            Segment(SponsorBlockCategory.INTRO, 0.0f..0.1f),
+            Segment(SponsorBlockCategory.SPONSOR, 0.7f..0.75f),
+            Segment(SponsorBlockCategory.OUTRO, 0.8f..1.0f),
         ),
         onSeek = { progress = it }
-    )
-}
-
-@Suppress("INVISIBLE_MEMBER")
-@Composable
-private fun Thumb(
-    interactionSource: MutableInteractionSource,
-    modifier: Modifier = Modifier,
-    colors: SliderColors = SliderDefaults.colors(),
-    enabled: Boolean = true,
-    thumbSize: DpSize = DpSize(SliderTokens.HandleWidth, SliderTokens.HandleHeight)
-) {
-    val interactions = remember { mutableStateListOf<Interaction>() }
-    LaunchedEffect(interactionSource) {
-        interactionSource.interactions.collect { interaction ->
-            when (interaction) {
-                is PressInteraction.Press -> interactions.add(interaction)
-                is PressInteraction.Release -> interactions.remove(interaction.press)
-                is PressInteraction.Cancel -> interactions.remove(interaction.press)
-                is DragInteraction.Start -> interactions.add(interaction)
-                is DragInteraction.Stop -> interactions.remove(interaction.start)
-                is DragInteraction.Cancel -> interactions.remove(interaction.start)
-            }
-        }
-    }
-
-    val elevation = if (interactions.isNotEmpty()) 6.dp else 1.dp
-    val shape = SliderTokens.HandleShape.toShape()
-
-    Spacer(
-        modifier
-            .size(thumbSize)
-            .indication(
-                interactionSource = interactionSource,
-                indication = rememberRipple(
-                    bounded = false,
-                    radius = SliderTokens.StateLayerSize / 2
-                )
-            )
-            .hoverable(interactionSource = interactionSource)
-            .shadow(if (enabled) elevation else 0.dp, shape, clip = false)
-            .background(colors.thumbColor(enabled).value, shape)
     )
 }
 
@@ -157,7 +202,7 @@ private fun Thumb(
 private fun Track(
     segments: ImmutableList<Segment>,
     buffered: Float,
-    sliderPositions: SliderPositions,
+    sliderState: SliderState,
     modifier: Modifier = Modifier,
     colors: SliderColors = SliderDefaults.colors(),
     enabled: Boolean = true,
@@ -192,30 +237,17 @@ private fun Track(
 
         drawLine(
             color = inactiveTrackColor.copy(alpha = 0.5f),
-            start = sliderStart,
+            start = bufferedEnd,
             end = sliderEnd,
             strokeWidth = trackStrokeWidth,
             cap = StrokeCap.Round
         )
 
-        val sliderValueEnd = Offset(
-            x = sliderStart.x +
-                (sliderEnd.x - sliderStart.x) * sliderPositions.activeRange.endInclusive,
-            y = center.y
-        )
-
-        val sliderValueStart = Offset(
-            x = sliderStart.x +
-                (sliderEnd.x - sliderStart.x) * sliderPositions.activeRange.start,
-            y = center.y
-        )
-
-        drawLine(
-            color = activeTrackColor,
-            start = sliderValueStart,
-            end = sliderValueEnd,
-            strokeWidth = trackStrokeWidth,
-            cap = StrokeCap.Round
+        drawTrack(
+            activeRangeStart = 0f,
+            activeRangeEnd = sliderState.coercedValueAsFraction,
+            inactiveTrackColor = inactiveTrackColor,
+            activeTrackColor = activeTrackColor
         )
 
         segments.sortedBy { it.range.start }.forEach { segment ->
@@ -230,16 +262,7 @@ private fun Track(
             )
 
             drawLine(
-                color = when (segment.category) {
-                    Category.INTRO -> Color(0x7800FFFF)
-                    Category.OUTRO -> Color(0x780202ED)
-                    Category.PREVIEW -> Color(0x78008FD6)
-                    Category.SELF_PROMO -> Color(0x78FFFF00)
-                    Category.SPONSOR -> Color(0x7800D400)
-                    Category.INTERACTION -> Color(0x78CC00FF)
-                    Category.MUSIC_OFF_TOPIC -> Color(0x78FF9900)
-                    Category.FILLER -> Color(0x787300FF)
-                },
+                color = segment.category.color,
                 start = segmentStart,
                 end = segmentEnd,
                 strokeWidth = trackStrokeWidth,
@@ -247,4 +270,47 @@ private fun Track(
             )
         }
     }
+}
+
+context(DrawScope)
+@Suppress("INVISIBLE_MEMBER")
+private fun drawTrack(
+    activeRangeStart: Float,
+    activeRangeEnd: Float,
+    inactiveTrackColor: Color,
+    activeTrackColor: Color
+) {
+    val isRtl = layoutDirection == LayoutDirection.Rtl
+    val sliderLeft = Offset(0f, center.y)
+    val sliderRight = Offset(size.width, center.y)
+    val sliderStart = if (isRtl) sliderRight else sliderLeft
+    val sliderEnd = if (isRtl) sliderLeft else sliderRight
+    val trackStrokeWidth = TrackHeight.toPx()
+
+    drawLine(
+        inactiveTrackColor,
+        sliderStart,
+        sliderEnd,
+        trackStrokeWidth,
+        StrokeCap.Round
+    )
+    val sliderValueEnd = Offset(
+        sliderStart.x +
+            (sliderEnd.x - sliderStart.x) * activeRangeEnd,
+        center.y
+    )
+
+    val sliderValueStart = Offset(
+        sliderStart.x +
+            (sliderEnd.x - sliderStart.x) * activeRangeStart,
+        center.y
+    )
+
+    drawLine(
+        activeTrackColor,
+        sliderValueStart,
+        sliderValueEnd,
+        trackStrokeWidth,
+        StrokeCap.Round
+    )
 }
