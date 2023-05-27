@@ -9,34 +9,21 @@ import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.hyperion.R
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.RawValue
 
-@Parcelize
-enum class BaseDestination : AppDestination {
-    HOME,
-    FEED,
-    LIBRARY;
+sealed interface Destination
 
-    @Stable
-    val icon: ImageVector
-        get() = when (this) {
-            HOME -> Icons.Default.Home
-            FEED -> Icons.Default.Subscriptions
-            LIBRARY -> Icons.Default.VideoLibrary
-        }
-
-    @Stable
+enum class BaseDestination(
+    val icon: ImageVector,
+    @StringRes
     val label: Int
-        @StringRes
-        get() = when (this) {
-            HOME -> R.string.home
-            FEED -> R.string.feed
-            LIBRARY -> R.string.library
-        }
+) : Destination {
+    HOME(Icons.Default.Home, R.string.home),
+    FEED(Icons.Default.Subscriptions, R.string.feed),
+    LIBRARY(Icons.Default.VideoLibrary, R.string.library)
 }
 
 @Parcelize
-sealed interface AppDestination : Parcelable {
+sealed interface AppDestination : Destination, Parcelable {
     @Parcelize
     object Search : AppDestination
 
@@ -54,6 +41,15 @@ sealed interface AppDestination : Parcelable {
 
     @Parcelize
     object AddAccount : AppDestination
+
+    @Parcelize
+    object Notifications : AppDestination
+
+    @Parcelize
+    object Channels : AppDestination
+
+    @Parcelize
+    object History : AppDestination
 
     @Parcelize
     object Settings : AppDestination
