@@ -36,7 +36,6 @@ import com.hyperion.ui.component.*
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.navigation.Destination
 import com.hyperion.ui.viewmodel.SearchViewModel
-import com.hyperion.util.rememberLazyListState
 import com.zt.innertube.domain.model.*
 import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.navigate

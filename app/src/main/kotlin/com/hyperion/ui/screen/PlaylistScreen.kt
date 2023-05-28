@@ -20,12 +20,11 @@ import androidx.paging.compose.itemKey
 import com.hyperion.R
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.PlaylistViewModel
-import com.hyperion.util.rememberLazyListState
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PlaylistScreen(
-    viewModel: PlaylistViewModel = getViewModel(),
+    viewModel: PlaylistViewModel = koinViewModel(),
     playlistId: String,
     onClickVideo: (id: String) -> Unit,
     onClickBack: () -> Unit
@@ -44,9 +43,7 @@ fun PlaylistScreen(
         }
 
         PlaylistViewModel.State.Loading -> {
-            PlaylistLoadingScreen(
-                onClickBack = onClickBack
-            )
+            PlaylistLoadingScreen(onClickBack)
         }
 
         is PlaylistViewModel.State.Error -> {
@@ -119,14 +116,12 @@ private fun PlaylistLoadedScreen(
         }
     ) { paddingValues ->
         val videos = viewModel.videos.collectAsLazyPagingItems()
-        val state = videos.rememberLazyListState()
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 14.dp),
-            state = state,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
@@ -237,9 +232,8 @@ private fun PlaylistLoadingScreen(
     ) { paddingValues ->
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
-            contentAlignment = Alignment.Center
+                .wrapContentSize(Alignment.Center)
+                .padding(paddingValues)
         ) {
             CircularProgressIndicator()
         }

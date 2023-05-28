@@ -44,48 +44,45 @@ fun ErrorScreen(
             SnackbarHost(snackbarHostState)
         }
     ) { paddingValues ->
-        Box(
+        Column(
             modifier = Modifier
+                .padding(paddingValues)
                 .fillMaxSize()
-                .padding(paddingValues),
-            contentAlignment = Alignment.Center
+                .wrapContentSize(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                val coroutineScope = rememberCoroutineScope()
-                val context = LocalContext.current
-                val clipboardManager = LocalClipboardManager.current
+            val coroutineScope = rememberCoroutineScope()
+            val context = LocalContext.current
+            val clipboardManager = LocalClipboardManager.current
 
+            Icon(
+                modifier = Modifier.size(48.dp),
+                imageVector = Icons.Default.Error,
+                tint = MaterialTheme.colorScheme.error,
+                contentDescription = stringResource(R.string.error)
+            )
+
+            Text(
+                text = stringResource(R.string.error_occurred),
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            Button(
+                contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
+                onClick = {
+                    clipboardManager.setText(AnnotatedString(exception.stackTraceToString()))
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(context.getString(R.string.copied_to_clipboard))
+                    }
+                }
+            ) {
                 Icon(
-                    modifier = Modifier.size(48.dp),
-                    imageVector = Icons.Default.Error,
-                    tint = MaterialTheme.colorScheme.error,
+                    imageVector = Icons.Default.CopyAll,
                     contentDescription = stringResource(R.string.error)
                 )
-
-                Text(
-                    text = stringResource(R.string.error_occurred),
-                    style = MaterialTheme.typography.titleLarge
-                )
-
-                Button(
-                    contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
-                    onClick = {
-                        clipboardManager.setText(AnnotatedString(exception.stackTraceToString()))
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar(context.getString(R.string.copied_to_clipboard))
-                        }
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CopyAll,
-                        contentDescription = stringResource(R.string.error)
-                    )
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(stringResource(R.string.copy_stacktrace))
-                }
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(stringResource(R.string.copy_stacktrace))
             }
         }
     }

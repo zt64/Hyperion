@@ -2,9 +2,9 @@
 kotlin = "1.8.21"
 kotlin-serialization = "1.5.1"
 agp = "8.0.1"
-compose = "1.5.0-alpha04"
+compose = "1.5.0-beta01"
 compose-compiler = "1.4.7"
-compose-material3 = "1.2.0-alpha01"
+compose-material3 = "1.2.0-alpha02"
 accompanist = "0.30.1"
 ktor = "2.3.0"
 media3 = "1.0.2"
@@ -13,8 +13,8 @@ koin = "3.4.4"
 [libraries]
 androidx-core = "androidx.core:core-ktx:1.10.1"
 androidx-splashscreen = "androidx.core:core-splashscreen:1.0.1"
-androidx-activity = "androidx.activity:activity-compose:1.7.1"
-androidx-paging = "androidx.paging:paging-compose:1.0.0-alpha19"
+androidx-activity = "androidx.activity:activity-compose:1.7.2"
+androidx-paging = "androidx.paging:paging-compose:1.0.0-alpha20"
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
@@ -37,7 +37,7 @@ compose-icons-extended = { module = "androidx.compose.material:material-icons-ex
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 accompanist-placeholder = { module = "com.google.accompanist:accompanist-placeholder", version.ref = "accompanist" }
 
-coil-compose = "io.coil-kt:coil-compose:2.3.0"
+coil-compose = "io.coil-kt:coil-compose:2.4.0"
 
 navigation = "dev.olshevski.navigation:reimagined:1.5.0-alpha01"
 

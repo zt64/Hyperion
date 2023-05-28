@@ -17,23 +17,20 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.HomeViewModel
-import com.hyperion.util.rememberLazyListState
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = getViewModel(),
+    viewModel: HomeViewModel = koinViewModel(),
     onClickVideo: (videoId: String) -> Unit,
     onClickChannel: (channelId: String) -> Unit
 ) {
     val videos = viewModel.videos.collectAsLazyPagingItems()
-    val state = videos.rememberLazyListState()
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 14.dp),
-        state = state,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {

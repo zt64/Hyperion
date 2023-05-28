@@ -222,7 +222,10 @@ private fun PlayerScreenPortrait(
                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            items(video.badges) { badge ->
+                            items(
+                                items = video.badges,
+                                key = { it.hashCode() }
+                            ) { badge ->
                                 SuggestionChip(
                                     modifier = Modifier.height(26.dp),
                                     label = { Text(badge) },

@@ -9,8 +9,8 @@ import androidx.media3.common.Player
 
 @Composable
 fun Player(
+    player: Player,
     modifier: Modifier = Modifier,
-    player: Player
 ) {
     AndroidView(
         modifier = Modifier
