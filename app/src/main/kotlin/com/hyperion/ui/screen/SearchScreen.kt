@@ -2,7 +2,6 @@ package com.hyperion.ui.screen
 
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,6 +34,7 @@ import com.hyperion.R
 import com.hyperion.domain.model.search.SearchFilter
 import com.hyperion.ui.component.*
 import com.hyperion.ui.navigation.AppDestination
+import com.hyperion.ui.navigation.Destination
 import com.hyperion.ui.viewmodel.SearchViewModel
 import com.hyperion.util.rememberLazyListState
 import com.zt.innertube.domain.model.*
@@ -42,13 +42,12 @@ import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.navigate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SearchScreen(
-    viewModel: SearchViewModel = getViewModel(),
-    navController: NavController<AppDestination>,
+    viewModel: SearchViewModel = koinViewModel(),
+    navController: NavController<Destination>,
     onClickBack: () -> Unit,
     onClickChannel: (id: String) -> Unit,
     onClickPlaylist: (id: String) -> Unit,
@@ -191,11 +190,9 @@ fun SearchScreen(
                 }
             } else {
                 val results = viewModel.results.collectAsLazyPagingItems()
-                val state = results.rememberLazyListState()
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    state = state,
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(10.dp)

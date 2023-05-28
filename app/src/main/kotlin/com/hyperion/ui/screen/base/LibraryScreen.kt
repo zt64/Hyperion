@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.sp
 import com.hyperion.R
 import com.hyperion.ui.component.ShimmerImage
 import com.hyperion.ui.viewmodel.LibraryViewModel
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LibraryScreen(
-    viewModel: LibraryViewModel = getViewModel()
+    viewModel: LibraryViewModel = koinViewModel()
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),

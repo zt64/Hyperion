@@ -14,11 +14,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
 import com.hyperion.ui.viewmodel.HistoryViewModel
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HistoryScreen(
-    viewModel: HistoryViewModel = getViewModel(),
+    viewModel: HistoryViewModel = koinViewModel(),
     onClickBack: () -> Unit
 ) {
     Scaffold(

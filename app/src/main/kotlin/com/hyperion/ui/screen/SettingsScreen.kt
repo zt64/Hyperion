@@ -29,12 +29,11 @@ import com.hyperion.ui.screen.settings.*
 import com.hyperion.ui.viewmodel.SettingsViewModel
 import dev.olshevski.navigation.reimagined.*
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = getViewModel(),
+    viewModel: SettingsViewModel = koinViewModel(),
     onClickBack: () -> Unit
 ) {
     val navController = rememberNavController<SettingsDestination>(SettingsSection)
@@ -137,7 +136,12 @@ fun SettingsScreen(
                     SettingsSection.GESTURES -> GesturesScreen(preferences)
                     SettingsSection.NOTIFICATIONS -> NotificationsScreen(preferences)
                     SettingsSection.ACCOUNTS -> AccountsScreen(preferences)
-                    SettingsSection.SPONSOR_BLOCK -> SponsorBlockScreen(preferences)
+                    SettingsSection.SPONSOR_BLOCK -> SponsorBlockScreen(
+                        preferences = preferences,
+                        onClickCategory = { category ->
+
+                        }
+                    )
                     SettingsSection.BACKUP_RESTORE -> BackupRestoreScreen(preferences)
                     SettingsSection.ABOUT -> AboutScreen(
                         onClickUpdate = {

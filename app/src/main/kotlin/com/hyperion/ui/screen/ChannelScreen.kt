@@ -19,19 +19,19 @@ import com.hyperion.R
 import com.hyperion.domain.model.channel.imageVector
 import com.hyperion.domain.model.channel.title
 import com.hyperion.ui.component.ShimmerImage
-import com.hyperion.ui.navigation.AppDestination
+import com.hyperion.ui.navigation.Destination
 import com.hyperion.ui.viewmodel.ChannelViewModel
 import com.zt.innertube.domain.model.DomainChannel
 import com.zt.innertube.network.dto.browse.ChannelTab
 import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.pop
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ChannelScreen(
     channelId: String,
-    viewModel: ChannelViewModel = getViewModel(),
-    navController: NavController<AppDestination>,
+    viewModel: ChannelViewModel = koinViewModel(),
+    navController: NavController<Destination>,
     onClickBack: () -> Unit
 ) {
     LaunchedEffect(Unit) {
@@ -65,7 +65,7 @@ fun ChannelScreen(
 @Composable
 private fun ChannelScreenLoaded(
     viewModel: ChannelViewModel,
-    navController: NavController<AppDestination>,
+    navController: NavController<Destination>,
     channel: DomainChannel
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()

@@ -13,11 +13,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
 import com.hyperion.ui.viewmodel.AddAccountViewModel
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AddAccountScreen(
-    viewModel: AddAccountViewModel = getViewModel(),
+    viewModel: AddAccountViewModel = koinViewModel(),
     onClickBack: () -> Unit
 ) {
     when (val state = viewModel.state) {

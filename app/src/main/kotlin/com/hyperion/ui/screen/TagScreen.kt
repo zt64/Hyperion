@@ -19,12 +19,11 @@ import androidx.paging.compose.itemKey
 import com.hyperion.R
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.TagViewModel
-import com.hyperion.util.rememberLazyListState
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun TagScreen(
-    viewModel: TagViewModel = getViewModel(),
+    viewModel: TagViewModel = koinViewModel(),
     tag: String,
     onClickVideo: (id: String) -> Unit,
     onClickBack: () -> Unit
@@ -42,7 +41,6 @@ fun TagScreen(
         TagViewModel.State.Loading -> TagScreenLoading(onClickBack)
 
         TagViewModel.State.Loaded -> TagScreenLoaded(
-            viewModel = viewModel,
             onClickVideo = onClickVideo,
             onClickBack = onClickBack
         )
@@ -50,9 +48,7 @@ fun TagScreen(
 }
 
 @Composable
-private fun TagScreenLoading(
-    onClickBack: () -> Unit
-) {
+private fun TagScreenLoading(onClickBack: () -> Unit) {
     Scaffold(
         topBar = {
             MediumTopAppBar(
@@ -81,7 +77,7 @@ private fun TagScreenLoading(
 
 @Composable
 private fun TagScreenLoaded(
-    viewModel: TagViewModel,
+    viewModel: TagViewModel = koinViewModel(),
     onClickVideo: (id: String) -> Unit,
     onClickBack: () -> Unit
 ) {
@@ -107,14 +103,12 @@ private fun TagScreenLoaded(
         }
     ) { paddingValues ->
         val videos = viewModel.videos.collectAsLazyPagingItems()
-        val state = videos.rememberLazyListState()
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 14.dp),
-            state = state,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
