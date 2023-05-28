@@ -130,4 +130,6 @@
     <string name="reply_notification_desc">Notify me about replies to my comments</string>
     <string name="cancel">Cancel</string>
     <string name="store">Store</string>
+    <string name="skip_count_tracking">Skip count tracking</string>
+    <string name="hide_this_notification">"Hide this notification "</string>
 </resources>
