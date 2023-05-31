@@ -146,7 +146,9 @@ fun SearchScreen(
                 val coroutineScope = rememberCoroutineScope()
 
                 LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .imePadding(),
                     contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -164,7 +166,8 @@ fun SearchScreen(
                                         focusManager.clearFocus()
                                     }
                                 }
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .animateItemPlacement(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
@@ -181,7 +184,7 @@ fun SearchScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.NorthWest,
-                                    contentDescription = null
+                                    contentDescription = stringResource(R.string.replace)
                                 )
                             }
                         }
