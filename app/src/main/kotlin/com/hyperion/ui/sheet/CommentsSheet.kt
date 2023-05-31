@@ -19,9 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hyperion.R
+import com.zt.innertube.domain.model.DomainComment
 
 @Composable
 fun CommentsSheet(
@@ -36,9 +38,10 @@ fun CommentsSheet(
     }
 }
 
-@Preview
 @Composable
-private fun Comment() {
+private fun Comment(
+    comment: DomainComment
+) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     Card(
@@ -63,19 +66,19 @@ private fun Comment() {
                     ) {
                         Text(
                             modifier = Modifier.weight(1f, true),
-                            text = "Comment author",
+                            text = comment.author.name!!,
                             overflow = TextOverflow.Ellipsis
                         )
 
                         Text(
-                            text = "1 hour ago",
+                            text = comment.datePosted,
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
                     //                Text(comment.author.name)
                 },
                 supportingContent = {
-                    Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nam libero justo laoreet sit amet cursus sit amet dictum.")
+                    Text(comment.content)
                 }
             )
 
@@ -85,25 +88,25 @@ private fun Comment() {
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
                         imageVector = Icons.Default.ThumbUp,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.like)
                     )
                 }
 
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
                         imageVector = Icons.Default.ThumbDown,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.dislike)
                     )
                 }
 
                 Spacer(Modifier.weight(1f, true))
 
-                Text("40 replies")
+                Text("${comment.replies.size} replies")
 
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
                         imageVector = Icons.Default.Reply,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.reply)
                     )
                 }
             }

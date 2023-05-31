@@ -135,4 +135,5 @@
     <string name="hide_this_notification">"이 알림 숨김 "</string>
     <string name="replace">Replace</string>
     <string name="remove">Remove</string>
+    <string name="reply">Reply</string>
 </resources>
