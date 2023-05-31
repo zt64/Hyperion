@@ -3,6 +3,7 @@ package com.hyperion.ui.screen
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.NotificationsNone
@@ -15,11 +16,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.hyperion.R
+import com.hyperion.ui.component.ShimmerImage
+import com.hyperion.ui.viewmodel.NotificationsViewModel
+import com.zt.innertube.domain.model.Notification
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NotificationsScreen(
-    onClickBack: () -> Unit
+    viewModel: NotificationsViewModel = koinViewModel(),
+    onClickBack: () -> Unit,
 ) {
     val notificationsSheetState = remember { SheetState() }
 
@@ -33,32 +42,36 @@ fun NotificationsScreen(
                     IconButton(onClick = onClickBack) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = null
+                            contentDescription = stringResource(R.string.back)
                         )
                     }
                 }
             )
         }
     ) { paddingValues ->
-        NotificationsScreenEmpty(
-            modifier = Modifier.padding(paddingValues)
-        )
+        val notifications = viewModel.notifications.collectAsLazyPagingItems()
 
-//        LazyColumn(
+//        NotificationsScreenEmpty(
 //            modifier = Modifier.padding(paddingValues)
-//        ) {
-//            items(10) { index ->
-//                val notification = remember {
-//                    index.toString()
-//                }
-//
-//                Notification(
-//                    notification = notification,
-//                    onClick = { },
-//                    onLongClick = { notificationsSheetState.expand(notification) }
-//                )
-//            }
-//        }
+//        )
+
+        LazyColumn(
+            modifier = Modifier.padding(paddingValues)
+        ) {
+            items(
+                count = notifications.itemCount,
+                key = notifications.itemKey { it.id },
+                contentType = notifications.itemContentType()
+            ) { index ->
+                val notification = notifications[index] ?: return@items
+
+                Notification(
+                    notification = notification,
+                    onClick = { },
+                    onLongClick = { notificationsSheetState.expand(notification) }
+                )
+            }
+        }
     }
 }
 
@@ -93,7 +106,7 @@ private fun NotificationsScreenEmpty(modifier: Modifier) {
 
 @Composable
 private fun Notification(
-    notification: String,
+    notification: Notification,
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
@@ -110,17 +123,25 @@ private fun Notification(
                     )
                 }
             ) {
-                Text("Notification $notification")
+                Text(notification.header)
             }
         },
-        supportingContent = {
-            Text("7 days ago")
+        supportingContent = notification.content?.let {
+            {
+                Text(it)
+            }
         },
         leadingContent = {
-
+            ShimmerImage(
+                url = notification.leadingImage,
+                contentDescription = null
+            )
         },
         trailingContent = {
-
+            ShimmerImage(
+                url = notification.trailingImage,
+                contentDescription = null
+            )
         }
     )
 }
@@ -133,9 +154,9 @@ private fun NotificationSheet(sheetState: SheetState) {
         ListItem(
             modifier = Modifier.clickable { },
             leadingContent = {
-                 Icon(
+                Icon(
                     imageVector = Icons.Default.RemoveCircle,
-                    contentDescription = null
+                    contentDescription = stringResource(R.string.remove)
                 )
             },
             headlineContent = { Text(stringResource(R.string.hide_this_notification)) }
@@ -149,7 +170,7 @@ private fun NotificationSheet(sheetState: SheetState) {
                     contentDescription = null
                 )
             },
-            headlineContent = { Text("Turn off all from ${sheetState.notification}") }
+            headlineContent = { Text("Turn off all from ${sheetState.notification!!.content}") }
         )
 
         ListItem(
@@ -169,10 +190,10 @@ private fun NotificationSheet(sheetState: SheetState) {
 private class SheetState {
     var expanded by mutableStateOf(false)
         private set
-    var notification by mutableStateOf("")
+    var notification by mutableStateOf<Notification?>(null)
         private set
 
-    fun expand(notification: String) {
+    fun expand(notification: Notification) {
         expanded = true
         this.notification = notification
     }
