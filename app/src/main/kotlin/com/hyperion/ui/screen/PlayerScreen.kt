@@ -3,11 +3,8 @@ package com.hyperion.ui.screen
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.*
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
@@ -16,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -29,15 +27,16 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.*
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.media3.common.Player
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
@@ -46,23 +45,27 @@ import com.hyperion.R
 import com.hyperion.ui.component.*
 import com.hyperion.ui.component.player.Player
 import com.hyperion.ui.component.player.PlayerActions
-import com.hyperion.ui.component.player.PlayerControlsOverlay
+import com.hyperion.ui.component.player.PlayerControls
 import com.hyperion.ui.navigation.AppDestination
+import com.hyperion.ui.navigation.Destination
+import com.hyperion.ui.sheet.CommentsSheet
 import com.hyperion.ui.sheet.DownloadSheet
 import com.hyperion.ui.sheet.PlayerSheet
 import com.hyperion.ui.viewmodel.PlayerViewModel
 import com.hyperion.util.findActivity
+import com.zt.innertube.domain.model.DomainChapter
+import com.zt.innertube.domain.model.DomainVideo
 import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
 
 @Composable
 fun PlayerScreen(
-    viewModel: PlayerViewModel = getViewModel(),
-    navController: NavController<AppDestination>,
+    viewModel: PlayerViewModel = koinViewModel(),
+    navController: NavController<Destination>,
     videoId: String? = null
 ) {
     LaunchedEffect(Unit) {
@@ -74,7 +77,6 @@ fun PlayerScreen(
 
         is PlayerViewModel.State.Loaded -> {
             PlayerScreenLoaded(
-                viewModel = viewModel,
                 navController = navController
             )
         }
@@ -106,21 +108,22 @@ private fun PlayerScreenLoading() {
 
 @Composable
 private fun PlayerScreenLoaded(
-    viewModel: PlayerViewModel,
-    navController: NavController<AppDestination>
+    viewModel: PlayerViewModel = koinViewModel(),
+    navController: NavController<Destination>
 ) {
+    val context = LocalContext.current
+
     if (viewModel.showQualityPicker) {
-        PlayerSheet(
-            viewModel = viewModel,
-            onDismissRequest = viewModel::hideQualityPicker
-        )
+        PlayerSheet(onDismissRequest = viewModel::hideOptions)
     }
 
     if (viewModel.showDownloadDialog) {
         DownloadSheet(onDismissRequest = viewModel::hideDownloadDialog)
     }
 
-    val context = LocalContext.current
+    if (viewModel.showCommentsSheet) {
+        CommentsSheet(onDismissRequest = viewModel::hideComments)
+    }
 
     DisposableEffect(viewModel.isFullscreen) {
         val activity = context.findActivity() ?: return@DisposableEffect onDispose { }
@@ -134,10 +137,9 @@ private fun PlayerScreenLoaded(
             insetsController.show(WindowInsetsCompat.Type.systemBars())
         }
 
-        activity.requestedOrientation = if (viewModel.isFullscreen) {
-            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        } else {
-            originalOrientation
+        activity.requestedOrientation = when {
+            viewModel.isFullscreen -> ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            else -> originalOrientation
         }
 
         onDispose {
@@ -146,38 +148,30 @@ private fun PlayerScreenLoaded(
         }
     }
 
-    DisposableEffect(Unit) {
-        onDispose { viewModel.player.release() }
-    }
-
     @SuppressLint("SwitchIntDef")
     when (LocalConfiguration.current.orientation) {
         Configuration.ORIENTATION_PORTRAIT -> PlayerScreenPortrait(
-            viewModel = viewModel,
             navController = navController
         )
 
-        Configuration.ORIENTATION_LANDSCAPE -> PlayerScreenLandscape(
-            viewModel = viewModel,
-            navController = navController
+        Configuration.ORIENTATION_LANDSCAPE -> PlayerControls(
+            modifier = Modifier.fillMaxHeight(),
+            navController = navController,
         )
     }
 }
 
 @Composable
 private fun PlayerScreenPortrait(
-    viewModel: PlayerViewModel,
-    navController: NavController<AppDestination>
+    viewModel: PlayerViewModel = koinViewModel(),
+    navController: NavController<Destination>,
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         val relatedVideos = viewModel.relatedVideos.collectAsLazyPagingItems()
 
-        PlayerControls(
-            viewModel = viewModel,
-            navController = navController
-        )
+        PlayerControls(navController = navController)
 
         LazyColumn(
             modifier = Modifier.padding(horizontal = 14.dp),
@@ -191,22 +185,6 @@ private fun PlayerScreenPortrait(
                     modifier = Modifier.padding(top = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    val uriHandler = LocalUriHandler.current
-                    val colorScheme = MaterialTheme.colorScheme
-
-                    // TODO: Add automatic hyperlinks
-                    val description = remember {
-                        buildAnnotatedString {
-                            withStyle(
-                                style = SpanStyle(
-                                    color = colorScheme.onSurface
-                                )
-                            ) {
-                                append(video.description)
-                            }
-                        }
-                    }
-
                     Text(
                         text = video.title,
                         style = MaterialTheme.typography.titleMedium
@@ -237,68 +215,16 @@ private fun PlayerScreenPortrait(
                         }
                     }
 
-                    Column(
+                    Description(
                         modifier = Modifier
-                            .animateContentSize()
-                            .requiredHeightIn(max = if (viewModel.showFullDescription) Dp.Unspecified else 100.dp)
-                    ) {
-                        ClickableText(
-                            text = description,
-                            style = MaterialTheme.typography.bodyMedium,
-                            overflow = TextOverflow.Ellipsis
-                        ) { offset ->
-                            val annotation = description.getStringAnnotations(
-                                tag = "URL",
-                                start = offset,
-                                end = offset
-                            ).firstOrNull()
-
-                            if (annotation == null) viewModel.toggleDescription() else uriHandler.openUri(annotation.item)
-                        }
-
-                        BoxWithConstraints {
-                            if (maxHeight >= 160.dp) {
-                                LazyRow(
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                ) {
-                                    items(video.chapters) { chapter ->
-                                        OutlinedCard(
-                                            modifier = Modifier.size(
-                                                width = 144.dp,
-                                                height = 160.dp
-                                            ),
-                                            onClick = {
-                                                // TODO: Seek to chapter
-                                            }
-                                        ) {
-                                            Column {
-                                                ShimmerImage(
-                                                    modifier = Modifier.aspectRatio(16f / 9f),
-                                                    url = chapter.thumbnail,
-                                                    contentDescription = null
-                                                )
-
-                                                Text(
-                                                    modifier = Modifier.padding(
-                                                        horizontal = 10.dp,
-                                                        vertical = 4.dp
-                                                    ),
-                                                    text = chapter.title,
-                                                    style = MaterialTheme.typography.titleSmall,
-                                                    maxLines = 1,
-                                                    overflow = TextOverflow.Ellipsis
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                            .requiredHeightIn(max = if (viewModel.showFullDescription) Dp.Unspecified else 100.dp),
+                        onClick = viewModel::toggleDescription,
+                        video = video
+                    )
 
                     PlayerActions(
                         modifier = Modifier.fillMaxWidth(),
-                        voteEnabled = false,
+                        voteEnabled = viewModel.accountManager.loggedIn,
                         likeLabel = { Text(video.likesText) },
                         dislikeLabel = { Text(video.dislikesText) },
                         showDownloadButton = viewModel.preferences.showDownloadButton,
@@ -341,8 +267,8 @@ private fun PlayerScreenPortrait(
                             }
 
                             FilledTonalButton(
-                                enabled = false,
-                                onClick = { }
+                                enabled = viewModel.accountManager.loggedIn,
+                                onClick = viewModel::toggleSubscription
                             ) {
                                 Text(stringResource(R.string.subscribe))
                             }
@@ -419,25 +345,14 @@ private fun PlayerScreenPortrait(
 }
 
 @Composable
-private fun PlayerScreenLandscape(
-    viewModel: PlayerViewModel,
-    navController: NavController<AppDestination>
-) {
-    PlayerControls(
-        modifier = Modifier.fillMaxHeight(),
-        viewModel = viewModel,
-        navController = navController
-    )
-}
-
-@Composable
 private fun PlayerControls(
     modifier: Modifier = Modifier,
-    viewModel: PlayerViewModel,
-    navController: NavController<AppDestination>
+    viewModel: PlayerViewModel = koinViewModel(),
+    navController: NavController<Destination>
 ) {
     val coroutineScope = rememberCoroutineScope()
     val offsetY = remember { Animatable(0f) }
+    val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     Box(
         modifier = modifier
@@ -448,51 +363,45 @@ private fun PlayerControls(
                 detectTapGestures(
                     onTap = { viewModel.toggleControls() },
                     onDoubleTap = { offset ->
-                        if (offset.x > size.width / 2) viewModel.skipForward() else viewModel.skipBackward()
-                    }
-                )
-                detectDragGestures { change, dragAmount ->
-                    // split up into three horizontal equally sized drag zones
-                    val zoneWidth = size.width / 3
-
-                    when {
-                        change.position.x < zoneWidth -> viewModel.skipBackward()
-                        change.position.x > zoneWidth * 2 -> viewModel.skipForward()
-                        else -> {
-                            val offset = offsetY.value + dragAmount.y
-
-                            if (viewModel.isFullscreen && offset in 0f..200f || !viewModel.isFullscreen && offset in -200f..0f) {
-                                coroutineScope.launch {
-                                    offsetY.snapTo(offset)
-                                }
-                            }
+                        if (offset.x > size.width / 2) {
+                            viewModel.skipForward()
+                        } else {
+                            viewModel.skipBackward()
                         }
                     }
-                }
+                )
             }
-        /*.draggable(
-            orientation = Orientation.Vertical,
-            state = rememberDraggableState { dragAmount ->
-                val offset = offsetY.value + dragAmount
+            .draggable(
+                orientation = Orientation.Vertical,
+                state = rememberDraggableState { dragAmount ->
+                    val offset = offsetY.value + dragAmount
 
-                if (viewModel.isFullscreen && offset in 0f..200f || !viewModel.isFullscreen && offset in -200f..0f) {
-                    coroutineScope.launch {
-                        offsetY.snapTo(offset)
+                    if (viewModel.isFullscreen && offset in 0f..200f || !viewModel.isFullscreen && offset in -200f..0f) {
+                        coroutineScope.launch {
+                            offsetY.snapTo(offset)
+                        }
                     }
-                }
-            },
-            onDragStopped = {
-                when {
-                    offsetY.value > 150 -> viewModel.exitFullscreen()
-                    offsetY.value < -150 -> viewModel.enterFullscreen()
-                }
+                },
+                onDragStopped = {
+                    if (offsetY.value > 150 || offsetY.value < -150) viewModel.toggleFullscreen()
 
-                offsetY.animateTo(0f)
-            }
-        )*/,
+                    offsetY.animateTo(0f)
+                }
+            ),
         contentAlignment = Alignment.Center
     ) {
-        Player(player = viewModel.player)
+        Player(viewModel.player)
+
+        AnimatedVisibility(
+            modifier = Modifier
+                .size(64.dp)
+                .zIndex(99f),
+            visible = viewModel.playbackState == Player.STATE_BUFFERING,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            CircularProgressIndicator()
+        }
 
         AnimatedVisibility(
             modifier = Modifier.matchParentSize(),
@@ -504,32 +413,116 @@ private fun PlayerControls(
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
                 tonalElevation = 8.dp
             ) {
-                PlayerControlsOverlay(
+                PlayerControls(
                     modifier = Modifier.matchParentSize(),
-                    isFullscreen = viewModel.isFullscreen,
-                    isPlaying = viewModel.isPlaying,
-                    position = viewModel.position,
-                    duration = viewModel.duration,
-                    onSkipNext = viewModel::skipNext,
-                    onSkipPrevious = viewModel::skipPrevious,
-                    onClickCollapse = navController::pop,
-                    onClickPlayPause = viewModel::togglePlayPause,
-                    onClickFullscreen = viewModel::toggleFullscreen,
-                    onClickMore = viewModel::showQualityPicker,
-                    onSeek = viewModel::seekTo
+                    onClickCollapse = navController::pop
                 )
             }
         }
+    }
+}
 
-        //            SeekBar(
-        //                modifier = Modifier
-        //                    .fillMaxWidth()
-        //                    .align(Alignment.BottomStart),
-        //                duration = Duration.ZERO,
-        //                value = viewModel.position.inWholeMilliseconds.toFloat(),
-        //                valueRange = 0f..viewModel.duration.inWholeMilliseconds.toFloat(),
-        //                onSeek = viewModel::seekTo,
-        //                onSeekFinished = { }
-        //            )
+@OptIn(ExperimentalTextApi::class)
+@Composable
+private fun Description(
+    modifier: Modifier,
+    onClick: () -> Unit,
+    video: DomainVideo
+) {
+    val colorScheme = MaterialTheme.colorScheme
+    val description = remember {
+        buildAnnotatedString {
+            append(video.description)
+
+            val regex = """\b(?:https?://|www\.)\S+\b""".toRegex()
+
+            regex.findAll(video.description).forEach { result ->
+                addStyle(
+                    style = SpanStyle(
+                        color = colorScheme.primary,
+                        textDecoration = TextDecoration.Underline
+                    ),
+                    start = result.range.first,
+                    end = result.range.last + 1
+                )
+
+                addUrlAnnotation(
+                    urlAnnotation = UrlAnnotation(result.value),
+                    start = result.range.first,
+                    end = result.range.last + 1
+                )
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .animateContentSize()
+            .then(modifier)
+    ) {
+        SelectionContainer {
+            val uriHandler = LocalUriHandler.current
+
+            ClickableText(
+                text = description,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.onSurface
+                ),
+                overflow = TextOverflow.Ellipsis
+            ) { offset ->
+                val annotation = description.getUrlAnnotations(
+                    start = offset,
+                    end = offset
+                ).firstOrNull()
+
+                if (annotation == null) onClick() else uriHandler.openUri(annotation.item.url)
+            }
+        }
+
+        // Chapters
+        BoxWithConstraints {
+            if (maxHeight >= 160.dp) {
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    items(
+                        items = video.chapters,
+                        key = DomainChapter::hashCode
+                    ) { Chapter(it) }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun Chapter(chapter: DomainChapter) {
+    OutlinedCard(
+        modifier = Modifier.size(
+            width = 144.dp,
+            height = 160.dp
+        ),
+        onClick = {
+            // TODO: Seek to chapter
+        }
+    ) {
+        Column {
+            ShimmerImage(
+                modifier = Modifier.aspectRatio(16f / 9f),
+                url = chapter.thumbnail,
+                contentDescription = null
+            )
+
+            Text(
+                modifier = Modifier.padding(
+                    horizontal = 10.dp,
+                    vertical = 4.dp
+                ),
+                text = chapter.title,
+                style = MaterialTheme.typography.titleSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }

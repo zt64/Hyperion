@@ -9,6 +9,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.hyperion.domain.manager.AccountManager
 import com.hyperion.domain.paging.BrowsePagingSource
 import com.zt.innertube.domain.model.Entity
 import com.zt.innertube.domain.repository.InnerTubeRepository
@@ -18,7 +19,8 @@ import kotlinx.coroutines.launch
 @Stable
 class SearchViewModel(
     private val innerTube: InnerTubeRepository,
-    private val pagingConfig: PagingConfig
+    private val pagingConfig: PagingConfig,
+    val accountManager: AccountManager
 ) : ViewModel() {
     var suggestions = mutableStateListOf<String>()
         private set

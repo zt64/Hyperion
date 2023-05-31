@@ -1,5 +1,8 @@
 package com.hyperion.domain.manager
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import com.zt.innertube.network.dto.ClientInfo
 import com.zt.innertube.network.service.InnerTubeService
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +15,8 @@ class AccountManager(
 ) {
     private val deviceId: String = UUID.randomUUID().toString()
     private var clientInfo: ClientInfo
+
+    var loggedIn: Boolean by mutableStateOf(false)
 
     init {
         runBlocking(Dispatchers.IO) {

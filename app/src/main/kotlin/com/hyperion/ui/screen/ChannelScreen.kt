@@ -145,7 +145,7 @@ private fun ChannelScreenLoaded(
                         }
 
                         FilledTonalButton(
-                            enabled = false,
+                            enabled = viewModel.accountManager.loggedIn,
                             onClick = viewModel::subscribe
                         ) {
                             Text(stringResource(R.string.subscribe))

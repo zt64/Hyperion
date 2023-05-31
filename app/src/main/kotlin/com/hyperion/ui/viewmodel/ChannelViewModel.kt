@@ -5,18 +5,21 @@ import android.content.Intent
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.*
 import com.hyperion.domain.manager.AccountManager
-import com.hyperion.domain.model.channel.ChannelTab
 import com.hyperion.domain.model.channel.VideoSort
 import com.zt.innertube.domain.model.DomainChannel
+import com.zt.innertube.domain.model.DomainVideoPartial
 import com.zt.innertube.domain.repository.InnerTubeRepository
+import com.zt.innertube.network.dto.browse.ChannelTab
 import kotlinx.coroutines.launch
 
 @Stable
 class ChannelViewModel(
     private val application: Application,
     private val innerTube: InnerTubeRepository,
-    private val accountManager: AccountManager
+    val accountManager: AccountManager,
+    pagingConfig: PagingConfig
 ) : ViewModel() {
     @Immutable
     sealed interface State {
@@ -28,11 +31,36 @@ class ChannelViewModel(
     var state by mutableStateOf<State>(State.Loading)
         private set
 
+    var id by mutableStateOf("")
+        private set
     var tab by mutableStateOf(ChannelTab.HOME)
+        private set
     var videoSort by mutableStateOf(VideoSort.RECENTLY_UPLOADED)
+        private set
+    var videos = Pager(pagingConfig) {
+        object : PagingSource<String, DomainVideoPartial>() {
+            override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainVideoPartial> {
+                TODO("Not yet implemented")
+            }
+
+            override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
+        }
+    }.flow.cachedIn(viewModelScope)
+
+    var channels = Pager(pagingConfig) {
+        object : PagingSource<String, DomainVideoPartial>() {
+            override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainVideoPartial> {
+                TODO("Not yet implemented")
+            }
+
+            override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
+        }
+    }.flow.cachedIn(viewModelScope)
 
     fun getChannel(id: String) {
         state = State.Loading
+
+        this.id = id
 
         viewModelScope.launch {
             state = try {
@@ -41,6 +69,14 @@ class ChannelViewModel(
                 e.printStackTrace()
                 State.Error(e)
             }
+        }
+    }
+
+    fun getChannelTab(tab: ChannelTab) {
+        this.tab = tab
+
+        viewModelScope.launch {
+            innerTube.getChannel(id, tab)
         }
     }
 

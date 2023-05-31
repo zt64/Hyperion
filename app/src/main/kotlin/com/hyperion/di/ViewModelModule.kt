@@ -17,4 +17,5 @@ val viewModelModule = module {
     viewModelOf(::LibraryViewModel)
     viewModelOf(::SettingsViewModel)
     viewModelOf(::AddAccountViewModel)
+    viewModelOf(::NotificationsViewModel)
 }

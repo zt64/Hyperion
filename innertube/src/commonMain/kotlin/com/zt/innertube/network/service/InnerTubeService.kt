@@ -46,12 +46,12 @@ import kotlin.io.encoding.ExperimentalEncodingApi
  *
  * @param engineFactory
  * @param cookiesStorage
- * @param safetyMode
+ * @param safetyMode Whether to use safety mode or not
  */
 class InnerTubeService(
     engineFactory: HttpClientEngineFactory<*>,
     cookiesStorage: CookiesStorage = AcceptAllCookiesStorage(),
-    safetyMode: Boolean
+    safetyMode: Boolean = false
 ) : CoroutineScope by CoroutineScope(Dispatchers.IO + SupervisorJob()) {
     private val json = Json {
         ignoreUnknownKeys = true
@@ -213,6 +213,12 @@ class InnerTubeService(
     internal suspend fun getChannel(id: String, tab: ChannelTab = ChannelTab.VIDEOS, continuation: String): ApiChannelContinuation =
         getBrowse(id, continuation, encodeProtobuf(ChannelParams(tab)))
 
+    /**
+     * Get the search suggestions for a given search query
+     *
+     * @param search
+     * @return
+     */
     internal suspend fun getSearchSuggestions(search: String): JsonElement = withContext(Dispatchers.IO) {
         val body = httpClient.get("https://suggestqueries-clients6.youtube.com/complete/search") {
             parameter("client", "youtube")
@@ -227,10 +233,10 @@ class InnerTubeService(
         PlayerBody(
             context = innerTubeContext.copy(
                 client = innerTubeContext.client.copy(
-                    clientName = CLIENT_NAME_ANDROID,
-                    platform = PLATFORM_ANDROID,
-                    clientVersion = CLIENT_VERSION_ANDROID,
-                    clientFormFactor = FORM_FACTOR_ANDROID
+                    clientName = "MWEB",
+                    platform = "MOBILE",
+                    clientVersion = "2.20230502.01.00",
+                    clientFormFactor = "SMALL_FORM_FACTOR"
                 )
             ),
             videoId = id
@@ -305,6 +311,11 @@ class InnerTubeService(
         }.body()
     }
 
+    /**
+     * Get the visitor data, necessary for recommendations and other requests
+     *
+     * @return visitor data
+     */
     private suspend fun getVisitorData(): String = withContext(Dispatchers.IO) {
         post<VisitorId>("visitor_id") { Body(innerTubeContext) }.responseContext.visitorData
     }
@@ -326,10 +337,14 @@ class InnerTubeService(
         private const val OAUTH_URL = "https://www.youtube.com/o/oauth2"
         private const val TV_USER_AGENT = "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version"
 
-        private val ytCfgRegex = """ytcfg\.set\((.*?)\);""".toRegex()
         private val tvBaseJsRegex = """<script id="base-js" src="(.*?)" nonce=".*?"></script>""".toRegex()
         private val tvClientRegex = """clientId:"([-\w]+\.apps\.googleusercontent\.com)",\w+:"(\w+)"""".toRegex()
 
+        /**
+         * Get the video thumbnail url for a given video id
+         *
+         * @param id the video id
+         */
         fun getVideoThumbnail(id: String) = "https://i.ytimg.com/vi/$id/hqdefault.jpg"
     }
 }

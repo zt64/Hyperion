@@ -5,28 +5,33 @@ import android.content.ComponentName
 import android.content.Intent
 import androidx.annotation.OptIn
 import androidx.compose.runtime.*
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.*
 import androidx.media3.common.Player.RepeatMode
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.datasource.*
-import androidx.media3.datasource.HttpDataSource.*
-import androidx.media3.exoplayer.source.MergingMediaSource
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
-import androidx.paging.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.google.common.util.concurrent.MoreExecutors
 import com.hyperion.domain.manager.AccountManager
 import com.hyperion.domain.manager.DownloadManager
 import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.domain.paging.BrowsePagingSource
 import com.hyperion.player.PlaybackService
+import com.zt.innertube.domain.model.DomainComment
 import com.zt.innertube.domain.model.DomainFormat
 import com.zt.innertube.domain.model.DomainVideo
 import com.zt.innertube.domain.model.DomainVideoPartial
 import com.zt.innertube.domain.repository.InnerTubeRepository
+import com.zt.innertube.network.service.InnerTubeService
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.isActive
@@ -35,13 +40,12 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(UnstableApi::class)
-@Stable
 class PlayerViewModel(
     private val application: Application,
     private val innerTube: InnerTubeRepository,
-    private val accountManager: AccountManager,
     private val downloadManager: DownloadManager,
     private val pagingConfig: PagingConfig,
+    val accountManager: AccountManager,
     val preferences: PreferencesManager
 ) : ViewModel() {
     @Immutable
@@ -69,6 +73,9 @@ class PlayerViewModel(
         private set
     var showDownloadDialog by mutableStateOf(false)
         private set
+    var showCaptions by mutableStateOf(false)
+        private set
+    var showCommentsSheet by mutableStateOf(false)
 
     private val listener: Player.Listener = object : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -90,9 +97,14 @@ class PlayerViewModel(
         override fun onRepeatModeChanged(repeatMode: Int) {
             this@PlayerViewModel.repeatMode = repeatMode
         }
+
+        override fun onTracksChanged(tracks: Tracks) {
+            this@PlayerViewModel.tracks = tracks
+        }
     }
 
     private val dataSourceFactory = DefaultHttpDataSource.Factory()
+    private val liveness = Channel<Unit>()
 
     var isPlaying by mutableStateOf(false)
         private set
@@ -100,7 +112,7 @@ class PlayerViewModel(
         private set
 
     @get:Player.State
-    var playbackState by mutableStateOf(Player.STATE_IDLE)
+    var playbackState by mutableIntStateOf(Player.STATE_IDLE)
         private set
     var duration by mutableStateOf(Duration.ZERO)
         private set
@@ -108,15 +120,21 @@ class PlayerViewModel(
         private set
 
     @get:RepeatMode
-    var repeatMode by mutableStateOf(Player.REPEAT_MODE_OFF)
+    var repeatMode by mutableIntStateOf(Player.REPEAT_MODE_OFF)
         private set
+    var tracks by mutableStateOf<Tracks>(Tracks.EMPTY)
+        private set
+
     var relatedVideos = emptyFlow<PagingData<DomainVideoPartial>>()
+        private set
+    var comments = emptyFlow<PagingData<DomainComment>>()
         private set
 
     lateinit var player: MediaController
 
     init {
-        val sessionToken = SessionToken(application, ComponentName(application, PlaybackService::class.java))
+        val sessionToken =
+            SessionToken(application, ComponentName(application, PlaybackService::class.java))
         val controllerFuture = MediaController.Builder(application, sessionToken).buildAsync()
 
         controllerFuture.addListener(
@@ -127,7 +145,8 @@ class PlayerViewModel(
 
                 viewModelScope.launch {
                     while (isActive) {
-                        duration = player.duration.takeUnless { it == C.TIME_UNSET }?.milliseconds ?: Duration.ZERO
+                        duration = player.duration.takeUnless { it == C.TIME_UNSET }?.milliseconds
+                            ?: Duration.ZERO
                         position = player.currentPosition.milliseconds
                         delay(500)
                     }
@@ -158,7 +177,7 @@ class PlayerViewModel(
     fun skipBackward() = player.seekBack()
     fun skipNext() = player.seekToNext()
     fun skipPrevious() = player.seekToPrevious()
-    fun seekTo(milliseconds: Float) = player.seekTo(milliseconds.toLong())
+    fun seekTo(position: Duration) = player.seekTo(position.inWholeMilliseconds)
 
     fun toggleDescription() {
         showFullDescription = !showFullDescription
@@ -176,11 +195,11 @@ class PlayerViewModel(
         isFullscreen = !isFullscreen
     }
 
-    fun showQualityPicker() {
+    fun showOptions() {
         showQualityPicker = true
     }
 
-    fun hideQualityPicker() {
+    fun hideOptions() {
         showQualityPicker = false
     }
 
@@ -203,6 +222,10 @@ class PlayerViewModel(
         }
     }
 
+    fun toggleCaptions() {
+        showCaptions = !showCaptions
+    }
+
     fun download() {
         viewModelScope.launch {
             try {
@@ -214,20 +237,20 @@ class PlayerViewModel(
     }
 
     private fun setFormat(format: DomainFormat.Video) {
-        val videoSource = ProgressiveMediaSource.Factory(dataSourceFactory)
-            .createMediaSource(MediaItem.fromUri(format.url))
+        val metadata = MediaMetadata.Builder()
+            .setTitle(video!!.title)
+            .setArtist(video!!.author.name)
+            .setMediaType(MediaMetadata.MEDIA_TYPE_VIDEO)
+            .setIsPlayable(true)
+            .setArtworkUri(InnerTubeService.getVideoThumbnail(video!!.id).toUri())
+            .build()
 
-        val mergingMediaSource = MergingMediaSource(
-            /* adjustPeriodTimeOffsets = */ true,
-            /* clipDurations = */ true,
-            /* ...mediaSources = */ videoSource, audioSource!!
-        )
+        val mediaItem = MediaItem.Builder()
+            .setMediaId(format.url)
+            .setMediaMetadata(metadata)
+            .build()
 
-        player.setMediaItem(
-            mergingMediaSource.mediaItem.let {
-                it.buildUpon().setMediaId(it.localConfiguration!!.uri.toString()).build()
-            }
-        )
+        player.setMediaItem(mediaItem)
     }
 
     fun loadVideo(id: String) {
@@ -265,7 +288,7 @@ class PlayerViewModel(
         }
     }
 
-    fun updateSubscription(isSubscribed: Boolean) {
+    fun toggleSubscription() {
         viewModelScope.launch {
             try {
                 val channelId = video!!.author.id
@@ -277,12 +300,16 @@ class PlayerViewModel(
     }
 
     fun showComments() {
-
+        showCommentsSheet = true
     }
 
-    fun selectFormat(selectedFormat: DomainFormat.Video) {
-        setFormat(selectedFormat)
-        hideQualityPicker()
+    fun hideComments() {
+        showCommentsSheet = false
+    }
+
+    fun selectFormat(format: DomainFormat.Video) {
+        setFormat(format)
+        hideOptions()
     }
 
     fun toggleLoop() {

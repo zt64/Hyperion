@@ -4,11 +4,11 @@ import androidx.annotation.StringRes
 import androidx.compose.runtime.Immutable
 import com.hyperion.R
 
+@Immutable
 sealed interface SearchFilter {
     @get:StringRes
     val displayName: Int
 
-    @Immutable
     enum class UploadDate(@StringRes override val displayName: Int) : SearchFilter {
         LAST_HOUR(R.string.last_hour),
         TODAY(R.string.today),
@@ -17,7 +17,6 @@ sealed interface SearchFilter {
         THIS_YEAR(R.string.this_year)
     }
 
-    @Immutable
     enum class Type(@StringRes override val displayName: Int) : SearchFilter {
         VIDEO(R.string.video),
         CHANNEL(R.string.channel),
@@ -25,14 +24,12 @@ sealed interface SearchFilter {
         MOVIE(R.string.movie)
     }
 
-    @Immutable
     enum class Duration(@StringRes override val displayName: Int) : SearchFilter {
         SHORT(R.string.short_video),
         MEDIUM(R.string.medium_video),
         LONG(R.string.long_video)
     }
 
-    @Immutable
     enum class Feature(@StringRes override val displayName: Int) : SearchFilter {
         LIVE(R.string.live),
         UHD(R.string.uhd),
@@ -46,7 +43,6 @@ sealed interface SearchFilter {
         LOCATION(R.string.location)
     }
 
-    @Immutable
     enum class Sort(@StringRes override val displayName: Int) : SearchFilter {
         RELEVANCE(R.string.relevance),
         UPLOAD_DATE(R.string.upload_date),
@@ -54,4 +50,3 @@ sealed interface SearchFilter {
         RATING(R.string.rating)
     }
 }
-

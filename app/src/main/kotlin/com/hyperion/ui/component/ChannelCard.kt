@@ -11,17 +11,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
+import com.hyperion.domain.manager.AccountManager
 import com.zt.innertube.domain.model.DomainChannelPartial
+import org.koin.compose.koinInject
 
 @Composable
 fun ChannelCard(
     channel: DomainChannelPartial,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
-    onClickSubscribe: () -> Unit
+    onClickSubscribe: () -> Unit,
+    modifier: Modifier = Modifier,
+    accountManager: AccountManager = koinInject(),
 ) {
     ElevatedCard(
-        modifier = Modifier
+        modifier = modifier
             .clip(CardDefaults.elevatedShape)
             .fillMaxWidth()
             .combinedClickable(
@@ -70,7 +74,7 @@ fun ChannelCard(
             }
 
             Button(
-                enabled = false,
+                enabled = accountManager.loggedIn,
                 onClick = onClickSubscribe
             ) {
                 Text(stringResource(R.string.subscribe))

@@ -17,10 +17,14 @@ class SettingsViewModel(
     }
 
     fun openGitHub() {
-        val intent = Intent(Intent.ACTION_VIEW, "https://github.com/zt64/Hyperion".toUri()).apply {
+        val intent = Intent(Intent.ACTION_VIEW, REPO_URL.toUri()).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
 
         application.startActivity(intent)
+    }
+
+    private companion object {
+        const val REPO_URL = "https://github.com/zt64/Hyperion"
     }
 }

@@ -28,7 +28,9 @@ class PreferencesManager(sharedPreferences: SharedPreferences) : BasePreferenceM
     var doubleTapToSeekDuration by preference("double_tap_to_seek_duration", 10)
 
     var sponsorBlockEnabled by preference("sponsor_block_enabled", true)
+    var sponsorBlockApiUrl by preference("sponsor_block_api_url", "https://sponsor.ajay.app")
     var sponsorBlockSkipNoticeDuration by preference("sponsor_block_skip_notice_duration", 5)
+    var sponsorBlockSkipTracking by preference("sponsor_block_skip_tracking", true)
     var sponsorBlockUserIdPrivate by preference("sponsor_block_user_id", "")
     var sponsorBlockUserIdPublic by preference("sponsor_block_user_id_public", "")
 }

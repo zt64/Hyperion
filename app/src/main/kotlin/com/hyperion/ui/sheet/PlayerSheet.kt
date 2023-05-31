@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ClosedCaption
-import androidx.compose.material.icons.filled.Loop
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ModalBottomSheet
@@ -20,10 +17,11 @@ import androidx.compose.ui.unit.dp
 import androidx.media3.common.Player
 import com.hyperion.R
 import com.hyperion.ui.viewmodel.PlayerViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun PlayerSheet(
-    viewModel: PlayerViewModel,
+    viewModel: PlayerViewModel = koinViewModel(),
     onDismissRequest: () -> Unit
 ) {
     ModalBottomSheet(onDismissRequest) {
@@ -67,12 +65,14 @@ fun PlayerSheet(
             )
 
             ListItem(
-                modifier = Modifier.clickable {
-
-                },
+                modifier = Modifier.clickable(onClick = viewModel::toggleCaptions),
                 leadingContent = {
                     Icon(
-                        imageVector = Icons.Default.ClosedCaption,
+                        imageVector = if (viewModel.showCaptions) {
+                            Icons.Default.ClosedCaption
+                        } else {
+                            Icons.Default.ClosedCaptionOff
+                        },
                         contentDescription = stringResource(R.string.captions)
                     )
                 },

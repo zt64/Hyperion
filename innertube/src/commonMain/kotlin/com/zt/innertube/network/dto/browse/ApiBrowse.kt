@@ -39,11 +39,10 @@ internal abstract class ApiBrowse {
 
 internal typealias ApiBrowseContinuation<T> = @Serializable(ContinuationSerializer::class) List<T>
 
-private class ContinuationSerializer<T : Any>(tSerializer: KSerializer<T>) : JsonTransformingSerializer<List<T>>(ListSerializer(tSerializer)) {
+internal class ContinuationSerializer<T : Any>(tSerializer: KSerializer<T>) : JsonTransformingSerializer<List<T>>(ListSerializer(tSerializer)) {
     override fun transformDeserialize(element: JsonElement) = element
         .jsonObject["onResponseReceivedActions"]!!
+        .jsonArray.single()
         .jsonObject["appendContinuationItemsAction"]!!
-        .jsonArray
-        .map { it.jsonObject["continuationItems"]!! }
-        .let(::JsonArray)
+        .jsonObject["continuationItems"]!!
 }
