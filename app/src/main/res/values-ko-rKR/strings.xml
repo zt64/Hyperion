@@ -129,10 +129,10 @@
     <string name="shared_content_notification_desc">Notify me when others share my content on their channels</string>
     <string name="reply_notification_desc">Notify me about replies to my comments</string>
     <string name="cancel">Cancel</string>
-    <string name="shorts">Shorts</string>
-    <string name="store">Store</string>
-    <string name="skip_count_tracking">Skip count tracking</string>
-    <string name="hide_this_notification">"Hide this notification "</string>
+    <string name="shorts">쇼츠</string>
+    <string name="store">스토어</string>
+    <string name="skip_count_tracking">건너뛴 횟수 추적</string>
+    <string name="hide_this_notification">"이 알림 숨김 "</string>
     <string name="replace">Replace</string>
     <string name="remove">Remove</string>
 </resources>
