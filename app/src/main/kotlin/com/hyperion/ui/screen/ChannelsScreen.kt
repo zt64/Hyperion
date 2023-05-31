@@ -12,7 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.hyperion.R
+import com.hyperion.ui.component.ChannelCard
 import com.hyperion.ui.viewmodel.ChannelsViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -38,6 +42,8 @@ fun ChannelsScreen(
             )
         }
     ) { paddingValues ->
+        val channels = viewModel.channels.collectAsLazyPagingItems()
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -46,7 +52,21 @@ fun ChannelsScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
+            items(
+                count = channels.itemCount,
+                key = channels.itemKey { it.id },
+                contentType = channels.itemContentType()
+            ) { index ->
+                val channel = channels[index] ?: return@items
 
+                ChannelCard(
+                    modifier = Modifier.animateItemPlacement(),
+                    channel = channel,
+                    onClick = { },
+                    onLongClick = { },
+                    onClickSubscribe = { }
+                )
+            }
         }
     }
 }
