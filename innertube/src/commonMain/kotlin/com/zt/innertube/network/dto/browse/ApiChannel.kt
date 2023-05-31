@@ -128,7 +128,7 @@ internal data class ApiChannel(
             val banner: ApiImage? = null,
             val channelHandleText: ApiText,
             val headerLinks: HeaderLinks? = null,
-            val subscriberCountText: SimpleText,
+            val subscriberCountText: SimpleText? = null,
             val title: String,
             val videosCountText: SimpleText
         ) {
