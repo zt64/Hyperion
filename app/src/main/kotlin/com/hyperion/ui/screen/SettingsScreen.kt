@@ -110,10 +110,11 @@ fun SettingsScreen(
             ) {
                 val preferences = viewModel.preferences
                 val coroutineScope = rememberCoroutineScope()
+                val sections = remember { SettingsSection.values() }
 
                 when (destination) {
                     SettingsSection -> {
-                        SettingsSection.values().forEach { destination ->
+                        sections.forEach { destination ->
                             ListItem(
                                 modifier = Modifier.clickable {
                                     navController.navigate(destination)

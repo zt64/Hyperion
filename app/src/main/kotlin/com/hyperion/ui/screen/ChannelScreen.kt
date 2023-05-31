@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -159,7 +160,9 @@ private fun ChannelScreenLoaded(
                     selectedTabIndex = viewModel.tab.ordinal,
                     edgePadding = 0.dp
                 ) {
-                    ChannelTab.values().forEach { tab ->
+                    val tabs = remember { ChannelTab.values() }
+
+                    tabs.forEach { tab ->
                         LeadingIconTab(
                             selected = viewModel.tab == tab,
                             icon = {

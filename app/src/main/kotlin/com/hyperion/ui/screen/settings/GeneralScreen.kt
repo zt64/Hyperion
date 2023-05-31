@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
@@ -26,11 +27,13 @@ import kotlinx.collections.immutable.toImmutableMap
 context(ColumnScope)
 @Composable
 fun GeneralScreen(preferences: PreferencesManager) {
+    val destinations = remember { BaseDestination.values() }
+
     RadioSetting(
         icon = Icons.Default.Start,
         label = stringResource(R.string.start_screen),
         value = preferences.startScreen,
-        options = BaseDestination.values().associateBy { destination ->
+        options = destinations.associateBy { destination ->
             stringResource(destination.label)
         }.toImmutableMap(),
         onConfirm = { preferences.startScreen = it }

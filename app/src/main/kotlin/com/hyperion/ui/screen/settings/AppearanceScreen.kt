@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
@@ -17,6 +18,8 @@ import kotlinx.collections.immutable.toImmutableMap
 context(ColumnScope)
 @Composable
 fun AppearanceScreen(preferences: PreferencesManager) {
+    val themes = remember { Theme.values() }
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         SwitchSetting(
             checked = preferences.dynamicColor,
@@ -31,7 +34,7 @@ fun AppearanceScreen(preferences: PreferencesManager) {
         label = stringResource(R.string.theme),
         description = stringResource(R.string.theme_setting_description),
         value = preferences.theme,
-        options = Theme.values().associateBy { theme -> stringResource(theme.displayName) }.toImmutableMap(),
+        options = themes.associateBy { theme -> stringResource(theme.displayName) }.toImmutableMap(),
         onConfirm = { preferences.theme = it }
     )
 

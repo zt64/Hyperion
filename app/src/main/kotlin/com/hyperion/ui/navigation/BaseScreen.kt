@@ -43,6 +43,7 @@ fun BaseScreen(
     val navController = rememberNavController(BaseDestination.HOME)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val baseDestinations = remember { BaseDestination.values() }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -134,7 +135,7 @@ fun BaseScreen(
                     windowSizeClass.heightSizeClass != WindowHeightSizeClass.Compact
                 ) {
                     NavigationBar {
-                        BaseDestination.values().forEach { destination ->
+                        baseDestinations.forEach { destination ->
                             key(destination) {
                                 NavigationBarItem(
                                     selected = navController.currentDestination == destination,
@@ -157,7 +158,7 @@ fun BaseScreen(
             ) {
                 if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact) {
                     NavigationRail {
-                        BaseDestination.values().forEach { destination ->
+                        baseDestinations.forEach { destination ->
                             NavigationRailItem(
                                 selected = navController.currentDestination == destination,
                                 icon = { Icon(destination.icon, null) },
