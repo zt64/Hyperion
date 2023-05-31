@@ -1,0 +1,6 @@
+<resources>
+    <drawable name="media3_notification_pause">@drawable/ic_media_pause</drawable>
+    <drawable name="media3_notification_play">@drawable/ic_media_play</drawable>
+    <drawable name="media3_notification_seek_to_next">@drawable/ic_media_next</drawable>
+    <drawable name="media3_notification_seek_to_previous">@drawable/ic_media_previous</drawable>
+</resources>
