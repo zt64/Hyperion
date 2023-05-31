@@ -35,6 +35,9 @@ sealed interface DomainFormat {
     ) : DomainFormat {
         @Serializable
         enum class AudioQuality {
+            @SerialName("AUDIO_QUALITY_ULTRALOW")
+            ULTRA_LOW,
+
             @SerialName("AUDIO_QUALITY_LOW")
             LOW,
 
