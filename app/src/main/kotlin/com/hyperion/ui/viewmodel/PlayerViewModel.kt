@@ -15,20 +15,14 @@ import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
+import androidx.paging.*
 import com.google.common.util.concurrent.MoreExecutors
 import com.hyperion.domain.manager.AccountManager
 import com.hyperion.domain.manager.DownloadManager
 import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.domain.paging.BrowsePagingSource
 import com.hyperion.player.PlaybackService
-import com.zt.innertube.domain.model.DomainComment
-import com.zt.innertube.domain.model.DomainFormat
-import com.zt.innertube.domain.model.DomainVideo
-import com.zt.innertube.domain.model.DomainVideoPartial
+import com.zt.innertube.domain.model.*
 import com.zt.innertube.domain.repository.InnerTubeRepository
 import com.zt.innertube.network.service.InnerTubeService
 import kotlinx.coroutines.channels.Channel
@@ -122,7 +116,7 @@ class PlayerViewModel(
     @get:RepeatMode
     var repeatMode by mutableIntStateOf(Player.REPEAT_MODE_OFF)
         private set
-    var tracks by mutableStateOf<Tracks>(Tracks.EMPTY)
+    var tracks by mutableStateOf(Tracks.EMPTY)
         private set
 
     var relatedVideos = emptyFlow<PagingData<DomainVideoPartial>>()
@@ -246,7 +240,7 @@ class PlayerViewModel(
             .build()
 
         val mediaItem = MediaItem.Builder()
-            .setMediaId(format.url)
+            .setMediaId(video!!.id)
             .setMediaMetadata(metadata)
             .build()
 

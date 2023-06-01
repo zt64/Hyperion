@@ -10,18 +10,32 @@ import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.DefaultLoadControl
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.drm.DefaultDrmSessionManagerProvider
+import androidx.media3.exoplayer.drm.DrmSessionManagerProvider
+import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.exoplayer.upstream.DefaultAllocator
+import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
+import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy
+import androidx.media3.exoplayer.util.EventLogger
 import androidx.media3.session.MediaSession
-import androidx.media3.session.MediaSession.ConnectionResult
 import androidx.media3.session.MediaSessionService
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
+import com.hyperion.BuildConfig
 import com.hyperion.ui.MainActivity
+import com.zt.innertube.domain.model.DomainFormat
+import com.zt.innertube.domain.repository.InnerTubeRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import org.koin.android.ext.android.inject
 
 @UnstableApi
 class PlaybackService : MediaSessionService() {
+    private val innerTube: InnerTubeRepository by inject()
+
     private lateinit var mediaSession: MediaSession
     private lateinit var player: ExoPlayer
 
@@ -45,7 +59,12 @@ class PlaybackService : MediaSessionService() {
                     .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
                     .setEnableDecoderFallback(true)
             )
-            .setMediaSourceFactory(ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory()))
+            .setMediaSourceFactory(
+                DemuxedMediaSourceFactory(
+                    mediaSourceFactory = ProgressiveMediaSource.Factory(DefaultHttpDataSource.Factory()),
+                    repository = innerTube
+                )
+            )
             .setUseLazyPreparation(true)
             .setLoadControl(
                 DefaultLoadControl.Builder()
@@ -84,6 +103,10 @@ class PlaybackService : MediaSessionService() {
             )
             .build()
 
+        if (BuildConfig.DEBUG) {
+            player.addAnalyticsListener(EventLogger())
+        }
+
         player.playWhenReady = true
     }
 
@@ -97,26 +120,54 @@ class PlaybackService : MediaSessionService() {
     }
 
     private inner class MediaSessionCallback : MediaSession.Callback {
-        override fun onConnect(session: MediaSession, controller: MediaSession.ControllerInfo): ConnectionResult {
-            val connectionResult = super.onConnect(session, controller)
-            val sessionCommands = connectionResult.availableSessionCommands
-            val playerCommands = connectionResult.availablePlayerCommands
-
-            return ConnectionResult.accept(sessionCommands, playerCommands)
-        }
-
         override fun onAddMediaItems(
             mediaSession: MediaSession,
             controller: MediaSession.ControllerInfo,
             mediaItems: MutableList<MediaItem>
-        ): ListenableFuture<MutableList<MediaItem>> {
-            val updatedMediaItems = mediaItems.map {
-                it.buildUpon()
-                    .setUri(it.mediaId)
-                    .build()
-            }.toMutableList()
-
-            return Futures.immediateFuture(updatedMediaItems)
-        }
+        ): ListenableFuture<MutableList<MediaItem>> = Futures.immediateFuture(mediaItems)
     }
+}
+
+@UnstableApi
+private class DemuxedMediaSourceFactory(
+    private val mediaSourceFactory: ProgressiveMediaSource.Factory,
+    private val repository: InnerTubeRepository
+) : MediaSource.Factory {
+    private var drmSessionManagerProvider: DrmSessionManagerProvider =
+        DefaultDrmSessionManagerProvider()
+    private var loadErrorHandlingPolicy: LoadErrorHandlingPolicy = DefaultLoadErrorHandlingPolicy()
+
+    override fun setLoadErrorHandlingPolicy(loadErrorHandlingPolicy: LoadErrorHandlingPolicy) =
+        apply {
+            this.loadErrorHandlingPolicy = loadErrorHandlingPolicy
+        }
+
+    override fun setDrmSessionManagerProvider(drmSessionManagerProvider: DrmSessionManagerProvider) =
+        apply {
+            this.drmSessionManagerProvider = drmSessionManagerProvider
+        }
+
+    override fun createMediaSource(mediaItem: MediaItem): MergingMediaSource {
+        val res = runBlocking(Dispatchers.IO) {
+            repository.getVideo(mediaItem.mediaId)
+        }
+
+        val videoItem = MediaItem.fromUri(
+            res.formats.filterIsInstance<DomainFormat.Video>().first().url
+        )
+        val audioItem = MediaItem.fromUri(
+            res.formats.filterIsInstance<DomainFormat.Audio>().first().url
+        )
+
+        val videoSource = mediaSourceFactory.createMediaSource(videoItem)
+        val audioSource = mediaSourceFactory.createMediaSource(audioItem)
+
+        return MergingMediaSource(
+            /* adjustPeriodTimeOffsets = */ true,
+            /* clipDurations = */ true,
+            /* ...mediaSources = */ videoSource, audioSource
+        )
+    }
+
+    override fun getSupportedTypes() = intArrayOf(C.CONTENT_TYPE_OTHER)
 }
