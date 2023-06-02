@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.bundles.accompanist)
 
     implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling)
     implementation(libs.compose.runtime)
     implementation(libs.compose.material3)
     implementation(libs.compose.material3.windowSizeClass)
@@ -79,7 +80,7 @@ dependencies {
     implementation(libs.compose.animation.graphics)
     implementation(libs.navigation)
     implementation(libs.coil.compose)
-    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.runtime.tracing)
 
     implementation(libs.ktor.core)

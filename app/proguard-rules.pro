@@ -10,3 +10,5 @@
 
 # Broaden access modifiers to increase results during optimization
 -allowaccessmodification
+
+-dontwarn org.slf4j.impl.StaticLoggerBinder
