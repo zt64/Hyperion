@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/logo.png" width=250>
+  <img src="assets/logo.svg" width=250>
 
 ## Hyperion
 
