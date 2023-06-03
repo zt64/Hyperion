@@ -133,7 +133,7 @@
     <string name="store">Store</string>
     <string name="skip_count_tracking">Skip count tracking</string>
     <string name="hide_this_notification">"Hide this notification "</string>
-    <string name="replace">Replace</string>
-    <string name="remove">Remove</string>
-    <string name="reply">Reply</string>
+    <string name="replace">Korvaa</string>
+    <string name="remove">Poista</string>
+    <string name="reply">Vastaa</string>
 </resources>

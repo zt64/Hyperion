@@ -115,7 +115,7 @@
     <string name="swipe_sensitivity">Swipe sensitivity</string>
     <string name="double_tap_to_seek">Double tap to seek</string>
     <string name="double_tap_to_seek_amount">Seek duration</string>
-    <string name="volume_gesture">Swipe to adjust volume</string>
+    <string name="volume_gesture">Deslize para ajustar o volume</string>
     <string name="brightness_gesture">Swipe to adjust brightness</string>
     <string name="skip_notice_duration">Skip notice duration</string>
     <string name="mini_player">Mini-player</string>
@@ -133,7 +133,7 @@
     <string name="store">Store</string>
     <string name="skip_count_tracking">Skip count tracking</string>
     <string name="hide_this_notification">"Hide this notification "</string>
-    <string name="replace">Replace</string>
-    <string name="remove">Remove</string>
-    <string name="reply">Reply</string>
+    <string name="replace">Substituir</string>
+    <string name="remove">Remover</string>
+    <string name="reply">Responder</string>
 </resources>
