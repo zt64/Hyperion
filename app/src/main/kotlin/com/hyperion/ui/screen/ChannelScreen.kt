@@ -34,32 +34,30 @@ fun ChannelScreen(
     viewModel: ChannelViewModel = koinViewModel(),
     navController: NavController<Destination>,
     onClickBack: () -> Unit
-) {
-    LaunchedEffect(Unit) {
-        viewModel.getChannel(channelId)
+) = when (val state = viewModel.state) {
+    is ChannelViewModel.State.Loaded -> {
+        ChannelScreenLoaded(
+            viewModel = viewModel,
+            navController = navController,
+            channel = state.channel
+        )
     }
 
-    when (val state = viewModel.state) {
-        is ChannelViewModel.State.Loaded -> {
-            ChannelScreenLoaded(
-                viewModel = viewModel,
-                navController = navController,
-                channel = state.channel
-            )
+    ChannelViewModel.State.Loading -> {
+        LaunchedEffect(Unit) {
+            viewModel.getChannel(channelId)
         }
 
-        ChannelViewModel.State.Loading -> {
-            ChannelScreenLoading(
-                onClickBack = onClickBack
-            )
-        }
+        ChannelScreenLoading(
+            onClickBack = onClickBack
+        )
+    }
 
-        is ChannelViewModel.State.Error -> {
-            ErrorScreen(
-                exception = state.error,
-                onClickBack = onClickBack
-            )
-        }
+    is ChannelViewModel.State.Error -> {
+        ErrorScreen(
+            exception = state.error,
+            onClickBack = onClickBack
+        )
     }
 }
 

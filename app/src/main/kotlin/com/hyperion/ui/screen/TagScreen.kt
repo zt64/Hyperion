@@ -27,24 +27,24 @@ fun TagScreen(
     tag: String,
     onClickVideo: (id: String) -> Unit,
     onClickBack: () -> Unit
-) {
-    LaunchedEffect(Unit) {
-        viewModel.getTag(tag)
+) = when (val state = viewModel.state) {
+    is TagViewModel.State.Error -> ErrorScreen(
+        exception = state.exception,
+        onClickBack = onClickBack
+    )
+
+    TagViewModel.State.Loading -> {
+        LaunchedEffect(Unit) {
+            viewModel.getTag(tag)
+        }
+
+        TagScreenLoading(onClickBack)
     }
 
-    when (val state = viewModel.state) {
-        is TagViewModel.State.Error -> ErrorScreen(
-            exception = state.exception,
-            onClickBack = onClickBack
-        )
-
-        TagViewModel.State.Loading -> TagScreenLoading(onClickBack)
-
-        TagViewModel.State.Loaded -> TagScreenLoaded(
-            onClickVideo = onClickVideo,
-            onClickBack = onClickBack
-        )
-    }
+    TagViewModel.State.Loaded -> TagScreenLoaded(
+        onClickVideo = onClickVideo,
+        onClickBack = onClickBack
+    )
 }
 
 @Composable

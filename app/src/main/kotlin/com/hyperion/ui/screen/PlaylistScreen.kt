@@ -28,30 +28,28 @@ fun PlaylistScreen(
     playlistId: String,
     onClickVideo: (id: String) -> Unit,
     onClickBack: () -> Unit
-) {
-    LaunchedEffect(Unit) {
-        viewModel.getPlaylist(playlistId)
+) = when (val state = viewModel.state) {
+    is PlaylistViewModel.State.Loaded -> {
+        PlaylistLoadedScreen(
+            viewModel = viewModel,
+            onClickVideo = onClickVideo,
+            onClickBack = onClickBack
+        )
     }
 
-    when (val state = viewModel.state) {
-        is PlaylistViewModel.State.Loaded -> {
-            PlaylistLoadedScreen(
-                viewModel = viewModel,
-                onClickVideo = onClickVideo,
-                onClickBack = onClickBack
-            )
+    PlaylistViewModel.State.Loading -> {
+        LaunchedEffect(Unit) {
+            viewModel.getPlaylist(playlistId)
         }
 
-        PlaylistViewModel.State.Loading -> {
-            PlaylistLoadingScreen(onClickBack)
-        }
+        PlaylistLoadingScreen(onClickBack)
+    }
 
-        is PlaylistViewModel.State.Error -> {
-            ErrorScreen(
-                exception = state.exception,
-                onClickBack = onClickBack
-            )
-        }
+    is PlaylistViewModel.State.Error -> {
+        ErrorScreen(
+            exception = state.exception,
+            onClickBack = onClickBack
+        )
     }
 }
 

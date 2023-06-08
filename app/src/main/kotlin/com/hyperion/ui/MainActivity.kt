@@ -20,10 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.hyperion.domain.manager.PreferencesManager
-import com.hyperion.ui.navigation.AppDestination
-import com.hyperion.ui.navigation.BaseDestination
-import com.hyperion.ui.navigation.BaseScreen
-import com.hyperion.ui.navigation.Destination
+import com.hyperion.ui.navigation.*
 import com.hyperion.ui.screen.*
 import com.hyperion.ui.screen.base.FeedScreen
 import com.hyperion.ui.screen.base.HomeScreen

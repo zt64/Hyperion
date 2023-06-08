@@ -68,17 +68,17 @@ fun PlayerScreen(
     navController: NavController<Destination>,
     videoId: String? = null
 ) {
-    LaunchedEffect(Unit) {
-        if (viewModel.video == null && videoId != null) viewModel.loadVideo(videoId)
-    }
-
     when (val state = viewModel.state) {
-        is PlayerViewModel.State.Loading -> PlayerScreenLoading()
+        is PlayerViewModel.State.Loading -> {
+            LaunchedEffect(Unit) {
+                if (viewModel.video == null && videoId != null) viewModel.loadVideo(videoId)
+            }
+
+            PlayerScreenLoading()
+        }
 
         is PlayerViewModel.State.Loaded -> {
-            PlayerScreenLoaded(
-                navController = navController
-            )
+            PlayerScreenLoaded(navController)
         }
 
         is PlayerViewModel.State.Error -> {
@@ -108,8 +108,8 @@ private fun PlayerScreenLoading() {
 
 @Composable
 private fun PlayerScreenLoaded(
-    viewModel: PlayerViewModel = koinViewModel(),
-    navController: NavController<Destination>
+    navController: NavController<Destination>,
+    viewModel: PlayerViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
 
