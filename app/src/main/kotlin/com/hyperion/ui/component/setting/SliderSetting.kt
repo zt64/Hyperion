@@ -6,24 +6,43 @@ import androidx.compose.foundation.systemGestureExclusion
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlin.reflect.KMutableProperty0
 
 @Composable
 fun SliderSetting(
     modifier: Modifier = Modifier,
+    preference: KMutableProperty0<Float>,
+    valueRange: ClosedFloatingPointRange<Float>,
+    steps: Int = 10,
     text: String,
+    label: @Composable ((Float) -> Unit) = {
+        Text("%.1f".format(it))
+    }
+) {
+    SliderSetting(
+        modifier = modifier,
+        value = preference.get(),
+        valueRange = valueRange,
+        steps = steps,
+        onValueChangeFinished = preference::set,
+        text = text,
+        label = label
+    )
+}
+
+@Composable
+fun SliderSetting(
+    modifier: Modifier = Modifier,
     value: Float,
     valueRange: ClosedFloatingPointRange<Float>,
     steps: Int = 10,
-    onValueChange: (value: Float) -> Unit = { },
     onValueChangeFinished: (value: Float) -> Unit,
+    text: String,
     label: @Composable ((Float) -> Unit) = {
         Text("%.1f".format(it))
     }
@@ -32,7 +51,7 @@ fun SliderSetting(
         modifier = modifier.systemGestureExclusion(),
         headlineContent = { Text(text) },
         supportingContent = {
-            var sliderValue by rememberSaveable { mutableStateOf(value) }
+            var sliderValue by rememberSaveable { mutableFloatStateOf(value) }
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -43,10 +62,7 @@ fun SliderSetting(
                     value = sliderValue,
                     valueRange = valueRange,
                     steps = steps,
-                    onValueChange = {
-                        onValueChange(it)
-                        sliderValue = it
-                    },
+                    onValueChange = { sliderValue = it },
                     onValueChangeFinished = { onValueChangeFinished(sliderValue) }
                 )
 

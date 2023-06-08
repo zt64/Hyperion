@@ -7,6 +7,9 @@ import com.hyperion.ui.navigation.BaseDestination
 import com.hyperion.ui.theme.Theme
 
 class PreferencesManager(sharedPreferences: SharedPreferences) : BasePreferenceManager(sharedPreferences) {
+    var visitorData by preference("visitor_data")
+    var deviceId by preference("device_id")
+
     var theme by preference("theme", Theme.SYSTEM)
     var dynamicColor by preference("dynamic_color", true)
     var compactCard by preference("compact_card", false)
@@ -31,6 +34,6 @@ class PreferencesManager(sharedPreferences: SharedPreferences) : BasePreferenceM
     var sponsorBlockApiUrl by preference("sponsor_block_api_url", "https://sponsor.ajay.app")
     var sponsorBlockSkipNoticeDuration by preference("sponsor_block_skip_notice_duration", 5)
     var sponsorBlockSkipTracking by preference("sponsor_block_skip_tracking", true)
-    var sponsorBlockUserIdPrivate by preference("sponsor_block_user_id", "")
-    var sponsorBlockUserIdPublic by preference("sponsor_block_user_id_public", "")
+    var sponsorBlockUserIdPrivate by preference("sponsor_block_user_id")
+    var sponsorBlockUserIdPublic by preference("sponsor_block_user_id_public")
 }

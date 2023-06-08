@@ -35,9 +35,8 @@ fun SponsorBlockScreen(
     onClickCategory: (SponsorBlockCategory) -> Unit
 ) {
     SwitchSetting(
-        checked = preferences.sponsorBlockEnabled,
+        preference = preferences::sponsorBlockEnabled,
         text = stringResource(R.string.enabled),
-        onCheckedChange = { preferences.sponsorBlockEnabled = it }
     )
 
     AnimatedVisibility(visible = preferences.sponsorBlockEnabled) {
@@ -50,7 +49,6 @@ fun SponsorBlockScreen(
                 text = stringResource(R.string.skip_notice_duration),
                 value = preferences.sponsorBlockSkipNoticeDuration.toFloat(),
                 valueRange = 0f..10f,
-                onValueChange = { preferences.sponsorBlockSkipNoticeDuration = it.toInt() },
                 onValueChangeFinished = { preferences.sponsorBlockSkipNoticeDuration = it.toInt() }
             )
 
@@ -63,9 +61,8 @@ fun SponsorBlockScreen(
             }
 
             SwitchSetting(
-                checked = preferences.sponsorBlockSkipTracking,
-                text = stringResource(R.string.skip_count_tracking),
-                onCheckedChange = { preferences.sponsorBlockSkipTracking = it }
+                preference = preferences::sponsorBlockSkipTracking,
+                text = stringResource(R.string.skip_count_tracking)
             )
 
             ListItem(
@@ -111,15 +108,9 @@ fun SponsorBlockScreen(
 
             categories.forEach { category ->
                 ListItem(
-                    modifier = Modifier.clickable {
-                        onClickCategory(category)
-                    },
-                    headlineContent = {
-                        Text(category.toString())
-                    },
-                    supportingContent = {
-                        Text(category.description)
-                    },
+                    modifier = Modifier.clickable { onClickCategory(category) },
+                    headlineContent = { Text(category.toString()) },
+                    supportingContent = { Text(category.description) },
                     trailingContent = {
                         Box(
                             modifier = Modifier

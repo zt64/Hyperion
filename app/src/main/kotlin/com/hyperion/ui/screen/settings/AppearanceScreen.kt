@@ -5,71 +5,58 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
 import com.hyperion.ui.component.setting.RadioSetting
 import com.hyperion.ui.component.setting.SliderSetting
 import com.hyperion.ui.component.setting.SwitchSetting
-import com.hyperion.ui.theme.Theme
-import kotlinx.collections.immutable.toImmutableMap
 
 context(ColumnScope)
 @Composable
 fun AppearanceScreen(preferences: PreferencesManager) {
-    val themes = remember { Theme.values() }
-
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         SwitchSetting(
-            checked = preferences.dynamicColor,
+            preference = preferences::dynamicColor,
             text = stringResource(R.string.dynamic_color),
-            icon = Icons.Default.Palette,
-            onCheckedChange = { preferences.dynamicColor = it }
+            icon = Icons.Default.Palette
         )
     }
 
     RadioSetting(
+        preference = preferences::theme,
         icon = Icons.Default.Style,
         label = stringResource(R.string.theme),
         description = stringResource(R.string.theme_setting_description),
-        value = preferences.theme,
-        options = themes.associateBy { theme -> stringResource(theme.displayName) }.toImmutableMap(),
-        onConfirm = { preferences.theme = it }
     )
 
     SwitchSetting(
-        checked = preferences.compactCard,
+        preference = preferences::compactCard,
         text = stringResource(R.string.compact_card),
-        icon = Icons.Default.VideoSettings,
-        onCheckedChange = { preferences.compactCard = it }
+        icon = Icons.Default.VideoSettings
     )
 
     SliderSetting(
+        preference = preferences::timestampScale,
         text = stringResource(R.string.timestamp_scale),
-        value = preferences.timestampScale,
         valueRange = 0.8f..2f,
-        onValueChangeFinished = { preferences.timestampScale = it }
     )
 
     SwitchSetting(
-        checked = preferences.showDownloadButton,
+        preference = preferences::showDownloadButton,
         text = stringResource(R.string.show_download_button),
         icon = Icons.Default.Download,
-        onCheckedChange = { preferences.showDownloadButton = it }
     )
 
     SwitchSetting(
-        checked = preferences.showRelatedVideos,
+        preference = preferences::showRelatedVideos,
         text = stringResource(R.string.show_related_videos),
-        icon = Icons.Default.List,
-        onCheckedChange = { preferences.showRelatedVideos = it }
+        icon = Icons.Default.List
     )
 
     SwitchSetting(
-        checked = preferences.hideNavItemLabel,
+        preference = preferences::hideNavItemLabel,
         text = stringResource(R.string.hide_nav_item_label),
-        icon = Icons.Default.Navigation,
-        onCheckedChange = { preferences.hideNavItemLabel = it }
+        icon = Icons.Default.Navigation
     )
 }

@@ -10,8 +10,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.hyperion.R
+import com.hyperion.ui.component.setting.RadioOption
 
-enum class Theme(@StringRes val displayName: Int) {
+enum class Theme(
+    @StringRes override val label: Int
+) : RadioOption {
     SYSTEM(R.string.system),
     LIGHT(R.string.light),
     DARK(R.string.dark);

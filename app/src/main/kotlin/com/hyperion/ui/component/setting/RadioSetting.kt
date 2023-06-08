@@ -1,32 +1,58 @@
 package com.hyperion.ui.component.setting
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
-import kotlinx.collections.immutable.ImmutableMap
+import kotlin.reflect.KMutableProperty0
+
+interface RadioOption {
+    @get:StringRes
+    val label: Int
+}
 
 @Composable
-fun <T> RadioSetting(
+inline fun <reified E> RadioSetting(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    preference: KMutableProperty0<E>,
+    description: String? = null,
+    icon: ImageVector? = null,
+    label: String,
+) where E : Enum<E>, E : RadioOption {
+    val options = remember { enumValues<E>() }
+
+    RadioSetting(
+        modifier = modifier,
+        enabled = enabled,
+        value = preference.get(),
+        options = options,
+        onConfirm = preference::set,
+        label = label,
+        description = description,
+        icon = icon
+    )
+}
+
+@Composable
+fun <E : RadioOption> RadioSetting(
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    value: E,
+    options: Array<E>,
+    onConfirm: (value: E) -> Unit,
     label: String,
     description: String? = null,
     icon: ImageVector? = null,
-    value: T,
-    options: ImmutableMap<String, T>,
-    onConfirm: (value: T) -> Unit
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -43,12 +69,10 @@ fun <T> RadioSetting(
                     )
                 }
             },
-            title = {
-                Text(label)
-            },
+            title = { Text(label) },
             text = {
                 Column {
-                    options.forEach { (label, option) ->
+                    options.forEach { option ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -61,7 +85,7 @@ fun <T> RadioSetting(
                             )
 
                             Text(
-                                text = label,
+                                text = stringResource(option.label),
                                 style = MaterialTheme.typography.labelLarge,
                                 softWrap = false
                             )
@@ -81,9 +105,7 @@ fun <T> RadioSetting(
             },
             dismissButton = {
                 TextButton(
-                    onClick = {
-                        showDialog = false
-                    }
+                    onClick = { showDialog = false }
                 ) {
                     Text(stringResource(R.string.dismiss))
                 }
@@ -92,12 +114,8 @@ fun <T> RadioSetting(
     }
 
     ListItem(
-        modifier = modifier.clickable {
-            showDialog = true
-        },
-        headlineContent = {
-            Text(label)
-        },
+        modifier = modifier.clickable { showDialog = true },
+        headlineContent = { Text(label) },
         supportingContent = description?.let {
             {
                 Text(description)
@@ -116,7 +134,7 @@ fun <T> RadioSetting(
                 enabled = enabled,
                 onClick = { showDialog = true }
             ) {
-                Text(options.filterValues { it == value }.keys.single())
+                Text(stringResource(value.label))
             }
         }
     )

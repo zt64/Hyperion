@@ -3,10 +3,7 @@ package com.hyperion.ui.screen.settings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BrightnessHigh
-import androidx.compose.material.icons.filled.Swipe
-import androidx.compose.material.icons.filled.TouchApp
-import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.hyperion.R
@@ -19,17 +16,15 @@ context(ColumnScope)
 @Composable
 fun GesturesScreen(preferences: PreferencesManager) {
     SwitchSetting(
-        checked = preferences.swipeToSeek,
+        preference = preferences::swipeToSeek,
         text = stringResource(R.string.swipe_to_seek),
         icon = Icons.Default.Swipe,
-        onCheckedChange = { preferences.swipeToSeek = it }
     )
 
     SwitchSetting(
-        checked = preferences.doubleTapToSeek,
+        preference = preferences::doubleTapToSeek,
         text = stringResource(R.string.double_tap_to_seek),
         icon = Icons.Default.TouchApp,
-        onCheckedChange = { preferences.doubleTapToSeek = it }
     )
 
     AnimatedVisibility(visible = preferences.doubleTapToSeek) {
@@ -43,16 +38,14 @@ fun GesturesScreen(preferences: PreferencesManager) {
     }
 
     SwitchSetting(
-        checked = preferences.volumeGesture,
+        preference = preferences::volumeGesture,
         text = stringResource(R.string.volume_gesture),
-        icon = Icons.Default.VolumeUp,
-        onCheckedChange = { preferences.volumeGesture = it }
+        icon = Icons.Default.VolumeUp
     )
 
     SwitchSetting(
-        checked = preferences.brightnessGesture,
+        preference = preferences::brightnessGesture,
         text = stringResource(R.string.brightness_gesture),
-        icon = Icons.Default.BrightnessHigh,
-        onCheckedChange = { preferences.brightnessGesture = it }
+        icon = Icons.Default.BrightnessHigh
     )
 }

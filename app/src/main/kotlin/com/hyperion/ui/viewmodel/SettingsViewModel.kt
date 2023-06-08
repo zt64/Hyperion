@@ -2,6 +2,7 @@ package com.hyperion.ui.viewmodel
 
 import android.app.Application
 import android.content.Intent
+import android.net.Uri
 import androidx.compose.runtime.Stable
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,10 @@ class SettingsViewModel(
 ) : ViewModel() {
     fun checkForUpdates() {
 
+    }
+
+    fun setDownloadUri(uri: Uri?) {
+        if (uri != null) preferences.downloadDirectory = uri.toString()
     }
 
     fun openGitHub() {
