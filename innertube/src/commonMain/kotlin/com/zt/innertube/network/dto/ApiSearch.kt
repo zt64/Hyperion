@@ -7,9 +7,7 @@ import com.zt.innertube.serializer.TokenSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonTransformingSerializer
-import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.*
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.protobuf.ProtoNumber
 
@@ -126,16 +124,16 @@ internal data class ApiSearch(
     object UnknownRenderer : Renderer
 }
 
-@Serializable
-internal data class ApiSearchContinuation(val onResponseReceivedCommands: List<Command>) {
-    @Serializable
-    data class Command(
-        @Serializable(ContinuationItemsSerializer::class)
-        @SerialName("appendContinuationItemsAction")
-        val items: List<@Serializable(ApiSearch.Item.Serializer::class) ApiSearch.Item>
-    ) {
-        private object ContinuationItemsSerializer : JsonTransformingSerializer<List<ApiSearch.Item>>(ListSerializer(ApiSearch.Item.Serializer)) {
-            override fun transformDeserialize(element: JsonElement) = element.jsonObject["continuationItems"]!!
-        }
-    }
+private class ItemsSerializer : JsonTransformingSerializer<List<ApiSearch.Item>>(ListSerializer(ApiSearch.Item.Serializer)) {
+    override fun transformDeserialize(element: JsonElement) = element
+        .jsonArray.single()
+        .jsonObject["appendContinuationItemsAction"]!!
+        .jsonObject["continuationItems"]!!
 }
+
+@Serializable
+internal data class ApiSearchContinuation(
+    @Serializable(ItemsSerializer::class)
+    @SerialName("onResponseReceivedCommands")
+    val items: List<ApiSearch.Item>
+)

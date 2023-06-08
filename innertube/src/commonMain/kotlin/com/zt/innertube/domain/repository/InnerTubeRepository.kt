@@ -70,9 +70,12 @@ class InnerTubeRepository(
     suspend fun getSearchSuggestions(query: String) = service.getSearchSuggestions(query).jsonArray[1].jsonArray
         .map { it.jsonArray[0].jsonPrimitive.content }
 
-    suspend fun getSearchResults(query: String, continuation: String? = null): DomainSearch {
+    suspend fun getSearchResults(
+        query: String,
+        continuation: String? = null
+    ): DomainBrowse<Entity> {
         val contents = if (continuation != null) {
-            service.getSearchResults(query, continuation).onResponseReceivedCommands.single().items
+            service.getSearchResults(query, continuation).items
         } else {
             service.getSearchResults(query).contents
         }
@@ -80,7 +83,7 @@ class InnerTubeRepository(
         val itemSection = contents.filterIsInstance<ApiSearch.ItemSection>().last()
         val continuationItem = contents.singleInstanceOrNull<ApiSearch.ContinuationItem>()
 
-        return DomainSearch(
+        return DomainBrowse(
             items = itemSection.contents.mapNotNull { renderer ->
                 when (renderer) {
                     is ApiSearch.ChannelRenderer -> {
