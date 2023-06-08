@@ -3,6 +3,7 @@ package com.hyperion.di
 import android.os.Build
 import com.zt.ktor.brotli.brotli
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.engine.android.Android
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.BrowserUserAgent
@@ -23,35 +24,40 @@ val httpModule = module {
         ignoreUnknownKeys = true
     }
 
-    fun provideInnerTubeClient(json: Json) = HttpClient(
-        engineFactory = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) CIO else Android
-    ) {
-        BrowserUserAgent()
+    fun provideEngineFactory(): HttpClientEngineFactory<*> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) CIO else Android
+    }
 
-        install(ContentNegotiation) {
-            json(json)
-        }
+    fun provideInnerTubeClient(engineFactory: HttpClientEngineFactory<*>, json: Json): HttpClient {
+        return HttpClient(engineFactory) {
+            BrowserUserAgent()
 
-        install(HttpRequestRetry) {
-            retryOnServerErrors(maxRetries = 5)
-            exponentialDelay()
-        }
+            install(ContentNegotiation) {
+                json(json)
+            }
 
-        install(ContentEncoding) {
-            deflate()
-            gzip()
-            brotli()
-        }
+            install(HttpRequestRetry) {
+                retryOnServerErrors(maxRetries = 5)
+                exponentialDelay()
+            }
 
-        defaultRequest {
-            contentType(ContentType.Application.Json)
-        }
+            install(ContentEncoding) {
+                deflate()
+                gzip()
+                brotli()
+            }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            install(HttpCache)
+            defaultRequest {
+                contentType(ContentType.Application.Json)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                install(HttpCache)
+            }
         }
     }
 
+    singleOf(::provideEngineFactory)
     singleOf(::provideJson)
     singleOf(::provideInnerTubeClient)
 }

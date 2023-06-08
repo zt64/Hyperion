@@ -47,11 +47,13 @@ import kotlin.io.encoding.ExperimentalEncodingApi
  * @param engineFactory
  * @param cookiesStorage
  * @param safetyMode Whether to use safety mode or not
+ * @param visitorData Visitor data
  */
 class InnerTubeService(
     engineFactory: HttpClientEngineFactory<*>,
     cookiesStorage: CookiesStorage = AcceptAllCookiesStorage(),
-    safetyMode: Boolean = false
+    safetyMode: Boolean = false,
+    visitorData: String? = null
 ) : CoroutineScope by CoroutineScope(Dispatchers.IO + SupervisorJob()) {
     private val json = Json {
         ignoreUnknownKeys = true
