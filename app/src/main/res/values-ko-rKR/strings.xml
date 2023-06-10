@@ -133,7 +133,7 @@
     <string name="store">스토어</string>
     <string name="skip_count_tracking">건너뛴 횟수 추적</string>
     <string name="hide_this_notification">"이 알림 숨김 "</string>
-    <string name="replace">Replace</string>
-    <string name="remove">Remove</string>
-    <string name="reply">Reply</string>
+    <string name="replace">대체</string>
+    <string name="remove">제거</string>
+    <string name="reply">답글</string>
 </resources>
