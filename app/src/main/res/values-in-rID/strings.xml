@@ -130,9 +130,9 @@
     <string name="reply_notification_desc">Beri tahu saya tentang balasan komentar saya</string>
     <string name="cancel">Batal</string>
     <string name="shorts">Shorts</string>
-    <string name="store">Store</string>
-    <string name="skip_count_tracking">Skip count tracking</string>
-    <string name="hide_this_notification">"Hide this notification "</string>
+    <string name="store">Simpan</string>
+    <string name="skip_count_tracking">Lewati pelacakan hitungan</string>
+    <string name="hide_this_notification">"Sembunyikan notifikasi "</string>
     <string name="replace">Replace</string>
     <string name="remove">Remove</string>
     <string name="reply">Reply</string>
