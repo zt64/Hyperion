@@ -35,9 +35,6 @@ android {
 
     packaging {
         resources {
-            // Reflection symbol list (https://stackoverflow.com/a/41073782/13964629)
-            excludes += "/**/*.kotlin_builtins"
-
             // okhttp3 is used by some lib (no cookies so publicsuffixes.gz can be dropped)
             excludes += "/okhttp3/**"
         }
@@ -79,7 +76,7 @@ dependencies {
     implementation(libs.compose.icons.extended)
     implementation(libs.compose.animation.graphics)
     implementation(libs.navigation)
-    implementation(libs.coil.compose)
+    implementation(libs.kamel.image)
     debugImplementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.runtime.tracing)
 

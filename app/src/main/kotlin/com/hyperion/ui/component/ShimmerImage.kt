@@ -1,91 +1,58 @@
 package com.hyperion.ui.component
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalAbsoluteTonalElevation
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.surfaceColorAtElevation
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
-import coil.compose.SubcomposeAsyncImageContent
-import coil.request.CachePolicy
-import coil.request.ImageRequest
-import coil.size.Precision
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
 import com.google.accompanist.placeholder.shimmer
-import coil.size.Size as CoilSize
-
-@JvmInline
-@Immutable
-value class Size(val size: CoilSize?) {
-    constructor(width: Int, height: Int) : this(CoilSize(width, height))
-
-    companion object {
-        val ORIGINAL = Size(CoilSize.ORIGINAL)
-    }
-}
+import io.kamel.image.KamelImage
+import io.kamel.image.asyncPainterResource
 
 @Composable
 fun ShimmerImage(
+    url: String,
+    contentDescription: String?,
     modifier: Modifier = Modifier,
-    url: String?,
-    size: Size = Size.ORIGINAL,
     contentScale: ContentScale = ContentScale.Fit,
-    contentDescription: String?
 ) {
-    SubcomposeAsyncImage(
+    KamelImage(
         modifier = modifier,
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(url)
-            .diskCacheKey(url)
-            .diskCachePolicy(CachePolicy.ENABLED)
-            .memoryCachePolicy(CachePolicy.ENABLED)
-            .memoryCacheKey(url)
-            .size(size.size ?: CoilSize.ORIGINAL)
-            .precision(Precision.EXACT)
-            .build(),
-        contentScale = contentScale,
+        resource = asyncPainterResource(url),
         contentDescription = contentDescription,
-        loading = {
+        contentScale = contentScale,
+        onLoading = {
             val localElevation = LocalAbsoluteTonalElevation.current
 
             Box(
                 modifier = Modifier
                     .placeholder(
                         visible = true,
-                        color = MaterialTheme.colorScheme.surfaceColorAtElevation(localElevation + 2.dp),
+                        color = MaterialTheme.colorScheme.surfaceColorAtElevation(localElevation + 1.dp),
                         highlight = PlaceholderHighlight.shimmer(
-                            highlightColor = MaterialTheme.colorScheme.surfaceColorAtElevation(localElevation + 3.dp)
+                            highlightColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
+                                localElevation + 4.dp
+                            )
                         )
                     )
                     .fillMaxSize()
             )
         },
-        success = {
-            SubcomposeAsyncImageContent()
+        onFailure = {
+            Icon(
+                modifier = Modifier.size(64.dp),
+                imageVector = Icons.Default.BrokenImage,
+                contentDescription = null,
+            )
         },
-        error = {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    modifier = Modifier.size(64.dp),
-                    imageVector = Icons.Default.BrokenImage,
-                    contentDescription = null,
-                )
-            }
-        }
+        animationSpec = tween()
     )
 }

@@ -1,13 +1,11 @@
 package com.hyperion
 
 import android.app.Application
-import coil.ImageLoader
-import coil.ImageLoaderFactory
 import com.hyperion.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
-class HyperionApplication : Application(), ImageLoaderFactory {
+class HyperionApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
@@ -23,8 +21,4 @@ class HyperionApplication : Application(), ImageLoaderFactory {
             )
         }
     }
-
-    override fun newImageLoader() = ImageLoader.Builder(this)
-        .crossfade(true)
-        .build()
 }
