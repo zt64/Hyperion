@@ -118,7 +118,7 @@
     <string name="volume_gesture">Usap untuk menyesuaikan volume</string>
     <string name="brightness_gesture">Usap untuk menyesuaikan kecerahan</string>
     <string name="skip_notice_duration">Lewati durasi pemberitahuan</string>
-    <string name="mini_player">Mini-player</string>
+    <string name="mini_player">Pemutar-mini</string>
     <string name="notifications">Notifikasi</string>
     <string name="mentions">Sebutan</string>
     <string name="subscriptions">Langganan</string>
@@ -133,7 +133,7 @@
     <string name="store">Simpan</string>
     <string name="skip_count_tracking">Lewati pelacakan hitungan</string>
     <string name="hide_this_notification">"Sembunyikan notifikasi "</string>
-    <string name="replace">Replace</string>
-    <string name="remove">Remove</string>
-    <string name="reply">Reply</string>
+    <string name="replace">Ganti</string>
+    <string name="remove">Hapus</string>
+    <string name="reply">Balas</string>
 </resources>
