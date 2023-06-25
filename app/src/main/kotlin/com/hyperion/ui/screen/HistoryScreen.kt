@@ -12,7 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.hyperion.R
+import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.HistoryViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -38,6 +42,8 @@ fun HistoryScreen(
             )
         }
     ) { paddingValues ->
+        val history = viewModel.history.collectAsLazyPagingItems()
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -46,7 +52,18 @@ fun HistoryScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
+            items(
+                count = history.itemCount,
+                key = history.itemKey { it.id },
+                contentType = history.itemContentType()
+            ) { index ->
+                val video = history[index] ?: return@items
 
+                VideoCard(
+                    video = video,
+                    onClick = { /* TODO */ }
+                )
+            }
         }
     }
 }

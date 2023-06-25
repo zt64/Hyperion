@@ -5,10 +5,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.NotificationsNone
-import androidx.compose.material.icons.filled.NotificationsOff
-import androidx.compose.material.icons.filled.RemoveCircle
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,8 +24,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NotificationsScreen(
-    viewModel: NotificationsViewModel = koinViewModel(),
     onClickBack: () -> Unit,
+    viewModel: NotificationsViewModel = koinViewModel()
 ) {
     val notificationsSheetState = remember { SheetState() }
 
@@ -51,9 +48,9 @@ fun NotificationsScreen(
     ) { paddingValues ->
         val notifications = viewModel.notifications.collectAsLazyPagingItems()
 
-//        NotificationsScreenEmpty(
-//            modifier = Modifier.padding(paddingValues)
-//        )
+        // NotificationsScreenEmpty(
+        //     modifier = Modifier.padding(paddingValues)
+        // )
 
         LazyColumn(
             modifier = Modifier.padding(paddingValues)
@@ -76,7 +73,7 @@ fun NotificationsScreen(
 }
 
 @Composable
-private fun NotificationsScreenEmpty(modifier: Modifier) {
+private fun NotificationsScreenEmpty(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()

@@ -22,8 +22,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ChannelsScreen(
-    viewModel: ChannelsViewModel = koinViewModel(),
-    onClickBack: () -> Unit
+    onClickBack: () -> Unit,
+    viewModel: ChannelsViewModel = koinViewModel()
 ) {
     Scaffold(
         topBar = {

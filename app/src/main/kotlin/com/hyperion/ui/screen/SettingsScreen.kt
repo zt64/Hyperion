@@ -30,8 +30,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = koinViewModel(),
-    onClickBack: () -> Unit
+    onClickBack: () -> Unit,
+    viewModel: SettingsViewModel = koinViewModel()
 ) {
     val navController = rememberNavController<SettingsDestination>(SettingsSection)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -97,7 +97,7 @@ fun SettingsScreen(
                             durationMillis = 300,
                             easing = FastOutSlowInEasing
                         )
-                    ) togetherWith fadeOut(tween(300))
+                    ) togetherWith fadeOut(tween())
                 }
             }
         ) { destination ->

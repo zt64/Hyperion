@@ -31,9 +31,9 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun ChannelScreen(
     channelId: String,
-    viewModel: ChannelViewModel = koinViewModel(),
     navController: NavController<Destination>,
-    onClickBack: () -> Unit
+    onClickBack: () -> Unit,
+    viewModel: ChannelViewModel = koinViewModel()
 ) = when (val state = viewModel.state) {
     is ChannelViewModel.State.Loaded -> {
         ChannelScreenLoaded(
@@ -48,9 +48,7 @@ fun ChannelScreen(
             viewModel.getChannel(channelId)
         }
 
-        ChannelScreenLoading(
-            onClickBack = onClickBack
-        )
+        ChannelScreenLoading(onClickBack)
     }
 
     is ChannelViewModel.State.Error -> {
@@ -193,9 +191,7 @@ private fun ChannelScreenLoaded(
 }
 
 @Composable
-private fun ChannelScreenLoading(
-    onClickBack: () -> Unit
-) {
+private fun ChannelScreenLoading(onClickBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(

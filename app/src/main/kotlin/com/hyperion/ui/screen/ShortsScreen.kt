@@ -57,7 +57,6 @@ fun ShortsScreen(
             Short()
         }
     }
-
 }
 
 @Composable
