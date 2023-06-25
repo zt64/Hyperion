@@ -21,7 +21,7 @@ val httpModule = module {
     }
 
     fun provideEngineFactory(): HttpClientEngineFactory<*> {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) CIO else Android
+        return OkHttp
     }
 
     fun provideHttpClient(engineFactory: HttpClientEngineFactory<*>, json: Json): HttpClient {
@@ -37,18 +37,8 @@ val httpModule = module {
                 exponentialDelay()
             }
 
-            install(ContentEncoding) {
-                deflate()
-                gzip()
-                brotli()
-            }
-
             defaultRequest {
                 contentType(ContentType.Application.Json)
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                install(HttpCache)
             }
         }
     }

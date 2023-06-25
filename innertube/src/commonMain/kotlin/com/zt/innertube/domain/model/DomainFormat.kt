@@ -106,10 +106,13 @@ internal class RangeSerializer<T>(
         decoder as JsonDecoder
 
         val json = decoder.decodeJsonElement().jsonObject
-        val start = decoder.json.decodeFromJsonElement(tSerializer, json["start"]!!)
-        val end = decoder.json.decodeFromJsonElement(tSerializer, json["end"]!!)
 
-        return start..end
+        with(decoder.json) {
+            val start = decodeFromJsonElement(tSerializer, json["start"]!!)
+            val end = decodeFromJsonElement(tSerializer, json["end"]!!)
+
+            return start..end
+        }
     }
 
     override fun serialize(encoder: Encoder, value: ClosedRange<T>) = error("Not supported")

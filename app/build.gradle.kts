@@ -64,6 +64,7 @@ dependencies {
     implementation(projects.innertube)
 
     implementation(libs.bundles.androidx)
+    implementation(libs.bundles.ktor)
     implementation(libs.bundles.media3)
     implementation(libs.bundles.accompanist)
 
@@ -79,15 +80,9 @@ dependencies {
     debugImplementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.runtime.tracing)
 
-    implementation(libs.ktor.core)
-    implementation(libs.ktor.cio)
-    implementation(libs.ktor.android)
-    implementation(libs.ktor.encoding)
-    implementation(libs.ktor.contentnegotiation)
-    implementation(libs.ktor.serialization.json)
-
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.koin.compose)
+    implementation(libs.ktor.okhttp)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

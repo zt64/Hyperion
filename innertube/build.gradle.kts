@@ -33,17 +33,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.serialization.protobuf)
 
-                implementation(libs.ktor.core)
-                implementation(libs.ktor.cio)
-                implementation(libs.ktor.encoding)
-                implementation(libs.ktor.contentnegotiation)
-                implementation(libs.ktor.serialization.json)
-            }
-        }
-
-        val androidMain by getting {
-            dependencies {
-                implementation(libs.ktor.android)
+                implementation(libs.bundles.ktor)
             }
         }
 
