@@ -1,15 +1,11 @@
 package com.hyperion.di
 
-import android.os.Build
-import com.zt.ktor.brotli.brotli
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.engine.android.Android
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.BrowserUserAgent
 import io.ktor.client.plugins.HttpRequestRetry
-import io.ktor.client.plugins.cache.HttpCache
-import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.ContentType
@@ -28,7 +24,7 @@ val httpModule = module {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) CIO else Android
     }
 
-    fun provideInnerTubeClient(engineFactory: HttpClientEngineFactory<*>, json: Json): HttpClient {
+    fun provideHttpClient(engineFactory: HttpClientEngineFactory<*>, json: Json): HttpClient {
         return HttpClient(engineFactory) {
             BrowserUserAgent()
 
@@ -59,5 +55,5 @@ val httpModule = module {
 
     singleOf(::provideEngineFactory)
     singleOf(::provideJson)
-    singleOf(::provideInnerTubeClient)
+    singleOf(::provideHttpClient)
 }

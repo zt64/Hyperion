@@ -62,7 +62,6 @@ android {
 
 dependencies {
     implementation(projects.innertube)
-    implementation(projects.ktorBrotli)
 
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.media3)
