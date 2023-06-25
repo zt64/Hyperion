@@ -43,9 +43,7 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.hyperion.R
 import com.hyperion.ui.component.*
-import com.hyperion.ui.component.player.Player
-import com.hyperion.ui.component.player.PlayerActions
-import com.hyperion.ui.component.player.PlayerControls
+import com.hyperion.ui.component.player.*
 import com.hyperion.ui.navigation.AppDestination
 import com.hyperion.ui.navigation.Destination
 import com.hyperion.ui.sheet.CommentsSheet
@@ -97,7 +95,7 @@ private fun PlayerScreenLoading() {
             modifier = Modifier
                 .background(Color.Black)
                 .statusBarsPadding()
-                .aspectRatio(16f / 9f)
+                .aspectRatio(WIDESCREEN_RATIO)
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
@@ -508,7 +506,7 @@ private fun Chapter(chapter: DomainChapter) {
     ) {
         Column {
             ShimmerImage(
-                modifier = Modifier.aspectRatio(16f / 9f),
+                modifier = Modifier.aspectRatio(WIDESCREEN_RATIO),
                 url = chapter.thumbnail,
                 contentDescription = null
             )

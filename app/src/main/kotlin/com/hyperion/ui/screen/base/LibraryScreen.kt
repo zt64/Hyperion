@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hyperion.R
 import com.hyperion.ui.component.ShimmerImage
+import com.hyperion.ui.component.player.WIDESCREEN_RATIO
 import com.hyperion.ui.viewmodel.LibraryViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -129,7 +130,7 @@ private fun RecentCard(
                 ShimmerImage(
                     modifier = Modifier
                         .background(Color.Black)
-                        .aspectRatio(16f / 9f),
+                        .aspectRatio(WIDESCREEN_RATIO),
                     url = "https://cdn.discordapp.com/avatars/556614860931072012/f50b1c6daf6f00827f827113e9920677.webp?size=480",
                     contentScale = ContentScale.Fit,
                     contentDescription = null

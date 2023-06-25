@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.hyperion.domain.manager.PreferencesManager
+import com.hyperion.ui.component.player.WIDESCREEN_RATIO
 import com.zt.innertube.domain.model.DomainMixPartial
 import org.koin.compose.koinInject
 
@@ -108,7 +109,7 @@ private fun Thumbnail(
             .then(modifier)
     ) {
         ShimmerImage(
-            modifier = Modifier.aspectRatio(16f / 9f),
+            modifier = Modifier.aspectRatio(WIDESCREEN_RATIO),
             url = thumbnailUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop

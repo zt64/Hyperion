@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
+import com.hyperion.ui.component.player.WIDESCREEN_RATIO
 import com.zt.innertube.domain.model.DomainVideoPartial
 import org.koin.compose.koinInject
 
@@ -135,13 +136,13 @@ fun VideoCard(
 
 @Composable
 private fun Thumbnail(
-    modifier: Modifier = Modifier,
     video: DomainVideoPartial,
-    timeStampScale: Float
+    timeStampScale: Float,
+    modifier: Modifier = Modifier
 ) {
     Box(modifier) {
         ShimmerImage(
-            modifier = Modifier.aspectRatio(16f / 9f),
+            modifier = Modifier.aspectRatio(WIDESCREEN_RATIO),
             url = video.thumbnailUrl,
             contentScale = ContentScale.Crop,
             contentDescription = stringResource(R.string.thumbnail)

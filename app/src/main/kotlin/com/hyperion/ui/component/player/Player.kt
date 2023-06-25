@@ -6,6 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.Player
+import androidx.media3.common.Tracks
+import androidx.media3.common.util.Size
+import androidx.media3.common.util.UnstableApi
+
+const val WIDESCREEN_RATIO = 16f / 9f
 
 @Composable
 fun Player(
@@ -14,7 +19,7 @@ fun Player(
 ) {
     AndroidView(
         modifier = Modifier
-            .aspectRatio(16f / 9f)
+            .aspectRatio(WIDESCREEN_RATIO)
             .then(modifier),
         factory = { context ->
             SurfaceView(context)
