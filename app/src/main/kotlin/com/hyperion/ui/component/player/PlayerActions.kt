@@ -1,14 +1,8 @@
 package com.hyperion.ui.component.player
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material.icons.filled.ThumbDown
-import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,14 +13,14 @@ import com.hyperion.R
 
 @Composable
 fun PlayerActions(
-    modifier: Modifier = Modifier,
     voteEnabled: Boolean,
     likeLabel: @Composable () -> Unit,
     dislikeLabel: @Composable () -> Unit,
     showDownloadButton: Boolean,
     onClickVote: (Boolean) -> Unit,
     onClickShare: () -> Unit,
-    onClickDownload: () -> Unit
+    onClickDownload: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,

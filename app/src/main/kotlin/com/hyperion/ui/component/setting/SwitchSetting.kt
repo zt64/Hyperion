@@ -29,13 +29,13 @@ fun SwitchSetting(
 
 @Composable
 fun SwitchSetting(
+    text: String,
+    checked: Boolean,
+    onCheckedChange: (value: Boolean) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    checked: Boolean,
     icon: ImageVector? = null,
-    text: String,
-    description: String? = null,
-    onCheckedChange: (value: Boolean) -> Unit
+    description: String? = null
 ) {
     ListItem(
         modifier = modifier.clickable(enabled) {

@@ -98,7 +98,10 @@ private fun Content(
                                         )
                                     }
 
-                                    BaseDestination.FEED -> FeedScreen()
+                                    BaseDestination.FEED -> FeedScreen(
+                                        onClickSignIn = { },
+                                    )
+
                                     BaseDestination.LIBRARY -> LibraryScreen()
                                 }
                             }
@@ -165,11 +168,9 @@ private fun Content(
                             onClickBack = navController::pop
                         )
 
-                        AppDestination.Settings -> {
-                            SettingsScreen(
-                                onClickBack = navController::pop
-                            )
-                        }
+                        AppDestination.Settings -> SettingsScreen(
+                            onClickBack = navController::pop
+                        )
                     }
                 }
             }

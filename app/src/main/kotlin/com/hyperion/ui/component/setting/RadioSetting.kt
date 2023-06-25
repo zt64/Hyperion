@@ -22,12 +22,12 @@ interface RadioOption {
 
 @Composable
 inline fun <reified E> RadioSetting(
+    preference: KMutableProperty0<E>,
+    label: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    preference: KMutableProperty0<E>,
     description: String? = null,
-    icon: ImageVector? = null,
-    label: String,
+    icon: ImageVector? = null
 ) where E : Enum<E>, E : RadioOption {
     val options = remember { enumValues<E>() }
 
@@ -45,14 +45,14 @@ inline fun <reified E> RadioSetting(
 
 @Composable
 fun <E : RadioOption> RadioSetting(
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
+    label: String,
     value: E,
     options: Array<E>,
     onConfirm: (value: E) -> Unit,
-    label: String,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     description: String? = null,
-    icon: ImageVector? = null,
+    icon: ImageVector? = null
 ) {
     var showDialog by rememberSaveable { mutableStateOf(false) }
 

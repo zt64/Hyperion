@@ -39,9 +39,7 @@ fun CommentsSheet(
 }
 
 @Composable
-private fun Comment(
-    comment: DomainComment
-) {
+private fun Comment(comment: DomainComment) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     Card(

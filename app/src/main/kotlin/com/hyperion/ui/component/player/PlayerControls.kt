@@ -10,10 +10,7 @@ import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,9 +24,9 @@ import kotlin.time.Duration.Companion.seconds
 @OptIn(ExperimentalAnimationGraphicsApi::class)
 @Composable
 fun PlayerControls(
+    onClickCollapse: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: PlayerViewModel = koinViewModel(),
-    onClickCollapse: () -> Unit
 ) {
     Box(
         modifier = modifier.padding(6.dp)
@@ -107,9 +104,7 @@ fun PlayerControls(
         ) {
             Text(
                 text = "${DateUtils.formatElapsedTime(viewModel.position.inWholeSeconds)} / ${
-                    DateUtils.formatElapsedTime(
-                        viewModel.duration.inWholeSeconds
-                    )
+                    DateUtils.formatElapsedTime(viewModel.duration.inWholeSeconds)
                 }",
                 style = MaterialTheme.typography.labelMedium
             )

@@ -20,14 +20,14 @@ import com.hyperion.R
 
 @Composable
 fun MiniPlayer(
-    modifier: Modifier = Modifier,
     player: Player,
     title: String,
     author: String,
     isPlaying: Boolean,
     onClick: () -> Unit,
     onClickPlayPause: () -> Unit,
-    onClickClose: () -> Unit
+    onClickClose: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         modifier = modifier,
@@ -66,7 +66,7 @@ fun MiniPlayer(
                     )
                 }
 
-                FilledTonalIconButton(onClick = onClickPlayPause) {
+                FilledTonalIconButton(onClickPlayPause) {
                     if (isPlaying) {
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
@@ -80,7 +80,7 @@ fun MiniPlayer(
                     }
                 }
 
-                FilledTonalIconButton(onClick = onClickClose) {
+                FilledTonalIconButton(onClickClose) {
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(R.string.close_mini_player)

@@ -62,8 +62,8 @@ import kotlin.math.roundToInt
 
 @Composable
 fun PlayerScreen(
-    viewModel: PlayerViewModel = koinViewModel(),
     navController: NavController<Destination>,
+    viewModel: PlayerViewModel = koinViewModel(),
     videoId: String? = null
 ) {
     when (val state = viewModel.state) {
@@ -148,9 +148,7 @@ private fun PlayerScreenLoaded(
 
     @SuppressLint("SwitchIntDef")
     when (LocalConfiguration.current.orientation) {
-        Configuration.ORIENTATION_PORTRAIT -> PlayerScreenPortrait(
-            navController = navController
-        )
+        Configuration.ORIENTATION_PORTRAIT -> PlayerScreenPortrait(navController)
 
         Configuration.ORIENTATION_LANDSCAPE -> PlayerControls(
             modifier = Modifier.fillMaxHeight(),
@@ -161,15 +159,15 @@ private fun PlayerScreenLoaded(
 
 @Composable
 private fun PlayerScreenPortrait(
-    viewModel: PlayerViewModel = koinViewModel(),
     navController: NavController<Destination>,
+    viewModel: PlayerViewModel = koinViewModel()
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         val relatedVideos = viewModel.relatedVideos.collectAsLazyPagingItems()
 
-        PlayerControls(navController = navController)
+        PlayerControls(navController)
 
         LazyColumn(
             modifier = Modifier.padding(horizontal = 14.dp),
@@ -315,7 +313,11 @@ private fun PlayerScreenPortrait(
                     VideoCard(
                         video = relatedVideo,
                         onClick = { viewModel.loadVideo(relatedVideo.id) },
-                        onClickChannel = { navController.navigate(AppDestination.Channel(relatedVideo.channel!!.id)) }
+                        onClickChannel = {
+                            navController.navigate(
+                                AppDestination.Channel(relatedVideo.channel!!.id)
+                            )
+                        }
                     )
                 }
 
@@ -344,9 +346,9 @@ private fun PlayerScreenPortrait(
 
 @Composable
 private fun PlayerControls(
+    navController: NavController<Destination>,
     modifier: Modifier = Modifier,
     viewModel: PlayerViewModel = koinViewModel(),
-    navController: NavController<Destination>
 ) {
     val coroutineScope = rememberCoroutineScope()
     val offsetY = remember { Animatable(0f) }
@@ -423,7 +425,7 @@ private fun PlayerControls(
 @OptIn(ExperimentalTextApi::class)
 @Composable
 private fun Description(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     video: DomainVideo
 ) {
@@ -486,7 +488,12 @@ private fun Description(
                     items(
                         items = video.chapters,
                         key = DomainChapter::hashCode
-                    ) { Chapter(it) }
+                    ) { chapter ->
+                        Chapter(
+                            chapter = chapter,
+                            onClick = { /* TODO */ }
+                        )
+                    }
                 }
             }
         }
@@ -494,15 +501,16 @@ private fun Description(
 }
 
 @Composable
-private fun Chapter(chapter: DomainChapter) {
+private fun Chapter(
+    chapter: DomainChapter,
+    onClick: () -> Unit
+) {
     OutlinedCard(
         modifier = Modifier.size(
             width = 144.dp,
             height = 160.dp
         ),
-        onClick = {
-            // TODO: Seek to chapter
-        }
+        onClick = onClick
     ) {
         Column {
             ShimmerImage(

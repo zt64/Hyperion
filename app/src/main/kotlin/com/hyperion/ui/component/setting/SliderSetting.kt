@@ -37,12 +37,12 @@ fun SliderSetting(
 
 @Composable
 fun SliderSetting(
-    modifier: Modifier = Modifier,
-    value: Float,
-    valueRange: ClosedFloatingPointRange<Float>,
-    steps: Int = 10,
-    onValueChangeFinished: (value: Float) -> Unit,
     text: String,
+    value: Float,
+    onValueChangeFinished: (value: Float) -> Unit,
+    modifier: Modifier = Modifier,
+    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    steps: Int = 10,
     label: @Composable ((Float) -> Unit) = {
         Text("%.1f".format(it))
     }

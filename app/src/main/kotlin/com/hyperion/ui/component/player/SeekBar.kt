@@ -12,10 +12,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -49,31 +46,36 @@ enum class SponsorBlockCategory(
     val color: Color
 ) {
     SPONSOR(
-        description = "Paid promotion, paid referrals and direct advertisements. Not for self-promotion or free shoutouts to causes/creators/websites/products they like.",
+        description = "Paid promotion, paid referrals and direct advertisements. Not for " +
+            "self-promotion or free shoutouts to causes/creators/websites/products they like.",
         color = Color(0x7800D400)
     ) {
         override fun toString() = "Sponsor"
     },
     SELF_PROMO(
-        description = "Similar to \"sponsor\" except for unpaid or self promotion. This includes sections about merchandise, donations, or information about who they collaborated with.",
+        description = "Similar to \"sponsor\" except for unpaid or self promotion. This includes " +
+            "sections about merchandise, donations, or information about who they collaborated with.",
         color = Color(0x78FFFF00)
     ) {
         override fun toString() = "Unpaid/Self Promotion"
     },
     INTERACTION(
-        description = "Asking for likes, comments, or subscribers. This includes asking for engagement in the video, comments, or social media.",
+        description = "Asking for likes, comments, or subscribers. This includes asking for " +
+            "engagement in the video, comments, or social media.",
         color = Color(0x78CC00FF)
     ) {
         override fun toString() = "Interaction Reminder"
     },
     HIGHLIGHT(
-        description = "The part of the video that most people are looking for. Similar to \"Video starts at x\" comments.",
+        description = "The part of the video that most people are looking for. Similar to " +
+            "\"Video starts at x\" comments.",
         color = Color(0x78FF0000)
     ) {
         override fun toString() = "Highlight"
     },
     INTRO(
-        description = "The introduction to the video. This includes the intro animation, intro music, and the creator introducing themselves.",
+        description = "The introduction to the video. This includes the intro animation, intro " +
+            "music, and the creator introducing themselves.",
         color = Color(0x7800FFFF)
     ) {
         override fun toString() = "Intro"
@@ -85,19 +87,22 @@ enum class SponsorBlockCategory(
         override fun toString() = "Endcards/Credits"
     },
     FILLER(
-        description = "Tangential scenes added only for filler or humor that are not required to understand the main content of the video.",
+        description = "Tangential scenes added only for filler or humor that are not required to " +
+            "understand the main content of the video.",
         color = Color(0x787300FF)
     ) {
         override fun toString() = "Filler Tangent/Jokes"
     },
     PREVIEW(
-        description = "Collection of clips that show what is coming up in in this video or other videos in a series where all information is repeated later in the video.",
+        description = "Collection of clips that show what is coming up in in this video or other " +
+            "videos in a series where all information is repeated later in the video.",
         color = Color(0x78008FD6)
     ) {
         override fun toString() = "Preview/Recap"
     },
     MUSIC_OFF_TOPIC(
-        description = "Only for use in music videos. This only should be used for sections of music videos that aren't already covered by another category.",
+        description = "Only for use in music videos. This only should be used for sections of music " +
+            "videos that aren't already covered by another category.",
         color = Color(0x78FF9900)
     ) {
         override fun toString() = "Music: Non-Music Section"
@@ -113,16 +118,16 @@ data class Segment(
 @Composable
 @ExperimentalMaterial3Api
 fun SeekBar(
-    modifier: Modifier = Modifier,
     duration: Duration,
     progress: Duration,
     buffered: Duration,
+    onSeek: (Duration) -> Unit,
+    modifier: Modifier = Modifier,
     segments: ImmutableList<Segment> = persistentListOf(),
     chapters: ImmutableList<DomainChapter> = persistentListOf(),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    onSeek: (Duration) -> Unit,
     onSeekFinished: (() -> Unit)? = null,
-    colors: SliderColors = SliderDefaults.colors(),
+    colors: SliderColors = SliderDefaults.colors()
 ) {
     Slider(
         modifier = modifier,
@@ -132,9 +137,7 @@ fun SeekBar(
         interactionSource = interactionSource,
         thumb = {
             val isDragged by interactionSource.collectIsDraggedAsState()
-            val visible = remember {
-                MutableTransitionState(false)
-            }
+            val visible = remember { MutableTransitionState(false) }
 
             visible.targetState = isDragged
 
@@ -223,8 +226,7 @@ private fun Track(
         val trackStrokeWidth = TrackHeight.toPx()
 
         val bufferedEnd = Offset(
-            x = sliderStart.x +
-                (sliderEnd.x - sliderStart.x) * buffered,
+            x = sliderStart.x + (sliderEnd.x - sliderStart.x) * buffered,
             y = center.y
         )
         drawLine(
@@ -295,14 +297,12 @@ private fun drawTrack(
         StrokeCap.Round
     )
     val sliderValueEnd = Offset(
-        sliderStart.x +
-            (sliderEnd.x - sliderStart.x) * activeRangeEnd,
+        sliderStart.x + (sliderEnd.x - sliderStart.x) * activeRangeEnd,
         center.y
     )
 
     val sliderValueStart = Offset(
-        sliderStart.x +
-            (sliderEnd.x - sliderStart.x) * activeRangeStart,
+        sliderStart.x + (sliderEnd.x - sliderStart.x) * activeRangeStart,
         center.y
     )
 
