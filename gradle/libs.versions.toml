@@ -9,7 +9,7 @@ accompanist = "0.30.1"
 ktor = "2.3.1"
 media3 = "1.1.0-rc01"
 koin = "3.4.5"
-kamel-image = "0.5.1"
+kamel-image = "0.6.0"
 
 [libraries]
 androidx-core = "androidx.core:core-ktx:1.10.1"
