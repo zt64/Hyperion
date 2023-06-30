@@ -22,10 +22,9 @@ fun Player(
             .aspectRatio(WIDESCREEN_RATIO)
             .then(modifier),
         factory = { context ->
-            SurfaceView(context)
-        },
-        update = { surfaceView ->
-            player.setVideoSurfaceView(surfaceView)
+            SurfaceView(context).apply {
+                player.setVideoSurfaceView(this)
+            }
         }
     )
 }
