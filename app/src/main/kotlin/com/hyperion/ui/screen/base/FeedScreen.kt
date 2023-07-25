@@ -29,19 +29,18 @@ import com.zt.innertube.domain.model.DomainChannelPartial
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun FeedScreen(
-    viewModel: FeedViewModel = koinViewModel(),
-    onClickSignIn: () -> Unit
-) {
+fun FeedScreen() {
+    val viewModel: FeedViewModel = koinViewModel()
+
     if (viewModel.accountManager.loggedIn) {
         FeedScreenLoggedIn()
     } else {
-        FeedScreenNotLoggedIn(onClickSignIn)
+        FeedScreenNotLoggedIn()
     }
 }
 
 @Composable
-private fun FeedScreenNotLoggedIn(onClickSignIn: () -> Unit) {
+private fun FeedScreenNotLoggedIn() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -70,7 +69,7 @@ private fun FeedScreenNotLoggedIn(onClickSignIn: () -> Unit) {
 
             Button(
                 enabled = false,
-                onClick = onClickSignIn
+                onClick = { }
             ) {
                 Text(stringResource(R.string.sign_in))
             }
@@ -79,7 +78,8 @@ private fun FeedScreenNotLoggedIn(onClickSignIn: () -> Unit) {
 }
 
 @Composable
-private fun FeedScreenLoggedIn(viewModel: FeedViewModel = koinViewModel()) {
+private fun FeedScreenLoggedIn() {
+    val viewModel: FeedViewModel = koinViewModel()
     val items = viewModel.items.collectAsLazyPagingItems()
 
     LazyColumn(

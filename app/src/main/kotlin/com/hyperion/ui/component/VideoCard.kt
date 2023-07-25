@@ -18,24 +18,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hyperion.R
 import com.hyperion.domain.manager.PreferencesManager
+import com.hyperion.ui.LocalNavController
 import com.hyperion.ui.component.player.WIDESCREEN_RATIO
+import com.hyperion.ui.navigation.AppDestination
 import com.zt.innertube.domain.model.DomainVideoPartial
+import dev.olshevski.navigation.reimagined.navigate
 import org.koin.compose.koinInject
 
 @Composable
 fun VideoCard(
-    modifier: Modifier = Modifier,
     video: DomainVideoPartial,
-    onClick: () -> Unit,
-    onClickChannel: () -> Unit = { },
+    modifier: Modifier = Modifier,
     onLongClick: () -> Unit = { },
     prefs: PreferencesManager = koinInject()
 ) {
+    val navController = LocalNavController.current
+
     ElevatedCard(
         modifier = modifier
             .clip(CardDefaults.elevatedShape)
             .combinedClickable(
-                onClick = onClick,
+                onClick = {
+                    navController.navigate(AppDestination.Player(video.id))
+                },
                 onLongClick = onLongClick
             )
     ) {
@@ -73,8 +78,10 @@ fun VideoCard(
                             ShimmerImage(
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .clickable(onClick = onClickChannel)
-                                    .size(28.dp),
+                                    .size(28.dp)
+                                    .clickable {
+                                        navController.navigate(AppDestination.Channel(video.channel!!.id))
+                                    },
                                 url = it,
                                 contentDescription = video.channel!!.name
                             )
@@ -104,10 +111,12 @@ fun VideoCard(
                         ShimmerImage(
                             modifier = Modifier
                                 .clip(CircleShape)
-                                .clickable(onClick = onClickChannel)
-                                .size(38.dp),
+                                .size(38.dp)
+                                .clickable {
+                                    navController.navigate(AppDestination.Channel(video.channel!!.id))
+                                },
                             url = it,
-                            contentDescription = null
+                            contentDescription = video.channel!!.name
                         )
                     }
 

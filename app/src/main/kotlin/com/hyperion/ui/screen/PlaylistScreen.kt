@@ -7,7 +7,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -18,47 +17,26 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.hyperion.R
+import com.hyperion.ui.component.BackButton
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.PlaylistViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
-fun PlaylistScreen(
-    viewModel: PlaylistViewModel = koinViewModel(),
-    playlistId: String,
-    onClickVideo: (id: String) -> Unit,
-    onClickBack: () -> Unit
-) = when (val state = viewModel.state) {
-    is PlaylistViewModel.State.Loaded -> {
-        PlaylistLoadedScreen(
-            viewModel = viewModel,
-            onClickVideo = onClickVideo,
-            onClickBack = onClickBack
-        )
-    }
+fun PlaylistScreen(playlistId: String) {
+    val viewModel: PlaylistViewModel = koinViewModel { parametersOf(playlistId) }
 
-    PlaylistViewModel.State.Loading -> {
-        LaunchedEffect(Unit) {
-            viewModel.getPlaylist(playlistId)
-        }
-
-        PlaylistLoadingScreen(onClickBack)
-    }
-
-    is PlaylistViewModel.State.Error -> {
-        ErrorScreen(
-            exception = state.exception,
-            onClickBack = onClickBack
-        )
+    when (val state = viewModel.state) {
+        is PlaylistViewModel.State.Loading -> PlaylistLoadingScreen()
+        is PlaylistViewModel.State.Loaded -> PlaylistLoadedScreen()
+        is PlaylistViewModel.State.Error -> ErrorScreen(state.exception)
     }
 }
 
 @Composable
-private fun PlaylistLoadedScreen(
-    viewModel: PlaylistViewModel,
-    onClickVideo: (id: String) -> Unit,
-    onClickBack: () -> Unit
-) {
+private fun PlaylistLoadedScreen() {
+    val viewModel: PlaylistViewModel = koinViewModel()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val playlist = viewModel.playlist!!
 
@@ -73,14 +51,7 @@ private fun PlaylistLoadedScreen(
                         softWrap = false
                     )
                 },
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
+                navigationIcon = { BackButton() },
                 actions = {
                     IconButton(onClick = viewModel::saveToLibrary) {
                         Icon(
@@ -181,10 +152,7 @@ private fun PlaylistLoadedScreen(
             ) { index ->
                 val video = videos[index] ?: return@items
 
-                VideoCard(
-                    video = video,
-                    onClick = { onClickVideo(video.id) }
-                )
+                VideoCard(video)
             }
 
             item {
@@ -210,28 +178,20 @@ private fun PlaylistLoadedScreen(
 }
 
 @Composable
-private fun PlaylistLoadingScreen(
-    onClickBack: () -> Unit
-) {
+private fun PlaylistLoadingScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
+                navigationIcon = { BackButton() },
                 title = { }
             )
         }
     ) { paddingValues ->
         Box(
             modifier = Modifier
-                .wrapContentSize(Alignment.Center)
-                .padding(paddingValues)
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
         }

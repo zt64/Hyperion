@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -14,12 +15,12 @@ import com.hyperion.R
 
 @Composable
 fun DownloadSheet(onDismissRequest: () -> Unit) {
-    var showQualityDialog by remember { mutableStateOf(false) }
-    var showFormatDialog by remember { mutableStateOf(false) }
+    var showQualityDialog by rememberSaveable { mutableStateOf(false) }
+    var showFormatDialog by rememberSaveable { mutableStateOf(false) }
 
-    var audioOnly by remember { mutableStateOf(false) }
-    var downloadSubtitles by remember { mutableStateOf(false) }
-    var saveThumbnail by remember { mutableStateOf(true) }
+    var audioOnly by rememberSaveable { mutableStateOf(false) }
+    var downloadSubtitles by rememberSaveable { mutableStateOf(false) }
+    var saveThumbnail by rememberSaveable { mutableStateOf(true) }
 
     if (showQualityDialog) {
         AlertDialog(

@@ -4,12 +4,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,52 +16,37 @@ import androidx.compose.ui.unit.dp
 import com.hyperion.R
 import com.hyperion.domain.model.channel.imageVector
 import com.hyperion.domain.model.channel.title
+import com.hyperion.ui.LocalNavController
+import com.hyperion.ui.component.BackButton
 import com.hyperion.ui.component.ShimmerImage
-import com.hyperion.ui.navigation.Destination
 import com.hyperion.ui.viewmodel.ChannelViewModel
 import com.zt.innertube.domain.model.DomainChannel
 import com.zt.innertube.network.dto.browse.ChannelTab
-import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.pop
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
-fun ChannelScreen(
-    channelId: String,
-    navController: NavController<Destination>,
-    onClickBack: () -> Unit,
-    viewModel: ChannelViewModel = koinViewModel()
-) = when (val state = viewModel.state) {
-    is ChannelViewModel.State.Loaded -> {
-        ChannelScreenLoaded(
-            viewModel = viewModel,
-            navController = navController,
-            channel = state.channel
-        )
-    }
+fun ChannelScreen(channelId: String) {
+    val viewModel: ChannelViewModel = koinViewModel { parametersOf(channelId) }
 
-    ChannelViewModel.State.Loading -> {
-        LaunchedEffect(Unit) {
-            viewModel.getChannel(channelId)
+    when (val state = viewModel.state) {
+        is ChannelViewModel.State.Loaded -> {
+            ChannelScreenLoaded(channel = state.channel)
         }
 
-        ChannelScreenLoading(onClickBack)
-    }
+        is ChannelViewModel.State.Loading -> ChannelScreenLoading()
 
-    is ChannelViewModel.State.Error -> {
-        ErrorScreen(
-            exception = state.error,
-            onClickBack = onClickBack
-        )
+        is ChannelViewModel.State.Error -> ErrorScreen(state.error)
     }
 }
 
 @Composable
 private fun ChannelScreenLoaded(
-    viewModel: ChannelViewModel,
-    navController: NavController<Destination>,
     channel: DomainChannel
 ) {
+    val navController = LocalNavController.current
+    val viewModel: ChannelViewModel = koinViewModel()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     Scaffold(
@@ -72,14 +54,7 @@ private fun ChannelScreenLoaded(
         topBar = {
             TopAppBar(
                 title = { Text(channel.name) },
-                navigationIcon = {
-                    IconButton(onClick = navController::pop) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
+                navigationIcon = { BackButton(navController::pop) },
                 actions = {
                     IconButton(onClick = viewModel::shareChannel) {
                         Icon(
@@ -156,9 +131,7 @@ private fun ChannelScreenLoaded(
                     selectedTabIndex = viewModel.tab.ordinal,
                     edgePadding = 0.dp
                 ) {
-                    val tabs = remember { ChannelTab.values() }
-
-                    tabs.forEach { tab ->
+                    ChannelTab.entries.forEach { tab ->
                         LeadingIconTab(
                             selected = viewModel.tab == tab,
                             icon = {
@@ -191,18 +164,11 @@ private fun ChannelScreenLoaded(
 }
 
 @Composable
-private fun ChannelScreenLoading(onClickBack: () -> Unit) {
+private fun ChannelScreenLoading() {
     Scaffold(
         topBar = {
             TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
+                navigationIcon = { BackButton() },
                 title = { }
             )
         }

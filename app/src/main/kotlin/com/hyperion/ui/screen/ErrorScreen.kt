@@ -2,7 +2,6 @@ package com.hyperion.ui.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CopyAll
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.*
@@ -17,26 +16,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
+import com.hyperion.ui.component.BackButton
 import kotlinx.coroutines.launch
 
 @Composable
 fun ErrorScreen(
-    exception: Exception,
-    onClickBack: () -> Unit
+    exception: Exception
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
+                navigationIcon = { BackButton() },
                 title = { }
             )
         },

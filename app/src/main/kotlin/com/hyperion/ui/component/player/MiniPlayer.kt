@@ -44,7 +44,7 @@ fun MiniPlayer(
                     ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Player(player = player)
+                Player(player)
 
                 Spacer(Modifier.width(4.dp))
 

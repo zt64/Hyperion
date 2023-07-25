@@ -1,16 +1,15 @@
 package com.hyperion.ui.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.hyperion.ui.LocalNavController
 import com.zt.innertube.domain.model.DomainComment
 
 @Composable
@@ -20,6 +19,8 @@ fun CommentCard(
     onClickDislike: () -> Unit,
     onClickReply: () -> Unit
 ) {
+    val navController = LocalNavController.current
+
     ElevatedCard {
         Column(
             modifier = Modifier.padding(8.dp)
@@ -29,7 +30,11 @@ fun CommentCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    modifier = Modifier.size(36.dp),
+                    modifier = Modifier
+                        .size(36.dp)
+                        .clickable {
+
+                        },
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = null
                 )

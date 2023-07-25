@@ -17,9 +17,9 @@ class AddAccountViewModel(
 ) : ViewModel() {
     @Immutable
     sealed interface State {
-        object Loading : State
-        class Loaded(val code: String) : State
-        class Error(val error: Exception) : State
+        data object Loading : State
+        data class Loaded(val code: String) : State
+        data class Error(val error: Exception) : State
     }
 
     var state by mutableStateOf<State>(State.Loading)

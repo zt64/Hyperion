@@ -104,9 +104,7 @@ fun SponsorBlockScreen(
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
-            val categories = remember(SponsorBlockCategory::values)
-
-            categories.forEach { category ->
+            SponsorBlockCategory.entries.forEach { category ->
                 ListItem(
                     modifier = Modifier.clickable { onClickCategory(category) },
                     headlineContent = { Text(category.toString()) },

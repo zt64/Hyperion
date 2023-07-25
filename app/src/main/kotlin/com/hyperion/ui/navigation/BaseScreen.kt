@@ -4,19 +4,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.NotificationsNone
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -24,26 +18,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
-import dev.olshevski.navigation.reimagined.*
+import com.hyperion.ui.LocalNavController
+import dev.olshevski.navigation.reimagined.AnimatedNavHost
+import dev.olshevski.navigation.reimagined.navigate
+import dev.olshevski.navigation.reimagined.rememberNavController
 import kotlinx.coroutines.launch
-
-private fun <T> NavController<T>.switchTo(destination: T) {
-    if (!moveToTop { it == destination }) navigate(destination)
-}
 
 @Composable
 fun BaseScreen(
     windowSizeClass: WindowSizeClass,
     hideNavLabel: Boolean,
-    onClickNotifications: () -> Unit,
-    onClickSearch: () -> Unit,
-    onClickSettings: () -> Unit,
     content: @Composable (BaseDestination) -> Unit
 ) {
+    val rootNavController = LocalNavController.current
     val navController = rememberNavController(BaseDestination.HOME)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val baseDestinations = remember { BaseDestination.values() }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -88,7 +78,9 @@ fun BaseScreen(
                                 .minimumInteractiveComponentSize()
                                 .size(40.dp)
                                 .clickable(
-                                    onClick = onClickNotifications,
+                                    onClick = {
+                                        rootNavController.navigate(AppDestination.Notifications)
+                                    },
                                     role = Role.Button,
                                     interactionSource = interactionSource,
                                     indication = rememberRipple(
@@ -112,14 +104,22 @@ fun BaseScreen(
                             }
                         }
 
-                        IconButton(onClick = onClickSearch) {
+                        IconButton(
+                            onClick = {
+                                rootNavController.navigate(AppDestination.Search)
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Search,
                                 contentDescription = stringResource(R.string.search)
                             )
                         }
 
-                        IconButton(onClick = onClickSettings) {
+                        IconButton(
+                            onClick = {
+                                rootNavController.navigate(AppDestination.Settings)
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
                                 contentDescription = stringResource(R.string.settings)
@@ -135,7 +135,7 @@ fun BaseScreen(
                     windowSizeClass.heightSizeClass != WindowHeightSizeClass.Compact
                 ) {
                     NavigationBar {
-                        baseDestinations.forEach { destination ->
+                        BaseDestination.entries.forEach { destination ->
                             key(destination) {
                                 NavigationBarItem(
                                     selected = navController.currentDestination == destination,
@@ -158,7 +158,7 @@ fun BaseScreen(
             ) {
                 if (windowSizeClass.widthSizeClass != WindowWidthSizeClass.Compact) {
                     NavigationRail {
-                        baseDestinations.forEach { destination ->
+                        BaseDestination.entries.forEach { destination ->
                             NavigationRailItem(
                                 selected = navController.currentDestination == destination,
                                 icon = { Icon(destination.icon, null) },

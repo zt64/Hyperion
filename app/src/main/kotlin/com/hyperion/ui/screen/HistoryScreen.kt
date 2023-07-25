@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,29 +16,20 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.hyperion.R
+import com.hyperion.ui.component.BackButton
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.HistoryViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HistoryScreen(
-    viewModel: HistoryViewModel = koinViewModel(),
-    onClickBack: () -> Unit
-) {
+fun HistoryScreen() {
+    val viewModel: HistoryViewModel = koinViewModel()
+
     Scaffold(
         topBar = {
             MediumTopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
-                title = {
-                    Text(stringResource(R.string.history))
-                }
+                navigationIcon = { BackButton() },
+                title = { Text(stringResource(R.string.history)) }
             )
         }
     ) { paddingValues ->
@@ -59,10 +50,7 @@ fun HistoryScreen(
             ) { index ->
                 val video = history[index] ?: return@items
 
-                VideoCard(
-                    video = video,
-                    onClick = { /* TODO */ }
-                )
+                VideoCard(video)
             }
         }
     }

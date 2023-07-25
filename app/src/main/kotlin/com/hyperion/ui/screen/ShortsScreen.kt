@@ -15,24 +15,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
+import com.hyperion.ui.component.BackButton
 
 @Composable
-fun ShortsScreen(
-    onClickBack: () -> Unit
-) {
+fun ShortsScreen() {
     val pagerState = rememberPagerState { 10 }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
+                navigationIcon = { BackButton() },
                 title = { Text(stringResource(R.string.shorts)) },
                 actions = {
                     IconButton(
@@ -146,5 +138,5 @@ fun Short() {
 @Preview
 @Composable
 fun ShortsScreenPreview() {
-    ShortsScreen {}
+    ShortsScreen()
 }

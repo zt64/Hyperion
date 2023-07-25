@@ -8,8 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -19,6 +17,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
+import com.hyperion.ui.LocalNavController
+import com.hyperion.ui.component.BackButton
 import com.hyperion.ui.navigation.SettingsDestination
 import com.hyperion.ui.navigation.SettingsSection
 import com.hyperion.ui.navigation.currentDestination
@@ -29,10 +29,9 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SettingsScreen(
-    onClickBack: () -> Unit,
-    viewModel: SettingsViewModel = koinViewModel()
-) {
+fun SettingsScreen() {
+    val viewModel: SettingsViewModel = koinViewModel()
+    val parentNavController = LocalNavController.current
     val navController = rememberNavController<SettingsDestination>(SettingsSection)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -42,20 +41,15 @@ fun SettingsScreen(
         topBar = {
             MediumTopAppBar(
                 navigationIcon = {
-                    IconButton(
+                    BackButton(
                         onClick = {
                             if (navController.currentDestination == SettingsSection) {
-                                onClickBack()
+                                parentNavController.pop()
                             } else {
                                 navController.pop()
                             }
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
+                    )
                 },
                 title = {
                     Crossfade(
@@ -107,11 +101,10 @@ fun SettingsScreen(
             ) {
                 val preferences = viewModel.preferences
                 val coroutineScope = rememberCoroutineScope()
-                val sections = remember { SettingsSection.values() }
 
                 when (destination) {
                     SettingsSection -> {
-                        sections.forEach { destination ->
+                        SettingsSection.entries.forEach { destination ->
                             ListItem(
                                 modifier = Modifier.clickable {
                                     navController.navigate(destination)
@@ -136,7 +129,13 @@ fun SettingsScreen(
                     SettingsSection.APPEARANCE -> AppearanceScreen(preferences)
                     SettingsSection.GESTURES -> GesturesScreen(preferences)
                     SettingsSection.NOTIFICATIONS -> NotificationsScreen(preferences)
-                    SettingsSection.ACCOUNTS -> AccountsScreen(preferences)
+                    SettingsSection.ACCOUNTS -> AccountsScreen(
+                        onClickAddAccount = {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Adding accounts not yet implemented!")
+                            }
+                        },
+                    )
                     SettingsSection.SPONSOR_BLOCK -> SponsorBlockScreen(
                         preferences = preferences,
                         onClickCategory = { category ->

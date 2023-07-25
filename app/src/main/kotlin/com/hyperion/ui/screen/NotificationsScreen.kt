@@ -5,7 +5,9 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.NotificationsNone
+import androidx.compose.material.icons.filled.NotificationsOff
+import androidx.compose.material.icons.filled.RemoveCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,16 +19,15 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.hyperion.R
+import com.hyperion.ui.component.BackButton
 import com.hyperion.ui.component.ShimmerImage
 import com.hyperion.ui.viewmodel.NotificationsViewModel
 import com.zt.innertube.domain.model.Notification
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun NotificationsScreen(
-    onClickBack: () -> Unit,
-    viewModel: NotificationsViewModel = koinViewModel()
-) {
+fun NotificationsScreen() {
+    val viewModel: NotificationsViewModel = koinViewModel()
     val notificationsSheetState = remember { SheetState() }
 
     NotificationSheet(notificationsSheetState)
@@ -35,14 +36,7 @@ fun NotificationsScreen(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.notifications)) },
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                }
+                navigationIcon = { BackButton() }
             )
         }
     ) { paddingValues ->

@@ -13,17 +13,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
+import com.hyperion.ui.LocalNavController
+import com.hyperion.ui.navigation.AppDestination
 import com.zt.innertube.domain.model.DomainTagPartial
+import dev.olshevski.navigation.reimagined.navigate
 
 @Composable
 fun TagCard(
     tag: DomainTagPartial,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val navController = LocalNavController.current
+
     ElevatedCard(
         modifier = modifier,
-        onClick = onClick
+        onClick = {
+            navController.navigate(AppDestination.Tag(tag.name))
+        }
     ) {
         Row(
             modifier = Modifier

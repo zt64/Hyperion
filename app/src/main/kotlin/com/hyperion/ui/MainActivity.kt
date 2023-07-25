@@ -12,9 +12,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -28,7 +26,9 @@ import com.hyperion.ui.screen.base.LibraryScreen
 import com.hyperion.ui.theme.HyperionTheme
 import com.hyperion.ui.theme.Theme
 import com.zt.innertube.network.service.InnerTubeService
-import dev.olshevski.navigation.reimagined.*
+import dev.olshevski.navigation.reimagined.AnimatedNavHost
+import dev.olshevski.navigation.reimagined.NavBackHandler
+import dev.olshevski.navigation.reimagined.rememberNavController
 import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
@@ -74,103 +74,49 @@ private fun Content(
 
                 NavBackHandler(navController)
 
-                AnimatedNavHost(
-                    modifier = Modifier.fillMaxSize(),
-                    controller = navController
-                ) { destination ->
-                    fun onClickVideo(id: String) = navController.navigate(AppDestination.Player(id))
-                    fun onClickChannel(id: String) = navController.navigate(AppDestination.Channel(id))
-
-                    when (destination) {
-                        is BaseDestination -> {
-                            BaseScreen(
+                CompositionLocalProvider(
+                    LocalNavController provides navController
+                ) {
+                    AnimatedNavHost(
+                        modifier = Modifier.fillMaxSize(),
+                        controller = navController
+                    ) { destination ->
+                        when (destination) {
+                            is BaseDestination -> BaseScreen(
                                 windowSizeClass = windowSizeClass,
-                                hideNavLabel = preferences.hideNavItemLabel,
-                                onClickNotifications = { navController.navigate(AppDestination.Notifications) },
-                                onClickSearch = { navController.navigate(AppDestination.Search) },
-                                onClickSettings = { navController.navigate(AppDestination.Settings) }
+                                hideNavLabel = preferences.hideNavItemLabel
                             ) { baseDestination ->
                                 when (baseDestination) {
-                                    BaseDestination.HOME -> {
-                                        HomeScreen(
-                                            onClickVideo = ::onClickVideo,
-                                            onClickChannel = ::onClickChannel
-                                        )
-                                    }
-
-                                    BaseDestination.FEED -> FeedScreen(
-                                        onClickSignIn = { },
-                                    )
-
+                                    BaseDestination.HOME -> HomeScreen()
+                                    BaseDestination.FEED -> FeedScreen()
                                     BaseDestination.LIBRARY -> LibraryScreen()
                                 }
                             }
-                        }
 
-                        AppDestination.Search -> {
-                            SearchScreen(
-                                navController = navController,
-                                onClickBack = navController::pop,
-                                onClickChannel = ::onClickChannel,
-                                onClickPlaylist = { id ->
-                                    navController.navigate(AppDestination.Playlist(id))
-                                },
-                                onClickTag = { name ->
-                                    navController.navigate(AppDestination.Tag(name))
-                                }
-                            )
-                        }
+                            AppDestination.Search -> SearchScreen()
 
-                        is AppDestination.Player -> {
-                            PlayerScreen(
-                                navController = navController,
+                            is AppDestination.Player -> PlayerScreen(
                                 videoId = destination.videoId
                             )
-                        }
 
-                        is AppDestination.Channel -> {
-                            ChannelScreen(
-                                navController = navController,
-                                channelId = destination.channelId,
-                                onClickBack = navController::pop
+                            is AppDestination.Channel -> ChannelScreen(
+                                channelId = destination.channelId
                             )
-                        }
 
-                        is AppDestination.Playlist -> {
-                            PlaylistScreen(
-                                playlistId = destination.playlistId,
-                                onClickVideo = ::onClickVideo,
-                                onClickBack = navController::pop
+                            is AppDestination.Playlist -> PlaylistScreen(
+                                playlistId = destination.playlistId
                             )
-                        }
 
-                        is AppDestination.Tag -> {
-                            TagScreen(
-                                tag = destination.tag,
-                                onClickVideo = ::onClickVideo,
-                                onClickBack = navController::pop
+                            is AppDestination.Tag -> TagScreen(
+                                tag = destination.tag
                             )
+
+                            AppDestination.AddAccount -> AddAccountScreen()
+                            AppDestination.Notifications -> NotificationsScreen()
+                            AppDestination.Channels -> ChannelsScreen()
+                            AppDestination.History -> HistoryScreen()
+                            AppDestination.Settings -> SettingsScreen()
                         }
-
-                        AppDestination.AddAccount -> AddAccountScreen(
-                            onClickBack = navController::pop
-                        )
-
-                        AppDestination.Notifications -> NotificationsScreen(
-                            onClickBack = navController::pop
-                        )
-
-                        AppDestination.Channels -> ChannelsScreen(
-                            onClickBack = navController::pop
-                        )
-
-                        AppDestination.History -> HistoryScreen(
-                            onClickBack = navController::pop
-                        )
-
-                        AppDestination.Settings -> SettingsScreen(
-                            onClickBack = navController::pop
-                        )
                     }
                 }
             }

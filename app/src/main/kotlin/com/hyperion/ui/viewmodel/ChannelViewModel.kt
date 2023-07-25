@@ -19,13 +19,14 @@ class ChannelViewModel(
     private val application: Application,
     private val innerTube: InnerTubeRepository,
     val accountManager: AccountManager,
-    pagingConfig: PagingConfig
+    pagingConfig: PagingConfig,
+    channelId: String
 ) : ViewModel() {
     @Immutable
     sealed interface State {
-        class Loaded(val channel: DomainChannel) : State
-        object Loading : State
-        class Error(val error: Exception) : State
+        data class Loaded(val channel: DomainChannel) : State
+        data object Loading : State
+        data class Error(val error: Exception) : State
     }
 
     var state by mutableStateOf<State>(State.Loading)
@@ -57,10 +58,9 @@ class ChannelViewModel(
         }
     }.flow.cachedIn(viewModelScope)
 
-    fun getChannel(id: String) {
+    init {
         state = State.Loading
-
-        this.id = id
+        id = channelId
 
         viewModelScope.launch {
             state = try {

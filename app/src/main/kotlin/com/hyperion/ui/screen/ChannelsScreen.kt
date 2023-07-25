@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,26 +16,19 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.hyperion.R
+import com.hyperion.ui.component.BackButton
 import com.hyperion.ui.component.ChannelCard
 import com.hyperion.ui.viewmodel.ChannelsViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ChannelsScreen(
-    onClickBack: () -> Unit,
-    viewModel: ChannelsViewModel = koinViewModel()
-) {
+fun ChannelsScreen() {
+    val viewModel: ChannelsViewModel = koinViewModel()
+
     Scaffold(
         topBar = {
             MediumTopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
+                navigationIcon = { BackButton() },
                 title = {
                     Text(stringResource(R.string.channels))
                 }
@@ -62,7 +55,6 @@ fun ChannelsScreen(
                 ChannelCard(
                     modifier = Modifier.animateItemPlacement(),
                     channel = channel,
-                    onClick = { },
                     onLongClick = { },
                     onClickSubscribe = { }
                 )

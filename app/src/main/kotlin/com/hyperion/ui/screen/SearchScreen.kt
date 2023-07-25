@@ -33,25 +33,16 @@ import androidx.paging.compose.itemKey
 import com.hyperion.R
 import com.hyperion.domain.model.search.SearchFilter
 import com.hyperion.ui.component.*
-import com.hyperion.ui.navigation.AppDestination
-import com.hyperion.ui.navigation.Destination
 import com.hyperion.ui.viewmodel.SearchViewModel
 import com.zt.innertube.domain.model.*
-import dev.olshevski.navigation.reimagined.NavController
-import dev.olshevski.navigation.reimagined.navigate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import kotlin.enums.EnumEntries
 
 @Composable
-fun SearchScreen(
-    viewModel: SearchViewModel = koinViewModel(),
-    navController: NavController<Destination>,
-    onClickBack: () -> Unit,
-    onClickChannel: (id: String) -> Unit,
-    onClickPlaylist: (id: String) -> Unit,
-    onClickTag: (name: String) -> Unit
-) {
+fun SearchScreen() {
+    val viewModel: SearchViewModel = koinViewModel()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
@@ -112,14 +103,7 @@ fun SearchScreen(
                         )
                     )
                 },
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
+                navigationIcon = { BackButton() },
                 actions = {
                     IconButton(
                         onClick = { viewModel.showFilterSheet = true }
@@ -207,24 +191,11 @@ fun SearchScreen(
                         val result = results[index] ?: return@items
 
                         when (result) {
-                            is DomainVideoPartial -> {
-                                VideoCard(
-                                    video = result,
-                                    onClick = {
-                                        navController.navigate(AppDestination.Player(result.id))
-                                    },
-                                    onClickChannel = {
-                                        onClickChannel(result.channel!!.id)
-                                    }
-                                )
-                            }
+                            is DomainVideoPartial -> VideoCard(result)
 
                             is DomainChannelPartial -> {
                                 ChannelCard(
                                     channel = result,
-                                    onClick = {
-                                        onClickChannel(result.id)
-                                    },
                                     onLongClick = {
 
                                     },
@@ -234,32 +205,9 @@ fun SearchScreen(
                                 )
                             }
 
-                            is DomainPlaylistPartial -> {
-                                PlaylistCard(
-                                    playlist = result,
-                                    onClick = {
-                                        onClickPlaylist(result.id)
-                                    }
-                                )
-                            }
-
-                            is DomainMixPartial -> {
-                                MixCard(
-                                    mix = result,
-                                    onClick = {
-
-                                    }
-                                )
-                            }
-
-                            is DomainTagPartial -> {
-                                TagCard(
-                                    tag = result,
-                                    onClick = {
-                                        onClickTag(result.name)
-                                    }
-                                )
-                            }
+                            is DomainPlaylistPartial -> PlaylistCard(result)
+                            is DomainMixPartial -> MixCard(result)
+                            is DomainTagPartial -> TagCard(result)
                         }
                     }
 
@@ -300,11 +248,11 @@ private fun FilterSheet(onDismissRequest: () -> Unit) {
             verticalArrangement = Arrangement.spacedBy(28.dp)
         ) {
             @Composable
-            fun FilterFlowRow(
+            fun <T> FilterFlowRow(
                 @StringRes title: Int,
                 icon: ImageVector,
-                items: Array<out SearchFilter>
-            ) {
+                items: EnumEntries<T>
+            ) where T : Enum<T>, T : SearchFilter {
                 Column {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -331,9 +279,7 @@ private fun FilterSheet(onDismissRequest: () -> Unit) {
 
                             FilterChip(
                                 selected = selected,
-                                onClick = {
-                                    selected = !selected
-                                },
+                                onClick = { selected = !selected },
                                 label = {
                                     Text(stringResource(filter.displayName))
                                 },
@@ -347,31 +293,31 @@ private fun FilterSheet(onDismissRequest: () -> Unit) {
             FilterFlowRow(
                 title = R.string.upload_date,
                 icon = Icons.Default.CalendarToday,
-                items = SearchFilter.UploadDate.values()
+                items = SearchFilter.UploadDate.entries
             )
 
             FilterFlowRow(
                 title = R.string.type,
                 icon = Icons.Default.FilterList,
-                items = SearchFilter.Type.values()
+                items = SearchFilter.Type.entries
             )
 
             FilterFlowRow(
                 title = R.string.duration,
                 icon = Icons.Default.Timer,
-                items = SearchFilter.Duration.values()
+                items = SearchFilter.Duration.entries
             )
 
             FilterFlowRow(
                 title = R.string.features,
                 icon = Icons.Default.Star,
-                items = SearchFilter.Feature.values()
+                items = SearchFilter.Feature.entries
             )
 
             FilterFlowRow(
                 title = R.string.sort_by,
                 icon = Icons.Default.Sort,
-                items = SearchFilter.Sort.values()
+                items = SearchFilter.Sort.entries
             )
         }
     }

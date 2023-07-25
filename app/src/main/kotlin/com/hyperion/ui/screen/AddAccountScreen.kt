@@ -3,7 +3,6 @@ package com.hyperion.ui.screen
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.OpenInBrowser
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -12,52 +11,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
+import com.hyperion.ui.component.BackButton
 import com.hyperion.ui.viewmodel.AddAccountViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AddAccountScreen(
-    viewModel: AddAccountViewModel = koinViewModel(),
-    onClickBack: () -> Unit
-) {
+fun AddAccountScreen() {
+    val viewModel: AddAccountViewModel = koinViewModel()
+
     when (val state = viewModel.state) {
         AddAccountViewModel.State.Loading -> {
-            AddAccountScreenLoading(onClickBack)
+            AddAccountScreenLoading()
         }
 
         is AddAccountViewModel.State.Loaded -> {
             AddAccountScreenLoaded(
                 code = state.code,
-                onClickBack = onClickBack,
                 onClickActivate = viewModel::activate
             )
         }
 
         is AddAccountViewModel.State.Error -> {
             ErrorScreen(
-                exception = state.error,
-                onClickBack = onClickBack
+                exception = state.error
             )
         }
     }
 }
 
 @Composable
-private fun AddAccountScreenLoading(onClickBack: () -> Unit) {
+private fun AddAccountScreenLoading() {
     Scaffold(
         topBar = {
             LargeTopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
-                title = {
-                    Text(stringResource(R.string.add_account))
-                }
+                navigationIcon = { BackButton() },
+                title = { Text(stringResource(R.string.add_account)) }
             )
         }
     ) { paddingValues ->
@@ -75,23 +63,13 @@ private fun AddAccountScreenLoading(onClickBack: () -> Unit) {
 @Composable
 private fun AddAccountScreenLoaded(
     code: String,
-    onClickBack: () -> Unit,
     onClickActivate: () -> Unit
 ) {
     Scaffold(
         topBar = {
             LargeTopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
-                title = {
-                    Text(stringResource(R.string.add_account))
-                }
+                navigationIcon = { BackButton() },
+                title = { Text(stringResource(R.string.add_account)) }
             )
         }
     ) { paddingValues ->

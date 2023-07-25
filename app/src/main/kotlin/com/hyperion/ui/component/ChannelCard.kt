@@ -12,24 +12,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hyperion.R
 import com.hyperion.domain.manager.AccountManager
+import com.hyperion.ui.LocalNavController
+import com.hyperion.ui.navigation.AppDestination
 import com.zt.innertube.domain.model.DomainChannelPartial
+import dev.olshevski.navigation.reimagined.navigate
 import org.koin.compose.koinInject
 
 @Composable
 fun ChannelCard(
     channel: DomainChannelPartial,
-    onClick: () -> Unit,
     onLongClick: () -> Unit,
     onClickSubscribe: () -> Unit,
     modifier: Modifier = Modifier,
     accountManager: AccountManager = koinInject(),
 ) {
+    val navController = LocalNavController.current
+
     ElevatedCard(
         modifier = modifier
             .clip(CardDefaults.elevatedShape)
             .fillMaxWidth()
             .combinedClickable(
-                onClick = onClick,
+                onClick = {
+                    navController.navigate(AppDestination.Channel(channel.id))
+                },
                 onLongClick = onLongClick
             )
     ) {

@@ -16,23 +16,27 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.hyperion.domain.manager.PreferencesManager
+import com.hyperion.ui.LocalNavController
 import com.hyperion.ui.component.player.WIDESCREEN_RATIO
 import com.zt.innertube.domain.model.DomainMixPartial
 import org.koin.compose.koinInject
 
 @Composable
 fun MixCard(
-    modifier: Modifier = Modifier,
     mix: DomainMixPartial,
-    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     onLongClick: () -> Unit = { },
-    prefs: PreferencesManager = koinInject()
 ) {
+    val navController = LocalNavController.current
+    val prefs: PreferencesManager = koinInject()
+
     ElevatedCard(
         modifier = modifier
             .clip(CardDefaults.elevatedShape)
             .combinedClickable(
-                onClick = onClick,
+                onClick = {
+
+                },
                 onLongClick = onLongClick
             )
     ) {

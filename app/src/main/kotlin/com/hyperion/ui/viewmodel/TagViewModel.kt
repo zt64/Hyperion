@@ -3,10 +3,7 @@ package com.hyperion.ui.viewmodel
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
+import androidx.paging.*
 import com.hyperion.domain.paging.BrowsePagingSource
 import com.zt.innertube.domain.model.DomainVideoPartial
 import com.zt.innertube.domain.repository.InnerTubeRepository
@@ -16,13 +13,14 @@ import kotlinx.coroutines.launch
 @Stable
 class TagViewModel(
     private val innerTube: InnerTubeRepository,
-    private val pagingConfig: PagingConfig
+    private val pagingConfig: PagingConfig,
+    tag: String
 ) : ViewModel() {
     @Immutable
     sealed interface State {
-        object Loading : State
-        object Loaded : State
-        class Error(val exception: Exception) : State
+        data object Loading : State
+        data object Loaded : State
+        data class Error(val exception: Exception) : State
     }
 
     var state by mutableStateOf<State>(State.Loading)
@@ -34,14 +32,14 @@ class TagViewModel(
     var videos by mutableStateOf(emptyFlow<PagingData<DomainVideoPartial>>())
         private set
 
-    fun getTag(tagQuery: String) {
+    init {
         state = State.Loading
 
         viewModelScope.launch {
             state = try {
-                val response = innerTube.getTag(tagQuery)
+                val response = innerTube.getTag(tag)
 
-                tag = response.name
+                this@TagViewModel.tag = response.name
                 subtitle = response.subtitle
 
                 videos = Pager(pagingConfig) {

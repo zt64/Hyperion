@@ -1,10 +1,13 @@
 package com.hyperion.ui.navigation
 
+import android.os.Parcelable
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.hyperion.R
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 
 sealed interface SettingsDestination {
     @get:StringRes
@@ -24,7 +27,9 @@ enum class SettingsSection(
     BACKUP_RESTORE(Icons.Default.SettingsBackupRestore, R.string.backup_restore),
     ABOUT(Icons.Default.Info, R.string.about);
 
-    companion object : SettingsDestination {
+    @Parcelize
+    companion object : SettingsDestination, Parcelable {
+        @IgnoredOnParcel
         override val label = R.string.settings
     }
 }

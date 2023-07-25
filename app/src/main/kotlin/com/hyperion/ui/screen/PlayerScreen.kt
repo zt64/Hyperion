@@ -42,10 +42,10 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.hyperion.R
+import com.hyperion.ui.LocalNavController
 import com.hyperion.ui.component.*
 import com.hyperion.ui.component.player.*
 import com.hyperion.ui.navigation.AppDestination
-import com.hyperion.ui.navigation.Destination
 import com.hyperion.ui.sheet.CommentsSheet
 import com.hyperion.ui.sheet.DownloadSheet
 import com.hyperion.ui.sheet.PlayerSheet
@@ -53,38 +53,21 @@ import com.hyperion.ui.viewmodel.PlayerViewModel
 import com.hyperion.util.findActivity
 import com.zt.innertube.domain.model.DomainChapter
 import com.zt.innertube.domain.model.DomainVideo
-import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import kotlin.math.roundToInt
 
 @Composable
-fun PlayerScreen(
-    navController: NavController<Destination>,
-    viewModel: PlayerViewModel = koinViewModel(),
-    videoId: String? = null
-) {
+fun PlayerScreen(videoId: String) {
+    val viewModel: PlayerViewModel = koinViewModel { parametersOf(videoId) }
+
     when (val state = viewModel.state) {
-        is PlayerViewModel.State.Loading -> {
-            LaunchedEffect(Unit) {
-                if (viewModel.video == null && videoId != null) viewModel.loadVideo(videoId)
-            }
-
-            PlayerScreenLoading()
-        }
-
-        is PlayerViewModel.State.Loaded -> {
-            PlayerScreenLoaded(navController)
-        }
-
-        is PlayerViewModel.State.Error -> {
-            ErrorScreen(
-                exception = state.exception,
-                onClickBack = navController::pop
-            )
-        }
+        is PlayerViewModel.State.Loading -> PlayerScreenLoading()
+        is PlayerViewModel.State.Loaded -> PlayerScreenLoaded()
+        is PlayerViewModel.State.Error -> ErrorScreen(state.exception)
     }
 }
 
@@ -105,10 +88,8 @@ private fun PlayerScreenLoading() {
 }
 
 @Composable
-private fun PlayerScreenLoaded(
-    navController: NavController<Destination>,
-    viewModel: PlayerViewModel = koinViewModel()
-) {
+private fun PlayerScreenLoaded() {
+    val viewModel: PlayerViewModel = koinViewModel()
     val context = LocalContext.current
 
     if (viewModel.showQualityPicker) {
@@ -124,7 +105,7 @@ private fun PlayerScreenLoaded(
     }
 
     DisposableEffect(viewModel.isFullscreen) {
-        val activity = context.findActivity() ?: return@DisposableEffect onDispose { }
+        val activity = context.findActivity()
         val insetsController = WindowInsetsControllerCompat(activity.window, activity.window.decorView)
         val originalOrientation = activity.requestedOrientation
 
@@ -148,26 +129,25 @@ private fun PlayerScreenLoaded(
 
     @SuppressLint("SwitchIntDef")
     when (LocalConfiguration.current.orientation) {
-        Configuration.ORIENTATION_PORTRAIT -> PlayerScreenPortrait(navController)
+        Configuration.ORIENTATION_PORTRAIT -> PlayerScreenPortrait()
 
         Configuration.ORIENTATION_LANDSCAPE -> PlayerControls(
-            modifier = Modifier.fillMaxHeight(),
-            navController = navController,
+            modifier = Modifier.fillMaxHeight()
         )
     }
 }
 
 @Composable
-private fun PlayerScreenPortrait(
-    navController: NavController<Destination>,
-    viewModel: PlayerViewModel = koinViewModel()
-) {
+private fun PlayerScreenPortrait() {
+    val navController = LocalNavController.current
+    val viewModel: PlayerViewModel = koinViewModel()
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         val relatedVideos = viewModel.relatedVideos.collectAsLazyPagingItems()
 
-        PlayerControls(navController)
+        PlayerControls()
 
         LazyColumn(
             modifier = Modifier.padding(horizontal = 14.dp),
@@ -310,15 +290,7 @@ private fun PlayerScreenPortrait(
                 ) { index ->
                     val relatedVideo = relatedVideos[index] ?: return@items
 
-                    VideoCard(
-                        video = relatedVideo,
-                        onClick = { viewModel.loadVideo(relatedVideo.id) },
-                        onClickChannel = {
-                            navController.navigate(
-                                AppDestination.Channel(relatedVideo.channel!!.id)
-                            )
-                        }
-                    )
+                    VideoCard(relatedVideo)
                 }
 
                 item {
@@ -346,10 +318,10 @@ private fun PlayerScreenPortrait(
 
 @Composable
 private fun PlayerControls(
-    navController: NavController<Destination>,
     modifier: Modifier = Modifier,
-    viewModel: PlayerViewModel = koinViewModel(),
 ) {
+    val navController = LocalNavController.current
+    val viewModel: PlayerViewModel = koinViewModel()
     val coroutineScope = rememberCoroutineScope()
     val offsetY = remember { Animatable(0f) }
     val isLandscape = LocalConfiguration.current.orientation == Configuration.ORIENTATION_LANDSCAPE

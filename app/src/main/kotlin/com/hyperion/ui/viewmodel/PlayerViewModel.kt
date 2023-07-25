@@ -40,13 +40,14 @@ class PlayerViewModel(
     private val downloadManager: DownloadManager,
     private val pagingConfig: PagingConfig,
     val accountManager: AccountManager,
-    val preferences: PreferencesManager
+    val preferences: PreferencesManager,
+    videoId: String
 ) : ViewModel() {
     @Immutable
     sealed interface State {
-        object Loaded : State
-        object Loading : State
-        class Error(val exception: Exception) : State
+        data object Loaded : State
+        data object Loading : State
+        data class Error(val exception: Exception) : State
     }
 
     var state by mutableStateOf<State>(State.Loading)
@@ -127,6 +128,10 @@ class PlayerViewModel(
     lateinit var player: MediaController
 
     init {
+        viewModelScope.launch {
+            loadVideo(videoId)
+        }
+
         val sessionToken =
             SessionToken(application, ComponentName(application, PlaybackService::class.java))
         val controllerFuture = MediaController.Builder(application, sessionToken).buildAsync()

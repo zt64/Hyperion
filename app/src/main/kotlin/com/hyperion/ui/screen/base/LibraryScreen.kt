@@ -23,9 +23,9 @@ import com.hyperion.ui.viewmodel.LibraryViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun LibraryScreen(
-    viewModel: LibraryViewModel = koinViewModel()
-) {
+fun LibraryScreen() {
+    val viewModel: LibraryViewModel = koinViewModel()
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

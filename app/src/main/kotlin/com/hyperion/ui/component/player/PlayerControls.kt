@@ -26,8 +26,9 @@ import kotlin.time.Duration.Companion.seconds
 fun PlayerControls(
     onClickCollapse: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: PlayerViewModel = koinViewModel(),
 ) {
+    val viewModel: PlayerViewModel = koinViewModel()
+
     Box(
         modifier = modifier.padding(6.dp)
     ) {

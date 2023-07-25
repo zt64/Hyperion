@@ -10,11 +10,8 @@ import androidx.compose.material.icons.filled.Reply
 import androidx.compose.material.icons.filled.ThumbDown
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,9 +23,7 @@ import com.hyperion.R
 import com.zt.innertube.domain.model.DomainComment
 
 @Composable
-fun CommentsSheet(
-    onDismissRequest: () -> Unit
-) {
+fun CommentsSheet(onDismissRequest: () -> Unit) {
     ModalBottomSheet(onDismissRequest) {
         LazyColumn(
             modifier = Modifier.padding()
@@ -73,7 +68,7 @@ private fun Comment(comment: DomainComment) {
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
-                    //                Text(comment.author.name)
+                    // Text(comment.author.name)
                 },
                 supportingContent = {
                     Text(comment.content)

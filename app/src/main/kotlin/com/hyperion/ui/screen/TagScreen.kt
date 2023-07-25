@@ -2,64 +2,39 @@ package com.hyperion.ui.screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
-import com.hyperion.R
+import com.hyperion.ui.component.BackButton
 import com.hyperion.ui.component.VideoCard
 import com.hyperion.ui.viewmodel.TagViewModel
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
-fun TagScreen(
-    viewModel: TagViewModel = koinViewModel(),
-    tag: String,
-    onClickVideo: (id: String) -> Unit,
-    onClickBack: () -> Unit
-) = when (val state = viewModel.state) {
-    is TagViewModel.State.Error -> ErrorScreen(
-        exception = state.exception,
-        onClickBack = onClickBack
-    )
+fun TagScreen(tag: String) {
+    val viewModel: TagViewModel = koinViewModel { parametersOf(tag) }
 
-    TagViewModel.State.Loading -> {
-        LaunchedEffect(Unit) {
-            viewModel.getTag(tag)
-        }
-
-        TagScreenLoading(onClickBack)
+    when (val state = viewModel.state) {
+        is TagViewModel.State.Loading -> TagScreenLoading()
+        is TagViewModel.State.Loaded -> TagScreenLoaded()
+        is TagViewModel.State.Error -> ErrorScreen(state.exception)
     }
-
-    TagViewModel.State.Loaded -> TagScreenLoaded(
-        onClickVideo = onClickVideo,
-        onClickBack = onClickBack
-    )
 }
 
 @Composable
-private fun TagScreenLoading(onClickBack: () -> Unit) {
+private fun TagScreenLoading() {
     Scaffold(
         topBar = {
             MediumTopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
+                navigationIcon = { BackButton() },
                 title = { }
             )
         }
@@ -76,28 +51,16 @@ private fun TagScreenLoading(onClickBack: () -> Unit) {
 }
 
 @Composable
-private fun TagScreenLoaded(
-    viewModel: TagViewModel = koinViewModel(),
-    onClickVideo: (id: String) -> Unit,
-    onClickBack: () -> Unit
-) {
+private fun TagScreenLoaded() {
+    val viewModel: TagViewModel = koinViewModel()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             MediumTopAppBar(
-                navigationIcon = {
-                    IconButton(onClick = onClickBack) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
-                        )
-                    }
-                },
-                title = {
-                    Text(viewModel.tag!!)
-                },
+                navigationIcon = { BackButton() },
+                title = { Text(viewModel.tag!!) },
                 scrollBehavior = scrollBehavior
             )
         }
@@ -125,12 +88,7 @@ private fun TagScreenLoaded(
             ) { index ->
                 val video = videos[index] ?: return@items
 
-                VideoCard(
-                    video = video,
-                    onClick = {
-                        onClickVideo(video.id)
-                    }
-                )
+                VideoCard(video)
             }
 
             item {

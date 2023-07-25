@@ -16,23 +16,29 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.hyperion.domain.manager.PreferencesManager
+import com.hyperion.ui.LocalNavController
 import com.hyperion.ui.component.player.WIDESCREEN_RATIO
+import com.hyperion.ui.navigation.AppDestination
 import com.zt.innertube.domain.model.DomainPlaylistPartial
+import dev.olshevski.navigation.reimagined.navigate
 import org.koin.compose.koinInject
 
 @Composable
 fun PlaylistCard(
-    modifier: Modifier = Modifier,
     playlist: DomainPlaylistPartial,
-    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     onLongClick: () -> Unit = { },
     prefs: PreferencesManager = koinInject()
 ) {
+    val navController = LocalNavController.current
+
     ElevatedCard(
         modifier = modifier
             .clip(CardDefaults.elevatedShape)
             .combinedClickable(
-                onClick = onClick,
+                onClick = {
+                    navController.navigate(AppDestination.Playlist(playlist.id))
+                },
                 onLongClick = onLongClick
             )
     ) {

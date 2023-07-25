@@ -21,11 +21,8 @@ import com.hyperion.ui.viewmodel.HomeViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun HomeScreen(
-    viewModel: HomeViewModel = koinViewModel(),
-    onClickVideo: (videoId: String) -> Unit,
-    onClickChannel: (channelId: String) -> Unit
-) {
+fun HomeScreen() {
+    val viewModel: HomeViewModel = koinViewModel()
     val videos = viewModel.videos.collectAsLazyPagingItems()
 
     LazyColumn(
@@ -48,11 +45,7 @@ fun HomeScreen(
         ) { index ->
             val video = videos[index] ?: return@items
 
-            VideoCard(
-                video = video,
-                onClick = { onClickVideo(video.id) },
-                onClickChannel = { onClickChannel(video.channel!!.id) }
-            )
+            VideoCard(video)
         }
 
         item {
