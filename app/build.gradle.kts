@@ -40,6 +40,10 @@ android {
         }
     }
 
+    androidResources {
+        generateLocaleConfig = true
+    }
+
     androidComponents {
         onVariants(selector().withBuildType("release")) {
             it.packaging.resources.excludes.apply {
