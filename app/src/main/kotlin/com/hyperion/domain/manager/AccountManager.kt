@@ -15,8 +15,9 @@ class AccountManager(
     var loggedIn: Boolean by mutableStateOf(false)
 
     init {
-        deviceId = preferencesManager.deviceId.takeUnless { it.isEmpty() }
-            ?: UUID.randomUUID().toString().also { preferencesManager.deviceId = it }
+        deviceId = preferencesManager.deviceId.ifEmpty {
+            UUID.randomUUID().toString().also { preferencesManager.deviceId = it }
+        }
     }
 
     suspend fun getCode(): String {
