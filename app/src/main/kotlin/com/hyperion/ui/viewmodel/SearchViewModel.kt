@@ -5,10 +5,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
+import androidx.paging.*
 import com.hyperion.domain.manager.AccountManager
 import com.hyperion.domain.paging.BrowsePagingSource
 import com.zt.innertube.domain.model.Entity
@@ -16,7 +13,6 @@ import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
-@Stable
 class SearchViewModel(
     private val innerTube: InnerTubeRepository,
     private val pagingConfig: PagingConfig,

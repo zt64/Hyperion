@@ -1,6 +1,5 @@
 package com.hyperion.ui.viewmodel
 
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,7 +9,6 @@ import com.zt.innertube.domain.model.DomainChannelPartial
 import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.flow.emptyFlow
 
-@Stable
 class ChannelsViewModel(
     private val innerTube: InnerTubeRepository
 ) : ViewModel() {

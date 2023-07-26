@@ -15,7 +15,6 @@ import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
-@Stable
 class PlaylistViewModel(
     private val application: Application,
     private val innerTube: InnerTubeRepository,

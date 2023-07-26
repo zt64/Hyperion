@@ -1,6 +1,5 @@
 package com.hyperion.ui.viewmodel
 
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,7 +10,6 @@ import com.zt.innertube.domain.model.Entity
 import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.flow.emptyFlow
 
-@Stable
 class FeedViewModel(
     private val preferencesManager: PreferencesManager,
     private val innerTube: InnerTubeRepository,

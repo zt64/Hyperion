@@ -14,7 +14,6 @@ import com.zt.innertube.domain.repository.InnerTubeRepository
 import com.zt.innertube.network.dto.browse.ChannelTab
 import kotlinx.coroutines.launch
 
-@Stable
 class ChannelViewModel(
     private val application: Application,
     private val innerTube: InnerTubeRepository,

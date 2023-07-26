@@ -10,7 +10,6 @@ import com.zt.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
-@Stable
 class TagViewModel(
     private val innerTube: InnerTubeRepository,
     private val pagingConfig: PagingConfig,
