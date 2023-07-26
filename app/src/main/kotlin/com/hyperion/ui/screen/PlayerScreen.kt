@@ -290,7 +290,12 @@ private fun PlayerScreenPortrait() {
                 ) { index ->
                     val relatedVideo = relatedVideos[index] ?: return@items
 
-                    VideoCard(relatedVideo)
+                    VideoCard(
+                        video = relatedVideo,
+                        onClick = {
+                            viewModel.loadVideo(relatedVideo.id)
+                        },
+                    )
                 }
 
                 item {

@@ -29,6 +29,25 @@ import org.koin.compose.koinInject
 fun VideoCard(
     video: DomainVideoPartial,
     modifier: Modifier = Modifier,
+    onLongClick: () -> Unit = { }
+) {
+    val navController = LocalNavController.current
+
+    VideoCard(
+        video = video,
+        onClick = {
+            navController.navigate(AppDestination.Player(video.id))
+        },
+        modifier = modifier,
+        onLongClick = onLongClick,
+    )
+}
+
+@Composable
+fun VideoCard(
+    video: DomainVideoPartial,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     onLongClick: () -> Unit = { },
     prefs: PreferencesManager = koinInject()
 ) {
@@ -38,9 +57,7 @@ fun VideoCard(
         modifier = modifier
             .clip(CardDefaults.elevatedShape)
             .combinedClickable(
-                onClick = {
-                    navController.navigate(AppDestination.Player(video.id))
-                },
+                onClick = onClick,
                 onLongClick = onLongClick
             )
     ) {
