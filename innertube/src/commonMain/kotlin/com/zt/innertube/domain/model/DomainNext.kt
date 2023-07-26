@@ -1,5 +1,8 @@
 package com.zt.innertube.domain.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class DomainNext(
     val viewCount: String,
     val uploadDate: String,

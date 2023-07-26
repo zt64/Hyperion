@@ -1,5 +1,8 @@
 package com.zt.innertube.domain.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class DomainComment(
     val id: String,
     val author: DomainChannelPartial,

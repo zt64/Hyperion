@@ -1,5 +1,8 @@
 package com.zt.innertube.domain.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class DomainMix(
     val id: String,
     val title: String,
@@ -9,6 +12,7 @@ data class DomainMix(
     override val continuation: String?,
 ) : DomainBrowse<DomainVideoPartial>()
 
+@Immutable
 data class DomainMixPartial(
     val id: String,
     val title: String,

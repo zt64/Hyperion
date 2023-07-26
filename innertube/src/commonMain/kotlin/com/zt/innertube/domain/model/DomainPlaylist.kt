@@ -1,5 +1,8 @@
 package com.zt.innertube.domain.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class DomainPlaylist(
     val id: String,
     val name: String,
@@ -11,6 +14,7 @@ data class DomainPlaylist(
     val shareUrl = "https://youtube.com/playlist?list=$id"
 }
 
+@Immutable
 data class DomainPlaylistPartial(
     val id: String,
     val title: String,

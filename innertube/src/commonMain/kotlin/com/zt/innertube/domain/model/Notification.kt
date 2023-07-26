@@ -1,5 +1,7 @@
 package com.zt.innertube.domain.model
 
+import androidx.compose.runtime.Immutable
+
 /**
  * TODO
  *
@@ -11,6 +13,7 @@ package com.zt.innertube.domain.model
  * @property sentTimeText
  * @property read
  */
+@Immutable
 data class Notification(
     val id: Long,
     val header: String,

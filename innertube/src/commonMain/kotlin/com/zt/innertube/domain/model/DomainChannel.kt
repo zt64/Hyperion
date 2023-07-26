@@ -1,8 +1,10 @@
 package com.zt.innertube.domain.model
 
+import androidx.compose.runtime.Immutable
 import com.zt.innertube.network.dto.ApiImageSource
 import com.zt.innertube.network.dto.browse.ChannelTab
 
+@Immutable
 data class DomainChannel(
     val id: String,
     val name: String,
@@ -15,6 +17,7 @@ data class DomainChannel(
     val shareUrl = "https://www.youtube.com/channel/$id"
 }
 
+@Immutable
 data class DomainChannelPartial(
     val id: String,
     val name: String? = null,

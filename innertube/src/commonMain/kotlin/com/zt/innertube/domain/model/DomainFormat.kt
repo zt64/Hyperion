@@ -1,5 +1,6 @@
 package com.zt.innertube.domain.model
 
+import androidx.compose.runtime.Immutable
 import kotlinx.serialization.*
 import kotlinx.serialization.builtins.PairSerializer
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -20,6 +21,7 @@ internal object FormatSerializer : JsonContentPolymorphicSerializer<DomainFormat
     }
 }
 
+@Immutable
 @Serializable(with = FormatSerializer::class)
 sealed interface DomainFormat {
     val url: String
@@ -31,6 +33,7 @@ sealed interface DomainFormat {
     val bitrate: Int
     val averageBitrate: Int
 
+    @Immutable
     @Serializable
     data class Audio(
         override val url: String,
@@ -62,6 +65,7 @@ sealed interface DomainFormat {
         }
     }
 
+    @Immutable
     @Serializable
     data class Video(
         override val url: String,
@@ -78,6 +82,7 @@ sealed interface DomainFormat {
         val qualityLabel: String
     ) : DomainFormat
 
+    @Immutable
     @Serializable
     data class Text(
         override val url: String,
@@ -92,7 +97,6 @@ sealed interface DomainFormat {
         val qualityLabel: String
     ) : DomainFormat
 }
-
 
 internal typealias LongRange = @Serializable(with = RangeSerializer::class) ClosedRange<Long>
 

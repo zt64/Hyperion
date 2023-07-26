@@ -1,7 +1,9 @@
 package com.zt.innertube.domain.model
 
+import androidx.compose.runtime.Immutable
 import com.zt.innertube.network.service.InnerTubeService
 
+@Immutable
 data class DomainVideo(
     val id: String,
     val title: String,
@@ -18,6 +20,7 @@ data class DomainVideo(
     val shareUrl = "https://youtu.be/$id"
 }
 
+@Immutable
 data class DomainVideoPartial(
     val id: String,
     val title: String,

@@ -5,6 +5,7 @@ agp = "8.1.0"
 compose = "1.6.0-alpha02"
 compose-compiler = "1.5.1"
 compose-material3 = "1.2.0-alpha04"
+compose-stable-marker = "1.0.0"
 accompanist = "0.31.5-beta"
 ktor = "2.3.2"
 media3 = "1.1.0"
@@ -34,6 +35,7 @@ compose-animation-graphics = { module = "androidx.compose.animation:animation-gr
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
 compose-material3-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "compose-material3" }
 compose-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
+compose-stable-marker = { module = "com.github.skydoves:compose-stable-marker", version.ref = "compose-stable-marker" }
 
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 accompanist-placeholder = { module = "com.google.accompanist:accompanist-placeholder", version.ref = "accompanist" }

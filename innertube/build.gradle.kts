@@ -34,6 +34,8 @@ kotlin {
                 implementation(libs.kotlinx.serialization.protobuf)
 
                 implementation(libs.bundles.ktor)
+
+                compileOnly(libs.compose.stable.marker)
             }
         }
 
