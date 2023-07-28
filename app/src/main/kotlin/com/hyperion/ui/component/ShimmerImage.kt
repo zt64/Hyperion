@@ -1,20 +1,20 @@
 package com.hyperion.ui.component
 
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.placeholder
-import com.google.accompanist.placeholder.shimmer
+import com.hyperion.ui.theme.HyperionTheme
+import com.valentinilk.shimmer.shimmer
 import io.kamel.core.config.KamelConfig
 import io.kamel.core.config.httpFetcher
 import io.kamel.core.config.stringMapper
@@ -44,23 +44,7 @@ fun ShimmerImage(
             resource = asyncPainterResource(url),
             contentDescription = contentDescription,
             contentScale = contentScale,
-            onLoading = {
-                val localElevation = LocalAbsoluteTonalElevation.current
-
-                Box(
-                    modifier = Modifier
-                        .placeholder(
-                            visible = true,
-                            color = MaterialTheme.colorScheme.surfaceColorAtElevation(localElevation + 1.dp),
-                            highlight = PlaceholderHighlight.shimmer(
-                                highlightColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
-                                    localElevation + 4.dp
-                                )
-                            )
-                        )
-                        .fillMaxSize()
-                )
-            },
+            onLoading = { Loading() },
             onFailure = {
                 Icon(
                     modifier = Modifier.size(64.dp),
@@ -70,5 +54,33 @@ fun ShimmerImage(
             },
             animationSpec = tween()
         )
+    }
+}
+
+context(BoxScope)
+@Composable
+private fun Loading() {
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .shimmer(),
+        color = MaterialTheme.colorScheme.surfaceContainerHighest,
+        content = {},
+    )
+}
+
+@Preview
+@Composable
+private fun LoadingPreview() {
+    HyperionTheme {
+        Surface(
+            modifier = Modifier.size(100.dp, 100.dp)
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(0.5f)
+            ) {
+                Loading()
+            }
+        }
     }
 }

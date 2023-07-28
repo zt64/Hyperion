@@ -6,11 +6,12 @@ compose = "1.6.0-alpha02"
 compose-compiler = "1.5.1"
 compose-material3 = "1.2.0-alpha04"
 compose-stable-marker = "1.0.0"
-accompanist = "0.31.5-beta"
+compose-shimmer = "1.0.5"
+accompanist = "0.31.6-rc"
 ktor = "2.3.2"
 media3 = "1.1.0"
-koin = "3.4.5"
-kamel-image = "0.7.0"
+koin = "3.4.6"
+kamel-image = "0.7.1"
 
 [libraries]
 androidx-core = "androidx.core:core-ktx:1.10.1"
@@ -36,9 +37,9 @@ compose-material3 = { module = "androidx.compose.material3:material3", version.r
 compose-material3-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "compose-material3" }
 compose-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
 compose-stable-marker = { module = "com.github.skydoves:compose-stable-marker", version.ref = "compose-stable-marker" }
+compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "compose-shimmer" }
 
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
-accompanist-placeholder = { module = "com.google.accompanist:accompanist-placeholder", version.ref = "accompanist" }
 
 kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamel-image" }
 
@@ -61,7 +62,6 @@ compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.1.12" 
 androidx = ["androidx-core", "androidx-splashscreen", "androidx-activity", "androidx-paging"]
 ktor = ["ktor-core", "ktor-contentnegotiation", "ktor-serialization-json", "ktor-encoding"]
 media3 = ["media3-exoplayer", "media3-exoplayer-dash", "media3-session"]
-accompanist = ["accompanist-systemuicontroller", "accompanist-placeholder"]
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

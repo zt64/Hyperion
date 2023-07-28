@@ -70,7 +70,6 @@ dependencies {
     implementation(libs.bundles.androidx)
     implementation(libs.bundles.ktor)
     implementation(libs.bundles.media3)
-    implementation(libs.bundles.accompanist)
 
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling)
@@ -79,6 +78,7 @@ dependencies {
     implementation(libs.compose.material3.windowSizeClass)
     implementation(libs.compose.icons.extended)
     implementation(libs.compose.animation.graphics)
+    implementation(libs.compose.shimmer)
     implementation(libs.navigation)
     implementation(libs.kamel.image)
     debugImplementation(libs.compose.ui.tooling.preview)
@@ -87,6 +87,7 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.koin.compose)
     implementation(libs.ktor.okhttp)
+    implementation(libs.accompanist.systemuicontroller)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
