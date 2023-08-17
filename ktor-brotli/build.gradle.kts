@@ -8,7 +8,7 @@ kotlin {
     jvm()
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 implementation(libs.ktor.encoding)
                 implementation(libs.brotli)

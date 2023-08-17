@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -7,7 +9,25 @@ pluginManagement {
     }
 }
 
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
 rootProject.name = "Hyperion"
-include(":app")
 include(":innertube")
 include(":ktor-brotli")
+
+include(
+    ":common",
+    ":desktop"
+)
+
+include(
+    ":android",
+    ":android:tv",
+    ":android:mobile",
+    ":android:wear",
+)
