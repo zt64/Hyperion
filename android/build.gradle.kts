@@ -43,6 +43,10 @@ subprojects {
                     parent!!.file("proguard-rules.pro")
                 )
             }
+
+            all {
+                versionNameSuffix = "-${project.name}"
+            }
         }
 
         packaging {

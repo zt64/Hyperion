@@ -21,10 +21,10 @@ jobs:
           cache: 'gradle'
 
       - name: Build project with Gradle
-        run: chmod +x ./gradlew && ./gradlew app:assembleDebug --no-daemon
+        run: chmod +x ./gradlew && ./gradlew android:assembleDebug --no-daemon
 
       - uses: actions/upload-artifact@v3
         with:
           name: app-debug
           path: |
-            app/build/outputs/apk/debug/app-debug.apk
+            android/**/build/outputs/apk/debug/app-debug.apk

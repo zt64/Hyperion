@@ -19,8 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.tv.foundation.lazy.list.TvLazyColumn
 import androidx.tv.foundation.lazy.list.TvLazyRow
 import androidx.tv.material3.*
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
+import dev.zt64.hyperion.ui.component.ShimmerImage
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 class MainActivity : ComponentActivity() {
@@ -140,11 +139,11 @@ class MainActivity : ComponentActivity() {
                                                         onClick = {},
                                                         interactionSource = remember { MutableInteractionSource() },
                                                     ) {
-                                                        KamelImage(
+                                                        ShimmerImage(
                                                             modifier = Modifier
                                                                 .fillMaxWidth()
                                                                 .aspectRatio(16f/9f),
-                                                            resource = asyncPainterResource("https://loremflickr.com/640/360"),
+                                                            url = "https://loremflickr.com/640/360",
                                                             contentDescription = null
                                                         )
                                                     }
