@@ -10,17 +10,21 @@ A modern alternate YouTube front-end for Android
 [![stars - Hyperion](https://img.shields.io/github/stars/zt64/Hyperion?style=for-the-badge)](https://github.com/zt64/Hyperion)
 [![forks - Hyperion](https://img.shields.io/github/forks/zt64/Hyperion?style=for-the-badge)](https://github.com/zt64/Hyperion)
 
-  <hr>
+----
 </div>
 
 ## Features
 
 - :art: Dynamic color
-- :thumbsdown: Return YouTube Dislikes
 - :no_entry_sign: Ad-free
+- :x: SponsorBlock
+- :thumbsdown: Return YouTube Dislikes
+- :arrow_down: Download videos
+- :vhs: Picture in Picture
+- :black_medium_square::white_medium_square: Dark/Light theme with/without following system color mode
+- 文A Multi language
 - More to come:
     - :bust_in_silhouette: Google account login
-    - :x: SponsorBlock
     - :art: Custom themes
 
 ## Installation
@@ -31,8 +35,13 @@ The latest APK can be downloaded
 from [here](https://nightly.link/zt64/Hyperion/workflows/build-debug/main/app-debug.zip). <br>
 GitHub releases will be added once Hyperion is in a more stable state.
 
+## Translation
+
+Please contribute to translations on [Crowdin](https://crowdin.com/project/hyperion-app).
+
 ## Acknowledgements
 
+- [SponsorBlock](https://sponsor.ajay.app/)
 - [Return YouTube Dislikes](https://github.com/Anarios/return-youtube-dislike)
 
 ## License
