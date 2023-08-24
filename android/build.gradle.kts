@@ -2,17 +2,19 @@
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 
 subprojects {
     val libs = rootProject.libs
 
     apply {
+        // plugin<KotlinAndroidPluginWrapper>()
         plugin(libs.plugins.kotlin.android.get().pluginId)
+        // plugin<AndroidBasePlugin>()
         plugin(libs.plugins.android.application.get().pluginId)
     }
 
-    configure<KotlinAndroidProjectExtension> {
+    kotlinExtension.apply {
         sourceSets.all {
             languageSettings {
                 enableLanguageFeature("ContextReceivers")
@@ -23,6 +25,17 @@ subprojects {
 
         jvmToolchain(17)
     }
+    // configure<KotlinAndroidProjectExtension> {
+    //     sourceSets.all {
+    //         languageSettings {
+    //             enableLanguageFeature("ContextReceivers")
+    //             optIn("androidx.compose.material3.ExperimentalMaterial3Api")
+    //             optIn("androidx.compose.foundation.ExperimentalFoundationApi")
+    //         }
+    //     }
+    //
+    //     jvmToolchain(17)
+    // }
 
     configure<ApplicationExtension> {
         namespace = "dev.zt64.hyperion"

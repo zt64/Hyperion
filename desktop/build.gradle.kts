@@ -21,7 +21,7 @@ compose.desktop {
 
         nativeDistributions {
             description = "YouTube client"
-            licenseFile.set(rootProject.file("LICENSE.md"))
+            licenseFile = rootProject.file("LICENSE.md")
 
             targetFormats(TargetFormat.Dmg, TargetFormat.Deb, TargetFormat.AppImage, TargetFormat.Exe)
         }

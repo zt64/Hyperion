@@ -20,10 +20,12 @@ android {
 }
 
 configurations.all {
-    resolutionStrategy.dependencySubstitution {
-        substitute(module("org.jetbrains.compose.material:material"))
-            .using(module("org.jetbrains.compose.material3:material3:${libs.versions.compose.multiplatform}"))
-            .because("Compose Material3 is used instead of Compose Material")
+    resolutionStrategy {
+        dependencySubstitution {
+            substitute(module("org.jetbrains.compose.material:material"))
+                .using(module("org.jetbrains.compose.material3:material3:${libs.versions.compose.multiplatform}"))
+                .because("Compose Material3 is used instead of Compose Material")
+        }
     }
 }
 
@@ -34,7 +36,7 @@ kotlin {
     jvm("desktop")
 
     sourceSets {
-        commonMain {
+        val commonMain by getting {
             dependencies {
                 api(projects.innertube)
 
@@ -67,25 +69,23 @@ kotlin {
         }
 
         named("androidMain") {
-            dependsOn(commonMain.get())
+            dependsOn(commonMain)
             dependencies {
                 api(libs.bundles.androidx)
                 api(libs.bundles.media3)
 
-                api(libs.compose.material3)
-                api(libs.compose.material3.windowSizeClass)
+                implementation(libs.compose.material3)
 
                 api(libs.compose.shimmer)
                 api(libs.compose.ui.tooling)
 
                 api(libs.navigation)
                 api(libs.koin.compose)
-                api(libs.accompanist.systemuicontroller)
             }
         }
 
         named("desktopMain") {
-            dependsOn(commonMain.get())
+            dependsOn(commonMain)
             dependencies {
                 implementation(compose.desktop.common)
             }
