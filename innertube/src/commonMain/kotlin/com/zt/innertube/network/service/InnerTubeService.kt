@@ -117,11 +117,11 @@ class InnerTubeService(
 
             innerTubeContext = InnerTubeContext(
                 client = InnerTubeContext.Client(
-                    clientName = CLIENT_NAME_WEB,
+                    clientName = ClientName.WEB,
                     clientVersion = CLIENT_VERSION_WEB,
                     gl = locale.country,
                     hl = locale.language,
-                    platform = PLATFORM_WEB,
+                    platform = Platform.DESKTOP,
                     userAgent = TV_USER_AGENT
                 ),
                 user = InnerTubeContext.User(safetyMode)
@@ -231,18 +231,25 @@ class InnerTubeService(
         json.parseToJsonElement(body.substringAfter("(").substringBeforeLast(")"))
     }
 
-    internal suspend fun getPlayer(id: String): ApiPlayer = post("player") {
-        PlayerBody(
-            context = innerTubeContext.copy(
-                client = innerTubeContext.client.copy(
-                    clientName = "MWEB",
-                    platform = "MOBILE",
-                    clientVersion = "2.20230502.01.00",
-                    clientFormFactor = "SMALL_FORM_FACTOR"
+    internal suspend fun getPlayer(id: String): ApiPlayer = withContext(Dispatchers.IO) {
+        httpClient.post("$API_URL/player") {
+            userAgent("com.google.android.youtube/17.36.4 (Linux; U; Android 13) gzip")
+            setBody(
+                PlayerBody(
+                    context = InnerTubeContext(
+                        client = innerTubeContext.client.copy(
+                            clientName = ClientName.ANDROID,
+                            platform = Platform.MOBILE,
+                            clientVersion = "17.36.4",
+                            clientFormFactor = FormFactor.SMALL_FORM_FACTOR,
+                            androidSdkVersion = 33,
+                            userAgent = "com.google.android.youtube/17.36.4 (Linux; U; Android 13) gzip"
+                        )
+                    ),
+                    videoId = id,
                 )
-            ),
-            videoId = id
-        )
+            )
+        }.body()
     }
 
     internal suspend fun getNext(id: String): ApiNext = post("next") {

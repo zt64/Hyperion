@@ -13,6 +13,7 @@ import androidx.media3.exoplayer.dash.manifest.*
 import androidx.media3.exoplayer.drm.DefaultDrmSessionManagerProvider
 import androidx.media3.exoplayer.drm.DrmSessionManagerProvider
 import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
 import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy
 import com.zt.innertube.domain.model.DomainFormat
@@ -48,49 +49,53 @@ class DashMediaSourceFactory(
             repository.getVideo(mediaItem.mediaId)
         }
 
-        val cpn = generateCpn()
-        val groups = res.formats.groupBy(DomainFormat::mimeType)
-        val sets = groups.entries.mapIndexed { index, (_, items) ->
-            val audioTrack = (items.first() as? DomainFormat.Audio)?.audioTrack
+        return ProgressiveMediaSource.Factory(dataSourceFactory)
+            .createMediaSource(MediaItem.fromUri(res.formats.filterIsInstance<DomainFormat.Video>().random().url))
 
-            if (audioTrack != null) {
-                AdaptationSet(
-                    /* id= */ index,
-                    /* type = */ C.TRACK_TYPE_DEFAULT,
-                    /* representations = */ items.map { it.generateRepresentation(cpn) },
-                    /* accessibilityDescriptors = */ emptyList(),
-                    /* essentialProperties = */ emptyList(),
-                    /* supplementalProperties = */ emptyList(),
-                )
-            } else {
-                AdaptationSet(
-                    /* id= */ index,
-                    /* type = */ C.TRACK_TYPE_DEFAULT,
-                    /* representations = */ items.map { it.generateRepresentation(cpn) },
-                    /* accessibilityDescriptors = */ emptyList(),
-                    /* essentialProperties = */ emptyList(),
-                    /* supplementalProperties = */ emptyList(),
-                )
-            }
-        }
-
-        return factory.createMediaSource(
-            DashManifest(
-                /* availabilityStartTimeMs = */ C.TIME_UNSET,
-                /* durationMs = */ res.formats.first().approxDurationMs,
-                /* minBufferTimeMs = */ MIN_BUFFER_TIME,
-                /* dynamic = */ false,
-                /* minUpdatePeriodMs = */ C.TIME_UNSET,
-                /* timeShiftBufferDepthMs = */ C.TIME_UNSET,
-                /* suggestedPresentationDelayMs = */ C.TIME_UNSET,
-                /* publishTimeMs = */ C.TIME_UNSET,
-                /* programInformation = */ null,
-                /* utcTiming = */ null,
-                /* serviceDescription = */ null,
-                /* location = */ null,
-                /* periods = */ listOf(Period(null, 0, sets))
-            )
-        )
+//        val cpn = generateCpn()
+//        val groups = res.formats.groupBy(DomainFormat::mimeType)
+//        val sets = groups.entries.mapIndexed { index, (_, items) ->
+//            val audioTrack = (items.first() as? DomainFormat.Audio)?.audioTrack
+//            val id = index.toLong()
+//
+//            if (audioTrack != null) {
+//                AdaptationSet(
+//                    /* id= */ id,
+//                    /* type = */ C.TRACK_TYPE_DEFAULT,
+//                    /* representations = */ items.map { it.generateRepresentation(cpn) },
+//                    /* accessibilityDescriptors = */ emptyList(),
+//                    /* essentialProperties = */ emptyList(),
+//                    /* supplementalProperties = */ emptyList(),
+//                )
+//            } else {
+//                AdaptationSet(
+//                    /* id= */ id,
+//                    /* type = */ C.TRACK_TYPE_DEFAULT,
+//                    /* representations = */ items.map { it.generateRepresentation(cpn) },
+//                    /* accessibilityDescriptors = */ emptyList(),
+//                    /* essentialProperties = */ emptyList(),
+//                    /* supplementalProperties = */ emptyList(),
+//                )
+//            }
+//        }
+//
+//        return factory.createMediaSource(
+//            DashManifest(
+//                /* availabilityStartTimeMs = */ C.TIME_UNSET,
+//                /* durationMs = */ res.formats.first().approxDurationMs,
+//                /* minBufferTimeMs = */ MIN_BUFFER_TIME,
+//                /* dynamic = */ false,
+//                /* minUpdatePeriodMs = */ C.TIME_UNSET,
+//                /* timeShiftBufferDepthMs = */ C.TIME_UNSET,
+//                /* suggestedPresentationDelayMs = */ C.TIME_UNSET,
+//                /* publishTimeMs = */ C.TIME_UNSET,
+//                /* programInformation = */ null,
+//                /* utcTiming = */ null,
+//                /* serviceDescription = */ null,
+//                /* location = */ null,
+//                /* periods = */ listOf(Period(null, 0, sets))
+//            )
+//        )
     }
 
     override fun getSupportedTypes() = intArrayOf(C.CONTENT_TYPE_DASH)

@@ -22,7 +22,6 @@ import androidx.media3.session.MediaSession.ControllerInfo
 import androidx.media3.session.MediaSessionService
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import com.hyperion.BuildConfig
 import com.hyperion.ui.MainActivity
 import com.zt.innertube.domain.repository.InnerTubeRepository
 import org.koin.android.ext.android.inject
@@ -63,7 +62,6 @@ class PlaybackService : MediaSessionService() {
             .setRenderersFactory(
                 DefaultRenderersFactory(application)
                     .setEnableAudioTrackPlaybackParams(true)
-                    .setEnableAudioOffload(true)
                     .forceEnableMediaCodecAsynchronousQueueing()
                     .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
                     .setEnableDecoderFallback(true)

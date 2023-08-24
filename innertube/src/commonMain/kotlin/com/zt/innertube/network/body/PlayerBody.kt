@@ -8,16 +8,11 @@ import kotlinx.serialization.Serializable
 internal data class PlayerBody(
     override val context: InnerTubeContext,
     val videoId: String,
-    @EncodeDefault
-    val contentCheckOk: Boolean = true,
-    @EncodeDefault
-    val racyCheckOk: Boolean = true,
-    @EncodeDefault
-    val mwebCapabilities: MwebCapabilities = MwebCapabilities(),
-    @EncodeDefault
-    val playbackContext: PlaybackContext = PlaybackContext(videoId),
-    @EncodeDefault
-    val params: String = "8AEB"
+    val contentCheckOk: Boolean? = true,
+    val racyCheckOk: Boolean? = true,
+    val mwebCapabilities: MwebCapabilities? = MwebCapabilities(),
+    val playbackContext: PlaybackContext? = PlaybackContext(videoId),
+    val params: String? = "8AEB"
 ) : IBody {
     @Serializable
     data class MwebCapabilities(val mobileClientSupportsLivestream: Boolean = true)

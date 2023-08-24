@@ -9,7 +9,7 @@ compose-stable-marker = "1.0.0"
 compose-shimmer = "1.0.5"
 accompanist = "0.31.6-rc"
 ktor = "2.3.2"
-media3 = "1.1.0"
+media3 = "1.2.0-alpha01"
 koin = "3.4.6"
 kamel-image = "0.7.1"
 
