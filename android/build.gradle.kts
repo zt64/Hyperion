@@ -8,9 +8,7 @@ subprojects {
     val libs = rootProject.libs
 
     apply {
-        // plugin<KotlinAndroidPluginWrapper>()
         plugin(libs.plugins.kotlin.android.get().pluginId)
-        // plugin<AndroidBasePlugin>()
         plugin(libs.plugins.android.application.get().pluginId)
     }
 
@@ -25,17 +23,6 @@ subprojects {
 
         jvmToolchain(17)
     }
-    // configure<KotlinAndroidProjectExtension> {
-    //     sourceSets.all {
-    //         languageSettings {
-    //             enableLanguageFeature("ContextReceivers")
-    //             optIn("androidx.compose.material3.ExperimentalMaterial3Api")
-    //             optIn("androidx.compose.foundation.ExperimentalFoundationApi")
-    //         }
-    //     }
-    //
-    //     jvmToolchain(17)
-    // }
 
     configure<ApplicationExtension> {
         namespace = "dev.zt64.hyperion"
