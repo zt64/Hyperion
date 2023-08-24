@@ -5,8 +5,8 @@ on:
     branches:
       - 'main'
     paths:
-      - 'app/src/main/res/values/strings.xml'
-      - '.github/workflows/crowdin.yml'
+      - 'common/src/commonMain/MR/base/strings.xml'
+      - '.github/workflows/sync-crowdin.yml'
   schedule:
     - cron: "0 17 * * 6" # weekly
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
       - name: Crowdin
         uses: crowdin/github-action@v1
         with:
-          config: crowdin.yml
+          config: sync-crowdin.yml
           upload_translations: true
           download_translations: true
           push_translations: true
