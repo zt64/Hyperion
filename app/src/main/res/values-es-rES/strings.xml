@@ -37,11 +37,11 @@
     <string name="close_fullscreen">Salir de pantalla completa</string>
     <string name="open_fullscreen">Abrir en pantalla completa</string>
     <string name="verified">Verificado</string>
-    <string name="dynamic_color">Dynamic color</string>
-    <string name="timestamp_scale">Timestamp scale</string>
-    <string name="about">About</string>
-    <string name="comments">Comments</string>
-    <string name="show_download_button">Show download button</string>
+    <string name="dynamic_color">Color dinámico</string>
+    <string name="timestamp_scale">Escala de marca de tiempo</string>
+    <string name="about">Sobre</string>
+    <string name="comments">Comentarios</string>
+    <string name="show_download_button">Mostrar botón de descarga</string>
     <string name="dismiss">Dismiss</string>
     <string name="confirm">Confirm</string>
     <string name="quality">Quality</string>
