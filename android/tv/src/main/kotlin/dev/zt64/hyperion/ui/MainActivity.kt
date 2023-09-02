@@ -21,7 +21,6 @@ import androidx.tv.foundation.lazy.list.TvLazyRow
 import androidx.tv.material3.*
 import dev.zt64.hyperion.ui.component.ShimmerImage
 
-@OptIn(ExperimentalTvMaterial3Api::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
