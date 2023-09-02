@@ -15,7 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -42,9 +42,11 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import dev.icerock.moko.resources.compose.stringResource
 import dev.olshevski.navigation.reimagined.navigate
+import dev.olshevski.navigation.reimagined.pop
 import dev.zt64.hyperion.LocalNavController
 import dev.zt64.hyperion.MR
-import dev.zt64.hyperion.ui.component.*
+import dev.zt64.hyperion.ui.component.ShimmerImage
+import dev.zt64.hyperion.ui.component.VideoCard
 import dev.zt64.hyperion.ui.component.player.*
 import dev.zt64.hyperion.ui.navigation.AppDestination
 import dev.zt64.hyperion.ui.sheet.CommentsSheet
@@ -130,7 +132,7 @@ private fun PlayerScreenLoaded() {
     when (LocalConfiguration.current.orientation) {
         Configuration.ORIENTATION_PORTRAIT -> PlayerScreenPortrait()
 
-        Configuration.ORIENTATION_LANDSCAPE -> PlayerControls(
+        Configuration.ORIENTATION_LANDSCAPE -> PlayerControlsContainer(
             modifier = Modifier.fillMaxHeight()
         )
     }
@@ -146,7 +148,7 @@ private fun PlayerScreenPortrait() {
     ) {
         val relatedVideos = viewModel.relatedVideos.collectAsLazyPagingItems()
 
-        PlayerControls()
+        PlayerControlsContainer()
 
         LazyColumn(
             modifier = Modifier.padding(horizontal = 14.dp),
@@ -321,7 +323,7 @@ private fun PlayerScreenPortrait() {
 }
 
 @Composable
-private fun PlayerControls(
+private fun PlayerControlsContainer(
     modifier: Modifier = Modifier,
 ) {
     val navController = LocalNavController.current
@@ -390,7 +392,8 @@ private fun PlayerControls(
                 tonalElevation = 8.dp
             ) {
                 PlayerControls(
-                    modifier = Modifier.matchParentSize()
+                    modifier = Modifier.matchParentSize(),
+                    onClickCollapse = navController::pop
                 )
             }
         }
