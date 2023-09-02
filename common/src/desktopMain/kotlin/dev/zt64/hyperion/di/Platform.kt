@@ -4,7 +4,7 @@ import org.jetbrains.skiko.OS
 import org.jetbrains.skiko.hostOs
 import java.io.File
 
-internal actual class Platform actual constructor() {
+internal actual class Platform {
     actual fun getDownloadsDir(): File {
         when (hostOs) {
             OS.Linux -> TODO()
