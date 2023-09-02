@@ -27,8 +27,8 @@ actual fun rememberImageLoader(): ImageLoader {
                     maxSizePercent(context, 0.25)
                 }
                 diskCacheConfig {
-                    directory(context.cacheDir.resolve("image_cache").toOkioPath())
-                    maxSizeBytes(512L * 1024 * 1024) // 512MB
+                    directory(context.cacheDir.toOkioPath().resolve("image_cache"))
+                    maxSizeBytes(128L * 1024 * 1024) // 128MB
                 }
             }
         }
