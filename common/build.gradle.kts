@@ -59,6 +59,8 @@ kotlin {
                 api(libs.paging.runtime.composeui)
                 api(libs.paging.common)
 
+                api(libs.napier)
+
                 implementation(libs.bundles.ktor)
                 implementation(libs.ktor.okhttp)
                 implementation(libs.uuid)

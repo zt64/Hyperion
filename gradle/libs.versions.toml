@@ -92,6 +92,8 @@ settings-coroutines = "com.russhwolf:multiplatform-settings-coroutines:1.0.0"
 
 compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.2.1" }
 
+napier = { module = "io.github.aakira:napier", version = "2.6.1" }
+
 [bundles]
 androidx = ["androidx-appcompat", "androidx-core", "androidx-splashscreen", "androidx-activity"]
 ktor = ["ktor-core", "ktor-contentnegotiation", "ktor-serialization-json", "ktor-encoding"]
