@@ -4,24 +4,24 @@ package com.hyperion.player
 
 import android.app.PendingIntent
 import android.content.Intent
-import androidx.media3.common.*
+import androidx.media3.common.AudioAttributes
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.database.StandaloneDatabaseProvider
-import androidx.media3.datasource.DefaultHttpDataSource
-import androidx.media3.datasource.cache.*
-import androidx.media3.exoplayer.DefaultLoadControl
-import androidx.media3.exoplayer.DefaultRenderersFactory
+import androidx.media3.datasource.cache.Cache
+import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
+import androidx.media3.datasource.cache.SimpleCache
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.dash.manifest.DashManifest
 import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
-import androidx.media3.exoplayer.upstream.DefaultAllocator
 import androidx.media3.exoplayer.util.EventLogger
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSession.ControllerInfo
 import androidx.media3.session.MediaSessionService
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
+import com.hyperion.BuildConfig
 import com.hyperion.ui.MainActivity
 import com.zt.innertube.domain.repository.InnerTubeRepository
 import org.koin.android.ext.android.inject
@@ -56,53 +56,22 @@ class PlaybackService : MediaSessionService() {
             /* databaseProvider = */ StandaloneDatabaseProvider(application),
         )
 
-        player = ExoPlayer.Builder(application)
-            .setTrackSelector(trackSelector)
-            .setAudioAttributes(audioAttributes, true)
-            .setRenderersFactory(
-                DefaultRenderersFactory(application)
-                    .setEnableAudioTrackPlaybackParams(true)
-                    .forceEnableMediaCodecAsynchronousQueueing()
-                    .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER)
-                    .setEnableDecoderFallback(true)
-            )
-            .setMediaSourceFactory(
-                DashMediaSourceFactory(
-                    dataSourceFactory = CacheDataSource.Factory()
-                        .setCache(cache)
-                        .setCacheWriteDataSinkFactory(
-                            CacheDataSink.Factory().setCache(cache)
-                        )
-                        .setUpstreamDataSourceFactory(DefaultHttpDataSource.Factory())
-                        .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR),
-                    repository = innerTube
-                )
-            )
-            .setUseLazyPreparation(true)
-            .setLoadControl(
-                DefaultLoadControl.Builder()
-                    .setBufferDurationsMs(
-                        /* minBufferMs= */ 2000,
-                        /* maxBufferMs= */ 5000,
-                        /* bufferForPlaybackMs= */ 1500,
-                        /* bufferForPlaybackAfterRebufferMs= */ 2000
-                    )
-                    .setPrioritizeTimeOverSizeThresholds(true)
-                    .setTargetBufferBytes(C.LENGTH_UNSET)
-                    .setBackBuffer(
-                        /* backBufferDurationMs= */ 10000,
-                        /* retainBackBufferFromKeyframe= */ false
-                    )
-                    .setAllocator(DefaultAllocator(true, 16))
-                    .build()
-            )
-            .setWakeMode(C.WAKE_MODE_NETWORK)
-            .setHandleAudioBecomingNoisy(true)
-            .setSeekBackIncrementMs(15000)
-            .setSeekForwardIncrementMs(15000)
-            .setPauseAtEndOfMediaItems(false)
-            .setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
-            .build()
+        player = ExoPlayer.Builder(
+            /* context = */ application,
+            /* renderersFactory = */ RenderersFactory(application),
+            /* mediaSourceFactory = */ buildMediaSourceFactory(cache, innerTube)
+        ).apply {
+            setTrackSelector(trackSelector)
+            setAudioAttributes(audioAttributes, true)
+            setUseLazyPreparation(true)
+            setLoadControl(buildLoadControl())
+            setWakeMode(C.WAKE_MODE_NETWORK)
+            setHandleAudioBecomingNoisy(true)
+            setSeekBackIncrementMs(15000)
+            setSeekForwardIncrementMs(15000)
+            setPauseAtEndOfMediaItems(false)
+            setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
+        }.build()
 
         mediaSession = MediaSession.Builder(application, player)
             .setCallback(MediaSessionCallback())
@@ -118,20 +87,6 @@ class PlaybackService : MediaSessionService() {
 
         if (BuildConfig.DEBUG) {
             player.addAnalyticsListener(EventLogger())
-
-            player.addListener(
-                object : Player.Listener {
-                    override fun onTimelineChanged(
-                        timeline: Timeline,
-                        @Player.TimelineChangeReason
-                        reason: Int
-                    ) {
-                        val manifest = player.currentManifest as DashManifest? ?: return
-
-                        println(manifest)
-                    }
-                }
-            )
         }
 
         player.playWhenReady = true

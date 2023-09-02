@@ -13,6 +13,7 @@ kotlin {
 android {
     namespace = "com.hyperion"
     compileSdk = 34
+    compileSdkPreview = "UpsideDownCake"
 
     defaultConfig {
         minSdk = 21

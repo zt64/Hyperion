@@ -13,6 +13,7 @@ import androidx.media3.exoplayer.dash.manifest.*
 import androidx.media3.exoplayer.drm.DefaultDrmSessionManagerProvider
 import androidx.media3.exoplayer.drm.DrmSessionManagerProvider
 import androidx.media3.exoplayer.source.MediaSource
+import androidx.media3.exoplayer.source.MergingMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
 import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy
@@ -45,12 +46,27 @@ class DashMediaSourceFactory(
         }
 
     override fun createMediaSource(mediaItem: MediaItem): MediaSource {
-        val res = runBlocking(Dispatchers.IO) {
+        val formats = runBlocking(Dispatchers.IO) {
             repository.getVideo(mediaItem.mediaId)
+        }.formats
+
+        val video = formats.filterIsInstance<DomainFormat.Video>().first()
+        val audio = formats.filterIsInstance<DomainFormat.Audio>().first {
+            it.audioQuality == DomainFormat.Audio.AudioQuality.LOW
         }
 
-        return ProgressiveMediaSource.Factory(dataSourceFactory)
-            .createMediaSource(MediaItem.fromUri(res.formats.filterIsInstance<DomainFormat.Video>().random().url))
+        val videoItem = MediaItem.fromUri(video.url)
+        val audioItem = MediaItem.fromUri(audio.url)
+
+        val mediaSourceFactory = ProgressiveMediaSource.Factory(dataSourceFactory, ExtractorsFactory())
+        val videoSource = mediaSourceFactory.createMediaSource(videoItem)
+        val audioSource = mediaSourceFactory.createMediaSource(audioItem)
+
+        return MergingMediaSource(
+            /* adjustPeriodTimeOffsets = */ true,
+            /* clipDurations = */ true,
+            /* ...mediaSources = */ videoSource, audioSource
+        )
 
 //        val cpn = generateCpn()
 //        val groups = res.formats.groupBy(DomainFormat::mimeType)

@@ -1,13 +1,13 @@
 [versions]
-kotlin = "1.9.0"
+kotlin = "1.9.10"
 kotlin-serialization = "1.5.1"
 agp = "8.1.0"
 compose = "1.6.0-alpha02"
-compose-compiler = "1.5.1"
+compose-compiler = "1.5.3"
 compose-material3 = "1.2.0-alpha04"
 compose-stable-marker = "1.0.0"
 compose-shimmer = "1.0.5"
-accompanist = "0.31.6-rc"
+accompanist = "0.33.1-alpha"
 ktor = "2.3.2"
 media3 = "1.2.0-alpha01"
 koin = "3.4.6"
@@ -16,7 +16,7 @@ kamel-image = "0.7.1"
 [libraries]
 androidx-core = "androidx.core:core-ktx:1.10.1"
 androidx-splashscreen = "androidx.core:core-splashscreen:1.0.1"
-androidx-activity = "androidx.activity:activity-compose:1.7.2"
+androidx-activity = "androidx.activity:activity-compose:1.8.0-alpha07"
 androidx-paging = "androidx.paging:paging-compose:3.2.0"
 
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
