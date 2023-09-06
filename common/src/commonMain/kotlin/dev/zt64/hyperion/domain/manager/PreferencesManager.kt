@@ -1,7 +1,7 @@
 package dev.zt64.hyperion.domain.manager
 
 import com.russhwolf.settings.*
-import dev.zt64.hyperion.di.Platform
+import dev.zt64.hyperion.Platform
 import dev.zt64.hyperion.ui.navigation.BaseDestination
 import dev.zt64.hyperion.ui.theme.Theme
 import kotlin.properties.ReadWriteProperty

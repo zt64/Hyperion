@@ -13,5 +13,4 @@ android {
 dependencies {
     implementation(libs.compose.material3)
     implementation(libs.compose.material3.windowSizeClass)
-    implementation(libs.accompanist.systemuicontroller)
 }

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
-import dev.zt64.hyperion.domain.model.RadioOption
+import dev.zt64.hyperion.domain.model.StringLabel
 import kotlin.reflect.KMutableProperty0
 
 @Composable
@@ -23,7 +23,7 @@ inline fun <reified E> RadioSetting(
     enabled: Boolean = true,
     description: String? = null,
     icon: ImageVector? = null
-) where E : Enum<E>, E : RadioOption {
+) where E : Enum<E>, E : StringLabel {
     val options = remember { enumValues<E>() }
 
     RadioSetting(
@@ -39,7 +39,7 @@ inline fun <reified E> RadioSetting(
 }
 
 @Composable
-fun <E : RadioOption> RadioSetting(
+fun <E : StringLabel> RadioSetting(
     label: String,
     value: E,
     options: Array<E>,

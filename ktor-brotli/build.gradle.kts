@@ -2,10 +2,10 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
 }
 
-group = "dev.zt64"
+group = "dev.zt64.ktor.brotli"
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(libs.versions.jvm.get().toInt())
 
     js {
         nodejs()

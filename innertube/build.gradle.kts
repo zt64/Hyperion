@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.android.library)
 }
 
+group = "dev.zt64.innertube"
+
 android {
     namespace = "dev.zt64.innertube"
     compileSdk = 34
@@ -16,7 +18,7 @@ android {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(libs.versions.jvm.get().toInt())
 
     androidTarget()
     jvm()

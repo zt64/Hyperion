@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.BuildConfig
+import dev.zt64.hyperion.BuildKonfig
 import dev.zt64.hyperion.MR
 
 context(ColumnScope)
@@ -36,7 +36,7 @@ fun AboutScreen(
             ) {
                 Text(
                     modifier = Modifier.padding(12.dp),
-                    text = "v${BuildConfig.VERSION_NAME}",
+                    text = "v${BuildKonfig.VERSION_NAME}",
                     style = MaterialTheme.typography.labelLarge
                 )
             }

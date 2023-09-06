@@ -1,22 +1,16 @@
 package dev.zt64.hyperion
 
 import android.app.Application
-import dev.zt64.hyperion.di.*
+import dev.zt64.hyperion.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
 
 class HyperionApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        startKoin {
+        initializeKoin {
             androidContext(this@HyperionApplication)
-            modules(
-                appModule,
-                repositoryModule,
-                viewModelModule
-            )
-            modules(commonModules())
+            modules(viewModelModule)
         }
     }
 }

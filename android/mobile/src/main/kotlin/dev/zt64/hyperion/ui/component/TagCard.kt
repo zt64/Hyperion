@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import dev.olshevski.navigation.reimagined.navigate
-import dev.zt64.hyperion.LocalNavController
 import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.ui.navigation.AppDestination
+import dev.zt64.hyperion.ui.navigation.LocalNavController
 import dev.zt64.innertube.domain.model.DomainTagPartial
 
 @Composable

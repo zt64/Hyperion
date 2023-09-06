@@ -16,10 +16,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.olshevski.navigation.reimagined.navigate
-import dev.zt64.hyperion.LocalNavController
 import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.hyperion.ui.component.player.WIDESCREEN_RATIO
 import dev.zt64.hyperion.ui.navigation.AppDestination
+import dev.zt64.hyperion.ui.navigation.LocalNavController
 import dev.zt64.innertube.domain.model.DomainPlaylistPartial
 import org.koin.compose.koinInject
 

@@ -1,36 +1,23 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.moko.resources)
     alias(libs.plugins.compose)
+    alias(libs.plugins.build.konfig)
 }
 
-android {
-    namespace = "dev.zt64.hyperion.common"
-    compileSdk = 34
+group = "dev.zt64.hyperion"
 
-    defaultConfig {
-        minSdk = 21
-    }
-
-    buildFeatures {
-        buildConfig = true
-    }
-}
-
-configurations.all {
-    resolutionStrategy {
-        dependencySubstitution {
-            substitute(module("org.jetbrains.compose.material:material"))
-                .using(module("org.jetbrains.compose.material3:material3:${libs.versions.compose.multiplatform}"))
-                .because("Compose Material3 is used instead of Compose Material")
-        }
-    }
-}
-
+@OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    jvmToolchain(17)
+    targetHierarchy.default()
+
+    jvmToolchain(libs.versions.jvm.get().toInt())
 
     androidTarget()
     jvm("desktop")
@@ -47,11 +34,14 @@ kotlin {
                 api(compose.animationGraphics)
                 api(compose.materialIconsExtended)
 
+                implementation(compose.material3)
+                api(compose.uiTooling)
+                api(compose.preview)
+
                 api(libs.image.loader)
                 api(libs.kotlinx.collections.immutable)
 
                 api(libs.moko.resources.compose)
-                api(libs.moko.parcelize)
 
                 api(libs.settings.noarg)
                 api(libs.settings.coroutines)
@@ -64,9 +54,8 @@ kotlin {
                 implementation(libs.bundles.ktor)
                 implementation(libs.ktor.okhttp)
                 implementation(libs.uuid)
-                implementation(libs.koin.core)
-                implementation(compose.material3)
-                implementation(compose.uiTooling)
+                implementation(libs.koin.compose)
+                implementation(libs.file.picker)
             }
         }
 
@@ -82,14 +71,14 @@ kotlin {
                 api(libs.compose.ui.tooling)
 
                 api(libs.navigation)
-                api(libs.koin.compose)
+                api(libs.koin.androidx.compose)
             }
         }
 
         named("desktopMain") {
             dependsOn(commonMain)
             dependencies {
-                implementation(compose.desktop.common)
+                implementation(compose.desktop.currentOs)
             }
         }
 
@@ -102,11 +91,49 @@ kotlin {
     }
 }
 
+android {
+    namespace = "$group.common"
+    compileSdk = 34
+
+    defaultConfig {
+        minSdk = 21
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        dependencySubstitution {
+            substitute(module("org.jetbrains.compose.material:material"))
+                .using(module("org.jetbrains.compose.material3:material3:${libs.versions.compose.multiplatform}"))
+                .because("Compose Material3 is used instead of Compose Material")
+        }
+    }
+}
+
 dependencies {
     debugImplementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.runtime.tracing)
 }
 
 multiplatformResources {
-    multiplatformResourcesPackage = "dev.zt64.hyperion"
+    multiplatformResourcesPackage = group.toString()
+}
+
+buildkonfig {
+    packageName = group.toString()
+
+    defaultConfigs {
+        buildConfigField(STRING, "VERSION_NAME", version.toString())
+        buildConfigField(BOOLEAN, "DEBUG", "false")
+    }
+
+    defaultConfigs("debug") {
+        buildConfigField(BOOLEAN, "DEBUG", "true")
+    }
+
+    targetConfigs {
+        android {
+
+        }
+    }
 }

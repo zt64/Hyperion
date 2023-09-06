@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.zt64.hyperion.LocalNavController
+import dev.zt64.hyperion.ui.navigation.LocalNavController
 import dev.zt64.innertube.domain.model.DomainComment
 
 @Composable

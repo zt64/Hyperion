@@ -7,8 +7,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import dev.icerock.moko.resources.compose.stringResource
 import dev.olshevski.navigation.reimagined.pop
-import dev.zt64.hyperion.LocalNavController
 import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.ui.navigation.LocalNavController
 
 @Composable
 fun BackButton() {
@@ -24,7 +24,7 @@ fun BackButton() {
 
 @Composable
 fun BackButton(onClick: () -> Unit) {
-    IconButton(onClick = onClick) {
+    IconButton(onClick) {
         Icon(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = stringResource(MR.strings.back)

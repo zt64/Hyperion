@@ -43,12 +43,12 @@ import androidx.paging.compose.itemKey
 import dev.icerock.moko.resources.compose.stringResource
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.pop
-import dev.zt64.hyperion.LocalNavController
 import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.component.VideoCard
 import dev.zt64.hyperion.ui.component.player.*
 import dev.zt64.hyperion.ui.navigation.AppDestination
+import dev.zt64.hyperion.ui.navigation.LocalNavController
 import dev.zt64.hyperion.ui.sheet.CommentsSheet
 import dev.zt64.hyperion.ui.sheet.DownloadSheet
 import dev.zt64.hyperion.ui.sheet.PlayerSheet

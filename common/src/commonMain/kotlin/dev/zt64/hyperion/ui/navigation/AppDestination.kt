@@ -5,25 +5,25 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Subscriptions
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.ui.graphics.vector.ImageVector
-import dev.icerock.moko.parcelize.Parcelable
 import dev.icerock.moko.parcelize.Parcelize
 import dev.icerock.moko.resources.StringResource
+import dev.zt64.hyperion.CommonParcelable
 import dev.zt64.hyperion.MR
-import dev.zt64.hyperion.domain.model.RadioOption
+import dev.zt64.hyperion.domain.model.StringLabel
 
 sealed interface Destination
 
 enum class BaseDestination(
     val icon: ImageVector,
     override val label: StringResource
-) : Destination, RadioOption {
+) : Destination, StringLabel {
     HOME(Icons.Default.Home, MR.strings.home),
     FEED(Icons.Default.Subscriptions, MR.strings.feed),
     LIBRARY(Icons.Default.VideoLibrary, MR.strings.library)
 }
 
 @Parcelize
-sealed interface AppDestination : Destination, Parcelable {
+sealed interface AppDestination : Destination, CommonParcelable {
     @Parcelize
     data object Search : AppDestination
 

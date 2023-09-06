@@ -57,7 +57,6 @@ subprojects {
         }
 
         buildFeatures {
-            buildConfig = true
             compose = true
         }
 

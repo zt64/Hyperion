@@ -17,9 +17,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import dev.olshevski.navigation.reimagined.*
-import dev.zt64.hyperion.LocalNavController
 import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.ui.component.BackButton
+import dev.zt64.hyperion.ui.navigation.LocalNavController
 import dev.zt64.hyperion.ui.navigation.SettingsDestination
 import dev.zt64.hyperion.ui.navigation.SettingsSection
 import dev.zt64.hyperion.ui.navigation.util.currentDestination

@@ -2,7 +2,6 @@ package dev.zt64.hyperion.ui.viewmodel
 
 import android.app.Application
 import android.content.Intent
-import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import dev.zt64.hyperion.domain.manager.PreferencesManager
@@ -15,8 +14,9 @@ class SettingsViewModel(
 
     }
 
-    fun setDownloadUri(uri: Uri?) {
-        if (uri != null) preferences.downloadDirectory = uri.toString()
+    fun setDownloadUri(uri: String?) {
+
+        // if (uri != null) preferences.downloadDirectory = uri.toString()
     }
 
     fun openGitHub() {

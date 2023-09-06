@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,18 +19,19 @@ import dev.icerock.moko.resources.compose.stringResource
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.navigate
 import dev.olshevski.navigation.reimagined.rememberNavController
-import dev.zt64.hyperion.LocalNavController
 import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.domain.manager.PreferencesManager
+import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.navigation.util.currentDestination
 import dev.zt64.hyperion.ui.navigation.util.switchTo
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
 fun BaseScreen(
-    windowSizeClass: WindowSizeClass,
-    hideNavLabel: Boolean,
     content: @Composable (BaseDestination) -> Unit
 ) {
+    val preferences: PreferencesManager = koinInject()
     val rootNavController = LocalNavController.current
     val navController = rememberNavController(BaseDestination.HOME)
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -49,6 +49,8 @@ fun BaseScreen(
             }
         }
     ) {
+        val windowSizeClass = LocalWindowSizeClass.current
+
         Scaffold(
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
@@ -94,9 +96,9 @@ fun BaseScreen(
                         ) {
                             BadgedBox(
                                 badge = {
-//                                    Badge {
-//                                        Text("57")
-//                                    }
+                                   // Badge {
+                                   //     Text("57")
+                                   // }
                                 }
                             ) {
                                 Icon(
@@ -142,7 +144,7 @@ fun BaseScreen(
                                 NavigationBarItem(
                                     selected = navController.currentDestination == destination,
                                     icon = { Icon(destination.icon, null) },
-                                    label = if (!hideNavLabel) {
+                                    label = if (!preferences.hideNavItemLabel) {
                                         { Text(stringResource(destination.label)) }
                                     } else null,
                                     onClick = { navController.switchTo(destination) }
@@ -164,7 +166,7 @@ fun BaseScreen(
                             NavigationRailItem(
                                 selected = navController.currentDestination == destination,
                                 icon = { Icon(destination.icon, null) },
-                                label = if (!hideNavLabel) {
+                                label = if (!preferences.hideNavItemLabel) {
                                     { Text(stringResource(destination.label)) }
                                 } else null,
                                 onClick = { navController.switchTo(destination) }

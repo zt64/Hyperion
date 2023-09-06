@@ -21,7 +21,6 @@ import androidx.core.view.WindowCompat
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.NavBackHandler
 import dev.olshevski.navigation.reimagined.rememberNavController
-import dev.zt64.hyperion.LocalNavController
 import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.hyperion.ui.navigation.*
 import dev.zt64.hyperion.ui.screen.*
@@ -43,20 +42,18 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            Content(activity = this)
+            Hyperion(activity = this)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-private fun Content(
+private fun Hyperion(
     activity: Activity,
     preferences: PreferencesManager = koinInject(),
     innerTubeService: InnerTubeService = koinInject()
 ) {
-    val windowSizeClass = calculateWindowSizeClass(activity)
-
     HyperionTheme(
         isDarkTheme = preferences.theme == Theme.SYSTEM && isSystemInDarkTheme() || preferences.theme == Theme.DARK,
         isDynamicColor = preferences.dynamicColor
@@ -65,8 +62,9 @@ private fun Content(
             modifier = Modifier.fillMaxSize()
         ) {
             val state by innerTubeService.state.collectAsState()
+            val isReady by remember { derivedStateOf { state == InnerTubeService.State.Initialized } }
 
-            if (state == InnerTubeService.State.Initializing) {
+            if (!isReady) {
                 Box(
                     modifier = Modifier.wrapContentSize(Alignment.Center)
                 ) {
@@ -78,17 +76,15 @@ private fun Content(
                 NavBackHandler(navController)
 
                 CompositionLocalProvider(
-                    LocalNavController provides navController
+                    LocalNavController provides navController,
+                    LocalWindowSizeClass provides calculateWindowSizeClass(activity)
                 ) {
                     AnimatedNavHost(
                         modifier = Modifier.fillMaxSize(),
                         controller = navController
                     ) { destination ->
                         when (destination) {
-                            is BaseDestination -> BaseScreen(
-                                windowSizeClass = windowSizeClass,
-                                hideNavLabel = preferences.hideNavItemLabel
-                            ) { baseDestination ->
+                            is BaseDestination -> BaseScreen { baseDestination ->
                                 when (baseDestination) {
                                     BaseDestination.HOME -> HomeScreen()
                                     BaseDestination.FEED -> FeedScreen()

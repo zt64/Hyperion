@@ -4,11 +4,11 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import dev.icerock.moko.resources.StringResource
 import dev.zt64.hyperion.MR
-import dev.zt64.hyperion.domain.model.RadioOption
+import dev.zt64.hyperion.domain.model.StringLabel
 
 enum class Theme(
     override val label: StringResource
-) : RadioOption {
+) : StringLabel {
     SYSTEM(MR.strings.system),
     LIGHT(MR.strings.light),
     DARK(MR.strings.dark);

@@ -24,10 +24,9 @@ import dev.zt64.hyperion.ui.navigation.Destination
 import dev.zt64.hyperion.ui.theme.HyperionTheme
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 suspend fun main() {
-    // println(MPVLib)
+    initializeKoin()
 
     application {
         Window(

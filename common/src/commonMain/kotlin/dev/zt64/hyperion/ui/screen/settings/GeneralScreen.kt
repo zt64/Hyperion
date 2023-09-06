@@ -1,29 +1,26 @@
 package dev.zt64.hyperion.ui.screen.settings
 
-import android.net.Uri
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import com.darkrockstudios.libraries.mpfilepicker.DirectoryPicker
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.SUPPORTS_PIP
 import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.hyperion.ui.component.setting.RadioSetting
 import dev.zt64.hyperion.ui.component.setting.SwitchSetting
 
-context(ColumnScope)
 @Composable
 fun GeneralScreen(
     preferences: PreferencesManager,
-    onClickDownload: (uri: Uri?) -> Unit,
+    onClickDownload: (path: String?) -> Unit,
 ) {
     RadioSetting(
         preference = preferences::startScreen,
@@ -31,7 +28,7 @@ fun GeneralScreen(
         label = stringResource(MR.strings.start_screen)
     )
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    if (SUPPORTS_PIP) {
         SwitchSetting(
             preference = preferences::pictureInPicture,
             enabled = false,
@@ -46,13 +43,15 @@ fun GeneralScreen(
         icon = Icons.Default.Minimize
     )
 
-    val directoryChooser = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocumentTree(),
-        onResult = onClickDownload
-    )
+    var showDirectoryPicker by rememberSaveable { mutableStateOf(false) }
+
+    DirectoryPicker(showDirectoryPicker) {
+        showDirectoryPicker = false
+        onClickDownload(it)
+    }
 
     ListItem(
-        modifier = Modifier.clickable { directoryChooser.launch(null) },
+        modifier = Modifier.clickable { showDirectoryPicker = true },
         headlineContent = { Text(stringResource(MR.strings.download_location)) },
         supportingContent = { Text(preferences.downloadDirectory) },
         leadingContent = {

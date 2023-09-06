@@ -6,12 +6,11 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(libs.versions.jvm.get().toInt())
 }
 
 dependencies {
     implementation(projects.common)
-    implementation(compose.desktop.currentOs)
     implementation(compose.material3)
 }
 

@@ -9,6 +9,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
@@ -25,7 +26,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
-import dev.zt64.hyperion.ui.tooling.Preview
+import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import dev.zt64.innertube.domain.model.DomainChapter
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -34,6 +35,7 @@ import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
+@Stable
 enum class SkipOption {
     DISABLE,
     SHOW,
@@ -47,35 +49,35 @@ enum class SponsorBlockCategory(
 ) {
     SPONSOR(
         description = "Paid promotion, paid referrals and direct advertisements. Not for " +
-            "self-promotion or free shoutouts to causes/creators/websites/products they like.",
+                "self-promotion or free shoutouts to causes/creators/websites/products they like.",
         color = Color(0x7800D400)
     ) {
         override fun toString() = "Sponsor"
     },
     SELF_PROMO(
         description = "Similar to \"sponsor\" except for unpaid or self promotion. This includes " +
-            "sections about merchandise, donations, or information about who they collaborated with.",
+                "sections about merchandise, donations, or information about who they collaborated with.",
         color = Color(0x78FFFF00)
     ) {
         override fun toString() = "Unpaid/Self Promotion"
     },
     INTERACTION(
         description = "Asking for likes, comments, or subscribers. This includes asking for " +
-            "engagement in the video, comments, or social media.",
+                "engagement in the video, comments, or social media.",
         color = Color(0x78CC00FF)
     ) {
         override fun toString() = "Interaction Reminder"
     },
     HIGHLIGHT(
         description = "The part of the video that most people are looking for. Similar to " +
-            "\"Video starts at x\" comments.",
+                "\"Video starts at x\" comments.",
         color = Color(0x78FF0000)
     ) {
         override fun toString() = "Highlight"
     },
     INTRO(
         description = "The introduction to the video. This includes the intro animation, intro " +
-            "music, and the creator introducing themselves.",
+                "music, and the creator introducing themselves.",
         color = Color(0x7800FFFF)
     ) {
         override fun toString() = "Intro"
@@ -88,21 +90,21 @@ enum class SponsorBlockCategory(
     },
     FILLER(
         description = "Tangential scenes added only for filler or humor that are not required to " +
-            "understand the main content of the video.",
+                "understand the main content of the video.",
         color = Color(0x787300FF)
     ) {
         override fun toString() = "Filler Tangent/Jokes"
     },
     PREVIEW(
         description = "Collection of clips that show what is coming up in in this video or other " +
-            "videos in a series where all information is repeated later in the video.",
+                "videos in a series where all information is repeated later in the video.",
         color = Color(0x78008FD6)
     ) {
         override fun toString() = "Preview/Recap"
     },
     MUSIC_OFF_TOPIC(
         description = "Only for use in music videos. This only should be used for sections of music " +
-            "videos that aren't already covered by another category.",
+                "videos that aren't already covered by another category.",
         color = Color(0x78FF9900)
     ) {
         override fun toString() = "Music: Non-Music Section"
@@ -209,25 +211,6 @@ internal fun Thumb(
     SliderDefaults.Thumb(
         interactionSource = interactionSource,
         colors = colors
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-private fun SeekBarPreview() {
-    var progress by remember { mutableStateOf(30.minutes) }
-
-    SeekBar(
-        duration = 1.hours,
-        progress = progress,
-        buffered = 60.minutes,
-        segments = persistentListOf(
-            Segment(SponsorBlockCategory.INTRO, 0.0f..0.1f),
-            Segment(SponsorBlockCategory.SPONSOR, 0.7f..0.75f),
-            Segment(SponsorBlockCategory.OUTRO, 0.8f..1.0f),
-        ),
-        onSeek = { progress = it }
     )
 }
 
@@ -344,4 +327,25 @@ private fun drawTrack(
         strokeWidth = trackStrokeWidth,
         cap = StrokeCap.Round
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun SeekBarPreview() {
+    HyperionPreview {
+        var progress by remember { mutableStateOf(30.minutes) }
+
+        SeekBar(
+            duration = 1.hours,
+            progress = progress,
+            buffered = 60.minutes,
+            segments = persistentListOf(
+                Segment(SponsorBlockCategory.INTRO, 0.0f..0.1f),
+                Segment(SponsorBlockCategory.SPONSOR, 0.7f..0.75f),
+                Segment(SponsorBlockCategory.OUTRO, 0.8f..1.0f),
+            ),
+            onSeek = { progress = it }
+        )
+    }
 }

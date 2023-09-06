@@ -19,7 +19,7 @@ import androidx.media3.session.MediaSession.ControllerInfo
 import androidx.media3.session.MediaSessionService
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import dev.zt64.hyperion.common.BuildConfig
+import dev.zt64.hyperion.BuildKonfig
 import dev.zt64.innertube.domain.repository.InnerTubeRepository
 import org.koin.android.ext.android.inject
 
@@ -74,7 +74,7 @@ class PlaybackService : MediaSessionService() {
             .setCallback(MediaSessionCallback())
             .build()
 
-        if (BuildConfig.DEBUG) {
+        if (BuildKonfig.DEBUG) {
             player.addAnalyticsListener(EventLogger())
         }
 

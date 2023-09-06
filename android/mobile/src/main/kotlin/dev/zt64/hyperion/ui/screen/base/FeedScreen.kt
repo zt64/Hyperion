@@ -23,10 +23,10 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import dev.icerock.moko.resources.compose.stringResource
 import dev.olshevski.navigation.reimagined.navigate
-import dev.zt64.hyperion.LocalNavController
 import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.navigation.AppDestination
+import dev.zt64.hyperion.ui.navigation.LocalNavController
 import dev.zt64.hyperion.ui.viewmodel.FeedViewModel
 import dev.zt64.innertube.domain.model.DomainChannelPartial
 import org.koin.androidx.compose.koinViewModel

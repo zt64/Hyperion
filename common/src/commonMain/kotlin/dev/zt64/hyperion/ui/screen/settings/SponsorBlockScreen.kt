@@ -100,7 +100,7 @@ fun SponsorBlockScreen(
                 }
             )
 
-            HorizontalDivider(
+            Divider(
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 

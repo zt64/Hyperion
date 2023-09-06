@@ -22,8 +22,10 @@ compose-shimmer = "1.0.5"
 
 compose-wear = "1.3.0-alpha04"
 
-koin-core = "3.4.3"
-koin-compose = "3.4.6"
+koin-compose = "1.0.4"
+koin-androidx-compose = "3.4.6"
+
+jvm = "17"
 
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
@@ -37,8 +39,8 @@ ktor-contentnegotiation = { module = "io.ktor:ktor-client-content-negotiation", 
 ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = "ktor" }
 
-koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-core" }
-koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin-compose" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin-androidx-compose" }
 
 compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
@@ -53,28 +55,27 @@ compose-icons-extended = { module = "androidx.compose.material:material-icons-ex
 compose-stable-marker = { module = "com.github.skydoves:compose-stable-marker", version.ref = "compose-stable-marker" }
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "compose-shimmer" }
 
-accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
-
-image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "image-loader" }
-
-horologist-compose-layout = { module = "dev.olshevski.horologist:horologist-compose-layout", version.ref = "horologist" }
-
-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging" }
-paging-runtime-composeui = { module = "app.cash.paging:paging-runtime-composeui", version.ref = "paging" }
-
 tv-foundation = { module = "androidx.tv:tv-foundation", version.ref = "tv" }
 tv-material = { module = "androidx.tv:tv-material", version.ref = "tv" }
 
 wear-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "compose-wear" }
 wear-material3 = "androidx.wear.compose:compose-material3:1.0.0-alpha10"
 wear-ui-tooling = { module = "androidx.wear.compose:compose-ui-tooling", version.ref = "compose-wear" }
-
-navigation = "dev.olshevski.navigation:reimagined:1.5.0"
+horologist-compose-layout = { module = "dev.olshevski.horologist:horologist-compose-layout", version.ref = "horologist" }
 
 media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
 media3-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "media3" }
 media3-session = { module = "androidx.media3:media3-session", version.ref = "media3" }
 media3-cast = { module = "androidx.media3:media3-cast", version.ref = "media3" }
+
+paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging" }
+paging-runtime-composeui = { module = "app.cash.paging:paging-runtime-composeui", version.ref = "paging" }
+
+image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "image-loader" }
+
+file-picker = "com.darkrockstudios:mpfilepicker:2.0.2"
+
+navigation = "dev.olshevski.navigation:reimagined:1.5.0"
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin-serialization" }
 kotlinx-serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlin-serialization" }
@@ -109,3 +110,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
+build-konfig = { id = "com.codingfeline.buildkonfig", version = "0.14.0" }

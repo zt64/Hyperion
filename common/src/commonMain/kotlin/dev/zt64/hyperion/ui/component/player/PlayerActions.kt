@@ -37,7 +37,7 @@ fun PlayerActions(
                 contentDescription = stringResource(MR.strings.like)
             )
             Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-            ProvideTextStyle(value = MaterialTheme.typography.labelMedium) {
+            ProvideTextStyle(MaterialTheme.typography.labelMedium) {
                 likeLabel()
             }
         }
@@ -52,7 +52,7 @@ fun PlayerActions(
                 contentDescription = stringResource(MR.strings.dislike)
             )
             Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-            ProvideTextStyle(value = MaterialTheme.typography.labelMedium) {
+            ProvideTextStyle(MaterialTheme.typography.labelMedium) {
                 dislikeLabel()
             }
         }

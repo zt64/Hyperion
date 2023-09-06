@@ -5,8 +5,9 @@ import dev.olshevski.navigation.reimagined.moveToTop
 import dev.olshevski.navigation.reimagined.navigate
 
 val <T> NavController<T>.currentDestination
-    get() = backstack.entries.last().destination
+    inline get() = backstack.entries.last().destination
 
-fun <T> NavController<T>.switchTo(destination: T) {
+@Suppress("NOTHING_TO_INLINE")
+inline fun <T> NavController<T>.switchTo(destination: T) {
     if (!moveToTop { it == destination }) navigate(destination)
 }

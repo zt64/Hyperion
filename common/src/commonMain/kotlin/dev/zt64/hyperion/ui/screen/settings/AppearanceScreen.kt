@@ -1,12 +1,12 @@
 package dev.zt64.hyperion.ui.screen.settings
 
-import android.os.Build
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.SUPPORTS_DYNAMIC_COLOR
 import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.hyperion.ui.component.setting.RadioSetting
 import dev.zt64.hyperion.ui.component.setting.SliderSetting
@@ -15,7 +15,7 @@ import dev.zt64.hyperion.ui.component.setting.SwitchSetting
 context(ColumnScope)
 @Composable
 fun AppearanceScreen(preferences: PreferencesManager) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+    if (SUPPORTS_DYNAMIC_COLOR) {
         SwitchSetting(
             preference = preferences::dynamicColor,
             text = stringResource(MR.strings.dynamic_color),

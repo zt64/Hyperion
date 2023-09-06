@@ -1,10 +1,9 @@
 package dev.zt64.hyperion.ui.component
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,13 +14,28 @@ import androidx.compose.ui.graphics.FilterQuality
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.seiko.imageloader.*
+import com.seiko.imageloader.component.setupDefaultComponents
 import com.seiko.imageloader.model.ImageEvent
 import com.seiko.imageloader.model.ImageRequest
 import com.seiko.imageloader.model.ImageResult
 import dev.zt64.hyperion.ui.modifier.shimmer
-import dev.zt64.hyperion.ui.theme.HyperionTheme
-import dev.zt64.hyperion.ui.tooling.Preview
+import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import io.github.aakira.napier.Napier
+
+@Composable
+expect fun rememberImageLoader(): ImageLoader
+
+fun ImageLoaderConfigBuilder.configureCommon() {
+    components {
+        setupDefaultComponents()
+    }
+
+    interceptor {
+        diskCacheConfig {
+            maxSizeBytes(128L * 1024 * 1024) // 128MB
+        }
+    }
+}
 
 @Composable
 fun ShimmerImage(
@@ -67,31 +81,22 @@ fun ShimmerImage(
             onDispose { }
         }
 
-        Crossfade(
-            targetState = painter,
-            animationSpec = tween(300)
-        ) {
-            Image(
-                painter = it,
-                contentDescription = contentDescription,
-                modifier = modifier.then(
-                    if (isLoading) Modifier.shimmer() else Modifier
-                ).then(
+        Image(
+            painter = painter,
+            contentDescription = contentDescription,
+            modifier = modifier
+                .then(if (isLoading) Modifier.shimmer() else Modifier)
+                .then(
                     if (isLoading || isError) Modifier.background(backgroundColor) else Modifier
                 ),
-                alignment = alignment,
-                contentScale = contentScale,
-                alpha = alpha,
-                colorFilter = colorFilter
-            )
-        }
+            alignment = alignment,
+            contentScale = contentScale,
+            alpha = alpha,
+            colorFilter = colorFilter
+        )
     }
 }
 
-@Composable
-expect fun rememberImageLoader(): ImageLoader
-
-context(BoxScope)
 @Composable
 private fun Loading() {
     Surface(
@@ -106,15 +111,7 @@ private fun Loading() {
 @Preview
 @Composable
 private fun LoadingPreview() {
-    HyperionTheme {
-        Surface(
-            modifier = Modifier.size(100.dp, 100.dp)
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(0.5f)
-            ) {
-                Loading()
-            }
-        }
+    HyperionPreview {
+        Loading()
     }
 }

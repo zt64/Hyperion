@@ -17,11 +17,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.icerock.moko.resources.compose.stringResource
 import dev.olshevski.navigation.reimagined.navigate
-import dev.zt64.hyperion.LocalNavController
 import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.component.player.WIDESCREEN_RATIO
 import dev.zt64.hyperion.ui.navigation.AppDestination
+import dev.zt64.hyperion.ui.navigation.LocalNavController
 import dev.zt64.hyperion.ui.viewmodel.LibraryViewModel
 import org.koin.androidx.compose.koinViewModel
 

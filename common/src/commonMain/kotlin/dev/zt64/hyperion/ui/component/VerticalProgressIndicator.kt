@@ -1,5 +1,6 @@
 package dev.zt64.hyperion.ui.component
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.progressSemantics
@@ -11,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.dp
+import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import kotlin.math.abs
 
 private val LinearIndicatorWidth = 4.0.dp
@@ -27,7 +29,7 @@ fun VerticalProgressIndicator(
     val coercedProgress = progress.coerceIn(0f, 1f)
 
     Canvas(
-        modifier
+        modifier = modifier
             .progressSemantics(coercedProgress)
             .size(LinearIndicatorWidth, LinearIndicatorHeight)
     ) {
@@ -69,5 +71,13 @@ private fun DrawScope.drawLinearIndicator(
                 cap = strokeCap,
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun VerticalProgressIndicatorPreview() {
+    HyperionPreview {
+        VerticalProgressIndicator(progress = 0.5f)
     }
 }
