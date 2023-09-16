@@ -50,8 +50,8 @@ private fun DrawScope.drawLinearIndicator(
     val height = size.height
     val xOffset = width / 2
 
-    val barStart = startFraction * height
-    val barEnd = endFraction * height
+    val barStart = (startFraction * -height) + height
+    val barEnd = (endFraction * -height) + height
 
     if (strokeCap == StrokeCap.Butt || width > height) {
         // Progress line
@@ -78,6 +78,6 @@ private fun DrawScope.drawLinearIndicator(
 @Composable
 private fun VerticalProgressIndicatorPreview() {
     HyperionPreview {
-        VerticalProgressIndicator(progress = 0.5f)
+        VerticalProgressIndicator(progress = 0.25f)
     }
 }
