@@ -131,7 +131,7 @@
     <string name="cancel">キャンセル</string>
     <string name="shorts">ショート</string>
     <string name="store">ストア</string>
-    <string name="skip_count_tracking">Skip count tracking</string>
+    <string name="skip_count_tracking">スキップ回数のトラッキング</string>
     <string name="hide_this_notification">"この通知を非表示 "</string>
     <string name="replace">置換</string>
     <string name="remove">除去</string>
