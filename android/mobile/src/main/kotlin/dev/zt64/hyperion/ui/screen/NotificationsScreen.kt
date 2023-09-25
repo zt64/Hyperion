@@ -1,5 +1,7 @@
 package dev.zt64.hyperion.ui.screen
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -9,6 +11,7 @@ import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.NotificationsOff
 import androidx.compose.material.icons.filled.RemoveCircle
 import androidx.compose.material3.*
+import androidx.compose.material3.DismissValue.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -101,37 +104,72 @@ private fun Notification(
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
-    ListItem(
-        modifier = Modifier.combinedClickable(
-            onClick = onClick,
-            onLongClick = onLongClick
-        ),
-        headlineContent = {
-            BadgedBox(
-                badge = {
-                    Badge(
-                        modifier = Modifier.align(Alignment.CenterStart)
+    val dismissState = rememberDismissState()
+
+    SwipeToDismiss(
+        state = dismissState,
+        background = {
+            val color by animateColorAsState(
+                targetValue = when (dismissState.targetValue) {
+                    Default -> MaterialTheme.colorScheme.surface
+                    DismissedToEnd -> MaterialTheme.colorScheme.primary
+                    DismissedToStart -> MaterialTheme.colorScheme.primary
+                },
+                label = "Swipe to dismiss background color"
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color),
+                contentAlignment = Alignment.Center
+            ) {
+                // Crossfade(
+                //     targetState = dismissState.targetValue,
+                //     label = ""
+                // ) { value ->
+                //     when (value) {
+                //         DismissedToEnd -> TODO()
+                //         DismissedToStart -> TODO()
+                //         else -> {}
+                //     }
+                // }
+            }
+        },
+        dismissContent = {
+            ListItem(
+                modifier = Modifier.combinedClickable(
+                    onClick = onClick,
+                    onLongClick = onLongClick
+                ),
+                headlineContent = {
+                    BadgedBox(
+                        badge = {
+                            Badge(
+                                modifier = Modifier.align(Alignment.CenterStart)
+                            )
+                        }
+                    ) {
+                        Text(notification.header)
+                    }
+                },
+                supportingContent = notification.content?.let {
+                    {
+                        Text(it)
+                    }
+                },
+                leadingContent = {
+                    ShimmerImage(
+                        url = notification.leadingImage,
+                        contentDescription = null
+                    )
+                },
+                trailingContent = {
+                    ShimmerImage(
+                        url = notification.trailingImage,
+                        contentDescription = null
                     )
                 }
-            ) {
-                Text(notification.header)
-            }
-        },
-        supportingContent = notification.content?.let {
-            {
-                Text(it)
-            }
-        },
-        leadingContent = {
-            ShimmerImage(
-                url = notification.leadingImage,
-                contentDescription = null
-            )
-        },
-        trailingContent = {
-            ShimmerImage(
-                url = notification.trailingImage,
-                contentDescription = null
             )
         }
     )

@@ -8,6 +8,6 @@ package dev.zt64.hyperion.domain.manager
 //     private val downloadDirectory = preferencesManager.downloadDirectory.toUri()
 // }
 
-expect class DownloadManager() {
+expect class DownloadManager(preferencesManager: PreferencesManager) {
     fun download()
 }

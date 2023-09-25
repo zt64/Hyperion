@@ -63,9 +63,7 @@ fun BaseScreen(
 
                         IconButton(
                             onClick = {
-                                coroutineScope.launch {
-                                    drawerState.open()
-                                }
+                                coroutineScope.launch { drawerState.open() }
                             }
                         ) {
                             Icon(

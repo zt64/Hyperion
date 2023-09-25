@@ -3,7 +3,10 @@ package dev.zt64.hyperion.ui.screen.settings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.filled.BrightnessHigh
+import androidx.compose.material.icons.filled.Swipe
+import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.runtime.Composable
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
@@ -40,7 +43,7 @@ fun GesturesScreen(preferences: PreferencesManager) {
     SwitchSetting(
         preference = preferences::volumeGesture,
         text = stringResource(MR.strings.volume_gesture),
-        icon = Icons.Default.VolumeUp
+        icon = Icons.AutoMirrored.Default.VolumeUp
     )
 
     SwitchSetting(

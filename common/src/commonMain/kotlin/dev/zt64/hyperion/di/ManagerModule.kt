@@ -6,7 +6,7 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 internal val managerModule = module {
-    singleOf(::PreferencesManager)
+    singleOf(::PreferencesManagerImpl) bind PreferencesManager::class
     singleOf(::AccountManagerImpl) bind AccountManager::class
     singleOf(::DownloadManager)
 }

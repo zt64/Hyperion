@@ -1,7 +1,7 @@
 package dev.zt64.hyperion.ui.component
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -16,7 +16,7 @@ fun BackButton() {
 
     IconButton(onClick = navController::pop) {
         Icon(
-            imageVector = Icons.Default.ArrowBack,
+            imageVector = Icons.AutoMirrored.Default.ArrowBack,
             contentDescription = stringResource(MR.strings.back)
         )
     }
@@ -26,7 +26,7 @@ fun BackButton() {
 fun BackButton(onClick: () -> Unit) {
     IconButton(onClick) {
         Icon(
-            imageVector = Icons.Default.ArrowBack,
+            imageVector = Icons.AutoMirrored.Default.ArrowBack,
             contentDescription = stringResource(MR.strings.back)
         )
     }

@@ -24,7 +24,7 @@ inline fun <reified E> RadioSetting(
     description: String? = null,
     icon: ImageVector? = null
 ) where E : Enum<E>, E : StringLabel {
-    val options = remember { enumValues<E>() }
+    val options = remember<Array<E>>(::enumValues)
 
     RadioSetting(
         modifier = modifier,

@@ -42,7 +42,7 @@ class PlaylistViewModel(
                 playlist = innerTube.getPlaylist(playlistId)
                 videos = Pager(pagingConfig) {
                     BrowsePagingSource { key ->
-                        if (key == null) playlist!! else innerTube.getPlaylist(playlistId, key)
+                        key?.let { innerTube.getPlaylist(playlistId, key) } ?: playlist!!
                     }
                 }.flow.cachedIn(viewModelScope)
 

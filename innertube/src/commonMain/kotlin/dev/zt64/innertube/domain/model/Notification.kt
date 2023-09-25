@@ -21,5 +21,5 @@ data class Notification(
     val leadingImage: String,
     val trailingImage: String,
     val sentTimeText: String,
-    val read: Boolean
+    val read: Boolean = false
 )

@@ -6,10 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
 import dev.zt64.innertube.domain.model.Notification
 import dev.zt64.innertube.domain.repository.InnerTubeRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 class NotificationsViewModel(
     private val innerTube: InnerTubeRepository
 ) : ViewModel() {
-    val notifications by mutableStateOf(emptyFlow<PagingData<Notification>>())
+    val notifications: Flow<PagingData<Notification>> by mutableStateOf(emptyFlow())
 }

@@ -15,13 +15,11 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 internal val httpModule = module {
-    fun provideJson() = Json {
+    fun provideJson(): Json = Json {
         ignoreUnknownKeys = true
     }
 
-    fun provideEngineFactory(): HttpClientEngineFactory<*> {
-        return OkHttp
-    }
+    fun provideEngineFactory(): HttpClientEngineFactory<*> = OkHttp
 
     fun provideHttpClient(engineFactory: HttpClientEngineFactory<*>, json: Json): HttpClient {
         return HttpClient(engineFactory) {

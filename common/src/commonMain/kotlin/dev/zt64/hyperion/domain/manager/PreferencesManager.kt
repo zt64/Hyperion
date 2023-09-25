@@ -7,9 +7,7 @@ import dev.zt64.hyperion.ui.theme.Theme
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class PreferencesManager internal constructor(
-    platform: Platform
-) : Settings by Settings() {
+abstract class PreferencesManager : Settings {
     var visitorData by nullableString("visitor_data")
     var deviceId by nullableString("device_id")
 
@@ -21,7 +19,14 @@ class PreferencesManager internal constructor(
     var pictureInPicture by boolean("pip", false)
     var showDownloadButton by boolean("show_download_button", true)
     var showRelatedVideos by boolean("show_related_videos", true)
-    var downloadDirectory by string("download_directory", platform.getDownloadsDir().path)
+    var downloadDirectory by string(
+        "download_directory",
+        try {
+            Platform.getDownloadsDir().path
+        } catch (e: Exception) {
+            ""
+        }
+    )
     var timestampScale by float("timestamp_scale", 1f)
     var hideNavItemLabel by boolean("hide_nav_item_label", false)
 
@@ -48,15 +53,18 @@ class PreferencesManager internal constructor(
     var sponsorBlockUserIdPublic by nullableString("sponsor_block_user_id_public")
 }
 
-private inline fun <reified E> Settings.enum(
+internal class PreferencesManagerImpl : PreferencesManager(), Settings by Settings()
+internal class PreferencesManagerPreviewImpl : PreferencesManager(), Settings by MapSettings()
+
+private inline fun <reified E : Enum<E>> Settings.enum(
     key: String? = null,
     defaultValue: E
-): ReadWriteProperty<Any?, E> where E : Enum<E> = object : ReadWriteProperty<Any?, E> {
-    override fun getValue(thisRef: Any?, property: KProperty<*>): E {
+): ReadWriteProperty<Any, E> = object : ReadWriteProperty<Any, E> {
+    override fun getValue(thisRef: Any, property: KProperty<*>): E {
         return enumValues<E>()[getInt(key ?: property.name, defaultValue.ordinal)]
     }
 
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: E) {
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: E) {
         putInt(key ?: property.name, value.ordinal)
     }
 }

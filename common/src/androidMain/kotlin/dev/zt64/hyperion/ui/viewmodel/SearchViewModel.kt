@@ -10,6 +10,7 @@ import dev.zt64.hyperion.domain.manager.AccountManager
 import dev.zt64.hyperion.domain.paging.BrowsePagingSource
 import dev.zt64.innertube.domain.model.Entity
 import dev.zt64.innertube.domain.repository.InnerTubeRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
@@ -20,7 +21,7 @@ class SearchViewModel(
 ) : ViewModel() {
     var suggestions = mutableStateListOf<String>()
         private set
-    var results by mutableStateOf(emptyFlow<PagingData<Entity>>())
+    var results: Flow<PagingData<Entity>> by mutableStateOf(emptyFlow())
         private set
     var textFieldValue by mutableStateOf(TextFieldValue())
         private set

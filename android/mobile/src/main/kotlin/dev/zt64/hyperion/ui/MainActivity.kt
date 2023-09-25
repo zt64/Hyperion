@@ -1,6 +1,5 @@
 package dev.zt64.hyperion.ui
 
-import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +18,7 @@ import androidx.core.view.WindowCompat
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.NavBackHandler
 import dev.olshevski.navigation.reimagined.rememberNavController
+import dev.zt64.hyperion.di.viewModelModule
 import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.hyperion.ui.navigation.*
 import dev.zt64.hyperion.ui.screen.*
@@ -30,6 +28,7 @@ import dev.zt64.hyperion.ui.screen.base.LibraryScreen
 import dev.zt64.hyperion.ui.theme.HyperionTheme
 import dev.zt64.hyperion.ui.theme.Theme
 import dev.zt64.innertube.network.service.InnerTubeService
+import org.koin.android.ext.koin.androidContext
 import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
@@ -42,15 +41,20 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            Hyperion(activity = this)
+            App(
+                application = {
+                    androidContext(this@MainActivity)
+                    modules(viewModelModule)
+                },
+            ) {
+                Hyperion()
+            }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
 private fun Hyperion(
-    activity: Activity,
     preferences: PreferencesManager = koinInject(),
     innerTubeService: InnerTubeService = koinInject()
 ) {
@@ -76,8 +80,7 @@ private fun Hyperion(
                 NavBackHandler(navController)
 
                 CompositionLocalProvider(
-                    LocalNavController provides navController,
-                    LocalWindowSizeClass provides calculateWindowSizeClass(activity)
+                    LocalNavController provides navController
                 ) {
                     AnimatedNavHost(
                         modifier = Modifier.fillMaxSize(),

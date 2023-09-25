@@ -5,7 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PlaylistPlay
+import androidx.compose.material.icons.automirrored.filled.PlaylistPlay
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,12 +14,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.olshevski.navigation.reimagined.navigate
 import dev.zt64.hyperion.domain.manager.PreferencesManager
+import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.component.player.WIDESCREEN_RATIO
 import dev.zt64.hyperion.ui.navigation.AppDestination
 import dev.zt64.hyperion.ui.navigation.LocalNavController
+import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import dev.zt64.innertube.domain.model.DomainPlaylistPartial
 import org.koin.compose.koinInject
 
@@ -31,6 +34,7 @@ fun PlaylistCard(
     prefs: PreferencesManager = koinInject()
 ) {
     val navController = LocalNavController.current
+    val windowSizeClass = LocalWindowSizeClass.current
 
     ElevatedCard(
         modifier = modifier
@@ -139,7 +143,7 @@ private fun Thumbnail(
         ) {
             Icon(
                 modifier = Modifier.size(34.dp),
-                imageVector = Icons.Default.PlaylistPlay,
+                imageVector = Icons.AutoMirrored.Default.PlaylistPlay,
                 contentDescription = null
             )
 
@@ -148,5 +152,21 @@ private fun Thumbnail(
                 style = MaterialTheme.typography.labelMedium
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PlaylistCardPreview() {
+    HyperionPreview {
+        PlaylistCard(
+            playlist = DomainPlaylistPartial(
+                id = "playlistId",
+                title = "Playlist Title",
+                subtitle = "Playlist Subtitle",
+                thumbnailUrl = "https://i.ytimg.com/vi/0qUW56RQzRw/hqdefault.jpg",
+                videoCountText = "10 videos"
+            )
+        )
     }
 }

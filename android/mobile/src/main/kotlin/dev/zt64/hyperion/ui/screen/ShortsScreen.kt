@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Comment
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -119,7 +120,7 @@ fun Short() {
 
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
-                        imageVector = Icons.Default.Comment,
+                        imageVector = Icons.AutoMirrored.Default.Comment,
                         contentDescription = stringResource(MR.strings.comments)
                     )
                 }
@@ -137,6 +138,6 @@ fun Short() {
 
 @Preview
 @Composable
-fun ShortsScreenPreview() {
+private fun ShortsScreenPreview() {
     ShortsScreen()
 }

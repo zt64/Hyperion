@@ -20,6 +20,7 @@ import com.google.common.util.concurrent.MoreExecutors
 import dev.zt64.hyperion.domain.manager.AccountManager
 import dev.zt64.hyperion.domain.manager.DownloadManager
 import dev.zt64.hyperion.domain.manager.PreferencesManager
+import dev.zt64.hyperion.domain.model.Rating
 import dev.zt64.hyperion.domain.paging.BrowsePagingSource
 import dev.zt64.hyperion.player.PlaybackService
 import dev.zt64.innertube.domain.model.*
@@ -210,8 +211,7 @@ class PlayerViewModel(
         showDownloadDialog = false
     }
 
-    // TODO: Use enum for like & dislike
-    fun updateVote(like: Boolean) {
+    fun updateVote(rating: Rating) {
         viewModelScope.launch {
             try {
 

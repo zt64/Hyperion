@@ -56,7 +56,6 @@ fun PlayerSheet(
             },
             label = "Quality Sheet"
         ) {
-
             @UnstableApi
             when (it) {
                 true -> {

@@ -16,8 +16,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import androidx.compose.ui.zIndex
 import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.ui.App
 import dev.zt64.hyperion.ui.navigation.AppDestination
 import dev.zt64.hyperion.ui.navigation.BaseDestination
 import dev.zt64.hyperion.ui.navigation.Destination
@@ -26,41 +26,35 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 suspend fun main() {
-    initializeKoin()
-
     application {
-        Window(
-            onCloseRequest = ::exitApplication,
-            title = "Hyperion"
-        ) {
-            HyperionTheme(true) {
-                Surface {
-                    val scope = rememberCoroutineScope()
-                    val drawerState = rememberDrawerState(DrawerValue.Closed)
-                    var selectedDestination by remember {
-                        mutableStateOf<Destination>(BaseDestination.HOME)
-                    }
+        App {
+            Window(
+                onCloseRequest = ::exitApplication,
+                title = "Hyperion",
+                icon = null
+            ) {
+                HyperionTheme(true) {
+                    Surface {
+                        val scope = rememberCoroutineScope()
+                        val drawerState = rememberDrawerState(DrawerValue.Closed)
+                        var selectedDestination by remember {
+                            mutableStateOf<Destination>(BaseDestination.HOME)
+                        }
 
-                    ModalNavigationDrawer(
-                        drawerState = drawerState,
-                        gesturesEnabled = false,
-                        drawerContent = {
-                            ModalDrawerSheet(
-                                modifier = Modifier.padding(16.dp),
-                            ) {
-                                Column(
-                                    modifier = Modifier.padding(
-                                        horizontal = 12.dp,
-                                        vertical = 4.dp
-                                    ).zIndex(99f),
-                                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                                ) {
+                        DismissibleNavigationDrawer(
+                            drawerState = drawerState,
+                            gesturesEnabled = false,
+                            drawerContent = {
+                                DismissibleDrawerSheet {
+                                    Spacer(Modifier.height(12.dp))
+
                                     Row(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .clickable {
 
-                                            },
+                                            }
+                                            .padding(NavigationDrawerItemDefaults.ItemPadding),
                                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
@@ -79,7 +73,7 @@ suspend fun main() {
 
                                         Column {
                                             Text(
-                                                text = "Guh",
+                                                text = "John Doe",
                                                 style = MaterialTheme.typography.titleMedium
                                             )
 
@@ -94,6 +88,9 @@ suspend fun main() {
 
                                     BaseDestination.entries.forEach { destination ->
                                         NavigationDrawerItem(
+                                            modifier = Modifier.padding(
+                                                NavigationDrawerItemDefaults.ItemPadding
+                                            ),
                                             icon = {
                                                 Icon(
                                                     imageVector = destination.icon,
@@ -104,9 +101,7 @@ suspend fun main() {
                                             onClick = {
                                                 selectedDestination = destination
 
-                                                scope.launch {
-                                                    drawerState.close()
-                                                }
+                                                scope.launch { drawerState.close() }
                                             },
                                             selected = selectedDestination == destination
                                         )
@@ -115,7 +110,7 @@ suspend fun main() {
                                     Spacer(modifier = Modifier.weight(1f))
 
                                     NavigationDrawerItem(
-                                        modifier = Modifier.padding(vertical = 12.dp),
+                                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                                         icon = {
                                             Icon(
                                                 imageVector = Icons.Default.Settings,
@@ -124,46 +119,43 @@ suspend fun main() {
                                         },
                                         label = { Text(stringResource(MR.strings.settings)) },
                                         onClick = {
-                                            scope.launch {
-                                                drawerState.close()
-                                            }
+                                            selectedDestination = AppDestination.Settings
+                                            scope.launch { drawerState.close() }
                                         },
                                         selected = selectedDestination == AppDestination.Settings
                                     )
 
                                 }
                             }
-                        }
-                    ) {
-                        Scaffold(
-                            topBar = {
-                                TopAppBar(
-                                    navigationIcon = {
-                                        IconButton(
-                                            onClick = {
-                                                scope.launch {
-                                                    drawerState.open()
+                        ) {
+                            Scaffold(
+                                topBar = {
+                                    TopAppBar(
+                                        navigationIcon = {
+                                            IconButton(
+                                                onClick = {
+                                                    scope.launch { drawerState.open() }
                                                 }
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Menu,
+                                                    contentDescription = null
+                                                )
                                             }
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.Menu,
-                                                contentDescription = null
-                                            )
+                                        },
+                                        title = {
+                                            Text("Hyperion")
                                         }
-                                    },
-                                    title = {
-                                        Text("Hyperion")
-                                    }
-                                )
-                            }
-                        ) { paddingValues ->
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(paddingValues)
-                            ) {
+                                    )
+                                }
+                            ) { paddingValues ->
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(paddingValues)
+                                ) {
 
+                                }
                             }
                         }
                     }
@@ -171,20 +163,4 @@ suspend fun main() {
             }
         }
     }
-}
-
-@Composable
-fun Player(
-    modifier: Modifier = Modifier
-) {
-
-}
-
-object MPVLib {
-    init {
-        System.loadLibrary("mpv")
-        mpv_initialize()
-    }
-
-    private external fun mpv_initialize(): Long
 }

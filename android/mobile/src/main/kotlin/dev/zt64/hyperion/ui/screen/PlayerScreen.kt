@@ -293,9 +293,7 @@ private fun PlayerScreenPortrait() {
 
                     VideoCard(
                         video = relatedVideo,
-                        onClick = {
-                            viewModel.loadVideo(relatedVideo.id)
-                        },
+                        onClick = { viewModel.loadVideo(relatedVideo.id) },
                     )
                 }
 

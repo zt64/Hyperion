@@ -10,12 +10,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import dev.olshevski.navigation.reimagined.navigate
 import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.navigation.AppDestination
 import dev.zt64.hyperion.ui.navigation.LocalNavController
+import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import dev.zt64.innertube.domain.model.DomainTagPartial
 
 @Composable
@@ -24,6 +27,7 @@ fun TagCard(
     modifier: Modifier = Modifier
 ) {
     val navController = LocalNavController.current
+    val windowSizeClass = LocalWindowSizeClass.current
 
     ElevatedCard(
         modifier = modifier,
@@ -76,5 +80,20 @@ fun TagCard(
                 }
             }
         }
+    }
+}
+
+@PreviewScreenSizes
+@Composable
+private fun TagCardPreview() {
+    HyperionPreview {
+        TagCard(
+            tag = DomainTagPartial(
+                name = "Music",
+                backgroundColor = Color.Red.value.toLong(),
+                videosCount = "1.2k",
+                channelsCount = "1.2k"
+            )
+        )
     }
 }

@@ -5,14 +5,9 @@ import java.io.File
 internal expect val SUPPORTS_DYNAMIC_COLOR: Boolean
 internal expect val SUPPORTS_PIP: Boolean
 
-internal expect class Platform() {
+internal expect object Platform {
     fun getDownloadsDir(): File
 }
 
-@OptIn(ExperimentalMultiplatform::class)
-@OptionalExpectation
-@Target(AnnotationTarget.CLASS)
-@Retention(AnnotationRetention.BINARY)
-expect annotation class CommonParcelize()
-
+// Somehow fixes a bug
 expect interface CommonParcelable

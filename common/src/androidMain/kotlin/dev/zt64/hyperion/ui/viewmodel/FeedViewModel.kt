@@ -8,6 +8,7 @@ import dev.zt64.hyperion.domain.manager.AccountManager
 import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.innertube.domain.model.Entity
 import dev.zt64.innertube.domain.repository.InnerTubeRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 class FeedViewModel(
@@ -15,5 +16,5 @@ class FeedViewModel(
     private val innerTube: InnerTubeRepository,
     val accountManager: AccountManager
 ) : ViewModel() {
-    val items by mutableStateOf(emptyFlow<PagingData<Entity>>())
+    val items: Flow<PagingData<Entity>> by mutableStateOf(emptyFlow())
 }

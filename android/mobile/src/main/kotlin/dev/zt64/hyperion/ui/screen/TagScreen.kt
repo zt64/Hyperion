@@ -15,6 +15,7 @@ import androidx.paging.compose.itemKey
 import dev.zt64.hyperion.ui.component.BackButton
 import dev.zt64.hyperion.ui.component.VideoCard
 import dev.zt64.hyperion.ui.viewmodel.TagViewModel
+import dev.zt64.hyperion.ui.viewmodel.TagViewModel.State
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -23,9 +24,9 @@ fun TagScreen(tag: String) {
     val viewModel: TagViewModel = koinViewModel { parametersOf(tag) }
 
     when (val state = viewModel.state) {
-        is TagViewModel.State.Loading -> TagScreenLoading()
-        is TagViewModel.State.Loaded -> TagScreenLoaded()
-        is TagViewModel.State.Error -> ErrorScreen(state.exception)
+        is State.Loading -> TagScreenLoading()
+        is State.Loaded -> TagScreenLoaded()
+        is State.Error -> ErrorScreen(state.exception)
     }
 }
 

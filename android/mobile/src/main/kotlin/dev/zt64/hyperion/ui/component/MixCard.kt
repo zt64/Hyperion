@@ -14,12 +14,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import dev.zt64.hyperion.domain.manager.PreferencesManager
+import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.component.player.WIDESCREEN_RATIO
 import dev.zt64.hyperion.ui.navigation.LocalNavController
+import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import dev.zt64.innertube.domain.model.DomainMixPartial
-import org.koin.compose.koinInject
 
 @Composable
 fun MixCard(
@@ -28,7 +29,7 @@ fun MixCard(
     onLongClick: () -> Unit = { },
 ) {
     val navController = LocalNavController.current
-    val prefs: PreferencesManager = koinInject()
+    val windowSizeClass = LocalWindowSizeClass.current
 
     ElevatedCard(
         modifier = modifier
@@ -42,7 +43,7 @@ fun MixCard(
     ) {
         val orientation = LocalConfiguration.current.orientation
 
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE || prefs.compactCard) {
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -133,5 +134,20 @@ private fun Thumbnail(
                 contentDescription = null
             )
         }
+    }
+}
+
+@PreviewScreenSizes
+@Composable
+private fun MixCardPreview() {
+    HyperionPreview {
+        MixCard(
+            mix = DomainMixPartial(
+                id = "mixId",
+                title = "Mix Title",
+                subtitle = "Mix Subtitle",
+                thumbnailUrl = "https://i.ytimg.com/vi/5qap5aO4i9A/hqdefault.jpg"
+            )
+        )
     }
 }

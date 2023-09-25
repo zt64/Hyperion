@@ -2,16 +2,31 @@ package dev.zt64.hyperion.ui.tooling
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.platform.LocalDensity
 import dev.zt64.hyperion.BuildKonfig
+import dev.zt64.hyperion.di.appModule
+import dev.zt64.hyperion.di.httpModule
+import dev.zt64.hyperion.domain.manager.PreferencesManager
+import dev.zt64.hyperion.domain.manager.PreferencesManagerPreviewImpl
+import dev.zt64.hyperion.ui.LocalWindowSizeClass
+import org.koin.compose.KoinApplication
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-internal fun HyperionPreview(
+fun HyperionPreview(
+    modifier: Modifier = Modifier,
     isDarkTheme: Boolean = true,
     content: @Composable BoxScope.() -> Unit,
 ) {
@@ -19,17 +34,36 @@ internal fun HyperionPreview(
         require(!BuildKonfig.DEBUG) { "HyperionPreview should not be used in production" }
     }
 
-    MaterialTheme(
-        colorScheme = if (isDarkTheme) darkColorScheme() else lightColorScheme()
-    ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-                content = content
+    KoinApplication(
+        application = {
+            modules(
+                appModule,
+                httpModule,
             )
+            modules(
+                module {
+                    singleOf(::PreferencesManagerPreviewImpl) bind PreferencesManager::class
+                }
+            )
+        }
+    ) {
+        CompositionLocalProvider(
+            LocalWindowSizeClass provides WindowSizeClass.calculateFromSize(
+                size = Size(1920f, 1080f),
+                density = LocalDensity.current
+            )
+        ) {
+            MaterialTheme(
+                colorScheme = if (isDarkTheme) darkColorScheme() else lightColorScheme()
+            ) {
+                Surface(modifier) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        content = content
+                    )
+                }
+            }
         }
     }
 }
+

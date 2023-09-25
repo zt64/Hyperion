@@ -13,15 +13,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.icerock.moko.resources.compose.stringResource
 import dev.olshevski.navigation.reimagined.navigate
 import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.domain.manager.PreferencesManager
+import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.component.player.WIDESCREEN_RATIO
 import dev.zt64.hyperion.ui.navigation.AppDestination
 import dev.zt64.hyperion.ui.navigation.LocalNavController
+import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import dev.zt64.innertube.domain.model.DomainVideoPartial
 import org.koin.compose.koinInject
 
@@ -32,6 +35,7 @@ fun VideoCard(
     onLongClick: () -> Unit = { }
 ) {
     val navController = LocalNavController.current
+    val windowSizeClass = LocalWindowSizeClass.current
 
     VideoCard(
         video = video,
@@ -189,5 +193,20 @@ private fun Thumbnail(
                 fontSize = 14.sp * timeStampScale
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun VideoCardPreview() {
+    HyperionPreview {
+        VideoCard(
+            video = DomainVideoPartial(
+                id = "id",
+                title = "Video title",
+                viewCount = "1.2M",
+                publishedTimeText = "1 year ago",
+            )
+        )
     }
 }

@@ -12,6 +12,7 @@ plugins {
 }
 
 group = "dev.zt64.hyperion"
+version = "0.1.0"
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
@@ -51,11 +52,13 @@ kotlin {
 
                 api(libs.napier)
 
+                api(libs.window.size.multiplatform)
                 implementation(libs.bundles.ktor)
                 implementation(libs.ktor.okhttp)
                 implementation(libs.uuid)
                 implementation(libs.koin.compose)
                 implementation(libs.file.picker)
+                implementation("com.russhwolf:multiplatform-settings-test:1.0.0")
             }
         }
 
@@ -113,6 +116,7 @@ configurations.all {
 dependencies {
     debugImplementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.runtime.tracing)
+    debugImplementation("com.russhwolf:multiplatform-settings-test:1.0.0")
 }
 
 multiplatformResources {

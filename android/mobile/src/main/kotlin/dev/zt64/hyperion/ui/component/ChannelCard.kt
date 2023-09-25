@@ -13,6 +13,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import dev.olshevski.navigation.reimagined.navigate
 import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.domain.manager.AccountManager
+import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.navigation.AppDestination
 import dev.zt64.hyperion.ui.navigation.LocalNavController
 import dev.zt64.innertube.domain.model.DomainChannelPartial
@@ -27,6 +28,7 @@ fun ChannelCard(
     accountManager: AccountManager = koinInject(),
 ) {
     val navController = LocalNavController.current
+    val windowSizeClass = LocalWindowSizeClass.current
 
     ElevatedCard(
         modifier = modifier

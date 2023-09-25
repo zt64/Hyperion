@@ -7,11 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
 import dev.zt64.innertube.domain.model.DomainChannelPartial
 import dev.zt64.innertube.domain.repository.InnerTubeRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 class ChannelsViewModel(
     private val innerTube: InnerTubeRepository
 ) : ViewModel() {
-    var channels by mutableStateOf(emptyFlow<PagingData<DomainChannelPartial>>())
+    var channels: Flow<PagingData<DomainChannelPartial>> by mutableStateOf(emptyFlow())
         private set
 }

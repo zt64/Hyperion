@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Reply
+import androidx.compose.material.icons.automirrored.filled.Reply
 import androidx.compose.material.icons.filled.ThumbDown
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.*
@@ -98,7 +98,7 @@ private fun Comment(comment: DomainComment) {
 
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(
-                        imageVector = Icons.Default.Reply,
+                        imageVector = Icons.AutoMirrored.Default.Reply,
                         contentDescription = stringResource(MR.strings.reply)
                     )
                 }

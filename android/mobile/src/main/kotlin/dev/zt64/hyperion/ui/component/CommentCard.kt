@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.navigation.LocalNavController
 import dev.zt64.innertube.domain.model.DomainComment
 
@@ -20,6 +21,7 @@ fun CommentCard(
     onClickReply: () -> Unit
 ) {
     val navController = LocalNavController.current
+    val windowSizeClass = LocalWindowSizeClass.current
 
     ElevatedCard {
         Column(

@@ -7,9 +7,6 @@ group = "dev.zt64.ktor.brotli"
 kotlin {
     jvmToolchain(libs.versions.jvm.get().toInt())
 
-    js {
-        nodejs()
-    }
     jvm()
 
     sourceSets {

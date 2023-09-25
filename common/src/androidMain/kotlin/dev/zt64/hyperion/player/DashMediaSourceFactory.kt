@@ -58,7 +58,8 @@ class DashMediaSourceFactory(
         val videoItem = MediaItem.fromUri(video.url)
         val audioItem = MediaItem.fromUri(audio.url)
 
-        val mediaSourceFactory = ProgressiveMediaSource.Factory(dataSourceFactory, ExtractorsFactory())
+        val mediaSourceFactory =
+            ProgressiveMediaSource.Factory(dataSourceFactory, ExtractorsFactory())
         val videoSource = mediaSourceFactory.createMediaSource(videoItem)
         val audioSource = mediaSourceFactory.createMediaSource(audioItem)
 

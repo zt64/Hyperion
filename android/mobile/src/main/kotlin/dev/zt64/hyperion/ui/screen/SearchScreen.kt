@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -316,7 +317,7 @@ private fun FilterSheet(onDismissRequest: () -> Unit) {
 
             FilterFlowRow(
                 title = MR.strings.sort_by,
-                icon = Icons.Default.Sort,
+                icon = Icons.AutoMirrored.Default.Sort,
                 items = SearchFilter.Sort.entries
             )
         }

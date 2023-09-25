@@ -44,10 +44,10 @@ fun SettingsScreen() {
                     BackButton(
                         onClick = {
                             if (navController.currentDestination == SettingsSection) {
-                                parentNavController.pop()
+                                parentNavController
                             } else {
-                                navController.pop()
-                            }
+                                navController
+                            }.pop()
                         }
                     )
                 },

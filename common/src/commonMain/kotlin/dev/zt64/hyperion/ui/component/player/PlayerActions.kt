@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.domain.model.Rating
 
 @Composable
 fun PlayerActions(
@@ -17,7 +18,7 @@ fun PlayerActions(
     likeLabel: @Composable () -> Unit,
     dislikeLabel: @Composable () -> Unit,
     showDownloadButton: Boolean,
-    onClickVote: (Boolean) -> Unit,
+    onClickVote: (Rating) -> Unit,
     onClickShare: () -> Unit,
     onClickDownload: () -> Unit,
     modifier: Modifier = Modifier
