@@ -6,32 +6,30 @@ plugins {
     alias(libs.plugins.android.library)
 }
 
+group = "dev.zt64.innertube"
+
 android {
-    namespace = "com.zt.innertube"
-    compileSdk = 33
+    namespace = "dev.zt64.innertube"
+    compileSdk = 34
 
     defaultConfig {
         minSdk = 21
     }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(libs.versions.jvm.get().toInt())
 
     androidTarget()
+    jvm()
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 implementation(projects.ktorBrotli)
 
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.kotlinx.serialization.protobuf)
+                api(libs.kotlinx.serialization.json)
+                api(libs.kotlinx.serialization.protobuf)
 
                 implementation(libs.bundles.ktor)
 
@@ -39,7 +37,7 @@ kotlin {
             }
         }
 
-        sourceSets.all {
+        all {
             languageSettings {
                 optIn("kotlinx.serialization.ExperimentalSerializationApi")
             }

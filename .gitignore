@@ -3,4 +3,4 @@
 .fleet
 build
 local.properties
-/app/release/
+/android/**/release/

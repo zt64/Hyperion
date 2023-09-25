@@ -2,13 +2,15 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
 }
 
+group = "dev.zt64.ktor.brotli"
+
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(libs.versions.jvm.get().toInt())
 
     jvm()
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 implementation(libs.ktor.encoding)
                 implementation(libs.brotli)

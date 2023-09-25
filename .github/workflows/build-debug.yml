@@ -18,13 +18,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          cache: 'gradle'
 
-      - name: Build project with Gradle
-        run: chmod +x ./gradlew && ./gradlew app:assembleDebug --no-daemon
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
 
-      - uses: actions/upload-artifact@v3
+      - name: Build project
+        run: ./gradlew assembleDebug
+
+      - uses: kittaakos/upload-artifact-as-is@v0
         with:
-          name: app-debug
           path: |
-            app/build/outputs/apk/debug/app-debug.apk
+            android/**/build/outputs/apk/debug/*-debug.apk
+          retention-days: 30
