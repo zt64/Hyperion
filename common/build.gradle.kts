@@ -47,12 +47,14 @@ kotlin {
                 api(libs.settings.noarg)
                 api(libs.settings.coroutines)
 
-                api(libs.paging.runtime.composeui)
+                api(libs.paging.compose.common)
                 api(libs.paging.common)
 
                 api(libs.napier)
 
                 api(libs.window.size.multiplatform)
+                
+                implementation(libs.material.kolor)
                 implementation(libs.bundles.ktor)
                 implementation(libs.ktor.okhttp)
                 implementation(libs.uuid)
@@ -71,7 +73,6 @@ kotlin {
                 implementation(libs.compose.material3)
 
                 api(libs.compose.shimmer)
-                api(libs.compose.ui.tooling)
 
                 api(libs.navigation)
                 api(libs.koin.androidx.compose)
@@ -89,6 +90,7 @@ kotlin {
             languageSettings {
                 enableLanguageFeature("ContextReceivers")
                 optIn("androidx.compose.material3.ExperimentalMaterial3Api")
+                optIn("androidx.compose.foundation.ExperimentalFoundationApi")
             }
         }
     }
@@ -108,13 +110,13 @@ configurations.all {
         dependencySubstitution {
             substitute(module("org.jetbrains.compose.material:material"))
                 .using(module("org.jetbrains.compose.material3:material3:${libs.versions.compose.multiplatform}"))
-                .because("Compose Material3 is used instead of Compose Material")
         }
     }
 }
 
 dependencies {
-    debugImplementation(libs.compose.ui.tooling.preview)
+    debugApi(compose.uiTooling)
+    debugApi(compose.preview)
     debugImplementation(libs.compose.runtime.tracing)
     debugImplementation("com.russhwolf:multiplatform-settings-test:1.0.0")
 }
