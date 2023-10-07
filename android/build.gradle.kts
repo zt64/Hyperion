@@ -53,6 +53,7 @@ subprojects {
             resources {
                 // okhttp3 is used by some lib (no cookies so publicsuffixes.gz can be dropped)
                 excludes += "/okhttp3/**"
+                excludes += "META-INF/DEPENDENCIES"
             }
         }
 

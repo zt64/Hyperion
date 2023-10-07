@@ -18,7 +18,6 @@ import androidx.core.view.WindowCompat
 import dev.olshevski.navigation.reimagined.AnimatedNavHost
 import dev.olshevski.navigation.reimagined.NavBackHandler
 import dev.olshevski.navigation.reimagined.rememberNavController
-import dev.zt64.hyperion.di.viewModelModule
 import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.hyperion.ui.navigation.*
 import dev.zt64.hyperion.ui.screen.*
@@ -28,7 +27,6 @@ import dev.zt64.hyperion.ui.screen.base.LibraryScreen
 import dev.zt64.hyperion.ui.theme.HyperionTheme
 import dev.zt64.hyperion.ui.theme.Theme
 import dev.zt64.innertube.network.service.InnerTubeService
-import org.koin.android.ext.koin.androidContext
 import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
@@ -41,12 +39,7 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            App(
-                application = {
-                    androidContext(this@MainActivity)
-                    modules(viewModelModule)
-                },
-            ) {
+            ProvideWindowSizeClass {
                 Hyperion()
             }
         }
