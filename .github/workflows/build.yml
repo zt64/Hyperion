@@ -18,7 +18,7 @@ permissions:
 
 jobs:
   build-android:
-    name: Build application packages
+    name: Build Android APKs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -37,10 +37,9 @@ jobs:
         with:
           path: |
             android/**/build/outputs/apk/debug/*-debug.apk
-          retention-days: 30
 
   build-desktop:
-    name: Build application packages
+    name: Build Desktop executables
     strategy:
       matrix:
         runtime: [ linux-x64, win-x64 ]
@@ -80,7 +79,7 @@ jobs:
       - name: Publish Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: runner-package-${{ matrix.runtime }}
+          name: desktop-${{ matrix.runtime }}
           path: |
             desktop/build/compose/binaries/main/*/
             desktop/build/compose/binaries/main-release/*/
