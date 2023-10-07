@@ -1,0 +1,97 @@
+name: Build Debug APK
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-android:
+    name: Build application packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Build project
+        run: ./gradlew assembleDebug
+
+      - uses: kittaakos/upload-artifact-as-is@v0
+        with:
+          path: |
+            android/**/build/outputs/apk/debug/*-debug.apk
+          retention-days: 30
+
+  build-desktop:
+    name: Build application packages
+    strategy:
+      matrix:
+        runtime: [ linux-x64, win-x64 ]
+        include:
+          - runtime: linux-x64
+            arch: x64
+            os: ubuntu-latest
+            shell: bash
+            build: packageReleaseUberJarForCurrentOS packageDeb
+
+          - runtime: win-x64
+            arch: x64
+            os: windows-latest
+            shell: powershell
+            build: packageReleaseUberJarForCurrentOS packageExe
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: ${{ matrix.shell }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          architecture: ${{ matrix.arch }}
+
+      - name: Build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: >
+            ${{ matrix.build }}
+
+      # Upload runner package tar.gz/zip as artifact
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: runner-package-${{ matrix.runtime }}
+          path: |
+            desktop/build/compose/binaries/main/*/
+            desktop/build/compose/binaries/main-release/*/
+            desktop/build/compose/jars/
+            !desktop/build/compose/binaries/main/app/
+
+      # Upload runner errors
+      - name: Upload error logs
+        uses: actions/upload-artifact@v3
+        if: ${{ failure() }}
+        with:
+          name: runner-errors-${{ matrix.runtime }}
+          path: |
+            desktop/build/compose/logs/
