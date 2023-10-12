@@ -158,7 +158,11 @@ fun PlayerControls(
 }
 
 private fun Duration.formatElapsedTime(): String {
-    return toComponents { hours, minutes, seconds, nanoseconds ->
-        String.format("%02d:%02d:%02d.%03d", hours, minutes, seconds, nanoseconds)
+    return toComponents { hours, minutes, seconds, _ ->
+        if (hours > 0) {
+            "%d:%02d:%02d".format(hours, minutes, seconds)
+        } else {
+            "%02d:%02d".format(minutes, seconds)
+        }
     }
 }
