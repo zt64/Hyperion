@@ -53,6 +53,7 @@ import dev.zt64.hyperion.ui.sheet.CommentsSheet
 import dev.zt64.hyperion.ui.sheet.DownloadSheet
 import dev.zt64.hyperion.ui.sheet.PlayerSheet
 import dev.zt64.hyperion.ui.viewmodel.PlayerViewModel
+import dev.zt64.hyperion.ui.viewmodel.PlayerViewModel.State
 import dev.zt64.hyperion.util.findActivity
 import dev.zt64.innertube.domain.model.DomainChapter
 import dev.zt64.innertube.domain.model.DomainVideo
@@ -66,9 +67,9 @@ fun PlayerScreen(videoId: String) {
     val viewModel: PlayerViewModel = koinViewModel { parametersOf(videoId) }
 
     when (val state = viewModel.state) {
-        is PlayerViewModel.State.Loading -> PlayerScreenLoading()
-        is PlayerViewModel.State.Loaded -> PlayerScreenLoaded()
-        is PlayerViewModel.State.Error -> ErrorScreen(state.exception)
+        is State.Loading -> PlayerScreenLoading()
+        is State.Loaded -> PlayerScreenLoaded()
+        is State.Error -> ErrorScreen(state.exception)
     }
 }
 
@@ -455,21 +456,32 @@ private fun Description(
             }
         }
 
-        // Chapters
-        BoxWithConstraints {
-            if (maxHeight >= 160.dp) {
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                ) {
-                    items(
-                        items = video.chapters,
-                        key = DomainChapter::hashCode
-                    ) { chapter ->
-                        Chapter(
-                            chapter = chapter,
-                            onClick = { /* TODO */ }
-                        )
-                    }
+        ChaptersRow(
+            video = video,
+            onClickChapter = { /* TODO */ }
+        )
+    }
+}
+
+@Composable
+private fun ChaptersRow(
+    video: DomainVideo,
+    onClickChapter: (DomainChapter) -> Unit,
+) {
+    // Chapters
+    BoxWithConstraints {
+        if (maxHeight >= 160.dp) {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
+                items(
+                    items = video.chapters,
+                    key = DomainChapter::hashCode
+                ) { chapter ->
+                    Chapter(
+                        chapter = chapter,
+                        onClick = { onClickChapter(chapter) }
+                    )
                 }
             }
         }

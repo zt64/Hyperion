@@ -2,19 +2,19 @@ package dev.zt64.hyperion.ui.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Sensors
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.component.player.WIDESCREEN_RATIO
@@ -26,20 +26,16 @@ import dev.zt64.innertube.domain.model.DomainMixPartial
 fun MixCard(
     mix: DomainMixPartial,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = { },
     onLongClick: () -> Unit = { },
 ) {
     val navController = LocalNavController.current
     val windowSizeClass = LocalWindowSizeClass.current
 
     ElevatedCard(
-        modifier = modifier
-            .clip(CardDefaults.elevatedShape)
-            .combinedClickable(
-                onClick = {
-
-                },
-                onLongClick = onLongClick
-            )
+        modifier = modifier,
+        onClick = onClick,
+        onLongClick = onLongClick
     ) {
         val orientation = LocalConfiguration.current.orientation
 
@@ -137,15 +133,15 @@ private fun Thumbnail(
     }
 }
 
-@PreviewScreenSizes
+@Preview
 @Composable
 private fun MixCardPreview() {
     HyperionPreview {
         MixCard(
             mix = DomainMixPartial(
                 id = "mixId",
-                title = "Mix Title",
-                subtitle = "Mix Subtitle",
+                title = "Lorem Ipsum",
+                subtitle = "Lorem Ipsum",
                 thumbnailUrl = "https://i.ytimg.com/vi/5qap5aO4i9A/hqdefault.jpg"
             )
         )

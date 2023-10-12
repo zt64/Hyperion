@@ -13,10 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.ui.component.BackButton
+import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import kotlinx.coroutines.launch
 
 @Composable
@@ -79,5 +81,13 @@ fun ErrorScreen(
                 Text(stringResource(MR.strings.copy_stacktrace))
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun ErrorScreenPreview() {
+    HyperionPreview {
+        ErrorScreen(Exception("Test exception"))
     }
 }

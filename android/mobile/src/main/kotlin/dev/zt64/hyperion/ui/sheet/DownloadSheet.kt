@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.ui.tooling.HyperionPreview
 
 @Composable
 fun DownloadSheet(onDismissRequest: () -> Unit) {
@@ -141,5 +142,7 @@ fun DownloadSheet(onDismissRequest: () -> Unit) {
 @Preview
 @Composable
 private fun DownloadSheetPreview() {
-    DownloadSheet(onDismissRequest = {})
+    HyperionPreview {
+        DownloadSheet(onDismissRequest = {})
+    }
 }

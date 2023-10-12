@@ -7,10 +7,8 @@ import okio.Path.Companion.toOkioPath
 import kotlin.io.path.Path
 
 @Composable
-actual fun rememberImageLoader(): ImageLoader = remember {
-    ImageLoader {
-        configureCommon()
-
+internal actual fun rememberImageLoader(): ImageLoader = remember {
+    dev.zt64.hyperion.ui.component.ImageLoader {
         interceptor {
             memoryCacheConfig {
                 maxSizeBytes(32 * 1024 * 1024) // 32MB

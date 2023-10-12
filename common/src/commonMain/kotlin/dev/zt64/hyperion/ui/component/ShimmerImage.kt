@@ -1,10 +1,10 @@
 package dev.zt64.hyperion.ui.component
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.*
+import androidx.compose.material3.LocalAbsoluteTonalElevation
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,21 +19,24 @@ import com.seiko.imageloader.model.ImageEvent
 import com.seiko.imageloader.model.ImageRequest
 import com.seiko.imageloader.model.ImageResult
 import dev.zt64.hyperion.ui.modifier.shimmer
-import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import io.github.aakira.napier.Napier
 
 @Composable
-expect fun rememberImageLoader(): ImageLoader
+internal expect fun rememberImageLoader(): ImageLoader
 
-fun ImageLoaderConfigBuilder.configureCommon() {
-    components {
-        setupDefaultComponents()
-    }
-
-    interceptor {
-        diskCacheConfig {
-            maxSizeBytes(128L * 1024 * 1024) // 128MB
+fun ImageLoader(block: ImageLoaderConfigBuilder.() -> Unit): ImageLoader {
+    return com.seiko.imageloader.ImageLoader {
+        components {
+            setupDefaultComponents()
         }
+
+        interceptor {
+            diskCacheConfig {
+                maxSizeBytes(128L * 1024 * 1024) // 128MB
+            }
+        }
+
+        block()
     }
 }
 
@@ -94,24 +97,5 @@ fun ShimmerImage(
             alpha = alpha,
             colorFilter = colorFilter
         )
-    }
-}
-
-@Composable
-private fun Loading() {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .shimmer(),
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        content = {},
-    )
-}
-
-@Preview
-@Composable
-private fun LoadingPreview() {
-    HyperionPreview {
-        Loading()
     }
 }

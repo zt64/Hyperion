@@ -114,6 +114,8 @@ class PlayerViewModel(
         private set
     var position by mutableStateOf(Duration.ZERO)
         private set
+    var speed by mutableFloatStateOf(1f)
+        private set
 
     @get:RepeatMode
     var repeatMode by mutableIntStateOf(Player.REPEAT_MODE_OFF)
@@ -209,6 +211,11 @@ class PlayerViewModel(
 
     fun hideDownloadDialog() {
         showDownloadDialog = false
+    }
+
+    fun setPlaybackSpeed(speed: Float) {
+        this.speed = speed
+        player.setPlaybackSpeed(speed)
     }
 
     fun updateVote(rating: Rating) {

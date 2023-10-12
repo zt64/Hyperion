@@ -15,6 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.*
 import androidx.media3.common.util.UnstableApi
@@ -22,6 +23,7 @@ import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import dev.zt64.hyperion.ui.viewmodel.PlayerViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -59,7 +61,7 @@ fun PlayerSheet(
             @UnstableApi
             when (it) {
                 true -> {
-                    val tracks by remember {
+                    val tracks by remember(viewModel.tracks) {
                         derivedStateOf {
                             viewModel.tracks.groups.flatMap { group ->
                                 buildList {
@@ -227,5 +229,13 @@ private fun TrackGroup.generateThing(
         val trackBuilder = TrackSelectionOverride(this@generateThing, listOf(trackIndex))
 
         add(trackName to trackBuilder)
+    }
+}
+
+@Preview
+@Composable
+private fun PlayerSheetPreview() {
+    HyperionPreview {
+        PlayerSheet(onDismissRequest = {})
     }
 }

@@ -13,7 +13,6 @@ abstract class PreferencesManager : Settings {
 
     var theme by enum("theme", Theme.SYSTEM)
     var dynamicColor by boolean("dynamic_color", true)
-    var compactCard by boolean("compact_card", false)
     var miniPlayer by boolean("mini_player", false)
     var startScreen by enum("start_screen", BaseDestination.HOME)
     var pictureInPicture by boolean("pip", false)

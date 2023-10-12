@@ -30,12 +30,6 @@ fun AppearanceScreen(preferences: PreferencesManager) {
         description = stringResource(MR.strings.theme_setting_description),
     )
 
-    SwitchSetting(
-        preference = preferences::compactCard,
-        text = stringResource(MR.strings.compact_card),
-        icon = Icons.Default.VideoSettings
-    )
-
     SliderSetting(
         preference = preferences::timestampScale,
         text = stringResource(MR.strings.timestamp_scale),

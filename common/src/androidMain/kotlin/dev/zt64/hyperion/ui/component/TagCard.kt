@@ -4,13 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tag
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import dev.olshevski.navigation.reimagined.navigate
@@ -27,13 +29,27 @@ fun TagCard(
     modifier: Modifier = Modifier
 ) {
     val navController = LocalNavController.current
-    val windowSizeClass = LocalWindowSizeClass.current
 
-    ElevatedCard(
-        modifier = modifier,
+    TagCard(
+        tag = tag,
         onClick = {
             navController.navigate(AppDestination.Tag(tag.name))
-        }
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
+fun TagCard(
+    tag: DomainTagPartial,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val windowSizeClass = LocalWindowSizeClass.current
+
+    androidx.compose.material3.ElevatedCard(
+        modifier = modifier,
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
@@ -67,14 +83,14 @@ fun TagCard(
 
                 tag.videosCount?.let {
                     Text(
-                        text = it,
+                        text = "$it ${stringResource(MR.strings.videos)}",
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
 
                 tag.channelsCount?.let {
                     Text(
-                        text = it,
+                        text = "$it ${stringResource(MR.strings.channels)}",
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
@@ -83,17 +99,18 @@ fun TagCard(
     }
 }
 
-@PreviewScreenSizes
+@Preview
 @Composable
 private fun TagCardPreview() {
     HyperionPreview {
         TagCard(
             tag = DomainTagPartial(
                 name = "Music",
-                backgroundColor = Color.Red.value.toLong(),
-                videosCount = "1.2k",
-                channelsCount = "1.2k"
-            )
+                backgroundColor = 0xFF1ed760,
+                videosCount = "123",
+                channelsCount = "456"
+            ),
+            onClick = {}
         )
     }
 }

@@ -60,7 +60,8 @@ kotlin {
                 implementation(libs.uuid)
                 implementation(libs.koin.compose)
                 implementation(libs.file.picker)
-                implementation("com.russhwolf:multiplatform-settings-test:1.0.0")
+                implementation(libs.color.picker)
+                implementation("com.russhwolf:multiplatform-settings-test:1.1.0")
             }
         }
 
@@ -118,7 +119,7 @@ dependencies {
     debugApi(compose.uiTooling)
     debugApi(compose.preview)
     debugImplementation(libs.compose.runtime.tracing)
-    debugImplementation("com.russhwolf:multiplatform-settings-test:1.0.0")
+    debugImplementation("com.russhwolf:multiplatform-settings-test:1.1.0")
 }
 
 multiplatformResources {

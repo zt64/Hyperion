@@ -1,45 +1,34 @@
 package dev.zt64.hyperion.ui.component
 
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import dev.olshevski.navigation.reimagined.navigate
 import dev.zt64.hyperion.MR
-import dev.zt64.hyperion.domain.manager.AccountManager
-import dev.zt64.hyperion.ui.LocalWindowSizeClass
-import dev.zt64.hyperion.ui.navigation.AppDestination
-import dev.zt64.hyperion.ui.navigation.LocalNavController
+import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import dev.zt64.innertube.domain.model.DomainChannelPartial
-import org.koin.compose.koinInject
 
 @Composable
 fun ChannelCard(
     channel: DomainChannelPartial,
-    onLongClick: () -> Unit,
+    isLoggedIn: Boolean,
+    onClick: () -> Unit,
     onClickSubscribe: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-    accountManager: AccountManager = koinInject(),
 ) {
-    val navController = LocalNavController.current
-    val windowSizeClass = LocalWindowSizeClass.current
-
     ElevatedCard(
-        modifier = modifier
-            .clip(CardDefaults.elevatedShape)
-            .fillMaxWidth()
-            .combinedClickable(
-                onClick = {
-                    navController.navigate(AppDestination.Channel(channel.id))
-                },
-                onLongClick = onLongClick
-            )
+        modifier = modifier.fillMaxWidth(),
+        onClick = onClick,
+        onLongClick = onLongClick
     ) {
         Row(
             modifier = Modifier
@@ -82,11 +71,31 @@ fun ChannelCard(
             }
 
             Button(
-                enabled = accountManager.loggedIn,
+                enabled = isLoggedIn,
                 onClick = onClickSubscribe
             ) {
                 Text(stringResource(MR.strings.subscribe))
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun ChannelCardPreview() {
+    HyperionPreview {
+        ChannelCard(
+            channel = DomainChannelPartial(
+                id = "",
+                name = "Linus Tech Tips",
+                avatarUrl = "",
+                subscriptionsText = "10.5M subscribers",
+                videoCountText = "4,000 videos"
+            ),
+            isLoggedIn = true,
+            onClick = {},
+            onLongClick = {},
+            onClickSubscribe = {}
+        )
     }
 }

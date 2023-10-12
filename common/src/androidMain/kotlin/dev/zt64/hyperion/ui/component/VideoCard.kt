@@ -2,10 +2,11 @@ package dev.zt64.hyperion.ui.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ import dev.zt64.hyperion.ui.component.player.WIDESCREEN_RATIO
 import dev.zt64.hyperion.ui.navigation.AppDestination
 import dev.zt64.hyperion.ui.navigation.LocalNavController
 import dev.zt64.hyperion.ui.tooling.HyperionPreview
+import dev.zt64.innertube.domain.model.DomainChannelPartial
 import dev.zt64.innertube.domain.model.DomainVideoPartial
 import org.koin.compose.koinInject
 
@@ -32,18 +34,38 @@ import org.koin.compose.koinInject
 fun VideoCard(
     video: DomainVideoPartial,
     modifier: Modifier = Modifier,
-    onLongClick: () -> Unit = { }
+    onLongClick: () -> Unit = { },
 ) {
     val navController = LocalNavController.current
-    val windowSizeClass = LocalWindowSizeClass.current
 
     VideoCard(
         video = video,
         onClick = {
             navController.navigate(AppDestination.Player(video.id))
         },
-        modifier = modifier,
         onLongClick = onLongClick,
+        modifier = modifier,
+    )
+}
+
+
+@Composable
+fun VideoCard(
+    video: DomainVideoPartial,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit = { },
+) {
+    val navController = LocalNavController.current
+
+    VideoCard(
+        video = video,
+        onClick = onClick,
+        onClickChannel = {
+            navController.navigate(AppDestination.Channel(video.channel!!.id))
+        },
+        onLongClick = onLongClick,
+        modifier = modifier,
     )
 }
 
@@ -51,23 +73,22 @@ fun VideoCard(
 fun VideoCard(
     video: DomainVideoPartial,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    onLongClick: () -> Unit = { },
-    prefs: PreferencesManager = koinInject()
+    onClickChannel: () -> Unit,
+    onLongClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    val prefs: PreferencesManager = koinInject()
+    val windowSizeClass = LocalWindowSizeClass.current
     val navController = LocalNavController.current
 
     ElevatedCard(
-        modifier = modifier
-            .clip(CardDefaults.elevatedShape)
-            .combinedClickable(
-                onClick = onClick,
-                onLongClick = onLongClick
-            )
+        modifier = modifier,
+        onClick = onClick,
+        onLongClick = onLongClick
     ) {
         val orientation = LocalConfiguration.current.orientation
 
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE || prefs.compactCard) {
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // Compact horizontal layout
             Row(
                 modifier = Modifier
@@ -95,18 +116,11 @@ fun VideoCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        video.channel?.avatarUrl?.let {
-                            ShimmerImage(
-                                modifier = Modifier
-                                    .clip(CircleShape)
-                                    .size(28.dp)
-                                    .clickable {
-                                        navController.navigate(AppDestination.Channel(video.channel!!.id))
-                                    },
-                                url = it,
-                                contentDescription = video.channel!!.name
-                            )
-                        }
+                        Avatar(
+                            modifier = Modifier.size(28.dp),
+                            channel = video.channel,
+                            onClick = onClickChannel
+                        )
 
                         Text(
                             text = video.subtitle,
@@ -128,18 +142,11 @@ fun VideoCard(
                     modifier = Modifier.padding(12.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    video.channel?.avatarUrl?.let {
-                        ShimmerImage(
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .size(38.dp)
-                                .clickable {
-                                    navController.navigate(AppDestination.Channel(video.channel!!.id))
-                                },
-                            url = it,
-                            contentDescription = video.channel!!.name
-                        )
-                    }
+                    Avatar(
+                        modifier = Modifier.size(38.dp),
+                        channel = video.channel,
+                        onClick = onClickChannel
+                    )
 
                     Column {
                         Text(
@@ -161,6 +168,23 @@ fun VideoCard(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun Avatar(
+    modifier: Modifier = Modifier,
+    channel: DomainChannelPartial?,
+    onClick: () -> Unit
+) {
+    channel?.avatarUrl?.let {
+        ShimmerImage(
+            modifier = modifier
+                .clip(CircleShape)
+                .clickable(onClick = onClick),
+            url = it,
+            contentDescription = channel.name
+        )
     }
 }
 

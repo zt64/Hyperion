@@ -7,7 +7,7 @@ image-loader = "1.6.4"
 horologist = "0.5.7"
 paging = "3.3.0-alpha02-0.4.0"
 tv = "1.0.0-alpha10"
-ktor = "2.3.4"
+ktor = "2.3.5"
 media3 = "1.1.1"
 uuid = "0.8.0"
 moko-resources = "0.23.0"
@@ -71,6 +71,7 @@ image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "imag
 file-picker = "com.darkrockstudios:mpfilepicker:2.1.0"
 navigation = "dev.olshevski.navigation:reimagined:1.5.0"
 material-kolor = "com.materialkolor:material-kolor:1.2.6"
+color-picker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
 window-size-multiplatform = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.3.1"
 
 # Kotlinx
@@ -86,8 +87,8 @@ uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
 
 # Settings
-settings-noarg = "com.russhwolf:multiplatform-settings-no-arg:1.0.0"
-settings-coroutines = "com.russhwolf:multiplatform-settings-coroutines:1.0.0"
+settings-noarg = "com.russhwolf:multiplatform-settings-no-arg:1.1.0"
+settings-coroutines = "com.russhwolf:multiplatform-settings-coroutines:1.1.0"
 
 compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.2.3" }
 

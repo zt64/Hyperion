@@ -14,6 +14,19 @@ import dev.zt64.hyperion.domain.manager.PreferencesManager
 context(ColumnScope)
 @Composable
 fun BackupRestoreScreen(preferences: PreferencesManager) {
+    BackupRestoreScreen(
+        preferences = preferences,
+        onClickRestore = { /*TODO*/ },
+        onClickBackup = { /*TODO*/ }
+    )
+}
+
+@Composable
+fun BackupRestoreScreen(
+    preferences: PreferencesManager,
+    onClickRestore: () -> Unit,
+    onClickBackup: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -24,7 +37,7 @@ fun BackupRestoreScreen(preferences: PreferencesManager) {
             modifier = Modifier
                 .weight(1f, true)
                 .widthIn(max = 120.dp),
-            onClick = { /*TODO*/ }
+            onClick = onClickRestore
         ) {
             Text(stringResource(MR.strings.restore))
         }
@@ -33,7 +46,7 @@ fun BackupRestoreScreen(preferences: PreferencesManager) {
             modifier = Modifier
                 .weight(1f, true)
                 .widthIn(max = 120.dp),
-            onClick = { /*TODO*/ }
+            onClick = onClickBackup
         ) {
             Text(stringResource(MR.strings.backup))
         }

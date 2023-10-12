@@ -9,13 +9,11 @@ import com.seiko.imageloader.option.androidContext
 import okio.Path.Companion.toOkioPath
 
 @Composable
-actual fun rememberImageLoader(): ImageLoader {
+internal actual fun rememberImageLoader(): ImageLoader {
     val context = LocalContext.current
 
     return remember {
-        ImageLoader {
-            configureCommon()
-
+        dev.zt64.hyperion.ui.component.ImageLoader {
             options {
                 androidContext(context)
             }

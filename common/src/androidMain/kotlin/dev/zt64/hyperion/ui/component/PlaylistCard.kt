@@ -2,53 +2,62 @@ package dev.zt64.hyperion.ui.component
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.PlaylistPlay
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.olshevski.navigation.reimagined.navigate
-import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.component.player.WIDESCREEN_RATIO
 import dev.zt64.hyperion.ui.navigation.AppDestination
 import dev.zt64.hyperion.ui.navigation.LocalNavController
 import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import dev.zt64.innertube.domain.model.DomainPlaylistPartial
-import org.koin.compose.koinInject
 
 @Composable
 fun PlaylistCard(
     playlist: DomainPlaylistPartial,
     modifier: Modifier = Modifier,
     onLongClick: () -> Unit = { },
-    prefs: PreferencesManager = koinInject()
 ) {
     val navController = LocalNavController.current
-    val windowSizeClass = LocalWindowSizeClass.current
 
+    PlaylistCard(
+        playlist = playlist,
+        onClick = {
+            navController.navigate(AppDestination.Playlist(playlist.id))
+        },
+        onLongClick = onLongClick,
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun PlaylistCard(
+    playlist: DomainPlaylistPartial,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     ElevatedCard(
-        modifier = modifier
-            .clip(CardDefaults.elevatedShape)
-            .combinedClickable(
-                onClick = {
-                    navController.navigate(AppDestination.Playlist(playlist.id))
-                },
-                onLongClick = onLongClick
-            )
+        modifier = modifier,
+        onClick = onClick,
+        onLongClick = onLongClick
     ) {
+        val windowSizeClass = LocalWindowSizeClass.current
         val orientation = LocalConfiguration.current.orientation
 
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE || prefs.compactCard) {
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

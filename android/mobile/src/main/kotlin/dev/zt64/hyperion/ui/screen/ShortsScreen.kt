@@ -47,13 +47,25 @@ fun ShortsScreen() {
             modifier = Modifier.padding(paddingValues),
             state = pagerState
         ) { index ->
-            Short()
+            Short(
+                onClickLike = { /*TODO*/ },
+                onClickDislike = { /*TODO*/ },
+                onClickComment = { /*TODO*/ },
+                onClickShare = { /*TODO*/ },
+                onClickSubscribe = { /*TODO*/ }
+            )
         }
     }
 }
 
 @Composable
-fun Short() {
+fun Short(
+    onClickLike: () -> Unit,
+    onClickDislike: () -> Unit,
+    onClickComment: () -> Unit,
+    onClickShare: () -> Unit,
+    onClickSubscribe: () -> Unit
+) {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -83,7 +95,7 @@ fun Short() {
 
                     TextButton(
                         enabled = false,
-                        onClick = { /*TODO*/ }
+                        onClick = onClickSubscribe
                     ) {
                         Text(stringResource(MR.strings.subscribe))
                     }
@@ -100,7 +112,7 @@ fun Short() {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = onClickLike) {
                     Icon(
                         imageVector = Icons.Default.ThumbUp,
                         contentDescription = stringResource(MR.strings.like)
@@ -109,7 +121,7 @@ fun Short() {
 
                 Text("3.5K")
 
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = onClickDislike) {
                     Icon(
                         imageVector = Icons.Default.ThumbDown,
                         contentDescription = stringResource(MR.strings.dislike)
@@ -118,14 +130,14 @@ fun Short() {
 
                 Text("16")
 
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = onClickComment) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Default.Comment,
                         contentDescription = stringResource(MR.strings.comments)
                     )
                 }
 
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = onClickShare) {
                     Icon(
                         imageVector = Icons.Default.Share,
                         contentDescription = stringResource(MR.strings.share)

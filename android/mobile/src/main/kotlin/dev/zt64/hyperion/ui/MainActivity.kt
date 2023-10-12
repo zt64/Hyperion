@@ -47,10 +47,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun Hyperion(
-    preferences: PreferencesManager = koinInject(),
-    innerTubeService: InnerTubeService = koinInject()
-) {
+private fun Hyperion() {
+    val preferences: PreferencesManager = koinInject()
+
     HyperionTheme(
         isDarkTheme = preferences.theme == Theme.SYSTEM && isSystemInDarkTheme() || preferences.theme == Theme.DARK,
         isDynamicColor = preferences.dynamicColor
@@ -58,6 +57,7 @@ private fun Hyperion(
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
+            val innerTubeService: InnerTubeService = koinInject()
             val state by innerTubeService.state.collectAsState()
             val isReady by remember { derivedStateOf { state == InnerTubeService.State.Initialized } }
 
