@@ -53,7 +53,8 @@ kotlin {
                 api(libs.napier)
 
                 api(libs.window.size.multiplatform)
-                
+
+                implementation(libs.compose.shimmer)
                 implementation(libs.material.kolor)
                 implementation(libs.bundles.ktor)
                 implementation(libs.ktor.okhttp)
@@ -73,7 +74,6 @@ kotlin {
 
                 implementation(libs.compose.material3)
 
-                api(libs.compose.shimmer)
 
                 api(libs.navigation)
                 api(libs.koin.androidx.compose)

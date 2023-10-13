@@ -18,7 +18,7 @@ import com.seiko.imageloader.component.setupDefaultComponents
 import com.seiko.imageloader.model.ImageEvent
 import com.seiko.imageloader.model.ImageRequest
 import com.seiko.imageloader.model.ImageResult
-import dev.zt64.hyperion.ui.modifier.shimmer
+import com.valentinilk.shimmer.shimmer
 import io.github.aakira.napier.Napier
 
 @Composable
