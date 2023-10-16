@@ -8,7 +8,7 @@ on:
       - 'common/src/commonMain/MR/base/strings.xml'
       - '.github/workflows/sync-crowdin.yml'
   schedule:
-    - cron: "0 17 * * 6" # weekly
+    - cron: "0 17 * * 6" # At 17:00 on Saturday.
   workflow_dispatch:
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Crowdin
         uses: crowdin/github-action@v1
