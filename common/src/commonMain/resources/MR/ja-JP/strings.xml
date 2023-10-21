@@ -5,7 +5,7 @@
     <string name="settings">設定</string>
     <string name="apply">適用</string>
     <string name="theme">テーマ</string>
-    <string name="theme_setting_description">Hyperionの外観</string>
+    <string name="theme_setting_description">Hyperion の外観</string>
     <string name="feed">新着動画</string>
     <string name="download">ダウンロード</string>
     <string name="share">共有</string>
@@ -37,8 +37,8 @@
     <string name="open_fullscreen">全画面表示を開く</string>
     <string name="verified">認証済み</string>
     <string name="dynamic_color">動的カラー</string>
-    <string name="timestamp_scale">タイムスタンプの尺度</string>
-    <string name="about">情報</string>
+    <string name="timestamp_scale">タイムスタンプのサイズ</string>
+    <string name="about">このアプリについて</string>
     <string name="comments">コメント</string>
     <string name="show_download_button">ダウンロードボタンを表示</string>
     <string name="dismiss">却下</string>
@@ -64,15 +64,15 @@
     <string name="restore">復元</string>
     <string name="add_account">アカウントを追加</string>
     <string name="copied_to_clipboard">クリップボードにコピーしました</string>
-    <string name="copy_stacktrace">スタックトレースをコピー</string>
+    <string name="copy_stacktrace">エラーメッセージをコピー</string>
     <string name="tag">タグ</string>
     <string name="hide_nav_item_label">ナビの文字列を隠す</string>
     <string name="chapters">チャプター</string>
     <string name="sign_in">ログイン</string>
     <string name="account">アカウント</string>
     <string name="library_sign_in_title">好きな動画を楽しむ</string>
-    <string name="library_sign_in_body">ログインして自分の動画のライブラリを使おう</string>
-    <string name="feed_sign_in_title">新着動画を見逃さない</string>
+    <string name="library_sign_in_body">ログインすると、自分の動画のライブラリにアクセスできます</string>
+    <string name="feed_sign_in_title">新作動画をお見逃しなく</string>
     <string name="feed_sign_in_body">ログインして好きな YouTube チャンネルの更新を見よう</string>
     <string name="popular">人気</string>
     <string name="recently_uploaded">最近公開された</string>
@@ -121,7 +121,7 @@
     <string name="notifications">通知</string>
     <string name="mentions">言及</string>
     <string name="subscriptions">登録チャンネル</string>
-    <string name="shared_content">コンテンツが紹介された</string>
+    <string name="shared_content">コンテンツが共有された</string>
     <string name="replies_to_my_comments">私のコメントへの返信</string>
     <string name="subscriptions_notification_desc">登録しているチャンネルの行動を通知</string>
     <string name="mention_notification_desc">誰かが私のチャンネルに言及したら通知</string>
