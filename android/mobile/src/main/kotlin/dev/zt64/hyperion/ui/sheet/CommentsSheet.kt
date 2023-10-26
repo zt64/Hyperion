@@ -1,6 +1,5 @@
 package dev.zt64.hyperion.ui.sheet
 
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -27,10 +26,31 @@ import dev.zt64.innertube.domain.model.DomainComment
 @Composable
 fun CommentsSheet(onDismissRequest: () -> Unit) {
     ModalBottomSheet(onDismissRequest) {
-        LazyColumn(
-            modifier = Modifier.padding()
-        ) {
+        SheetContent()
+    }
+}
 
+@Composable
+private fun SheetContent() {
+    LazyColumn {
+        items(20) {
+            Comment(
+                comment = DomainComment(
+                    id = "1",
+                    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                    datePosted = "1 day ago",
+                    author = DomainChannelPartial(
+                        id = "1",
+                        name = "Author name",
+                        avatarUrl = "https://i.imgur.com/7bMqy9z.png"
+                    ),
+                    likeCount = 300,
+                    replies = emptyList()
+                ),
+                onClickLike = {},
+                onClickDislike = {},
+                onClickReply = {}
+            )
         }
     }
 }
@@ -44,11 +64,8 @@ private fun Comment(
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
-    Card(
-        modifier = Modifier.combinedClickable(
-            onClick = {},
-            onLongClick = {}
-        )
+    Surface(
+        onClick = {},
     ) {
         Column {
             ListItem(
@@ -76,7 +93,6 @@ private fun Comment(
                             style = MaterialTheme.typography.labelSmall
                         )
                     }
-                    // Text(comment.author.name)
                 },
                 supportingContent = {
                     Text(comment.content)
@@ -93,7 +109,7 @@ private fun Comment(
                     )
                 }
 
-                Text("${comment.likeCount}")
+                Text(comment.likeCount.toString())
 
                 IconButton(onClick = onClickDislike) {
                     Icon(
@@ -104,7 +120,9 @@ private fun Comment(
 
                 Spacer(Modifier.weight(1f, true))
 
-                Text("${comment.replies.size} replies")
+                if (comment.replies.isNotEmpty()) {
+                    Text("${comment.replies.size} replies")
+                }
 
                 IconButton(onClick = onClickReply) {
                     Icon(
@@ -119,7 +137,7 @@ private fun Comment(
 
 @Preview
 @Composable
-fun CommentCardPreview() {
+private fun CommentCardPreview() {
     HyperionPreview {
         Comment(
             comment = DomainComment(
@@ -128,7 +146,7 @@ fun CommentCardPreview() {
                 datePosted = "1 day ago",
                 author = DomainChannelPartial(
                     id = "1",
-                    name = "Author name",
+                    name = "@author",
                     avatarUrl = "https://i.imgur.com/7bMqy9z.png"
                 ),
                 likeCount = 300,
@@ -138,5 +156,13 @@ fun CommentCardPreview() {
             onClickDislike = {},
             onClickReply = {}
         )
+    }
+}
+
+@Preview
+@Composable
+private fun CommentsSheetPreview() {
+    HyperionPreview {
+        SheetContent()
     }
 }

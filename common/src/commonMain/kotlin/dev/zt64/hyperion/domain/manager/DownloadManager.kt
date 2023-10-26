@@ -1,5 +1,7 @@
 package dev.zt64.hyperion.domain.manager
 
+import org.koin.core.component.KoinComponent
+
 // class DownloadManager(
 //     application: Application,
 //     preferencesManager: PreferencesManager
@@ -8,6 +10,6 @@ package dev.zt64.hyperion.domain.manager
 //     private val downloadDirectory = preferencesManager.downloadDirectory.toUri()
 // }
 
-expect class DownloadManager(preferencesManager: PreferencesManager) {
+expect class DownloadManager(preferencesManager: PreferencesManager) : KoinComponent {
     fun download()
 }

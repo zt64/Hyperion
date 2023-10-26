@@ -21,102 +21,107 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
-import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.hyperion.ui.component.SponsorBlockCategory
 import dev.zt64.hyperion.ui.component.setting.SliderSetting
 import dev.zt64.hyperion.ui.component.setting.SwitchSetting
+import dev.zt64.hyperion.ui.model.SettingsScreenModel
 
-context(ColumnScope)
-@Composable
-fun SponsorBlockScreen(
-    preferences: PreferencesManager,
-    onClickCategory: (SponsorBlockCategory) -> Unit
-) {
-    SwitchSetting(
-        preference = preferences::sponsorBlockEnabled,
-        text = stringResource(MR.strings.enabled),
-    )
+object SponsorBlockScreen : Screen {
+    @Composable
+    override fun Content() {
+        val model: SettingsScreenModel = getScreenModel()
+        val preferences = model.preferences
 
-    AnimatedVisibility(visible = preferences.sponsorBlockEnabled) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            var showUserIdDialog by rememberSaveable { mutableStateOf(false) }
+        SwitchSetting(
+            preference = preferences::sponsorBlockEnabled,
+            text = stringResource(MR.strings.enabled),
+        )
 
-            SliderSetting(
-                text = stringResource(MR.strings.skip_notice_duration),
-                value = preferences.sponsorBlockSkipNoticeDuration.toFloat(),
-                valueRange = 0f..10f,
-                onValueChangeFinished = { preferences.sponsorBlockSkipNoticeDuration = it.toInt() }
-            )
+        AnimatedVisibility(visible = preferences.sponsorBlockEnabled) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                var showUserIdDialog by rememberSaveable { mutableStateOf(false) }
 
-            if (showUserIdDialog) {
-                UserIdDialog(
-                    id = preferences.sponsorBlockUserIdPrivate,
-                    onClickSave = { showUserIdDialog = false },
-                    onDismissRequest = { showUserIdDialog = false }
-                )
-            }
-
-            SwitchSetting(
-                preference = preferences::sponsorBlockSkipTracking,
-                text = stringResource(MR.strings.skip_count_tracking)
-            )
-
-            ListItem(
-                modifier = Modifier.clickable { showUserIdDialog = true },
-                headlineContent = {
-                    Text("Private UserID")
-                },
-                supportingContent = {
-                    Text("**********************")
-                },
-                trailingContent = {
-                    IconButton(onClick = { showUserIdDialog = true }) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = null
-                        )
+                SliderSetting(
+                    text = stringResource(MR.strings.skip_notice_duration),
+                    value = preferences.sponsorBlockSkipNoticeDuration.toFloat(),
+                    valueRange = 0f..10f,
+                    onValueChangeFinished = {
+                        preferences.sponsorBlockSkipNoticeDuration = it.toInt()
                     }
+                )
+
+                if (showUserIdDialog) {
+                    UserIdDialog(
+                        id = preferences.sponsorBlockUserIdPrivate,
+                        onClickSave = { showUserIdDialog = false },
+                        onDismissRequest = { showUserIdDialog = false }
+                    )
                 }
-            )
 
-            OutlinedTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                value = preferences.sponsorBlockApiUrl,
-                onValueChange = { preferences.sponsorBlockApiUrl = it },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    capitalization = KeyboardCapitalization.None,
-                    autoCorrect = false,
-                    imeAction = ImeAction.Done
-                ),
-                label = {
-                    Text("API URL")
-                }
-            )
+                SwitchSetting(
+                    preference = preferences::sponsorBlockSkipTracking,
+                    text = stringResource(MR.strings.skip_count_tracking)
+                )
 
-            Divider(
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-
-            SponsorBlockCategory.entries.forEach { category ->
                 ListItem(
-                    modifier = Modifier.clickable { onClickCategory(category) },
-                    headlineContent = { Text(category.toString()) },
-                    supportingContent = { Text(category.description) },
+                    modifier = Modifier.clickable { showUserIdDialog = true },
+                    headlineContent = {
+                        Text("Private UserID")
+                    },
+                    supportingContent = {
+                        Text("**********************")
+                    },
                     trailingContent = {
-                        Box(
-                            modifier = Modifier
-                                .size(36.dp)
-                                .background(category.color, CircleShape)
-                        )
+                        IconButton(onClick = { showUserIdDialog = true }) {
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = null
+                            )
+                        }
                     }
                 )
+
+                OutlinedTextField(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    value = preferences.sponsorBlockApiUrl,
+                    onValueChange = { preferences.sponsorBlockApiUrl = it },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        capitalization = KeyboardCapitalization.None,
+                        autoCorrect = false,
+                        imeAction = ImeAction.Done
+                    ),
+                    label = {
+                        Text("API URL")
+                    }
+                )
+
+                Divider(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+
+                SponsorBlockCategory.entries.forEach { category ->
+                    ListItem(
+                        modifier = Modifier.clickable { /* onClickCategory(category) */ },
+                        headlineContent = { Text(category.toString()) },
+                        supportingContent = { Text(category.description) },
+                        trailingContent = {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .background(category.color, CircleShape)
+                            )
+                        }
+                    )
+                }
             }
         }
     }

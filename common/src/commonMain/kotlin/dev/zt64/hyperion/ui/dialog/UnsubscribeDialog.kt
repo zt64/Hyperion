@@ -1,0 +1,41 @@
+package dev.zt64.hyperion.ui.dialog
+
+import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.MR
+
+@Composable
+fun UnsubscribeDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = {
+            onDismiss()
+        },
+        title = {
+            Text(stringResource(MR.strings.unsubscribe))
+        },
+        dismissButton = {
+            OutlinedButton(onClick = onDismiss) {
+                Text(stringResource(MR.strings.cancel))
+            }
+        },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text(stringResource(MR.strings.unsubscribe))
+            }
+        },
+    )
+}
+
+@Preview
+@Composable
+private fun UnsubscribeDialogPreview() {
+    UnsubscribeDialog(
+        onConfirm = {},
+        onDismiss = {}
+    )
+}

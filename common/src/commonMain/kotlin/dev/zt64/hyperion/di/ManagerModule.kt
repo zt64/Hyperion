@@ -9,4 +9,6 @@ internal val managerModule = module {
     singleOf(::PreferencesManagerImpl) bind PreferencesManager::class
     singleOf(::AccountManagerImpl) bind AccountManager::class
     singleOf(::DownloadManager)
+    singleOf(::UrlManager)
+    singleOf(::ShareManager)
 }

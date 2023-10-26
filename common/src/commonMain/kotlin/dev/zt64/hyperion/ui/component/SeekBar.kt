@@ -10,10 +10,10 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -224,68 +224,68 @@ internal fun Track(
     colors: SliderColors = SliderDefaults.colors(),
     enabled: Boolean = true,
 ) {
-    // val inactiveTrackColor by colors.trackColor(enabled, active = false)
-    // val activeTrackColor by colors.trackColor(enabled, active = true)
-    //
-    // Canvas(
-    //     modifier = modifier
-    //         .fillMaxWidth()
-    //         .height(TrackHeight)
-    // ) {
-    //     val isRtl = layoutDirection == LayoutDirection.Rtl
-    //     val sliderLeft = Offset(0f, center.y)
-    //     val sliderRight = Offset(size.width, center.y)
-    //     val sliderStart = if (isRtl) sliderRight else sliderLeft
-    //     val sliderEnd = if (isRtl) sliderLeft else sliderRight
-    //     val trackStrokeWidth = TrackHeight.toPx()
-    //
-    //     val bufferedEnd = Offset(
-    //         x = sliderStart.x + (sliderEnd.x - sliderStart.x) * buffered,
-    //         y = center.y
-    //     )
-    //     drawLine(
-    //         color = inactiveTrackColor,
-    //         start = sliderStart,
-    //         end = bufferedEnd,
-    //         strokeWidth = trackStrokeWidth,
-    //         cap = StrokeCap.Round
-    //     )
-    //
-    //     drawLine(
-    //         color = inactiveTrackColor.copy(alpha = 0.5f),
-    //         start = bufferedEnd,
-    //         end = sliderEnd,
-    //         strokeWidth = trackStrokeWidth,
-    //         cap = StrokeCap.Round
-    //     )
-    //
-    //     drawTrack(
-    //         activeRangeStart = 0f,
-    //         activeRangeEnd = sliderState.activeRangeEnd,
-    //         inactiveTrackColor = inactiveTrackColor,
-    //         activeTrackColor = activeTrackColor
-    //     )
-    //
-    //     segments.sortedBy { it.range.start }.forEach { segment ->
-    //         val segmentStart = Offset(
-    //             x = sliderStart.x + (sliderEnd.x - sliderStart.x) * segment.range.start,
-    //             y = center.y
-    //         )
-    //
-    //         val segmentEnd = Offset(
-    //             x = sliderStart.x + (sliderEnd.x - sliderStart.x) * segment.range.endInclusive,
-    //             y = center.y
-    //         )
-    //
-    //         drawLine(
-    //             color = segment.category.color,
-    //             start = segmentStart,
-    //             end = segmentEnd,
-    //             strokeWidth = trackStrokeWidth,
-    //             cap = StrokeCap.Round
-    //         )
-    //     }
-    // }
+    val inactiveTrackColor by colors.trackColor(enabled, active = false)
+    val activeTrackColor by colors.trackColor(enabled, active = true)
+
+    Canvas(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(TrackHeight)
+    ) {
+        val isRtl = layoutDirection == LayoutDirection.Rtl
+        val sliderLeft = Offset(0f, center.y)
+        val sliderRight = Offset(size.width, center.y)
+        val sliderStart = if (isRtl) sliderRight else sliderLeft
+        val sliderEnd = if (isRtl) sliderLeft else sliderRight
+        val trackStrokeWidth = TrackHeight.toPx()
+
+        val bufferedEnd = Offset(
+            x = sliderStart.x + (sliderEnd.x - sliderStart.x) * buffered,
+            y = center.y
+        )
+        drawLine(
+            color = inactiveTrackColor,
+            start = sliderStart,
+            end = bufferedEnd,
+            strokeWidth = trackStrokeWidth,
+            cap = StrokeCap.Round
+        )
+
+        drawLine(
+            color = inactiveTrackColor.copy(alpha = 0.5f),
+            start = bufferedEnd,
+            end = sliderEnd,
+            strokeWidth = trackStrokeWidth,
+            cap = StrokeCap.Round
+        )
+
+        drawTrack(
+            activeRangeStart = 0f,
+            activeRangeEnd = sliderState.activeRangeEnd,
+            inactiveTrackColor = inactiveTrackColor,
+            activeTrackColor = activeTrackColor
+        )
+
+        segments.sortedBy { it.range.start }.forEach { segment ->
+            val segmentStart = Offset(
+                x = sliderStart.x + (sliderEnd.x - sliderStart.x) * segment.range.start,
+                y = center.y
+            )
+
+            val segmentEnd = Offset(
+                x = sliderStart.x + (sliderEnd.x - sliderStart.x) * segment.range.endInclusive,
+                y = center.y
+            )
+
+            drawLine(
+                color = segment.category.color,
+                start = segmentStart,
+                end = segmentEnd,
+                strokeWidth = trackStrokeWidth,
+                cap = StrokeCap.Round
+            )
+        }
+    }
 }
 
 context(DrawScope)

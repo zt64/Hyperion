@@ -6,7 +6,6 @@ import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +16,7 @@ import dev.zt64.hyperion.di.appModule
 import dev.zt64.hyperion.di.httpModule
 import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.hyperion.domain.manager.PreferencesManagerPreviewImpl
-import dev.zt64.hyperion.ui.LocalWindowSizeClass
+import dev.zt64.hyperion.ui.ProvideWindowSizeClass
 import org.koin.compose.KoinApplication
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -47,8 +46,8 @@ fun HyperionPreview(
             )
         }
     ) {
-        CompositionLocalProvider(
-            LocalWindowSizeClass provides WindowSizeClass.calculateFromSize(
+        ProvideWindowSizeClass(
+            WindowSizeClass.calculateFromSize(
                 size = Size(1920f, 1080f),
                 density = LocalDensity.current
             )
@@ -66,4 +65,3 @@ fun HyperionPreview(
         }
     }
 }
-

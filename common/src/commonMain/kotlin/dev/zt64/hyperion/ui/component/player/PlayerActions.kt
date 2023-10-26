@@ -2,7 +2,9 @@ package dev.zt64.hyperion.ui.component.player
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.ThumbDown
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -11,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.domain.model.Rating
+import dev.zt64.hyperion.ui.component.FilledTonalShareButton
 
 @Composable
 fun PlayerActions(
@@ -60,12 +63,7 @@ fun PlayerActions(
 
         Spacer(Modifier.weight(1f, true))
 
-        FilledTonalIconButton(onClick = onClickShare) {
-            Icon(
-                imageVector = Icons.Default.Share,
-                contentDescription = stringResource(MR.strings.share)
-            )
-        }
+        FilledTonalShareButton("", "")
 
         if (showDownloadButton) {
             FilledTonalIconButton(onClick = onClickDownload) {

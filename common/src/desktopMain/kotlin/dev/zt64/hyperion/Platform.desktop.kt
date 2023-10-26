@@ -10,5 +10,3 @@ internal actual object Platform {
         return File(System.getProperty("user.home"), "Downloads")
     }
 }
-
-actual interface CommonParcelable

@@ -21,13 +21,13 @@ fun GesturesScreen(preferences: PreferencesManager) {
     SwitchSetting(
         preference = preferences::swipeToSeek,
         text = stringResource(MR.strings.swipe_to_seek),
-        icon = Icons.Default.Swipe,
+        icon = Icons.Default.Swipe
     )
 
     SwitchSetting(
         preference = preferences::doubleTapToSeek,
         text = stringResource(MR.strings.double_tap_to_seek),
-        icon = Icons.Default.TouchApp,
+        icon = Icons.Default.TouchApp
     )
 
     AnimatedVisibility(visible = preferences.doubleTapToSeek) {

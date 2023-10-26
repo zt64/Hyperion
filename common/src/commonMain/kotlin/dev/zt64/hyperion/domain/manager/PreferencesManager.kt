@@ -1,24 +1,23 @@
 package dev.zt64.hyperion.domain.manager
 
-import com.russhwolf.settings.*
+import com.russhwolf.settings.Settings
 import dev.zt64.hyperion.Platform
-import dev.zt64.hyperion.ui.navigation.BaseDestination
+import dev.zt64.hyperion.domain.manager.base.BasePreferenceManager
 import dev.zt64.hyperion.ui.theme.Theme
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-abstract class PreferencesManager : Settings {
-    var visitorData by nullableString("visitor_data")
-    var deviceId by nullableString("device_id")
+abstract class PreferencesManager(settings: Settings) : BasePreferenceManager(settings) {
+    var visitorData by preference("visitor_data")
+    var deviceId by preference("device_id")
 
-    var theme by enum("theme", Theme.SYSTEM)
-    var dynamicColor by boolean("dynamic_color", true)
-    var miniPlayer by boolean("mini_player", false)
-    var startScreen by enum("start_screen", BaseDestination.HOME)
-    var pictureInPicture by boolean("pip", false)
-    var showDownloadButton by boolean("show_download_button", true)
-    var showRelatedVideos by boolean("show_related_videos", true)
-    var downloadDirectory by string(
+    var theme by preference("theme", Theme.SYSTEM)
+    var dynamicColor by preference("dynamic_color", true)
+    var miniPlayer by preference("mini_player", false)
+    var pictureInPicture by preference("pip", false)
+    var showDownloadButton by preference("show_download_button", true)
+    var showRelatedVideos by preference("show_related_videos", true)
+    var downloadDirectory by preference(
         "download_directory",
         try {
             Platform.getDownloadsDir().path
@@ -26,34 +25,34 @@ abstract class PreferencesManager : Settings {
             ""
         }
     )
-    var timestampScale by float("timestamp_scale", 1f)
-    var hideNavItemLabel by boolean("hide_nav_item_label", false)
+    var timestampScale by preference("timestamp_scale", 1f)
+    var hideNavItemLabel by preference("hide_nav_item_label", false)
 
     // Gestures
-    var swipeToSeek by boolean("swipe_to_seek", true)
-    var swipeToSeekSensitivity by float("swipe_to_seek_sensitivity", 1f)
-    var brightnessGesture by boolean("brightness_gesture", true)
-    var volumeGesture by boolean("volume_gesture", true)
-    var doubleTapToSeek by boolean("double_tap_to_seek", true)
-    var doubleTapToSeekDuration by int("double_tap_to_seek_duration", 10)
+    var swipeToSeek by preference("swipe_to_seek", true)
+    var swipeToSeekSensitivity by preference("swipe_to_seek_sensitivity", 1f)
+    var brightnessGesture by preference("brightness_gesture", true)
+    var volumeGesture by preference("volume_gesture", true)
+    var doubleTapToSeek by preference("double_tap_to_seek", true)
+    var doubleTapToSeekDuration by preference("double_tap_to_seek_duration", 10)
 
     // Video
-    var videoQuality by string("video_quality", "auto")
-    var videoFormat by string("video_format", "mp4")
-    var videoCodec by string("video_codec", "avc1")
-    var videoResolution by string("video_resolution", "auto")
-    var videoFrameRate by string("video_frame_rate", "auto")
+    var videoQuality by preference("video_quality", "auto")
+    var videoFormat by preference("video_format", "mp4")
+    var videoCodec by preference("video_codec", "avc1")
+    var videoResolution by preference("video_resolution", "auto")
+    var videoFrameRate by preference("video_frame_rate", "auto")
 
-    var sponsorBlockEnabled by boolean("sponsor_block_enabled", true)
-    var sponsorBlockApiUrl by string("sponsor_block_api_url", "https://sponsor.ajay.app")
-    var sponsorBlockSkipNoticeDuration by int("sponsor_block_skip_notice_duration", 5)
-    var sponsorBlockSkipTracking by boolean("sponsor_block_skip_tracking", true)
-    var sponsorBlockUserIdPrivate by nullableString("sponsor_block_user_id")
-    var sponsorBlockUserIdPublic by nullableString("sponsor_block_user_id_public")
+    var sponsorBlockEnabled by preference("sponsor_block_enabled", true)
+    var sponsorBlockApiUrl by preference("sponsor_block_api_url", "https://sponsor.ajay.app")
+    var sponsorBlockSkipNoticeDuration by preference("sponsor_block_skip_notice_duration", 5)
+    var sponsorBlockSkipTracking by preference("sponsor_block_skip_tracking", true)
+    var sponsorBlockUserIdPrivate by preference("sponsor_block_user_id")
+    var sponsorBlockUserIdPublic by preference("sponsor_block_user_id_public")
 }
 
-internal class PreferencesManagerImpl : PreferencesManager(), Settings by Settings()
-internal class PreferencesManagerPreviewImpl : PreferencesManager(), Settings by MapSettings()
+internal class PreferencesManagerImpl : PreferencesManager(Settings())
+internal class PreferencesManagerPreviewImpl : PreferencesManager(Settings())
 
 private inline fun <reified E : Enum<E>> Settings.enum(
     key: String? = null,

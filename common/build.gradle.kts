@@ -26,6 +26,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(compose.material3)
+
                 api(projects.innertube)
 
                 api(compose.ui)
@@ -35,14 +37,15 @@ kotlin {
                 api(compose.animationGraphics)
                 api(compose.materialIconsExtended)
 
-                implementation(compose.material3)
                 api(compose.uiTooling)
                 api(compose.preview)
 
                 api(libs.image.loader)
                 api(libs.kotlinx.collections.immutable)
 
-                api(libs.moko.resources.compose)
+                api(libs.moko.resources.compose.get().toString()) {
+                    exclude(group = "org.jetbrains.compose.material", module ="material")
+                }
 
                 api(libs.settings.noarg)
                 api(libs.settings.coroutines)
@@ -54,15 +57,27 @@ kotlin {
 
                 api(libs.window.size.multiplatform)
 
+                api(libs.voyager.navigator)
+                api(libs.voyager.tabNavigator)
+                api(libs.voyager.transitions)
+                api(libs.voyager.koin)
+
                 implementation(libs.compose.shimmer)
                 implementation(libs.material.kolor)
                 implementation(libs.bundles.ktor)
                 implementation(libs.ktor.okhttp)
                 implementation(libs.uuid)
-                implementation(libs.koin.compose)
+                api(libs.koin.compose)
                 implementation(libs.file.picker)
                 implementation(libs.color.picker)
                 implementation("com.russhwolf:multiplatform-settings-test:1.1.0")
+            }
+        }
+
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.koin.test)
             }
         }
 
@@ -74,8 +89,6 @@ kotlin {
 
                 implementation(libs.compose.material3)
 
-
-                api(libs.navigation)
                 api(libs.koin.androidx.compose)
             }
         }

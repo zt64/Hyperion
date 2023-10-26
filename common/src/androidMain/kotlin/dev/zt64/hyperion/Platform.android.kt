@@ -1,7 +1,6 @@
 package dev.zt64.hyperion
 
 import android.os.Build
-import android.os.Parcelable
 import androidx.annotation.ChecksSdkIntAtLeast
 import java.io.File
 
@@ -16,5 +15,3 @@ internal actual object Platform {
         return File("/storage/emulated/0/Download")
     }
 }
-
-actual typealias CommonParcelable = Parcelable

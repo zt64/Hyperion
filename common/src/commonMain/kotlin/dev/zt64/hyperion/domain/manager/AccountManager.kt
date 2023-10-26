@@ -7,7 +7,7 @@ import com.benasher44.uuid.uuid4
 import dev.zt64.innertube.network.service.InnerTubeService
 
 interface AccountManager {
-    var loggedIn: Boolean
+    val loggedIn: Boolean
 
     suspend fun getCode(): String
 }
@@ -19,6 +19,7 @@ internal class AccountManagerImpl(
     private val deviceId: String
 
     override var loggedIn: Boolean by mutableStateOf(false)
+        private set
 
     init {
         deviceId = preferencesManager.deviceId ?: uuid4().toString().also {

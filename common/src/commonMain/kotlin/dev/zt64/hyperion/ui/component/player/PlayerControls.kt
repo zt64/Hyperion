@@ -12,9 +12,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
-import dev.zt64.hyperion.ui.component.SeekBar
+import dev.zt64.hyperion.ui.model.IPlayerScreenModel
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+
+@Composable
+fun PlayerControls(
+    model: IPlayerScreenModel,
+    onClickCollapse: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // val model: IPlayerScreenModel = getScreenModel()
+    //
+    PlayerControls(
+        position = model.position,
+        duration = model.duration,
+        isPlaying = model.isPlaying,
+        isFullscreen = model.isFullscreen,
+        showCaptions = model.showCaptions,
+        onClickCollapse = onClickCollapse,
+        onClickFullscreen = model::toggleFullscreen,
+        onClickSkipBackward = model::skipBackward,
+        onClickSkipForward = model::skipForward,
+        onClickPlayPause = model::togglePlay,
+        onClickCaptions = model::toggleCaptions,
+        onClickOptions = model::showOptions,
+        onSeek = model::seekTo,
+        modifier = modifier
+    )
+}
 
 @Composable
 fun PlayerControls(
@@ -122,6 +148,7 @@ fun PlayerControls(
             )
 
             Row(
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Bottom
             ) {
                 val interactionSource = remember { MutableInteractionSource() }
@@ -129,15 +156,15 @@ fun PlayerControls(
                 var seekPosition by remember { mutableStateOf(position) }
                 val buffered by remember { derivedStateOf { position + 10.seconds } }
 
-                SeekBar(
-                    modifier = Modifier.weight(1f),
-                    duration = duration,
-                    progress = if (isDragged) seekPosition else position,
-                    buffered = buffered,
-                    onSeek = { seekPosition = it },
-                    onSeekFinished = { onSeek(seekPosition) },
-                    interactionSource = interactionSource
-                )
+                // SeekBar(
+                //     modifier = Modifier.weight(1f),
+                //     duration = duration,
+                //     progress = if (isDragged) seekPosition else position,
+                //     buffered = buffered,
+                //     onSeek = { seekPosition = it },
+                //     onSeekFinished = { onSeek(seekPosition) },
+                //     interactionSource = interactionSource
+                // )
 
                 IconButton(onClick = onClickFullscreen) {
                     if (isFullscreen) {

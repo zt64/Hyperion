@@ -144,7 +144,7 @@ internal data class ApiChannel(
             }
 
             @Serializable
-            data class HeaderLinks(val channelHeaderLinksRenderer: ChannelHeaderLinksRenderer) {
+            data class HeaderLinks(val channelHeaderLinksRenderer: ChannelHeaderLinksRenderer? = null) {
                 @Serializable
                 data class ChannelHeaderLinksRenderer(
                     val primaryLinks: List<Link> = emptyList(),

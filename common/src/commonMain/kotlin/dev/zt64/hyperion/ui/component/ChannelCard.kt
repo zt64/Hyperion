@@ -11,10 +11,37 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.domain.manager.AccountManager
+import dev.zt64.hyperion.ui.screen.ChannelScreen
 import dev.zt64.hyperion.ui.tooling.HyperionPreview
 import dev.zt64.innertube.domain.model.DomainChannelPartial
+import org.koin.compose.koinInject
+
+@Composable
+fun ChannelCard(
+    modifier: Modifier = Modifier,
+    channel: DomainChannelPartial,
+    onLongClick: () -> Unit,
+    onClickSubscribe: () -> Unit,
+) {
+    val navController = LocalNavigator.currentOrThrow
+    val accountManager: AccountManager = koinInject()
+
+    ChannelCard(
+        channel = channel,
+        isLoggedIn = accountManager.loggedIn,
+        onClick = {
+            navController.push(ChannelScreen(channel.id))
+        },
+        onClickSubscribe = onClickSubscribe,
+        onLongClick = onLongClick,
+        modifier = modifier,
+    )
+}
 
 @Composable
 fun ChannelCard(

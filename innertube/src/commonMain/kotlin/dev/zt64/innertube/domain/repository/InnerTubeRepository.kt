@@ -107,7 +107,7 @@ class InnerTubeRepository(
             results.singleInstance()
 
         return DomainNext(
-            viewCount = primaryInfoRenderer.viewCount.videoViewCountRenderer.shortViewCount,
+            viewCount = primaryInfoRenderer.viewCount.videoViewCountRenderer.shortViewCount ?: "Whar",
             uploadDate = primaryInfoRenderer.relativeDateText,
             channelAvatarUrl = secondaryInfoRenderer.owner.videoOwnerRenderer.thumbnail.sources.first().url,
             likesText = primaryInfoRenderer.likesText,

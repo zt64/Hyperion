@@ -8,6 +8,3 @@ internal expect val SUPPORTS_PIP: Boolean
 internal expect object Platform {
     fun getDownloadsDir(): File
 }
-
-// Somehow fixes a bug
-expect interface CommonParcelable

@@ -55,9 +55,7 @@ fun ShimmerImage(
         LocalImageLoader provides rememberImageLoader()
     ) {
         val request = remember(url) {
-            ImageRequest {
-                data(url)
-            }
+            ImageRequest(url)
         }
 
         val imageAction by rememberImageAction(request)
@@ -65,7 +63,7 @@ fun ShimmerImage(
         val isError by remember { derivedStateOf { imageAction is ImageResult.Error } }
         val painter = rememberImageActionPainter(
             action = imageAction,
-            filterQuality = quality,
+            filterQuality = quality
         )
 
         val backgroundColor = MaterialTheme.colorScheme.surfaceColorAtElevation(
@@ -89,9 +87,7 @@ fun ShimmerImage(
             contentDescription = contentDescription,
             modifier = modifier
                 .then(if (isLoading) Modifier.shimmer() else Modifier)
-                .then(
-                    if (isLoading || isError) Modifier.background(backgroundColor) else Modifier
-                ),
+                .then(if (isLoading || isError) Modifier.background(backgroundColor) else Modifier),
             alignment = alignment,
             contentScale = contentScale,
             alpha = alpha,

@@ -112,7 +112,7 @@ internal data class ApiNext(
         data class ViewCount(val videoViewCountRenderer: Renderer) {
             @Serializable
             data class Renderer(
-                val shortViewCount: SimpleText,
+                val shortViewCount: SimpleText? = null,
                 val viewCount: SimpleText
             )
         }

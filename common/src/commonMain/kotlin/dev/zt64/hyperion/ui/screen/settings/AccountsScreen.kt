@@ -2,7 +2,6 @@ package dev.zt64.hyperion.ui.screen.settings
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ManageAccounts
 import androidx.compose.material3.*
@@ -11,50 +10,50 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.getScreenModel
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
-import dev.zt64.hyperion.domain.manager.AccountManager
-import dev.zt64.hyperion.domain.manager.PreferencesManager
-import org.koin.compose.koinInject
+import dev.zt64.hyperion.ui.model.SettingsScreenModel
 
-context(ColumnScope)
-@Composable
-fun AccountsScreen(
-    onClickAddAccount: () -> Unit,
-    preferences: PreferencesManager = koinInject(),
-    accountManager: AccountManager = koinInject()
-) {
-    var showAccountDialog by rememberSaveable { mutableStateOf(false) }
+object AccountsScreen : Screen {
+    @Composable
+    override fun Content() {
+        val model: SettingsScreenModel = getScreenModel()
+        val preferences = model.preferences
 
-    // val preferences: PreferencesManager = koinInject()
-    // val accountManager: AccountManager = koinInject()
-    //
-    // if (accountManager.loggedIn) {
-    //
-    // }
+        var showAccountDialog by rememberSaveable { mutableStateOf(false) }
 
-    if (showAccountDialog) {
-        AddAccountDialog(
-            onDismissRequest = { showAccountDialog = false }
-        )
-    }
+        // val preferences: PreferencesManager = koinInject()
+        // val accountManager: AccountManager = koinInject()
+        //
+        // if (accountManager.loggedIn) {
+        //
+        // }
 
-    LazyColumn(
-        modifier = Modifier
-            .weight(1f, true)
-    ) {
-
-    }
-
-    Button(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        onClick = {
-            showAccountDialog = true
+        if (showAccountDialog) {
+            AddAccountDialog(
+                onDismissRequest = { showAccountDialog = false }
+            )
         }
-    ) {
-        Text(stringResource(MR.strings.add_account))
+
+        // LazyColumn(
+        //     modifier = Modifier.weight(1f, true)
+        // ) {
+        //
+        // }
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            onClick = {
+                showAccountDialog = true
+            }
+        ) {
+            Text(stringResource(MR.strings.add_account))
+        }
+
     }
 }
 

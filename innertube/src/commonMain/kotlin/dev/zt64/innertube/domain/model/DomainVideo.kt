@@ -37,6 +37,7 @@ data class DomainVideoPartial(
         publishedTimeText,
         viewCount
     ).joinToString(SEPARATOR)
+    val shareUrl = "https://youtu.be/$id"
 
     private companion object {
         private const val SEPARATOR = " • "

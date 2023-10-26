@@ -16,124 +16,130 @@ import dev.zt64.hyperion.ui.tooling.HyperionPreview
 
 @Composable
 fun DownloadSheet(onDismissRequest: () -> Unit) {
-    var showQualityDialog by rememberSaveable { mutableStateOf(false) }
-    var showFormatDialog by rememberSaveable { mutableStateOf(false) }
+    val uiState = rememberSaveable { UiState() }
 
-    var audioOnly by rememberSaveable { mutableStateOf(false) }
-    var downloadSubtitles by rememberSaveable { mutableStateOf(false) }
-    var saveThumbnail by rememberSaveable { mutableStateOf(true) }
-
-    if (showQualityDialog) {
-        AlertDialog(
-            onDismissRequest = { showQualityDialog = false }
-        ) {
+    if (uiState.showQualityDialog) {
+        AlertDialog(onDismissRequest = uiState::dismissQualityDialog) {
 
         }
     }
 
-    if (showFormatDialog) {
-        AlertDialog(
-            onDismissRequest = { showFormatDialog = false }
-        ) {
+    if (uiState.showFormatDialog) {
+        AlertDialog(onDismissRequest = uiState::dismissFormatDialog) {
 
         }
     }
 
     ModalBottomSheet(onDismissRequest) {
-        Column(
-            modifier = Modifier
-                .navigationBarsPadding() // workaround bug
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        SheetContent(
+            uiState = uiState,
+            onDismissRequest = onDismissRequest,
+            onClickDownload = {}
+        )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun SheetContent(
+    uiState: UiState,
+    onDismissRequest: () -> Unit,
+    onClickDownload: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .navigationBarsPadding() // workaround bug
+            .padding(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = stringResource(MR.strings.general),
+            style = MaterialTheme.typography.labelLarge
+        )
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = stringResource(MR.strings.general),
-                style = MaterialTheme.typography.labelLarge
+            AssistChip(
+                onClick = uiState::showQualityDialog,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.HighQuality,
+                        contentDescription = null
+                    )
+                },
+                label = { Text("Resolution") }
             )
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                AssistChip(
-                    onClick = { showQualityDialog = true },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.HighQuality,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text("Resolution") }
-                )
-                AssistChip(
-                    onClick = { showFormatDialog = true },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Extension,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text("Format") }
-                )
-            }
+            AssistChip(
+                onClick = uiState::showFormatDialog,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Extension,
+                        contentDescription = null
+                    )
+                },
+                label = { Text("Format") }
+            )
+        }
 
-            Text(
-                text = "Features",
-                style = MaterialTheme.typography.labelLarge
+        Text(
+            text = "Features",
+            style = MaterialTheme.typography.labelLarge
+        )
+
+        FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            InputChip(
+                selected = uiState.audioOnly,
+                onClick = uiState::toggleAudioOnly,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.AudioFile,
+                        contentDescription = null
+                    )
+                },
+                label = { Text("Audio only") }
             )
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                InputChip(
-                    selected = audioOnly,
-                    onClick = { audioOnly = !audioOnly },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.AudioFile,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text("Audio only") }
-                )
-                InputChip(
-                    selected = downloadSubtitles,
-                    onClick = { downloadSubtitles = !downloadSubtitles },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Subtitles,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(stringResource(MR.strings.subtitles)) }
-                )
-                InputChip(
-                    selected = saveThumbnail,
-                    onClick = { saveThumbnail = !saveThumbnail },
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.Image,
-                            contentDescription = null
-                        )
-                    },
-                    label = { Text(stringResource(MR.strings.thumbnail)) }
-                )
+            InputChip(
+                selected = uiState.downloadSubtitles,
+                onClick = uiState::toggleDownloadSubtitles,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Subtitles,
+                        contentDescription = null
+                    )
+                },
+                label = { Text(stringResource(MR.strings.subtitles)) }
+            )
+
+            InputChip(
+                selected = uiState.saveThumbnail,
+                onClick = uiState::toggleSaveThumbnail,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Image,
+                        contentDescription = null
+                    )
+                },
+                label = {
+                    Text(stringResource(MR.strings.thumbnail))
+                }
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
+        ) {
+            OutlinedButton(onClick = onDismissRequest) {
+                Text(stringResource(MR.strings.cancel))
             }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
-            ) {
-                OutlinedButton(
-                    onClick = onDismissRequest
-                ) {
-                    Text(stringResource(MR.strings.cancel))
-                }
-
-                Button(
-                    onClick = {}
-                ) {
-                    Text(stringResource(MR.strings.download))
-                }
+            Button(onClick = onClickDownload) {
+                Text(stringResource(MR.strings.download))
             }
         }
     }
@@ -143,6 +149,53 @@ fun DownloadSheet(onDismissRequest: () -> Unit) {
 @Composable
 private fun DownloadSheetPreview() {
     HyperionPreview {
-        DownloadSheet(onDismissRequest = {})
+        SheetContent(
+            uiState = remember { UiState() },
+            onDismissRequest = {},
+            onClickDownload = {}
+        )
+    }
+}
+
+@Stable
+private class UiState {
+    var showQualityDialog by mutableStateOf(false)
+        private set
+    var showFormatDialog by mutableStateOf(false)
+        private set
+
+    var audioOnly by mutableStateOf(false)
+        private set
+    var downloadSubtitles by mutableStateOf(false)
+        private set
+    var saveThumbnail by mutableStateOf(true)
+        private set
+
+    fun dismissQualityDialog() {
+        showQualityDialog = false
+    }
+
+    fun dismissFormatDialog() {
+        showFormatDialog = false
+    }
+
+    fun showQualityDialog() {
+        showQualityDialog = true
+    }
+
+    fun showFormatDialog() {
+        showFormatDialog = true
+    }
+
+    fun toggleAudioOnly() {
+        audioOnly = !audioOnly
+    }
+
+    fun toggleDownloadSubtitles() {
+        downloadSubtitles = !downloadSubtitles
+    }
+
+    fun toggleSaveThumbnail() {
+        saveThumbnail = !saveThumbnail
     }
 }
