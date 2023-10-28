@@ -135,4 +135,5 @@
     <string name="replace">Replace</string>
     <string name="remove">Remove</string>
     <string name="reply">Reply</string>
+    <string name="unsubscribe">Unsubscribe</string>
 </resources>

@@ -135,4 +135,5 @@
     <string name="replace">Korvaa</string>
     <string name="remove">Poista</string>
     <string name="reply">Vastaa</string>
+    <string name="unsubscribe">Unsubscribe</string>
 </resources>

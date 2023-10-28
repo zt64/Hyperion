@@ -135,4 +135,5 @@
     <string name="replace">Заменить</string>
     <string name="remove">Удалить</string>
     <string name="reply">Ответить</string>
+    <string name="unsubscribe">Unsubscribe</string>
 </resources>

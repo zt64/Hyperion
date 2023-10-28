@@ -135,4 +135,5 @@
     <string name="replace">대체</string>
     <string name="remove">제거</string>
     <string name="reply">답글</string>
+    <string name="unsubscribe">Unsubscribe</string>
 </resources>
