@@ -1,8 +1,3 @@
-@file:Suppress(
-    "INVISIBLE_SETTER",
-    "INVISIBLE_REFERENCE",
-)
-
 package dev.zt64.hyperion.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
@@ -117,30 +112,6 @@ data class Segment(
     val range: ClosedFloatingPointRange<Float>,
 )
 
-expect class SliderState
-
-internal expect val SliderState.activeRangeEnd: Float
-
-@Composable
-internal expect fun Slider(
-    value: Float,
-    onValueChange: (Float) -> Unit,
-    modifier: Modifier,
-    enabled: Boolean = true,
-    onValueChangeFinished: (() -> Unit)?,
-    colors: SliderColors = SliderDefaults.colors(),
-    interactionSource: MutableInteractionSource,
-    steps: Int = 0,
-    thumb: @Composable (SliderState) -> Unit = {
-        Thumb(
-            interactionSource = interactionSource,
-            colors = colors
-        )
-    },
-    track: @Composable (SliderState) -> Unit,
-    valueRange: ClosedFloatingPointRange<Float> = 0f..1f
-)
-
 @Composable
 @ExperimentalMaterial3Api
 fun SeekBar(
@@ -224,8 +195,8 @@ internal fun Track(
     colors: SliderColors = SliderDefaults.colors(),
     enabled: Boolean = true,
 ) {
-    val inactiveTrackColor by colors.trackColor(enabled, active = false)
-    val activeTrackColor by colors.trackColor(enabled, active = true)
+    val inactiveTrackColor = colors.commonTrackColor(enabled, active = false)
+    val activeTrackColor = colors.commonTrackColor(enabled, active = true)
 
     Canvas(
         modifier = modifier

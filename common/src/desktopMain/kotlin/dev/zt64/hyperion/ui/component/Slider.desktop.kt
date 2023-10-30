@@ -1,14 +1,17 @@
+@file:Suppress("INVISIBLE_MEMBER")
+
 package dev.zt64.hyperion.ui.component
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.SliderColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 
-internal actual typealias SliderState = androidx.compose.material3.SliderState
+internal actual typealias SliderState = androidx.compose.material3.SliderPositions
 
 internal actual val SliderState.activeRangeEnd: Float
-    get() = value
+    get() = activeRange.endInclusive
 
 @Composable
 internal actual fun Slider(
@@ -36,3 +39,8 @@ internal actual fun Slider(
     track = track,
     valueRange = valueRange
 )
+
+@Composable
+internal actual fun SliderColors.commonTrackColor(enabled: Boolean, active: Boolean): Color {
+    return trackColor(enabled, active).value
+}
