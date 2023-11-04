@@ -64,7 +64,7 @@
     <string name="restore">復元</string>
     <string name="add_account">アカウントを追加</string>
     <string name="copied_to_clipboard">クリップボードにコピーしました</string>
-    <string name="copy_stacktrace">エラーメッセージをコピー</string>
+    <string name="copy_stacktrace">スタックトレースをコピー</string>
     <string name="tag">タグ</string>
     <string name="hide_nav_item_label">ナビの文字列を隠す</string>
     <string name="chapters">チャプター</string>
@@ -132,8 +132,8 @@
     <string name="store">ストア</string>
     <string name="skip_count_tracking">スキップ回数のトラッキング</string>
     <string name="hide_this_notification">"この通知を非表示 "</string>
-    <string name="replace">置換</string>
+    <string name="replace">置き換え</string>
     <string name="remove">削除</string>
     <string name="reply">返信</string>
-    <string name="unsubscribe">Unsubscribe</string>
+    <string name="unsubscribe">チャンネル登録解除</string>
 </resources>
