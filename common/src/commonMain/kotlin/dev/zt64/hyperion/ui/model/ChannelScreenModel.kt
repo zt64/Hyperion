@@ -3,7 +3,7 @@ package dev.zt64.hyperion.ui.model
 import androidx.compose.runtime.*
 import androidx.paging.*
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import dev.zt64.hyperion.domain.manager.AccountManager
 import dev.zt64.hyperion.domain.manager.ShareManager
 import dev.zt64.hyperion.domain.model.channel.VideoSort
@@ -43,7 +43,7 @@ class ChannelScreenModel(
 
             override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
         }
-    }.flow.cachedIn(coroutineScope)
+    }.flow.cachedIn(screenModelScope)
 
     var channels = Pager(pagingConfig) {
         object : PagingSource<String, DomainVideoPartial>() {
@@ -53,13 +53,13 @@ class ChannelScreenModel(
 
             override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
         }
-    }.flow.cachedIn(coroutineScope)
+    }.flow.cachedIn(screenModelScope)
 
     init {
         state = State.Loading
         id = channelId
 
-        coroutineScope.launch {
+        screenModelScope.launch {
             state = try {
                 State.Loaded(innerTube.getChannel(id))
             } catch (e: Exception) {
@@ -72,7 +72,7 @@ class ChannelScreenModel(
     fun getChannelTab(tab: ChannelTab) {
         this.tab = tab
 
-        coroutineScope.launch {
+        screenModelScope.launch {
             innerTube.getChannel(id, tab)
         }
     }

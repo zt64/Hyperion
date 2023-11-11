@@ -3,7 +3,7 @@ package dev.zt64.hyperion.ui.model
 import androidx.compose.runtime.*
 import androidx.paging.*
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import dev.zt64.hyperion.domain.paging.BrowsePagingSource
 import dev.zt64.innertube.domain.model.DomainVideoPartial
 import dev.zt64.innertube.domain.repository.InnerTubeRepository
@@ -34,7 +34,7 @@ class TagScreenModel(
     init {
         state = State.Loading
 
-        coroutineScope.launch {
+        screenModelScope.launch {
             state = try {
                 val response = innerTube.getTag(tag)
 
@@ -45,7 +45,7 @@ class TagScreenModel(
                     BrowsePagingSource { key ->
                         if (key == null) response else innerTube.getTagContinuation(key)
                     }
-                }.flow.cachedIn(coroutineScope)
+                }.flow.cachedIn(screenModelScope)
 
                 State.Loaded
             } catch (e: Exception) {

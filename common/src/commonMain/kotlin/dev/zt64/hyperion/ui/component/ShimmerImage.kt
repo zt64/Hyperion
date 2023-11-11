@@ -54,13 +54,11 @@ fun ShimmerImage(
     CompositionLocalProvider(
         LocalImageLoader provides rememberImageLoader()
     ) {
-        val request = remember(url) {
-            ImageRequest(url)
-        }
+        val request = remember(url) { ImageRequest(url) }
 
         val imageAction by rememberImageAction(request)
         val isLoading by remember { derivedStateOf { imageAction is ImageEvent } }
-        val isError by remember { derivedStateOf { imageAction is ImageResult.Error } }
+        val isError by remember { derivedStateOf { imageAction is ImageResult.OfError } }
         val painter = rememberImageActionPainter(
             action = imageAction,
             filterQuality = quality
@@ -75,7 +73,7 @@ fun ShimmerImage(
                 Napier.e(
                     tag = "Image",
                     message = "Failed to load image",
-                    throwable = (imageAction as ImageResult.Error).error
+                    throwable = (imageAction as ImageResult.OfError).error
                 )
             }
 

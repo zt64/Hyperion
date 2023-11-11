@@ -13,8 +13,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.domain.model.StringLabel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
+import kotlin.enums.enumEntries
 import kotlin.reflect.KMutableProperty0
 
+@OptIn(ExperimentalStdlibApi::class)
 @Composable
 inline fun <reified E> RadioSetting(
     preference: KMutableProperty0<E>,
@@ -24,13 +28,13 @@ inline fun <reified E> RadioSetting(
     description: String? = null,
     icon: ImageVector? = null
 ) where E : Enum<E>, E : StringLabel {
-    val options = remember<Array<E>>(::enumValues)
+    val options = remember { enumEntries<E>() }
 
     RadioSetting(
         modifier = modifier,
         enabled = enabled,
         value = preference.get(),
-        options = options,
+        options = options.toImmutableList(),
         onConfirm = preference::set,
         label = label,
         description = description,
@@ -42,7 +46,7 @@ inline fun <reified E> RadioSetting(
 fun <E : StringLabel> RadioSetting(
     label: String,
     value: E,
-    options: Array<E>,
+    options: ImmutableList<E>,
     onConfirm: (value: E) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,

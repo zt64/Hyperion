@@ -3,7 +3,7 @@ package dev.zt64.hyperion.ui.model
 import androidx.compose.runtime.*
 import androidx.paging.*
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import dev.zt64.hyperion.domain.manager.*
 import dev.zt64.hyperion.domain.model.Rating
 import dev.zt64.hyperion.domain.paging.BrowsePagingSource
@@ -97,6 +97,7 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) : IPlayerS
 
     final override var state by mutableStateOf<PlayerState>(PlayerState.Loading)
         protected set
+
     final override var video by mutableStateOf<DomainVideo?>(null)
         protected set
 
@@ -135,7 +136,7 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) : IPlayerS
     }
 
     fun loadVideo(id: String) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             try {
                 state = PlayerState.Loading
 
@@ -216,7 +217,7 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) : IPlayerS
     }
 
     final override fun updateVote(rating: Rating) {
-        coroutineScope.launch {
+        screenModelScope.launch {
             try {
 
             } catch (e: Exception) {
@@ -226,7 +227,7 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) : IPlayerS
     }
 
     final override fun download() {
-        coroutineScope.launch {
+        screenModelScope.launch {
             try {
                 downloadManager
             } catch (e: Exception) {
@@ -236,7 +237,7 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) : IPlayerS
     }
 
     final override fun toggleSubscription() {
-        coroutineScope.launch {
+        screenModelScope.launch {
             try {
                 val channelId = video!!.author.id
                 // Make request to subscribe
@@ -255,6 +256,6 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) : IPlayerS
                     innerTube.getRelatedVideos(videoId, key)
                 }
             }
-        }.flow.cachedIn(coroutineScope)
+        }.flow.cachedIn(screenModelScope)
     }
 }

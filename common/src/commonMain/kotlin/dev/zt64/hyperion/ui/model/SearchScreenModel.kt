@@ -5,7 +5,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.paging.*
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import dev.zt64.hyperion.domain.manager.AccountManager
 import dev.zt64.hyperion.domain.paging.BrowsePagingSource
 import dev.zt64.innertube.domain.model.Entity
@@ -31,7 +31,7 @@ class SearchScreenModel(
     fun textFieldValueChange(value: TextFieldValue) {
         textFieldValue = value
 
-        coroutineScope.launch {
+        screenModelScope.launch {
             try {
                 val searchSuggestions = innerTube.getSearchSuggestions(textFieldValue.text)
 
@@ -64,7 +64,7 @@ class SearchScreenModel(
     fun search() {
         results = Pager(pagingConfig) {
             BrowsePagingSource { key -> innerTube.getSearchResults(textFieldValue.text, key) }
-        }.flow.cachedIn(coroutineScope)
+        }.flow.cachedIn(screenModelScope)
 
         searchActive = false
     }

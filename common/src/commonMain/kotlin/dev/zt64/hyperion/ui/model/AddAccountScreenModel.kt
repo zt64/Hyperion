@@ -2,7 +2,7 @@ package dev.zt64.hyperion.ui.model
 
 import androidx.compose.runtime.*
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import dev.zt64.hyperion.domain.manager.AccountManager
 import kotlinx.coroutines.launch
 
@@ -22,7 +22,7 @@ class AddAccountScreenModel(
     init {
         state = State.Loading
 
-        coroutineScope.launch {
+        screenModelScope.launch {
             state = try {
                 State.Loaded(accountManager.getCode())
             } catch (e: Exception) {

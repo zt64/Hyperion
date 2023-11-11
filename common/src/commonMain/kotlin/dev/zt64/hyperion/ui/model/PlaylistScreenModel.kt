@@ -3,7 +3,7 @@ package dev.zt64.hyperion.ui.model
 import androidx.compose.runtime.*
 import androidx.paging.*
 import cafe.adriel.voyager.core.model.ScreenModel
-import cafe.adriel.voyager.core.model.coroutineScope
+import cafe.adriel.voyager.core.model.screenModelScope
 import dev.zt64.hyperion.domain.manager.ShareManager
 import dev.zt64.hyperion.domain.paging.BrowsePagingSource
 import dev.zt64.innertube.domain.model.DomainPlaylist
@@ -36,14 +36,14 @@ class PlaylistScreenModel(
     init {
         state = State.Loading
 
-        coroutineScope.launch {
+        screenModelScope.launch {
             try {
                 playlist = innerTube.getPlaylist(playlistId)
                 videos = Pager(pagingConfig) {
                     BrowsePagingSource { key ->
                         key?.let { innerTube.getPlaylist(playlistId, key) } ?: playlist!!
                     }
-                }.flow.cachedIn(coroutineScope)
+                }.flow.cachedIn(screenModelScope)
 
                 state = State.Loaded
             } catch (e: Exception) {
@@ -54,7 +54,7 @@ class PlaylistScreenModel(
     }
 
     fun saveToLibrary() {
-        coroutineScope.launch {
+        screenModelScope.launch {
             // snackbarHostState.showSnackbar(application.getString(MR.strings.saved_to_library))
         }
     }
