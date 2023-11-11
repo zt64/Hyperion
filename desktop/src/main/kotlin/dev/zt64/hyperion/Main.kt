@@ -6,7 +6,7 @@ import dev.zt64.hyperion.di.appModule
 import org.koin.core.context.startKoin
 import java.awt.Dimension
 
-suspend fun main() {
+fun main() {
     startKoin {
         modules(appModule)
     }

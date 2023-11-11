@@ -19,13 +19,32 @@ compose.desktop {
         mainClass = "dev.zt64.hyperion.MainKt"
 
         nativeDistributions {
+            packageName = "hyperion"
             description = "YouTube client"
+            packageVersion = rootProject.version.toString()
             licenseFile = rootProject.file("LICENSE.md")
 
-            targetFormats(TargetFormat.Dmg, TargetFormat.Deb, TargetFormat.AppImage, TargetFormat.Exe)
+            modules = arrayListOf(
+                "java.base",
+                "java.desktop",
+                "java.instrument",
+                "java.management",
+                "java.prefs",
+                "java.logging",
+                "java.net.http",
+                "jdk.xml.dom"
+            )
+
+            targetFormats(
+                TargetFormat.Dmg,
+                TargetFormat.Deb,
+                TargetFormat.AppImage,
+                TargetFormat.Exe
+            )
         }
 
         buildTypes.release.proguard {
+            configurationFiles.from(file("proguard-rules.pro"))
             obfuscate = true
         }
     }
