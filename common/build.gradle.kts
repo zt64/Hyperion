@@ -78,6 +78,7 @@ kotlin {
         }
 
         named("androidMain") {
+            dependsOn(commonMain.get())
             dependencies {
                 api(libs.bundles.androidx)
                 api(libs.bundles.media3)
