@@ -1,6 +1,5 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -14,17 +13,14 @@ plugins {
 group = "dev.zt64.hyperion"
 version = "0.1.0"
 
-@OptIn(ExperimentalKotlinGradlePluginApi::class)
 kotlin {
-    targetHierarchy.default()
-
     jvmToolchain(libs.versions.jvm.get().toInt())
 
     androidTarget()
     jvm("desktop")
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 implementation(compose.material3)
 
@@ -44,7 +40,7 @@ kotlin {
                 api(libs.kotlinx.collections.immutable)
 
                 api(libs.moko.resources.compose.get().toString()) {
-                    exclude(group = "org.jetbrains.compose.material", module ="material")
+                    exclude(group = "org.jetbrains.compose.material", module = "material")
                 }
 
                 api(libs.settings.noarg)
@@ -70,7 +66,7 @@ kotlin {
                 api(libs.koin.compose)
                 implementation(libs.file.picker)
                 implementation(libs.color.picker)
-                implementation("com.russhwolf:multiplatform-settings-test:1.1.0")
+                implementation(libs.settings.test)
             }
         }
 
@@ -82,7 +78,6 @@ kotlin {
         }
 
         named("androidMain") {
-            dependsOn(commonMain)
             dependencies {
                 api(libs.bundles.androidx)
                 api(libs.bundles.media3)
@@ -94,7 +89,7 @@ kotlin {
         }
 
         named("desktopMain") {
-            dependsOn(commonMain)
+            dependsOn(commonMain.get())
             dependencies {
                 implementation(compose.desktop.currentOs)
             }
@@ -107,6 +102,12 @@ kotlin {
                 optIn("androidx.compose.foundation.ExperimentalFoundationApi")
             }
         }
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        freeCompilerArgs += "-Xexpect-actual-classes"
     }
 }
 
@@ -132,7 +133,7 @@ dependencies {
     debugApi(compose.uiTooling)
     debugApi(compose.preview)
     debugImplementation(libs.compose.runtime.tracing)
-    debugImplementation("com.russhwolf:multiplatform-settings-test:1.1.0")
+    debugImplementation(libs.settings.test)
 }
 
 multiplatformResources {

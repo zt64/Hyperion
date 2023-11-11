@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.moko.resources) apply false
 }
 
+version = "1.0.0"
+
 subprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
