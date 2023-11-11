@@ -3,24 +3,13 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.android.library)
 }
 
 group = "dev.zt64.innertube"
 
-android {
-    namespace = "dev.zt64.innertube"
-    compileSdk = 34
-
-    defaultConfig {
-        minSdk = 21
-    }
-}
-
 kotlin {
     jvmToolchain(libs.versions.jvm.get().toInt())
 
-    androidTarget()
     jvm()
 
     sourceSets {
