@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Subscriptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,10 +31,12 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.ui.LocalSnackbarHostState
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.model.FeedScreenModel
 import dev.zt64.hyperion.ui.screen.AddAccountScreen
 import dev.zt64.innertube.domain.model.DomainChannelPartial
+import kotlinx.coroutines.launch
 
 object FeedTab : Tab {
     override val options: TabOptions
@@ -54,14 +57,18 @@ object FeedTab : Tab {
     @Composable
     override fun Content() {
         val model: FeedScreenModel = getScreenModel()
+        val scope = rememberCoroutineScope()
         val navController = LocalNavigator.currentOrThrow
+        val snackbarHostState = LocalSnackbarHostState.currentOrThrow
 
         if (model.accountManager.loggedIn) {
             FeedScreenLoggedIn()
         } else {
             FeedScreenNotLoggedIn(
                 onClickAddAccount = {
-                    navController.push(AddAccountScreen)
+                    scope.launch {
+                        snackbarHostState.showSnackbar("TODO")
+                    }
                 }
             )
         }
