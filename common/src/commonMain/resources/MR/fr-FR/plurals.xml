@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plural name="views">
-        <item quantity="one">1 view</item>
-        <item quantity="other">%d views</item>
+        <item quantity="one">1 vue</item>
+        <item quantity="other">%d vues</item>
     </plural>
 </resources>
