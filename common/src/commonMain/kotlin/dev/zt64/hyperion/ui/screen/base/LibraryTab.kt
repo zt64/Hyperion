@@ -1,5 +1,6 @@
 package dev.zt64.hyperion.ui.screen.base
 
+import androidx.compose.foundation.LocalScrollbarStyle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -8,6 +9,7 @@ import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,10 +26,12 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.ui.LocalSnackbarHostState
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.component.player.WIDESCREEN_RATIO
 import dev.zt64.hyperion.ui.model.LibraryScreenModel
 import dev.zt64.hyperion.ui.screen.AddAccountScreen
+import kotlinx.coroutines.launch
 
 object LibraryTab : Tab {
     override val options: TabOptions
@@ -48,6 +52,8 @@ object LibraryTab : Tab {
     @Composable
     override fun Content() {
         val model: LibraryScreenModel = getScreenModel()
+        val scope = rememberCoroutineScope()
+        val snackbarHostState = LocalSnackbarHostState.currentOrThrow
 
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -79,7 +85,9 @@ object LibraryTab : Tab {
 
                 Button(
                     onClick = {
-                        navigator.push(AddAccountScreen)
+                        scope.launch {
+                            snackbarHostState.showSnackbar("TODO")
+                        }
                     }
                 ) {
                     Text(stringResource(MR.strings.sign_in))

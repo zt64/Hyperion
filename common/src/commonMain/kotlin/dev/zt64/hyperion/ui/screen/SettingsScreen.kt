@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -20,12 +21,14 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.transitions.SlideTransition
 import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.ui.LocalSnackbarHostState
 import dev.zt64.hyperion.ui.component.AdaptiveTopBar
 import dev.zt64.hyperion.ui.component.BackButton
 import dev.zt64.hyperion.ui.model.SettingsScreenModel
 import dev.zt64.hyperion.ui.navigation.SettingsSection
 import dev.zt64.hyperion.ui.screen.settings.*
 import dev.zt64.hyperion.ui.screen.settings.NotificationsScreen
+import kotlinx.coroutines.launch
 
 object SettingsScreen : Screen {
     @Composable
@@ -91,24 +94,26 @@ object BaseSettingsScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
+        val snackbarHostState = LocalSnackbarHostState.currentOrThrow
+        val scope = rememberCoroutineScope()
 
         SettingsSection.entries.forEach { destination ->
             key(destination.label) {
                 ListItem(
                     modifier = Modifier
                         .clickable {
-                            navigator.push(
-                                when (destination) {
-                                    SettingsSection.ABOUT -> AboutScreen
-                                    SettingsSection.ACCOUNTS -> AccountsScreen
-                                    SettingsSection.APPEARANCE -> AppearanceScreen
-                                    SettingsSection.BACKUP_RESTORE -> BackupRestoreScreen
-                                    SettingsSection.GENERAL -> GeneralScreen
-                                    SettingsSection.NOTIFICATIONS -> NotificationsScreen
-                                    SettingsSection.SPONSOR_BLOCK -> SponsorBlockScreen
-                                    SettingsSection.GESTURES -> TODO()
+                            when (destination) {
+                                SettingsSection.ABOUT -> navigator.push(AboutScreen)
+                                SettingsSection.ACCOUNTS -> navigator.push(AccountsScreen)
+                                SettingsSection.APPEARANCE -> navigator.push(AppearanceScreen)
+                                SettingsSection.BACKUP_RESTORE -> navigator.push(BackupRestoreScreen)
+                                SettingsSection.GENERAL -> navigator.push(GeneralScreen)
+                                SettingsSection.NOTIFICATIONS -> navigator.push(NotificationsScreen)
+                                SettingsSection.SPONSOR_BLOCK -> navigator.push(SponsorBlockScreen)
+                                else -> scope.launch {
+                                    snackbarHostState.showSnackbar("TODO")
                                 }
-                            )
+                            }
                         }
                         .padding(vertical = 12.dp),
                     headlineContent = { Text(stringResource(destination.label)) },
