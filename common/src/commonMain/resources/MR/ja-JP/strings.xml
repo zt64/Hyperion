@@ -36,12 +36,12 @@
     <string name="close_fullscreen">全画面表示を閉じる</string>
     <string name="open_fullscreen">全画面表示を開く</string>
     <string name="verified">認証済み</string>
-    <string name="dynamic_color">動的カラー</string>
+    <string name="dynamic_color">ダイナミックカラー</string>
     <string name="timestamp_scale">タイムスタンプのサイズ</string>
     <string name="about">このアプリについて</string>
     <string name="comments">コメント</string>
     <string name="show_download_button">ダウンロードボタンを表示</string>
-    <string name="dismiss">却下</string>
+    <string name="dismiss">閉じる</string>
     <string name="confirm">確認</string>
     <string name="quality">画質</string>
     <string name="system">システム</string>
@@ -50,7 +50,7 @@
     <string name="clear">消去</string>
     <string name="filter">絞り込み</string>
     <string name="appearance">外観</string>
-    <string name="general">一般</string>
+    <string name="general">全般</string>
     <string name="backup_restore">バックアップと復元</string>
     <string name="accounts">アカウント</string>
     <string name="shuffle">シャッフル</string>
@@ -66,7 +66,7 @@
     <string name="copied_to_clipboard">クリップボードにコピーしました</string>
     <string name="copy_stacktrace">スタックトレースをコピー</string>
     <string name="tag">タグ</string>
-    <string name="hide_nav_item_label">ナビの文字列を隠す</string>
+    <string name="hide_nav_item_label">ナビゲーションのラベルを非表示</string>
     <string name="chapters">チャプター</string>
     <string name="sign_in">ログイン</string>
     <string name="account">アカウント</string>
