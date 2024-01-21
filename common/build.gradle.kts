@@ -16,8 +16,8 @@ version = "0.1.0"
 kotlin {
     jvmToolchain(libs.versions.jvm.get().toInt())
 
-    androidTarget()
     jvm("desktop")
+    androidTarget()
 
     sourceSets {
         commonMain {
@@ -64,8 +64,12 @@ kotlin {
                 implementation(libs.ktor.okhttp)
                 implementation(libs.uuid)
                 api(libs.koin.compose)
-                implementation(libs.file.picker)
-                implementation(libs.color.picker)
+                implementation(libs.file.picker.get().toString()) {
+                    exclude(group = "org.jetbrains.compose.material", module = "material")
+                }
+                implementation(libs.color.picker.get().toString()) {
+                    exclude(group = "org.jetbrains.compose.material", module = "material")
+                }
                 implementation(libs.settings.test)
             }
         }
@@ -121,11 +125,10 @@ android {
     }
 }
 
-configurations.all {
-    resolutionStrategy {
-        dependencySubstitution {
-            substitute(module("org.jetbrains.compose.material:material"))
-                .using(module("org.jetbrains.compose.material3:material3:${libs.versions.compose.multiplatform}"))
+listOf(configurations.implementation, configurations.api).forEach {
+    it.configure {
+        resolutionStrategy {
+            exclude(group = "org.jetbrains.compose.material", module = "material")
         }
     }
 }
