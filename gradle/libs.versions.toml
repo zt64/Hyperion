@@ -99,9 +99,11 @@ settings-noarg = { module = "com.russhwolf:multiplatform-settings-no-arg", versi
 settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "settings" }
 settings-test = { module = "com.russhwolf:multiplatform-settings-test", version.ref = "settings" }
 
-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.2.3" }
-
 napier = { module = "io.github.aakira:napier", version = "2.6.1" }
+
+google-api-services-youtube = "com.google.apis:google-api-services-youtube:v3-rev222-1.25.0"
+
+ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.3.10" }
 
 [bundles]
 androidx = ["androidx-appcompat", "androidx-core", "androidx-splashscreen", "androidx-activity"]
@@ -118,4 +120,5 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 compose = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
-build-konfig = { id = "com.codingfeline.buildkonfig", version = "0.14.0" }
+build-konfig = { id = "com.codingfeline.buildkonfig", version = "0.15.1" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version = "12.1.0" }

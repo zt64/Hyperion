@@ -14,5 +14,14 @@ ij_smart_tabs = false
 ij_visual_guides = none
 ij_wrap_on_typing = false
 
+[*.{kt,kts}]
+ij_kotlin_allow_trailing_comma = false
+ij_kotlin_allow_trailing_comma_on_call_site = false
+ktlint_code_style = ktlint_official
+ktlint_standard_no-wildcard-imports = disabled
+ktlint_standard_string-template-indent = disabled
+ktlint_standard_multiline-expression-wrapping = disabled
+compose_allowed_composition_locals = LocalSnackbarHostState
+
 [*.yml]
 indent_size = 2

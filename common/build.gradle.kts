@@ -135,6 +135,8 @@ dependencies {
     debugApi(compose.preview)
     debugImplementation(libs.compose.runtime.tracing)
     debugImplementation(libs.settings.test)
+
+    ktlintRuleset(libs.ktlint.compose.rules)
 }
 
 multiplatformResources {

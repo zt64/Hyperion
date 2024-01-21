@@ -8,11 +8,14 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.compose) apply false
     alias(libs.plugins.moko.resources) apply false
+    alias(libs.plugins.ktlint)
 }
 
 version = "1.0.0"
 
 subprojects {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs += listOf(
@@ -21,4 +24,8 @@ subprojects {
             )
         }
     }
+}
+
+ktlint {
+    version = "1.1.1"
 }

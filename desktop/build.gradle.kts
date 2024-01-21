@@ -12,6 +12,8 @@ kotlin {
 dependencies {
     implementation(projects.common)
     implementation(compose.material3)
+
+    ktlintRuleset(libs.ktlint.compose.rules)
 }
 
 compose.desktop {

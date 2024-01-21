@@ -65,6 +65,7 @@ subprojects {
             val implementation by configurations
 
             implementation(rootProject.projects.common)
+            ktlintRuleset(libs.ktlint.compose.rules)
         }
 
         composeOptions.kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
