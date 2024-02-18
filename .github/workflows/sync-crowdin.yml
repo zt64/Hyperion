@@ -5,7 +5,7 @@ on:
     branches:
       - 'main'
     paths:
-      - 'common/src/commonMain/MR/base/strings.xml'
+      - 'common/src/commonMain/moko-resources/base/strings.xml'
       - '.github/workflows/sync-crowdin.yml'
   schedule:
     - cron: "0 17 * * 6" # At 17:00 on Saturday.
