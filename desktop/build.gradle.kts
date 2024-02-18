@@ -33,8 +33,7 @@ compose.desktop {
                 "java.management",
                 "java.prefs",
                 "java.logging",
-                "java.net.http",
-                "jdk.xml.dom"
+                "java.net.http"
             )
 
             targetFormats(

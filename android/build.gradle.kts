@@ -2,6 +2,7 @@
 
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
+import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 
 subprojects {
@@ -15,13 +16,13 @@ subprojects {
     kotlinExtension.apply {
         sourceSets.all {
             languageSettings {
-                enableLanguageFeature("ContextReceivers")
+                enableLanguageFeature(LanguageFeature.ContextReceivers.name)
                 optIn("androidx.compose.material3.ExperimentalMaterial3Api")
                 optIn("androidx.compose.foundation.ExperimentalFoundationApi")
             }
         }
 
-        jvmToolchain(17)
+        jvmToolchain(libs.versions.jvm.get().toInt())
     }
 
     configure<ApplicationExtension> {
@@ -68,7 +69,8 @@ subprojects {
             ktlintRuleset(libs.ktlint.compose.rules)
         }
 
-        composeOptions.kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+        composeOptions.kotlinCompilerExtensionVersion =
+            libs.versions.compose.compiler.get()
     }
 
     configure<ApplicationAndroidComponentsExtension> {
