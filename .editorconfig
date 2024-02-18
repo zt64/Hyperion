@@ -6,22 +6,25 @@ indent_style = space
 insert_final_newline = false
 max_line_length = 100
 tab_width = 4
-ij_continuation_indent_size = 4
-ij_formatter_off_tag = @formatter:off
-ij_formatter_on_tag = @formatter:on
-ij_formatter_tags_enabled = true
+ij_continuation_indent_size = 8
 ij_smart_tabs = false
-ij_visual_guides = none
 ij_wrap_on_typing = false
 
 [*.{kt,kts}]
 ij_kotlin_allow_trailing_comma = false
 ij_kotlin_allow_trailing_comma_on_call_site = false
 ktlint_code_style = ktlint_official
+ktlint_experimental = enabled
 ktlint_standard_no-wildcard-imports = disabled
 ktlint_standard_string-template-indent = disabled
 ktlint_standard_multiline-expression-wrapping = disabled
-compose_allowed_composition_locals = LocalSnackbarHostState
+ktlint_standard_function-expression-body = disabled
+ktlint_function_signature_body_expression_wrapping = default
+ktlint_function_naming_ignore_when_annotated_with = Composable
+compose_allowed_composition_locals = LocalSnackbarHostState,LocalWindowSizeClass
+
+[*.xml]
+ij_xml_continuation_indent_size = 4
 
 [*.yml]
 indent_size = 2
