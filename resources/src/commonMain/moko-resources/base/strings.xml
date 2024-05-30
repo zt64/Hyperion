@@ -59,6 +59,7 @@
     <string name="community">Community</string>
     <string name="channels">Channels</string>
     <string name="sponsor_block" translatable="false">SponsorBlock</string>
+    <string name="dearrow" translatable="false">Dearrow</string>
     <string name="history">History</string>
     <string name="view_all">View all</string>
     <string name="recently_added">Recently added</string>
@@ -75,7 +76,8 @@
     <string name="library_sign_in_title">Enjoy your favorite videos</string>
     <string name="library_sign_in_body">Sign in to access your personal library of videos</string>
     <string name="feed_sign_in_title">Don\'t miss new videos</string>
-    <string name="feed_sign_in_body">Sign in to see updates from your favorite YouTube channels</string>
+    <string name="feed_sign_in_body">Sign in to see updates from your favorite YouTube channels
+    </string>
     <string name="popular">Popular</string>
     <string name="recently_uploaded">Recently uploaded</string>
     <string name="show_related_videos">Show related videos</string>
@@ -131,9 +133,13 @@
     <string name="subscriptions">Subscriptions</string>
     <string name="shared_content">Shared content</string>
     <string name="replies_to_my_comments">Replies to my comments</string>
-    <string name="subscriptions_notification_desc">Notify me about activity from the channels I\'m subscribed too</string>
+    <string name="subscriptions_notification_desc">Notify me about activity from the channels I\'m
+        subscribed too
+    </string>
     <string name="mention_notification_desc">Notify me when others mention my channel</string>
-    <string name="shared_content_notification_desc">Notify me when others share my content on their channels</string>
+    <string name="shared_content_notification_desc">Notify me when others share my content on their
+        channels
+    </string>
     <string name="reply_notification_desc">Notify me about replies to my comments</string>
     <string name="cancel">Cancel</string>
     <string name="shorts">Shorts</string>
@@ -144,4 +150,7 @@
     <string name="remove">Remove</string>
     <string name="reply">Reply</string>
     <string name="unsubscribe">Unsubscribe</string>
+    <string name="views">Views</string>
+    <string name="delete">Delete</string>
+    <string name="delete_comment">Delete comment</string>
 </resources>

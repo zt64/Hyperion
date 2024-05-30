@@ -40,10 +40,6 @@ kotlin {
                 api(libs.coil.network.ktor)
                 api(libs.kotlinx.collections.immutable)
 
-                api(libs.moko.resources.compose.get().toString()) {
-                    exclude(group = "org.jetbrains.compose.material", module = "material")
-                }
-
                 api(libs.settings.noarg)
                 api(libs.settings.coroutines)
 
