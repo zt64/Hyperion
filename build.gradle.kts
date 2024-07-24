@@ -1,38 +1,40 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
-    alias(libs.plugins.kotlin.multiplatform) apply false
-    alias(libs.plugins.kotlin.android) apply false
-    alias(libs.plugins.kotlin.jvm) apply false
+    // Kotlin
+    // alias(libs.plugins.kotlin.android) apply false
+    // alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.serialization) apply false
-    alias(libs.plugins.kotlin.parcelize) apply false
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.android.library) apply false
-    alias(libs.plugins.compose) apply false
+    // alias(libs.plugins.kotlin.parcelize) apply false
+
+    // Android
+    // alias(libs.plugins.android.application) apply false
+    // alias(libs.plugins.android.library) apply false
+
+    // Other
+    alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.compose.jb) apply false
     alias(libs.plugins.moko.resources) apply false
     alias(libs.plugins.ktlint) apply false
 }
 
 allprojects {
-    group = "dev.zt64"
+    group = "dev.zt64.hyperion"
     version = "1.0.0"
-}
 
-subprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
     configure<KtlintExtension> {
-        version = "1.1.1"
+        version = rootProject.libs.versions.ktlint
     }
+}
 
-    tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions {
-            freeCompilerArgs += listOf(
-                "-P",
-                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=" +
-                    "${layout.buildDirectory.file("report")}"
-            )
+subprojects {
+    tasks.withType<KotlinJvmCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.fromTarget(rootProject.libs.versions.jvm.get()))
         }
     }
 }

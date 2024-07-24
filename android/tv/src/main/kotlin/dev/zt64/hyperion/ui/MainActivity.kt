@@ -5,19 +5,46 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Subscriptions
+import androidx.compose.material.icons.filled.VideoLibrary
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.tv.foundation.lazy.list.TvLazyColumn
 import androidx.tv.foundation.lazy.list.TvLazyRow
-import androidx.tv.material3.*
+import androidx.tv.material3.CardLayoutDefaults
+import androidx.tv.material3.DrawerValue
+import androidx.tv.material3.Icon
+import androidx.tv.material3.MaterialTheme
+import androidx.tv.material3.NavigationDrawer
+import androidx.tv.material3.StandardCardLayout
+import androidx.tv.material3.Surface
+import androidx.tv.material3.Text
+import androidx.tv.material3.rememberDrawerState
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.theme.HyperionTheme
 
@@ -53,7 +80,7 @@ fun Hyperion() {
                         fun Item(
                             label: String,
                             icon: ImageVector,
-                            selected: Boolean = false,
+                            selected: Boolean = false
                         ) {
                             var selected by remember { mutableStateOf(selected) }
                             val elevation by animateDpAsState(
@@ -71,14 +98,14 @@ fun Hyperion() {
                                         .padding(12.dp)
                                         .selectable(
                                             selected = selected,
-                                            onClick = { selected = !selected },
+                                            onClick = { selected = !selected }
                                         ),
                                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Icon(
                                         imageVector = icon,
-                                        contentDescription = null,
+                                        contentDescription = null
                                     )
 
                                     Text(
@@ -133,7 +160,9 @@ fun Hyperion() {
                                     imageCard = {
                                         CardLayoutDefaults.ImageCard(
                                             onClick = {},
-                                            interactionSource = remember { MutableInteractionSource() },
+                                            interactionSource = remember {
+                                                MutableInteractionSource()
+                                            }
                                         ) {
                                             ShimmerImage(
                                                 modifier = Modifier

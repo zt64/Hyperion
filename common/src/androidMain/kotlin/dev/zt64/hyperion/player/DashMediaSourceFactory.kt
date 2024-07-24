@@ -9,7 +9,10 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DataSource
 import androidx.media3.exoplayer.dash.DashMediaSource
-import androidx.media3.exoplayer.dash.manifest.*
+import androidx.media3.exoplayer.dash.manifest.BaseUrl
+import androidx.media3.exoplayer.dash.manifest.RangedUri
+import androidx.media3.exoplayer.dash.manifest.Representation
+import androidx.media3.exoplayer.dash.manifest.SegmentBase
 import androidx.media3.exoplayer.drm.DefaultDrmSessionManagerProvider
 import androidx.media3.exoplayer.drm.DrmSessionManagerProvider
 import androidx.media3.exoplayer.source.MediaSource
@@ -23,15 +26,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 @UnstableApi
-class DashMediaSourceFactory(
+internal class DashMediaSourceFactory(
     val dataSourceFactory: DataSource.Factory,
     private val repository: InnerTubeRepository
 ) : MediaSource.Factory {
     private var drmSessionManagerProvider: DrmSessionManagerProvider =
         DefaultDrmSessionManagerProvider()
-    private var loadErrorHandlingPolicy: LoadErrorHandlingPolicy = DefaultLoadErrorHandlingPolicy()
+    private var loadErrorHandlingPolicy: LoadErrorHandlingPolicy =
+        DefaultLoadErrorHandlingPolicy()
 
-    private val factory = DashMediaSource.Factory(dataSourceFactory)
+    private val factory = DashMediaSource
+        .Factory(dataSourceFactory)
         .setLoadErrorHandlingPolicy(loadErrorHandlingPolicy)
         .setDrmSessionManagerProvider(drmSessionManagerProvider)
 
@@ -40,20 +45,23 @@ class DashMediaSourceFactory(
             this.loadErrorHandlingPolicy = loadErrorHandlingPolicy
         }
 
-    override fun setDrmSessionManagerProvider(drmSessionManagerProvider: DrmSessionManagerProvider) =
-        apply {
-            this.drmSessionManagerProvider = drmSessionManagerProvider
-        }
+    override fun setDrmSessionManagerProvider(
+        drmSessionManagerProvider: DrmSessionManagerProvider
+    ) = apply {
+        this.drmSessionManagerProvider = drmSessionManagerProvider
+    }
 
     override fun createMediaSource(mediaItem: MediaItem): MediaSource {
-        val formats = runBlocking(Dispatchers.IO) {
-            repository.getVideo(mediaItem.mediaId)
-        }.formats
+        val formats =
+            runBlocking(Dispatchers.IO) {
+                repository.getVideo(mediaItem.mediaId)
+            }.formats
 
         val video = formats.filterIsInstance<DomainFormat.Video>().first()
-        val audio = formats.filterIsInstance<DomainFormat.Audio>().first {
-            it.audioQuality == DomainFormat.Audio.AudioQuality.LOW
-        }
+        val audio =
+            formats.filterIsInstance<DomainFormat.Audio>().first {
+                it.audioQuality == DomainFormat.Audio.AudioQuality.LOW
+            }
 
         val videoItem = MediaItem.fromUri(video.url)
         val audioItem = MediaItem.fromUri(audio.url)
@@ -64,9 +72,13 @@ class DashMediaSourceFactory(
         val audioSource = mediaSourceFactory.createMediaSource(audioItem)
 
         return MergingMediaSource(
-            /* adjustPeriodTimeOffsets = */ true,
-            /* clipDurations = */ true,
-            /* ...mediaSources = */ videoSource, audioSource
+            // adjustPeriodTimeOffsets =
+            true,
+            // clipDurations =
+            true,
+            // ...mediaSources =
+            videoSource,
+            audioSource
         )
 
 //        val cpn = generateCpn()
@@ -151,35 +163,46 @@ class DashMediaSourceFactory(
         val (mimeType, end) = mimeType.split("; codecs=\"")
         val codecs = end.dropLast(1)
 
-        val uri = Uri.Builder()
+        val uri = Uri
+            .Builder()
             .path(url)
             .appendQueryParameter("cpn", cpn)
             .build()
             .toString()
 
-        val segmentBase = SegmentBase.SingleSegmentBase(
-            /* initialization = */ RangedUri(
-                null,
-                initRange.start,
-                initRange.endInclusive
-            ),
-            /* timescale = */ 1,
-            /* presentationTimeOffset = */ 0,
-            /* indexStart = */ indexRange.start,
-            /* indexLength = */ indexRange.endInclusive
-        )
+        val segmentBase =
+            SegmentBase.SingleSegmentBase(
+                // initialization =
+                RangedUri(
+                    null,
+                    initRange.start,
+                    initRange.endInclusive
+                ),
+                // timescale =
+                1,
+                // presentationTimeOffset =
+                0,
+                // indexStart =
+                indexRange.start,
+                // indexLength =
+                indexRange.endInclusive
+            )
 
         return Representation.newInstance(
-            /* revisionId = */ Representation.REVISION_ID_DEFAULT,
-            /* format = */ formatBuilder
+            // revisionId =
+            Representation.REVISION_ID_DEFAULT,
+            // format =
+            formatBuilder
                 .setId(itag)
                 .setCodecs(codecs)
                 .setAverageBitrate(averageBitrate)
                 .setPeakBitrate(bitrate)
                 .setSampleMimeType(mimeType)
                 .build(),
-            /* baseUrls = */ listOf(BaseUrl(uri)),
-            /* segmentBase = */ segmentBase
+            // baseUrls =
+            listOf(BaseUrl(uri)),
+            // segmentBase =
+            segmentBase
         )
     }
 

@@ -6,49 +6,65 @@ import androidx.compose.runtime.setValue
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.get
 import com.russhwolf.settings.set
+import kotlin.enums.enumEntries
 import kotlin.reflect.KProperty
 
 private typealias Getter<T> = (key: String, defaultValue: T) -> T
 private typealias Setter<T> = (key: String, newValue: T) -> Unit
 
 @Suppress("SameParameterValue", "MemberVisibilityCanBePrivate")
-abstract class BasePreferenceManager(protected val settings: Settings) {
-    protected fun preference(key: String?, defaultValue: String) = PreferenceProvider(
+abstract class BasePreferenceManager(val settings: Settings) {
+    protected fun preference(
+        key: String,
+        defaultValue: String
+    ) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = settings::get,
         setter = settings::set
     )
 
-    protected fun preference(key: String?) = PreferenceProvider<String?>(
+    protected fun preference(key: String) = Preference<String?>(
         key = key,
         defaultValue = null,
-        getter = { key, defaultValue -> settings.getStringOrNull(key) ?: defaultValue },
+        getter = { actualKey, defaultValue -> settings.getStringOrNull(actualKey) ?: defaultValue },
         setter = settings::set
     )
 
-    protected fun preference(key: String?, defaultValue: Boolean) = PreferenceProvider(
+    protected fun preference(
+        key: String,
+        defaultValue: Boolean
+    ) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = settings::get,
         setter = settings::set
     )
 
-    protected fun preference(key: String?, defaultValue: Int) = PreferenceProvider(
+    protected fun preference(
+        key: String,
+        defaultValue: Int
+    ) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = settings::get,
         setter = settings::set
     )
 
-    protected fun preference(key: String?, defaultValue: Float) = PreferenceProvider(
+    protected fun preference(
+        key: String,
+        defaultValue: Float
+    ) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = settings::get,
         setter = settings::set
     )
 
-    protected fun preference(key: String?, defaultValue: Long) = PreferenceProvider(
+    protected fun preference(
+        key: String,
+        defaultValue: Long
+    ) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = settings::get,
@@ -56,24 +72,14 @@ abstract class BasePreferenceManager(protected val settings: Settings) {
     )
 
     protected inline fun <reified E : Enum<E>> preference(
-        key: String?,
+        key: String,
         defaultValue: E
-    ): PreferenceProvider<E> {
-        return PreferenceProvider(
-            key = key,
-            defaultValue = defaultValue,
-            getter = settings::get,
-            setter = settings::set
-        )
-    }
-
-    protected fun preference(defaultValue: Boolean) = preference(null, defaultValue)
-    protected fun preference(defaultValue: Int) = preference(null, defaultValue)
-    protected fun preference(defaultValue: Float) = preference(null, defaultValue)
-    protected fun preference(defaultValue: Long) = preference(null, defaultValue)
-    protected inline fun <reified E : Enum<E>> preference(defaultValue: E): PreferenceProvider<E> {
-        return preference(null, defaultValue)
-    }
+    ) = Preference(
+        key = key,
+        defaultValue = defaultValue,
+        getter = settings::get,
+        setter = { actualKey, value -> settings.putEnum(actualKey, value) }
+    )
 
     protected class Preference<T>(
         private val key: String,
@@ -83,49 +89,45 @@ abstract class BasePreferenceManager(protected val settings: Settings) {
     ) {
         private var value by mutableStateOf(getter(key, defaultValue))
 
-        operator fun getValue(thisRef: Any, property: KProperty<*>) = value
-        operator fun setValue(thisRef: Any, property: KProperty<*>, value: T) {
+        operator fun getValue(
+            thisRef: Any,
+            property: KProperty<*>
+        ) = value
+
+        operator fun setValue(
+            thisRef: Any,
+            property: KProperty<*>,
+            value: T
+        ) {
             this.value = value
             setter(key, value)
-        }
-    }
-
-    protected class PreferenceProvider<T>(
-        private val key: String?,
-        private val defaultValue: T,
-        private val getter: Getter<T>,
-        private val setter: Setter<T>
-    ) {
-        operator fun provideDelegate(thisRef: Any, property: KProperty<*>): Preference<T> {
-            return Preference(
-                key = key ?: property.name.camelToSnakeCase(),
-                defaultValue = defaultValue,
-                getter = getter,
-                setter = setter
-            )
         }
     }
 
     fun clear() = settings.clear()
 }
 
-fun String.camelToSnakeCase(): String {
-    val pattern = "(?<=.)[A-Z]".toRegex()
-    return replace(pattern, "_$0").lowercase()
+@OptIn(ExperimentalStdlibApi::class)
+inline fun <reified E : Enum<E>> Settings.getEnum(
+    key: String,
+    defaultValue: E
+): E = enumEntries<E>()[getInt(key, defaultValue.ordinal)]
+
+inline fun <reified E : Enum<E>> Settings.putEnum(
+    key: String,
+    value: E
+) {
+    putInt(key, value.ordinal)
 }
 
-inline fun <reified E : Enum<E>> Settings.getEnum(key: String, defaultValue: E): E {
-    return enumValueOf(getString(key, defaultValue.name))
-}
+inline operator fun <reified E : Enum<E>> Settings.get(
+    key: String,
+    defaultValue: E
+): E = getEnum(key, defaultValue)
 
-inline fun <reified E : Enum<E>> Settings.putEnum(key: String, value: E) {
-    putString(key, value.name)
-}
-
-inline operator fun <reified E : Enum<E>> Settings.get(key: String, defaultValue: E): E {
-    return getEnum(key, defaultValue)
-}
-
-inline operator fun <reified E : Enum<E>> Settings.set(key: String, value: E) {
+inline operator fun <reified E : Enum<E>> Settings.set(
+    key: String,
+    value: E
+) {
     putEnum(key, value)
 }

@@ -2,7 +2,15 @@ package dev.zt64.hyperion.ui.component
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material3.Icon
@@ -17,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.screen.TagScreen
 import dev.zt64.hyperion.ui.tooling.HyperionPreview
@@ -32,9 +40,7 @@ fun TagCard(
 
     TagCard(
         tag = tag,
-        onClick = {
-            navigator.push(TagScreen(tag.name))
-        },
+        onClick = { navigator.push(TagScreen(tag.name)) },
         modifier = modifier
     )
 }

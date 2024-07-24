@@ -2,25 +2,49 @@ package dev.zt64.hyperion.ui.component.player
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.ClosedCaption
+import androidx.compose.material.icons.filled.ClosedCaptionOff
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Fullscreen
+import androidx.compose.material.icons.filled.FullscreenExit
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
-import dev.zt64.hyperion.ui.model.IPlayerScreenModel
+import dev.zt64.hyperion.resources.MR
+import dev.zt64.hyperion.ui.component.SeekBar
+import dev.zt64.hyperion.ui.model.PlayerScreenModel
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun PlayerControls(
-    model: IPlayerScreenModel,
+    model: PlayerScreenModel,
     onClickCollapse: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     // val model: IPlayerScreenModel = getScreenModel()
     //
@@ -32,8 +56,8 @@ fun PlayerControls(
         showCaptions = model.showCaptions,
         onClickCollapse = onClickCollapse,
         onClickFullscreen = model::toggleFullscreen,
-        onClickSkipBackward = model::skipBackward,
-        onClickSkipForward = model::skipForward,
+        onClickSkipBackward = model::seekBackward,
+        onClickSkipForward = model::seekForward,
         onClickPlayPause = model::togglePlay,
         onClickCaptions = model::toggleCaptions,
         onClickOptions = model::showOptions,
@@ -57,7 +81,7 @@ fun PlayerControls(
     onClickCaptions: () -> Unit,
     onClickOptions: () -> Unit,
     onSeek: (Duration) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier.padding(6.dp)
@@ -156,15 +180,15 @@ fun PlayerControls(
                 var seekPosition by remember { mutableStateOf(position) }
                 val buffered by remember { derivedStateOf { position + 10.seconds } }
 
-                // SeekBar(
-                //     modifier = Modifier.weight(1f),
-                //     duration = duration,
-                //     progress = if (isDragged) seekPosition else position,
-                //     buffered = buffered,
-                //     onSeek = { seekPosition = it },
-                //     onSeekFinished = { onSeek(seekPosition) },
-                //     interactionSource = interactionSource
-                // )
+                SeekBar(
+                    modifier = Modifier.weight(1f),
+                    duration = duration,
+                    progress = if (isDragged) seekPosition else position,
+                    buffered = buffered,
+                    onSeek = { seekPosition = it },
+                    onSeekFinished = { onSeek(seekPosition) },
+                    interactionSource = interactionSource
+                )
 
                 IconButton(onClick = onClickFullscreen) {
                     if (isFullscreen) {

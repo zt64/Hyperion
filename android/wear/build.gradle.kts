@@ -6,6 +6,6 @@ android {
 
 dependencies {
     implementation(libs.wear.foundation)
-    implementation(libs.wear.material3)
+    implementation(libs.wear.m3)
     implementation(libs.wear.ui.tooling)
 }

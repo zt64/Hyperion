@@ -10,9 +10,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.AdaptiveTopBar
 import dev.zt64.hyperion.ui.model.AddAccountScreenModel
 import dev.zt64.hyperion.ui.model.AddAccountScreenModel.State
@@ -20,7 +20,7 @@ import dev.zt64.hyperion.ui.model.AddAccountScreenModel.State
 object AddAccountScreen : Screen {
     @Composable
     override fun Content() {
-        val model: AddAccountScreenModel = getScreenModel()
+        val model: AddAccountScreenModel = koinScreenModel()
 
         when (val state = model.state) {
             is State.Loading -> Loading()
@@ -28,7 +28,6 @@ object AddAccountScreen : Screen {
                 code = state.code,
                 onClickActivate = model::activate
             )
-
             is State.Error -> ErrorScreenContent(state.error)
         }
     }

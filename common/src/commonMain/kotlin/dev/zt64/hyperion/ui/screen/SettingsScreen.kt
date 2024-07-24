@@ -6,7 +6,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
@@ -14,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -24,13 +30,19 @@ import dev.zt64.hyperion.ui.component.AdaptiveTopBar
 import dev.zt64.hyperion.ui.component.BackButton
 import dev.zt64.hyperion.ui.model.SettingsScreenModel
 import dev.zt64.hyperion.ui.navigation.SettingsSection
-import dev.zt64.hyperion.ui.screen.settings.*
+import dev.zt64.hyperion.ui.screen.settings.AboutScreen
+import dev.zt64.hyperion.ui.screen.settings.AccountsScreen
+import dev.zt64.hyperion.ui.screen.settings.AppearanceScreen
+import dev.zt64.hyperion.ui.screen.settings.BackupRestoreScreen
+import dev.zt64.hyperion.ui.screen.settings.DearrowScreen
+import dev.zt64.hyperion.ui.screen.settings.GeneralScreen
 import dev.zt64.hyperion.ui.screen.settings.NotificationsScreen
+import dev.zt64.hyperion.ui.screen.settings.SponsorBlockScreen
 
 object SettingsScreen : Screen {
     @Composable
     override fun Content() {
-        val model: SettingsScreenModel = getScreenModel()
+        val model: SettingsScreenModel = koinScreenModel()
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
         val snackbarHostState = remember { SnackbarHostState() }
         val navigator = LocalNavigator.currentOrThrow
@@ -55,13 +67,14 @@ object SettingsScreen : Screen {
                             Text(
                                 stringResource(
                                     when (settingsNavigator.lastItem) {
+                                        GeneralScreen -> SettingsSection.GENERAL
                                         AboutScreen -> SettingsSection.ABOUT
                                         AccountsScreen -> SettingsSection.ACCOUNTS
                                         AppearanceScreen -> SettingsSection.APPEARANCE
                                         BackupRestoreScreen -> SettingsSection.BACKUP_RESTORE
-                                        GeneralScreen -> SettingsSection.GENERAL
                                         NotificationsScreen -> SettingsSection.NOTIFICATIONS
                                         SponsorBlockScreen -> SettingsSection.SPONSOR_BLOCK
+                                        DearrowScreen -> SettingsSection.DEARROW
                                         else -> SettingsSection
                                     }.label
                                 )
@@ -73,14 +86,15 @@ object SettingsScreen : Screen {
                 snackbarHost = { SnackbarHost(snackbarHostState) }
             ) { paddingValues ->
                 SlideTransition(settingsNavigator) {
+                    val scrollState = rememberScrollState()
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(paddingValues)
-                            .verticalScroll(rememberScrollState()),
-                    ) {
-                        it.Content()
-                    }
+                            .verticalScroll(scrollState),
+                        content = { it.Content() }
+                    )
                 }
             }
         }
@@ -106,11 +120,11 @@ object BaseSettingsScreen : Screen {
                                     SettingsSection.GENERAL -> GeneralScreen
                                     SettingsSection.NOTIFICATIONS -> NotificationsScreen
                                     SettingsSection.SPONSOR_BLOCK -> SponsorBlockScreen
+                                    SettingsSection.DEARROW -> DearrowScreen
                                     SettingsSection.GESTURES -> TODO()
                                 }
                             )
-                        }
-                        .padding(vertical = 12.dp),
+                        }.padding(vertical = 12.dp),
                     headlineContent = { Text(stringResource(destination.label)) },
                     leadingContent = {
                         Icon(

@@ -7,11 +7,10 @@ import androidx.paging.*
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dev.zt64.hyperion.domain.manager.AccountManager
-import dev.zt64.hyperion.domain.paging.BrowsePagingSource
-import dev.zt64.innertube.domain.model.Entity
 import dev.zt64.innertube.domain.repository.InnerTubeRepository
+import dev.zt64.innertube.model.SearchResult
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 
 class SearchScreenModel(
@@ -21,7 +20,7 @@ class SearchScreenModel(
 ) : ScreenModel {
     var suggestions = mutableStateListOf<String>()
         private set
-    var results: Flow<PagingData<Entity>> by mutableStateOf(emptyFlow())
+    var results: Flow<PagingData<SearchResult>> by mutableStateOf(flowOf(PagingData.empty()))
         private set
     var textFieldValue by mutableStateOf(TextFieldValue())
         private set
@@ -53,18 +52,43 @@ class SearchScreenModel(
     }
 
     fun selectSuggestion(suggestion: String) {
-        textFieldValue = TextFieldValue(
-            text = suggestion,
-            selection = TextRange(suggestion.length)
-        )
+        textFieldValue =
+            TextFieldValue(
+                text = suggestion,
+                selection = TextRange(suggestion.length)
+            )
 
         search()
     }
 
     fun search() {
-        results = Pager(pagingConfig) {
-            BrowsePagingSource { key -> innerTube.getSearchResults(textFieldValue.text, key) }
-        }.flow.cachedIn(screenModelScope)
+        results =
+            Pager(pagingConfig) {
+                // BrowsePagingSource { key -> innerTube.getSearchResults(textFieldValue.text, key) }
+                object : PagingSource<String, SearchResult>() {
+                    override suspend fun load(
+                        params: LoadParams<String>
+                    ): LoadResult<String, SearchResult> {
+                        val res = innerTube.getSearchResults(textFieldValue.text, params.key)
+
+                        return try {
+                            LoadResult.Page(
+                                data = res.results,
+                                prevKey = res.prevToken,
+                                nextKey = res.nextToken
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+
+                            LoadResult.Error(e)
+                        }
+                    }
+
+                    override fun getRefreshKey(state: PagingState<String, SearchResult>): String? {
+                        TODO("Not yet implemented")
+                    }
+                }
+            }.flow.cachedIn(screenModelScope)
 
         searchActive = false
     }

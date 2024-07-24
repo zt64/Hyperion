@@ -1,6 +1,7 @@
 package dev.zt64.hyperion.ui.component
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
 /**
  * A button that shares the given content.
@@ -11,10 +12,17 @@ import androidx.compose.runtime.Composable
  * @param label Optional label to show in the share sheet.
  */
 @Composable
-expect fun ShareButton(content: String, label: String? = null)
+expect fun ShareButton(
+    content: String,
+    modifier: Modifier = Modifier,
+    label: String? = null
+)
 
 @Composable
-expect fun FilledTonalShareButton(content: String, label: String? = null)
+expect fun FilledTonalShareButton(
+    content: String,
+    label: String? = null
+)
 
 @Composable
 internal expect fun ShareButtonIcon()

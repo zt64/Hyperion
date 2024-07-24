@@ -8,7 +8,10 @@ import kotlin.time.Duration
 const val WIDESCREEN_RATIO = 16f / 9f
 
 @Composable
-expect fun Player(state: PlayerState, modifier: Modifier = Modifier)
+expect fun Player(
+    state: PlayerState,
+    modifier: Modifier = Modifier
+)
 
 @Stable
 expect class PlayerState {

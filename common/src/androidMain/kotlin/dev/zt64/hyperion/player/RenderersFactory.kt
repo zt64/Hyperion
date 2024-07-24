@@ -14,7 +14,7 @@ import androidx.media3.exoplayer.video.MediaCodecVideoRenderer
 import androidx.media3.exoplayer.video.VideoRendererEventListener
 
 @UnstableApi
-class RenderersFactory(private val context: Context) : RenderersFactory {
+internal class RenderersFactory(private val context: Context) : RenderersFactory {
     override fun createRenderers(
         handler: Handler,
         videoListener: VideoRendererEventListener,
@@ -26,20 +26,31 @@ class RenderersFactory(private val context: Context) : RenderersFactory {
         val codecSelector = MediaCodecSelector.DEFAULT
 
         renderers += MediaCodecAudioRenderer(
-            /* context = */ context,
-            /* mediaCodecSelector = */ codecSelector,
-            /* eventHandler = */ handler,
-            /* eventListener = */ audioListener
+            // context =
+            context,
+            // mediaCodecSelector =
+            codecSelector,
+            // eventHandler =
+            handler,
+            // eventListener =
+            audioListener
         )
 
         renderers += MediaCodecVideoRenderer(
-            /* context = */ context,
-            /* mediaCodecSelector = */ codecSelector,
-            /* allowedJoiningTimeMs = */ 5000,
-            /* enableDecoderFallback = */ true,
-            /* eventHandler = */ handler,
-            /* eventListener = */ videoListener,
-            /* maxDroppedFramesToNotify = */ 50
+            // context =
+            context,
+            // mediaCodecSelector =
+            codecSelector,
+            // allowedJoiningTimeMs =
+            5000,
+            // enableDecoderFallback =
+            true,
+            // eventHandler =
+            handler,
+            // eventListener =
+            videoListener,
+            // maxDroppedFramesToNotify =
+            50
         )
 
         return renderers

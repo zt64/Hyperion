@@ -13,7 +13,7 @@ val LocalWindowSizeClass = staticCompositionLocalOf<WindowSizeClass> {
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-fun ProvideWindowSizeClass(
+internal fun ProvideWindowSizeClass(
     windowSizeClass: WindowSizeClass = calculateWindowSizeClass(),
     content: @Composable () -> Unit
 ) {

@@ -9,8 +9,6 @@ import dev.zt64.innertube.domain.repository.InnerTubeRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
-class HistoryScreenModel(
-    private val innerTube: InnerTubeRepository
-) : ScreenModel {
+class HistoryScreenModel(private val innerTube: InnerTubeRepository) : ScreenModel {
     val history: Flow<PagingData<DomainVideoPartial>> by mutableStateOf(emptyFlow())
 }

@@ -1,15 +1,29 @@
 package dev.zt64.hyperion.ui.model
 
-import androidx.compose.runtime.*
-import androidx.paging.*
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import dev.zt64.hyperion.domain.manager.*
+import dev.zt64.hyperion.domain.manager.AccountManager
+import dev.zt64.hyperion.domain.manager.DownloadManager
+import dev.zt64.hyperion.domain.manager.PreferencesManager
+import dev.zt64.hyperion.domain.manager.ShareManager
 import dev.zt64.hyperion.domain.model.Rating
 import dev.zt64.hyperion.domain.paging.BrowsePagingSource
-import dev.zt64.innertube.domain.model.*
+import dev.zt64.innertube.domain.model.DomainComment
+import dev.zt64.innertube.domain.model.DomainFormat
+import dev.zt64.innertube.domain.model.DomainVideo
+import dev.zt64.innertube.domain.model.DomainVideoPartial
 import dev.zt64.innertube.domain.repository.InnerTubeRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -21,72 +35,44 @@ enum class PlaybackState {
     Buffering,
     Playing,
     Paused,
-    Ended
-}
-
-interface IPlayerScreenModel : ScreenModel {
-    val state: PlayerState
-    val video: DomainVideo?
-    val isFullscreen: Boolean
-    val isPlaying: Boolean
-    val isLoading: Boolean
-    val playbackState: PlaybackState
-    val showFullDescription: Boolean
-    val showControls: Boolean
-    val showQualityPicker: Boolean
-    val showDownloadDialog: Boolean
-    val showCaptions: Boolean
-    val showCommentsSheet: Boolean
-    val duration: Duration
-    val position: Duration
-    val speed: Float
-    val repeatMode: Int
-
-    val relatedVideos: Flow<PagingData<DomainVideoPartial>>
-    val comments: Flow<PagingData<DomainComment>>
-
-    fun skipForward()
-    fun skipBackward()
-    fun skipNext()
-    fun skipPrevious()
-    fun seekTo(position: Duration)
-
-    fun togglePlay()
-    fun toggleFullscreen()
-    fun toggleCaptions()
-    fun toggleDescription()
-    fun toggleControls()
-    fun toggleLoop()
-
-    fun showComments()
-    fun hideComments()
-    fun showOptions()
-    fun hideOptions()
-    fun showDownloadDialog()
-    fun hideDownloadDialog()
-    fun shareVideo()
-    fun setPlaybackSpeed(speed: Float)
-    fun updateVote(rating: Rating)
-    fun selectFormat(format: DomainFormat.Video)
-    fun download()
-    fun toggleSubscription()
+    Idle
 }
 
 @Immutable
 sealed interface PlayerState {
     data object Loaded : PlayerState
+
     data object Loading : PlayerState
+
     data class Error(val exception: Exception) : PlayerState
 }
 
-expect class PlayerScreenModel internal constructor(videoId: String) : AbstractPlayerScreenModel
+expect class PlayerScreenModel internal constructor(videoId: String) : AbstractPlayerScreenModel {
+    fun seekForward()
+
+    fun seekBackward()
+
+    fun skipNext()
+
+    fun skipPrevious()
+
+    override fun seekTo(position: Duration)
+
+    override fun setPlaybackSpeed(speed: Float)
+
+    override fun selectFormat(format: DomainFormat.Video)
+
+    override fun togglePlay()
+}
 
 /**
  * Common screen model for the player screen that handles logic
  *
  * @property videoId
  */
-abstract class AbstractPlayerScreenModel(private val videoId: String) : IPlayerScreenModel, KoinComponent {
+abstract class AbstractPlayerScreenModel(private val videoId: String) :
+    ScreenModel,
+    KoinComponent {
     val accountManager = get<AccountManager>()
     val preferences = get<PreferencesManager>()
 
@@ -95,10 +81,14 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) : IPlayerS
     private val shareManager = get<ShareManager>()
     private val pagingConfig = get<PagingConfig>()
 
-    final override var state by mutableStateOf<PlayerState>(PlayerState.Loading)
+    var state by mutableStateOf<PlayerState>(PlayerState.Loading)
         protected set
 
-    final override var video by mutableStateOf<DomainVideo?>(null)
+    // queue
+    // var videoQueue = mutableStateListOf<DomainVideo>()
+    //     private set
+
+    var video by mutableStateOf<DomainVideo?>(null)
         protected set
 
     var videoFormats = mutableStateListOf<DomainFormat.Video>()
@@ -106,30 +96,42 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) : IPlayerS
     var videoFormat: DomainFormat.Video? = null
         private set
 
-    final override var isFullscreen by mutableStateOf(false)
+    var isFullscreen by mutableStateOf(false)
         private set
-    final override var showFullDescription by mutableStateOf(false)
+    var showFullDescription by mutableStateOf(false)
         private set
-    final override var showControls by mutableStateOf(false)
-    final override var showQualityPicker by mutableStateOf(false)
+    var showControls by mutableStateOf(false)
+    var showQualityPicker by mutableStateOf(false)
         protected set
-    final override var showDownloadDialog by mutableStateOf(false)
+    var showDownloadDialog by mutableStateOf(false)
         private set
-    final override var showCaptions by mutableStateOf(false)
+    var showCaptions by mutableStateOf(false)
         private set
-    final override var showCommentsSheet by mutableStateOf(false)
+    var showCommentsSheet by mutableStateOf(false)
         private set
-    final override var duration by mutableStateOf(Duration.ZERO)
+    var duration by mutableStateOf(Duration.ZERO)
         protected set
-    final override var position by mutableStateOf(Duration.ZERO)
+    var position by mutableStateOf(Duration.ZERO)
         protected set
-    final override var speed by mutableFloatStateOf(1f)
+    var speed by mutableFloatStateOf(1f)
         private set
 
-    final override var relatedVideos = emptyFlow<PagingData<DomainVideoPartial>>()
+    var relatedVideos = emptyFlow<PagingData<DomainVideoPartial>>()
         private set
-    final override var comments = emptyFlow<PagingData<DomainComment>>()
+    var comments = emptyFlow<PagingData<DomainComment>>()
         private set
+
+    var isLoading: Boolean by mutableStateOf(false)
+        protected set
+
+    var isPlaying: Boolean by mutableStateOf(false)
+        protected set
+
+    var loop: Boolean by mutableStateOf(false)
+        protected set
+
+    var playbackState: PlaybackState by mutableStateOf(PlaybackState.Idle)
+        protected set
 
     init {
         loadVideo(videoId)
@@ -162,71 +164,64 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) : IPlayerS
         }
     }
 
-    abstract fun updatePlayer()
-
-    override fun selectFormat(format: DomainFormat.Video) {
+    open fun selectFormat(format: DomainFormat.Video) {
         updatePlayer()
     }
 
-    final override fun showComments() {
+    fun showComments() {
         showCommentsSheet = true
     }
 
-    final override fun hideComments() {
+    fun hideComments() {
         showCommentsSheet = false
     }
 
-    final override fun showOptions() {
+    fun showOptions() {
         showQualityPicker = true
     }
 
-    final override fun hideOptions() {
+    fun hideOptions() {
         showQualityPicker = false
     }
 
-    final override fun showDownloadDialog() {
+    fun showDownloadDialog() {
         showDownloadDialog = true
     }
 
-    final override fun hideDownloadDialog() {
+    fun hideDownloadDialog() {
         showDownloadDialog = false
     }
 
-    final override fun toggleDescription() {
+    fun toggleDescription() {
         showFullDescription = !showFullDescription
     }
 
-    final override fun toggleControls() {
+    fun toggleControls() {
         showControls = !showControls
     }
 
-    final override fun toggleFullscreen() {
+    fun toggleFullscreen() {
         isFullscreen = !isFullscreen
     }
 
-    override fun toggleCaptions() {
+    fun toggleCaptions() {
         showCaptions = !showCaptions
     }
 
-    final override fun shareVideo() {
+    fun shareVideo() {
         shareManager.share(video!!.shareUrl, video!!.title)
     }
 
-    override fun setPlaybackSpeed(speed: Float) {
-        this.speed = speed
-    }
-
-    final override fun updateVote(rating: Rating) {
+    fun updateVote(rating: Rating) {
         screenModelScope.launch {
             try {
-
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 
-    final override fun download() {
+    fun download() {
         screenModelScope.launch {
             try {
                 downloadManager
@@ -236,7 +231,7 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) : IPlayerS
         }
     }
 
-    final override fun toggleSubscription() {
+    fun toggleSubscription() {
         screenModelScope.launch {
             try {
                 val channelId = video!!.author.id
@@ -257,5 +252,20 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) : IPlayerS
                 }
             }
         }.flow.cachedIn(screenModelScope)
+    }
+
+    /**
+     * Update the player with the current video
+     */
+    abstract fun updatePlayer()
+
+    abstract fun seekTo(position: Duration)
+
+    abstract fun togglePlay()
+
+    abstract fun toggleLoop()
+
+    open fun setPlaybackSpeed(speed: Float) {
+        this.speed = speed
     }
 }

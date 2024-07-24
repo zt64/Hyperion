@@ -1,8 +1,15 @@
 package dev.zt64.hyperion.ui.screen
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,18 +19,17 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import dev.zt64.hyperion.ui.component.AdaptiveTopBar
 import dev.zt64.hyperion.ui.component.LoadingIndicator
 import dev.zt64.hyperion.ui.component.VideoCard
 import dev.zt64.hyperion.ui.model.TagScreenModel
 import dev.zt64.hyperion.ui.model.TagScreenModel.State
-import org.koin.core.parameter.parametersOf
 
 data class TagScreen(private val tag: String) : Screen {
     @Composable
     override fun Content() {
-        val model = getScreenModel<TagScreenModel> { parametersOf(tag) }
+        val model: TagScreenModel = koinScreenModel()
 
         when (val state = model.state) {
             is State.Loading -> Loading()
@@ -50,7 +56,7 @@ data class TagScreen(private val tag: String) : Screen {
 
     @Composable
     private fun Loaded() {
-        val model = getScreenModel<TagScreenModel>()
+        val model: TagScreenModel = koinScreenModel()
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
         Scaffold(
@@ -65,10 +71,11 @@ data class TagScreen(private val tag: String) : Screen {
             val videos = model.videos.collectAsLazyPagingItems()
 
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = 14.dp),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(horizontal = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 item {

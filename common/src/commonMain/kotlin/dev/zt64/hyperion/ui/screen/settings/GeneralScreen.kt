@@ -12,18 +12,18 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import com.darkrockstudios.libraries.mpfilepicker.DirectoryPicker
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.SUPPORTS_PIP
+import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.setting.SwitchSetting
 import dev.zt64.hyperion.ui.model.SettingsScreenModel
 
 object GeneralScreen : Screen {
     @Composable
     override fun Content() {
-        val model: SettingsScreenModel = getScreenModel()
+        val model: SettingsScreenModel = koinScreenModel()
         val preferences = model.preferences
 
         if (SUPPORTS_PIP) {

@@ -5,12 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 
-val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState?> {
-    null
-}
+val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState?> { null }
 
 @Composable
-fun ProvideSnackbarHostState(
+internal fun ProvideSnackbarHostState(
     snackbarHostState: SnackbarHostState,
     content: @Composable () -> Unit
 ) {

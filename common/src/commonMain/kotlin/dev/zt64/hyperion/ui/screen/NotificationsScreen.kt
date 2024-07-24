@@ -3,23 +3,46 @@ package dev.zt64.hyperion.ui.screen
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.NotificationsNone
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.collectAsLazyPagingItems
 import app.cash.paging.compose.itemContentType
 import app.cash.paging.compose.itemKey
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.AdaptiveTopBar
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.model.NotificationsScreenModel
@@ -45,7 +68,7 @@ private class SheetState {
 object NotificationsScreen : Screen {
     @Composable
     override fun Content() {
-        val model: NotificationsScreenModel = getScreenModel()
+        val model: NotificationsScreenModel = koinScreenModel()
         val notificationsSheetState = remember { SheetState() }
 
         // NotificationSheet(notificationsSheetState)
@@ -53,7 +76,7 @@ object NotificationsScreen : Screen {
         Scaffold(
             topBar = {
                 AdaptiveTopBar(
-                    title = { Text(stringResource(MR.strings.notifications)) },
+                    title = { Text(stringResource(MR.strings.notifications)) }
                 )
             }
         ) { paddingValues ->
@@ -64,8 +87,11 @@ object NotificationsScreen : Screen {
                     modifier = Modifier.padding(paddingValues)
                 )
             } else {
+                val state = rememberLazyListState()
+
                 LazyColumn(
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier.padding(paddingValues),
+                    state = state
                 ) {
                     items(
                         count = notifications.itemCount,
@@ -73,12 +99,29 @@ object NotificationsScreen : Screen {
                         contentType = notifications.itemContentType()
                     ) { index ->
                         val notification = notifications[index] ?: return@items
+                        val dismissState = rememberSwipeToDismissBoxState()
 
-                        Notification(
-                            notification = notification,
-                            onClick = { },
-                            onLongClick = { notificationsSheetState.expand(notification) }
-                        )
+                        SwipeToDismissBox(
+                            state = dismissState,
+                            backgroundContent = {
+                                val color by animateColorAsState(
+                                    when (dismissState.targetValue) {
+                                        SwipeToDismissBoxValue.Settled -> {
+                                            MaterialTheme.colorScheme.surface
+                                        }
+                                        SwipeToDismissBoxValue.StartToEnd -> Color.Red
+                                        SwipeToDismissBoxValue.EndToStart -> Color.Red
+                                    }
+                                )
+                                Box(Modifier.fillMaxSize().background(color))
+                            }
+                        ) {
+                            Notification(
+                                notification = notification,
+                                onClick = { },
+                                onLongClick = { notificationsSheetState.expand(notification) }
+                            )
+                        }
                     }
                 }
             }
@@ -92,72 +135,37 @@ private fun Notification(
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
-    val dismissState = rememberDismissState()
-
-    SwipeToDismiss(
-        state = dismissState,
-        background = {
-            val color by animateColorAsState(
-                targetValue = when (dismissState.targetValue) {
-                    DismissValue.Default -> MaterialTheme.colorScheme.surface
-                    DismissValue.DismissedToEnd -> MaterialTheme.colorScheme.primary
-                    DismissValue.DismissedToStart -> MaterialTheme.colorScheme.primary
-                },
-                label = "Swipe to dismiss background color"
-            )
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color),
-                contentAlignment = Alignment.Center
-            ) {
-                // Crossfade(
-                //     targetState = dismissState.targetValue,
-                //     label = ""
-                // ) { value ->
-                //     when (value) {
-                //         DismissedToEnd -> TODO()
-                //         DismissedToStart -> TODO()
-                //         else -> {}
-                //     }
-                // }
-            }
-        },
-        dismissContent = {
-            ListItem(
-                modifier = Modifier.combinedClickable(
-                    onClick = onClick,
-                    onLongClick = onLongClick
-                ),
-                headlineContent = {
-                    BadgedBox(
-                        badge = {
-                            Badge(
-                                modifier = Modifier.align(Alignment.CenterStart)
-                            )
-                        }
-                    ) {
-                        Text(notification.header)
-                    }
-                },
-                supportingContent = notification.content?.let {
-                    {
-                        Text(it)
-                    }
-                },
-                leadingContent = {
-                    ShimmerImage(
-                        url = notification.leadingImage,
-                        contentDescription = null
-                    )
-                },
-                trailingContent = {
-                    ShimmerImage(
-                        url = notification.trailingImage,
-                        contentDescription = null
+    ListItem(
+        modifier = Modifier.combinedClickable(
+            onClick = onClick,
+            onLongClick = onLongClick
+        ),
+        headlineContent = {
+            BadgedBox(
+                badge = {
+                    Badge(
+                        modifier = Modifier.align(Alignment.CenterStart)
                     )
                 }
+            ) {
+                Text(notification.header)
+            }
+        },
+        supportingContent = notification.content?.let {
+            {
+                Text(it)
+            }
+        },
+        leadingContent = {
+            ShimmerImage(
+                url = notification.leadingImage,
+                contentDescription = null
+            )
+        },
+        trailingContent = {
+            ShimmerImage(
+                url = notification.trailingImage,
+                contentDescription = null
             )
         }
     )

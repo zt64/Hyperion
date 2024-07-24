@@ -1,8 +1,8 @@
 package dev.zt64.hyperion.di
 
+import dev.zt64.hyperion.httpClientEngineFactory
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineFactory
-import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.BrowserUserAgent
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -19,9 +19,12 @@ internal val httpModule = module {
         ignoreUnknownKeys = true
     }
 
-    fun provideEngineFactory(): HttpClientEngineFactory<*> = OkHttp
+    fun provideClientEngine(): HttpClientEngineFactory<*> = httpClientEngineFactory()
 
-    fun provideHttpClient(engineFactory: HttpClientEngineFactory<*>, json: Json): HttpClient {
+    fun provideHttpClient(
+        engineFactory: HttpClientEngineFactory<*>,
+        json: Json
+    ): HttpClient {
         return HttpClient(engineFactory) {
             BrowserUserAgent()
 
@@ -40,7 +43,7 @@ internal val httpModule = module {
         }
     }
 
-    singleOf(::provideEngineFactory)
+    singleOf(::provideClientEngine)
     singleOf(::provideJson)
     singleOf(::provideHttpClient)
 }

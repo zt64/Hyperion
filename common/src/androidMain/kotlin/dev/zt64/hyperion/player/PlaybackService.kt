@@ -23,7 +23,7 @@ import dev.zt64.hyperion.BuildKonfig
 import dev.zt64.innertube.domain.repository.InnerTubeRepository
 import org.koin.android.ext.android.inject
 
-class PlaybackService : MediaSessionService() {
+internal class PlaybackService : MediaSessionService() {
     private val innerTube: InnerTubeRepository by inject()
 
     private lateinit var cache: Cache
@@ -33,7 +33,9 @@ class PlaybackService : MediaSessionService() {
     override fun onCreate() {
         super.onCreate()
 
-        val params = DefaultTrackSelector.Parameters.getDefaults(application)
+        val params = DefaultTrackSelector
+            .Parameters
+            .getDefaults(application)
             .buildUpon()
             .clearVideoSizeConstraints()
             .clearViewportSizeConstraints()
@@ -42,35 +44,44 @@ class PlaybackService : MediaSessionService() {
         val trackSelectorFactory = AdaptiveTrackSelection.Factory()
         val trackSelector = DefaultTrackSelector(application, params, trackSelectorFactory)
 
-        val audioAttributes = AudioAttributes.Builder()
+        val audioAttributes = AudioAttributes
+            .Builder()
             .setUsage(C.USAGE_MEDIA)
             .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
             .build()
 
         cache = SimpleCache(
-            /* cacheDir = */ application.cacheDir.resolve("video"),
-            /* evictor = */ LeastRecentlyUsedCacheEvictor(CACHE_SIZE),
-            /* databaseProvider = */ StandaloneDatabaseProvider(application),
+            // cacheDir =
+            application.cacheDir.resolve("video"),
+            // evictor =
+            LeastRecentlyUsedCacheEvictor(CACHE_SIZE),
+            // databaseProvider =
+            StandaloneDatabaseProvider(application)
         )
 
-        player = ExoPlayer.Builder(
-            /* context = */ application,
-            /* renderersFactory = */ RenderersFactory(application),
-            /* mediaSourceFactory = */ buildMediaSourceFactory(cache, innerTube)
-        ).apply {
-            setTrackSelector(trackSelector)
-            setAudioAttributes(audioAttributes, true)
-            setUseLazyPreparation(true)
-            setLoadControl(buildLoadControl())
-            setWakeMode(C.WAKE_MODE_NETWORK)
-            setHandleAudioBecomingNoisy(true)
-            setSeekBackIncrementMs(15000)
-            setSeekForwardIncrementMs(15000)
-            setPauseAtEndOfMediaItems(false)
-            setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
-        }.build()
+        player = ExoPlayer
+            .Builder(
+                // context =
+                application,
+                // renderersFactory =
+                RenderersFactory(application),
+                // mediaSourceFactory =
+                buildMediaSourceFactory(cache, innerTube)
+            ).apply {
+                setTrackSelector(trackSelector)
+                setAudioAttributes(audioAttributes, true)
+                setUseLazyPreparation(true)
+                setLoadControl(buildLoadControl())
+                setWakeMode(C.WAKE_MODE_NETWORK)
+                setHandleAudioBecomingNoisy(true)
+                setSeekBackIncrementMs(15000)
+                setSeekForwardIncrementMs(15000)
+                setPauseAtEndOfMediaItems(false)
+                setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
+            }.build()
 
-        mediaSession = MediaSession.Builder(application, player)
+        mediaSession = MediaSession
+            .Builder(application, player)
             .setCallback(MediaSessionCallback())
             .build()
 
@@ -96,9 +107,7 @@ class PlaybackService : MediaSessionService() {
             mediaSession: MediaSession,
             controller: ControllerInfo,
             mediaItems: List<MediaItem>
-        ): ListenableFuture<List<MediaItem>> {
-            return Futures.immediateFuture(mediaItems)
-        }
+        ): ListenableFuture<List<MediaItem>> = Futures.immediateFuture(mediaItems)
     }
 
     private companion object {

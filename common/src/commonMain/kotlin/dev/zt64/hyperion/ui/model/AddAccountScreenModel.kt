@@ -6,13 +6,13 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import dev.zt64.hyperion.domain.manager.AccountManager
 import kotlinx.coroutines.launch
 
-class AddAccountScreenModel(
-    private val accountManager: AccountManager
-) : ScreenModel {
+class AddAccountScreenModel(private val accountManager: AccountManager) : ScreenModel {
     @Immutable
     sealed interface State {
         data object Loading : State
+
         data class Loaded(val code: String) : State
+
         data class Error(val error: Exception) : State
     }
 

@@ -5,10 +5,13 @@ import android.content.Intent
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-actual class ShareManager : KoinComponent {
+internal actual class ShareManager : KoinComponent {
     private val application: Application = get()
 
-    actual fun share(content: String, label: String?) {
+    actual fun share(
+        content: String,
+        label: String?
+    ) {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
 

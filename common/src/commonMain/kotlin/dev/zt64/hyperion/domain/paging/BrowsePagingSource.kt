@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import dev.zt64.innertube.domain.model.DomainBrowse
 
-class BrowsePagingSource<T : Any>(
+internal class BrowsePagingSource<T : Any>(
     private val getter: suspend (key: String?) -> DomainBrowse<T>
 ) : PagingSource<String, T>() {
     override suspend fun load(params: LoadParams<String>) = try {

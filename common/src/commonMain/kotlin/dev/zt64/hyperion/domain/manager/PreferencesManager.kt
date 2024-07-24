@@ -4,8 +4,6 @@ import com.russhwolf.settings.Settings
 import dev.zt64.hyperion.Platform
 import dev.zt64.hyperion.domain.manager.base.BasePreferenceManager
 import dev.zt64.hyperion.ui.theme.Theme
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 
 abstract class PreferencesManager(settings: Settings) : BasePreferenceManager(settings) {
     var visitorData by preference("visitor_data")
@@ -18,8 +16,8 @@ abstract class PreferencesManager(settings: Settings) : BasePreferenceManager(se
     var showDownloadButton by preference("show_download_button", true)
     var showRelatedVideos by preference("show_related_videos", true)
     var downloadDirectory by preference(
-        "download_directory",
-        try {
+        key = "download_directory",
+        defaultValue = try {
             Platform.getDownloadsDir().path
         } catch (e: Exception) {
             ""
@@ -49,20 +47,15 @@ abstract class PreferencesManager(settings: Settings) : BasePreferenceManager(se
     var sponsorBlockSkipTracking by preference("sponsor_block_skip_tracking", true)
     var sponsorBlockUserIdPrivate by preference("sponsor_block_user_id")
     var sponsorBlockUserIdPublic by preference("sponsor_block_user_id_public")
+
+    var dearrowEnabled by preference("dearrow_enabled", true)
+    var dearrowFetchingServiceUrl by preference(
+        "dearrow_fetching_service_url",
+        "https://dearrow.ajay.app"
+    )
+    var dearrowReplaceTitle by preference("dearrow_replace_title", true)
+    var dearrowReplaceThumbnail by preference("dearrow_replace_thumbnail", true)
+    var dearrowPrivateUserId by preference("dearrow_user_id")
 }
 
 internal class PreferencesManagerImpl : PreferencesManager(Settings())
-internal class PreferencesManagerPreviewImpl : PreferencesManager(Settings())
-
-private inline fun <reified E : Enum<E>> Settings.enum(
-    key: String? = null,
-    defaultValue: E
-): ReadWriteProperty<Any, E> = object : ReadWriteProperty<Any, E> {
-    override fun getValue(thisRef: Any, property: KProperty<*>): E {
-        return enumValues<E>()[getInt(key ?: property.name, defaultValue.ordinal)]
-    }
-
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: E) {
-        putInt(key ?: property.name, value.ordinal)
-    }
-}

@@ -1,6 +1,7 @@
 .gradle
 .idea
 .fleet
+.kotlin
 build
 local.properties
 /android/**/release/

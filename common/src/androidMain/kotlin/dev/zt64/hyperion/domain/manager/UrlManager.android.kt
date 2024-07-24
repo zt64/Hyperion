@@ -6,7 +6,7 @@ import androidx.core.net.toUri
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
-actual class UrlManager : KoinComponent {
+internal actual class UrlManager : KoinComponent {
     private val application: Application = get()
 
     actual fun openUrl(url: String) {

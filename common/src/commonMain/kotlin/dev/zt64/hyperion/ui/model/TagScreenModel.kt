@@ -18,7 +18,9 @@ class TagScreenModel(
     @Immutable
     sealed interface State {
         data object Loading : State
+
         data object Loaded : State
+
         data class Error(val exception: Exception) : State
     }
 
@@ -35,23 +37,25 @@ class TagScreenModel(
         state = State.Loading
 
         screenModelScope.launch {
-            state = try {
-                val response = innerTube.getTag(tag)
+            state =
+                try {
+                    val response = innerTube.getTag(tag)
 
-                this@TagScreenModel.tag = response.name
-                subtitle = response.subtitle
+                    this@TagScreenModel.tag = response.name
+                    subtitle = response.subtitle
 
-                videos = Pager(pagingConfig) {
-                    BrowsePagingSource { key ->
-                        if (key == null) response else innerTube.getTagContinuation(key)
-                    }
-                }.flow.cachedIn(screenModelScope)
+                    videos =
+                        Pager(pagingConfig) {
+                            BrowsePagingSource { key ->
+                                if (key == null) response else innerTube.getTagContinuation(key)
+                            }
+                        }.flow.cachedIn(screenModelScope)
 
-                State.Loaded
-            } catch (e: Exception) {
-                e.printStackTrace()
-                State.Error(e)
-            }
+                    State.Loaded
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    State.Error(e)
+                }
         }
     }
 }

@@ -11,8 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.domain.model.Rating
+import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.FilledTonalShareButton
 
 @Composable

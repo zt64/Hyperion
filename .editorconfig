@@ -9,10 +9,15 @@ tab_width = 4
 ij_continuation_indent_size = 8
 ij_smart_tabs = false
 ij_wrap_on_typing = false
+ij_any_line_comment_at_first_column = false
+ij_any_line_comment_add_space = true
+ij_any_block_comment_add_space = true
+ij_any_line_comment_add_space_on_reformat = true
 
 [*.{kt,kts}]
 ij_kotlin_allow_trailing_comma = false
 ij_kotlin_allow_trailing_comma_on_call_site = false
+ij_kotlin_line_break_after_multiline_when_entry = false
 ktlint_code_style = ktlint_official
 ktlint_experimental = enabled
 ktlint_standard_no-wildcard-imports = disabled
@@ -23,7 +28,7 @@ ktlint_function_signature_body_expression_wrapping = default
 ktlint_function_naming_ignore_when_annotated_with = Composable
 ktlint_chain_method_rule_force_multiline_when_chain_operator_count_greater_or_equal_than = 6
 ktlint_class_signature_rule_force_multiline_when_parameter_count_greater_or_equal_than = 3
-compose_allowed_composition_locals = LocalSnackbarHostState,LocalWindowSizeClass
+compose_allowed_composition_locals = LocalSnackbarHostState, LocalWindowSizeClass
 
 [*.xml]
 ij_xml_continuation_indent_size = 4

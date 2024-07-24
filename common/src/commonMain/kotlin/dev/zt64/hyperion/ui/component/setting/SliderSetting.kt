@@ -5,20 +5,23 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlin.reflect.KMutableProperty0
 
 @Composable
-fun SliderSetting(
-    modifier: Modifier = Modifier,
+internal fun SliderSetting(
     preference: KMutableProperty0<Float>,
     valueRange: ClosedFloatingPointRange<Float>,
-    steps: Int = 10,
     text: String,
+    modifier: Modifier = Modifier,
+    steps: Int = 10,
     label: @Composable ((Float) -> Unit) = {
         Text("%.1f".format(it))
     }

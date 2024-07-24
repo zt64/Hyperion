@@ -9,11 +9,13 @@ subprojects {
     val libs = rootProject.libs
 
     apply {
+        plugin("android-application")
         plugin(libs.plugins.kotlin.android.get().pluginId)
         plugin(libs.plugins.android.application.get().pluginId)
+        plugin(libs.plugins.compose.compiler.get().pluginId)
     }
 
-    kotlinExtension.apply {
+    with(kotlinExtension) {
         sourceSets.all {
             languageSettings {
                 enableLanguageFeature(LanguageFeature.ContextReceivers.name)
@@ -33,7 +35,7 @@ subprojects {
             minSdk = 21
             targetSdk = 34
             versionCode = 1
-            versionName = "0.0.1"
+            versionName = version.toString()
         }
 
         buildTypes {
@@ -58,19 +60,12 @@ subprojects {
             }
         }
 
-        buildFeatures {
-            compose = true
-        }
-
         dependencies {
             val implementation by configurations
 
             implementation(rootProject.projects.common)
             ktlintRuleset(libs.ktlint.compose.rules)
         }
-
-        composeOptions.kotlinCompilerExtensionVersion =
-            libs.versions.compose.compiler.get()
     }
 
     configure<ApplicationAndroidComponentsExtension> {

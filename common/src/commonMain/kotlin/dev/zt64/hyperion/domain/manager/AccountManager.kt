@@ -28,6 +28,8 @@ internal class AccountManagerImpl(
     }
 
     override suspend fun getCode(): String {
-        TODO()
+        val (id, secret) = innerTubeService.getClientInfo()
+
+        return innerTubeService.getUserCode(id, deviceId).userCode
     }
 }

@@ -24,7 +24,7 @@ fun VerticalProgressIndicator(
     modifier: Modifier = Modifier,
     color: Color = ProgressIndicatorDefaults.linearColor,
     trackColor: Color = ProgressIndicatorDefaults.linearTrackColor,
-    strokeCap: StrokeCap = ProgressIndicatorDefaults.LinearStrokeCap,
+    strokeCap: StrokeCap = ProgressIndicatorDefaults.LinearStrokeCap
 ) {
     val coercedProgress = progress.coerceIn(0f, 1f)
 
@@ -44,7 +44,7 @@ private fun DrawScope.drawLinearIndicator(
     endFraction: Float,
     color: Color,
     strokeWidth: Float,
-    strokeCap: StrokeCap,
+    strokeCap: StrokeCap
 ) {
     val width = size.width
     val height = size.height
@@ -68,7 +68,7 @@ private fun DrawScope.drawLinearIndicator(
                 start = Offset(xOffset, adjustedBarStart),
                 end = Offset(xOffset, adjustedBarEnd),
                 strokeWidth = strokeWidth,
-                cap = strokeCap,
+                cap = strokeCap
             )
         }
     }

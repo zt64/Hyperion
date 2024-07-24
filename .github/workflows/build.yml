@@ -28,7 +28,7 @@ permissions:
 
 jobs:
   verify:
-    name: "Verify"
+    name: "Check"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

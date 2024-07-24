@@ -8,13 +8,15 @@ import androidx.media3.datasource.cache.CacheDataSource
 import dev.zt64.innertube.domain.repository.InnerTubeRepository
 
 @UnstableApi
-fun buildMediaSourceFactory(cache: Cache, innerTube: InnerTubeRepository): DashMediaSourceFactory {
-    return DashMediaSourceFactory(
-        dataSourceFactory = CacheDataSource.Factory()
-            .setCache(cache)
-            .setCacheWriteDataSinkFactory(CacheDataSink.Factory().setCache(cache))
-            .setUpstreamDataSourceFactory(DefaultHttpDataSource.Factory())
-            .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR),
-        repository = innerTube
-    )
-}
+internal fun buildMediaSourceFactory(
+    cache: Cache,
+    innerTube: InnerTubeRepository
+): DashMediaSourceFactory = DashMediaSourceFactory(
+    dataSourceFactory = CacheDataSource
+        .Factory()
+        .setCache(cache)
+        .setCacheWriteDataSinkFactory(CacheDataSink.Factory().setCache(cache))
+        .setUpstreamDataSourceFactory(DefaultHttpDataSource.Factory())
+        .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR),
+    repository = innerTube
+)

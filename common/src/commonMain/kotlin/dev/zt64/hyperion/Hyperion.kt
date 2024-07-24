@@ -1,10 +1,16 @@
 package dev.zt64.hyperion
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -14,15 +20,30 @@ import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
 import cafe.adriel.voyager.transitions.FadeTransition
 import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.ProvideSnackbarHostState
-import dev.zt64.hyperion.ui.ProvideWindowSizeClass
 import dev.zt64.hyperion.ui.screen.BaseScreen
 import dev.zt64.hyperion.ui.theme.HyperionTheme
+import dev.zt64.innertube.network.service.InnerTubeService
+import org.koin.compose.koinInject
 
 @Composable
 fun Hyperion() {
     HyperionTheme {
-        ProvideWindowSizeClass {
-            Surface {
+        Surface(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            val innerTubeService: InnerTubeService = koinInject()
+            val state by innerTubeService.state.collectAsState()
+            val isReady by remember {
+                derivedStateOf { state is InnerTubeService.State.Initialized }
+            }
+
+            if (!isReady) {
+                Box(
+                    modifier = Modifier.wrapContentSize(Alignment.Center)
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else {
                 val windowSizeClass = LocalWindowSizeClass.current
                 val snackbarHostState = remember { SnackbarHostState() }
 
@@ -41,7 +62,7 @@ fun Hyperion() {
 
                             SnackbarHost(
                                 modifier = Modifier.align(Alignment.BottomCenter),
-                                hostState = snackbarHostState,
+                                hostState = snackbarHostState
                             )
                         }
                     }

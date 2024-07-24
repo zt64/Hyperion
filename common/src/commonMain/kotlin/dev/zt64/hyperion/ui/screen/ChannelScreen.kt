@@ -1,10 +1,26 @@
 package dev.zt64.hyperion.ui.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LeadingIconTab
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,11 +29,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.domain.model.channel.imageVector
 import dev.zt64.hyperion.domain.model.channel.title
+import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.AdaptiveTopBar
 import dev.zt64.hyperion.ui.component.ShareButton
 import dev.zt64.hyperion.ui.component.ShimmerImage
@@ -30,7 +46,8 @@ import org.koin.core.parameter.parametersOf
 data class ChannelScreen(private val id: String) : Screen {
     @Composable
     override fun Content() {
-        val model: ChannelScreenModel = getScreenModel { parametersOf(id) }
+        { parametersOf(id) }
+        val model: ChannelScreenModel = koinScreenModel()
 
         when (val state = model.state) {
             is State.Loaded -> Loaded(state.channel)
@@ -57,7 +74,7 @@ data class ChannelScreen(private val id: String) : Screen {
 
     @Composable
     private fun Loaded(channel: DomainChannel) {
-        val model: ChannelScreenModel = getScreenModel()
+        val model: ChannelScreenModel = koinScreenModel()
         val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
         Scaffold(
@@ -65,7 +82,7 @@ data class ChannelScreen(private val id: String) : Screen {
             topBar = {
                 AdaptiveTopBar(
                     title = { Text(channel.name) },
-                    actions = { ShareButton(channel.shareUrl, channel.name) },
+                    actions = { ShareButton(channel.shareUrl, label = channel.name) },
                     scrollBehavior = scrollBehavior
                 )
             }
@@ -82,8 +99,9 @@ data class ChannelScreen(private val id: String) : Screen {
                     ) {
                         channel.banner?.let { banner ->
                             ShimmerImage(
-                                modifier = Modifier
-                                    .aspectRatio(banner.width.toFloat() / banner.height.toFloat()),
+                                modifier = Modifier.aspectRatio(
+                                    banner.width.toFloat() / banner.height.toFloat()
+                                ),
                                 url = banner.url,
                                 contentDescription = channel.name
                             )
@@ -170,6 +188,5 @@ data class ChannelScreen(private val id: String) : Screen {
 
     @Composable
     private fun AboutTab() {
-
     }
 }

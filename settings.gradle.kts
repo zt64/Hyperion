@@ -15,22 +15,27 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven("https://androidx.dev/storage/compose-compiler/repository/")
     }
-    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+
+    // repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
 }
 
 rootProject.name = "Hyperion"
-include(":innertube")
-include(":ktor-brotli")
+
+include("api")
+include("ktor-brotli")
+
+include("resources")
 
 include(
-    ":common",
-    ":desktop"
+    "common",
+    "desktop"
 )
 
 include(
-    ":android",
-    ":android:tv",
-    ":android:mobile",
-    ":android:wear",
+    "android",
+    "android:tv",
+    "android:mobile",
+    "android:wear"
 )

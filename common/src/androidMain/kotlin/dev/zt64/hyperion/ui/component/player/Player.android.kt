@@ -1,17 +1,27 @@
 package dev.zt64.hyperion.ui.component.player
 
-import android.view.SurfaceView
 import androidx.annotation.FloatRange
+import androidx.compose.foundation.AndroidExternalSurface
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.Player
 import androidx.media3.common.Tracks
 import androidx.media3.common.util.Size
 import androidx.media3.common.util.UnstableApi
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -20,25 +30,21 @@ actual fun Player(
     state: PlayerState,
     modifier: Modifier
 ) {
-    AndroidView(
+    AndroidExternalSurface(
         modifier = Modifier
             .aspectRatio(WIDESCREEN_RATIO)
-            .then(modifier),
-        factory = { context ->
-            SurfaceView(context).apply {
-                state.player.setVideoSurfaceView(this)
-            }
-        }
-    )
+            .then(modifier)
+    ) {
+        onSurface { surface, _, _ -> state.player.setVideoSurface(surface) }
+    }
 }
 
 @Composable
-fun rememberPlayerState(player: Player): PlayerState {
-    return rememberSaveable { PlayerState(player) }
-}
+fun rememberPlayerState(player: Player): PlayerState = remember { PlayerState(player) }
 
 @Stable
-actual class PlayerState(internal val player: Player) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
+actual class PlayerState(internal val player: Player) :
+    CoroutineScope by CoroutineScope(Dispatchers.Main) {
     var isPlaying by mutableStateOf(player.isPlaying)
         private set
 
@@ -123,7 +129,10 @@ actual class PlayerState(internal val player: Player) : CoroutineScope by Corout
         }
 
         @UnstableApi
-        override fun onSurfaceSizeChanged(width: Int, height: Int) {
+        override fun onSurfaceSizeChanged(
+            width: Int,
+            height: Int
+        ) {
             this@PlayerState.surfaceSize = Size(width, height)
         }
     }

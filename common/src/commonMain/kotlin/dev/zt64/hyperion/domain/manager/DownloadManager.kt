@@ -10,6 +10,6 @@ import org.koin.core.component.KoinComponent
 //     private val downloadDirectory = preferencesManager.downloadDirectory.toUri()
 // }
 
-expect class DownloadManager(preferencesManager: PreferencesManager) : KoinComponent {
+internal expect class DownloadManager(preferencesManager: PreferencesManager) : KoinComponent {
     fun download()
 }

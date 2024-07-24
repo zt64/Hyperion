@@ -12,6 +12,5 @@ class ShortsScreenModel : ScreenModel {
     val shorts: Flow<PagingData<DomainVideoPartial>> by mutableStateOf(emptyFlow())
 
     fun showMenu() {
-
     }
 }

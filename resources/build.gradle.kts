@@ -23,10 +23,10 @@ kotlin {
 }
 
 android {
-    namespace = "dev.zt64.hyperion"
+    namespace = "dev.zt64.hyperion.resources"
 }
 
 multiplatformResources {
-    resourcesPackage = "dev.zt64.hyperion"
+    resourcesPackage = "dev.zt64.hyperion.resources"
     resourcesVisibility = MRVisibility.Public
 }

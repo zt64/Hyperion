@@ -2,16 +2,16 @@ package dev.zt64.hyperion.ui.screen.settings
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.setting.SwitchSetting
 import dev.zt64.hyperion.ui.model.SettingsScreenModel
 
 object NotificationsScreen : Screen {
     @Composable
     override fun Content() {
-        val model: SettingsScreenModel = getScreenModel()
+        val model: SettingsScreenModel = koinScreenModel()
         val preferences = model.preferences
 
         SwitchSetting(
@@ -41,6 +41,5 @@ object NotificationsScreen : Screen {
             description = stringResource(MR.strings.shared_content_notification_desc),
             onCheckedChange = {}
         )
-
     }
 }

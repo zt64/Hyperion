@@ -2,14 +2,27 @@ package dev.zt64.hyperion.ui.screen.base
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Subscriptions
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -23,13 +36,13 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.model.FeedScreenModel
 import dev.zt64.hyperion.ui.screen.AddAccountScreen
@@ -53,7 +66,7 @@ object FeedTab : Tab {
 
     @Composable
     override fun Content() {
-        val model: FeedScreenModel = getScreenModel()
+        val model: FeedScreenModel = koinScreenModel()
         val navController = LocalNavigator.currentOrThrow
 
         if (model.accountManager.loggedIn) {
@@ -68,9 +81,7 @@ object FeedTab : Tab {
     }
 
     @Composable
-    private fun FeedScreenNotLoggedIn(
-        onClickAddAccount: () -> Unit
-    ) {
+    private fun FeedScreenNotLoggedIn(onClickAddAccount: () -> Unit) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -106,7 +117,7 @@ object FeedTab : Tab {
 
     @Composable
     private fun FeedScreenLoggedIn() {
-        val model: FeedScreenModel = getScreenModel()
+        val model: FeedScreenModel = koinScreenModel()
         val items = model.items.collectAsLazyPagingItems()
 
         LazyColumn(
@@ -137,7 +148,6 @@ object FeedTab : Tab {
                 contentType = items.itemContentType()
             ) { index ->
                 val item = items[index] ?: return@items
-
             }
         }
     }
@@ -146,7 +156,7 @@ object FeedTab : Tab {
     private fun ChannelsRow(
         selectedChannel: DomainChannelPartial?,
         onClickChannel: () -> Unit,
-        onClickViewAll: () -> Unit,
+        onClickViewAll: () -> Unit
     ) {
         LazyRow(
             contentPadding = PaddingValues(horizontal = 14.dp),
@@ -165,10 +175,11 @@ object FeedTab : Tab {
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Box(
-                        modifier = Modifier.toggleable(
-                            value = true,
-                            onValueChange = {}
-                        )
+                        modifier =
+                            Modifier.toggleable(
+                                value = true,
+                                onValueChange = {}
+                            )
                     ) {
                         ShimmerImage(
                             modifier = Modifier
@@ -258,5 +269,3 @@ object FeedTab : Tab {
         }
     }
 }
-
-

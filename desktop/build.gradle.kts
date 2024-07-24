@@ -1,12 +1,9 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
-    alias(libs.plugins.kotlin.jvm)
-    alias(libs.plugins.compose)
-}
-
-kotlin {
-    jvmToolchain(libs.versions.jvm.get().toInt())
+    kotlin("jvm")
+    alias(libs.plugins.compose.jb)
+    alias(libs.plugins.compose.compiler)
 }
 
 dependencies {

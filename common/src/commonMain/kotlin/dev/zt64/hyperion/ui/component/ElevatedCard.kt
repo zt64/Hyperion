@@ -11,8 +11,8 @@ import androidx.compose.ui.draw.clip
 @Composable
 fun ElevatedCard(
     onClick: () -> Unit,
-    onLongClick: () -> Unit = { },
     modifier: Modifier = Modifier,
+    onLongClick: () -> Unit = { },
     content: @Composable ColumnScope.() -> Unit
 ) {
     ElevatedCard(

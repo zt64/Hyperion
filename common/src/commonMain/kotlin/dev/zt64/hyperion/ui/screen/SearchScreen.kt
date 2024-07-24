@@ -2,9 +2,17 @@ package dev.zt64.hyperion.ui.screen
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -12,8 +20,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.NorthWest
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -28,19 +49,19 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
-import dev.zt64.hyperion.ui.component.*
+import dev.zt64.hyperion.resources.MR
+import dev.zt64.hyperion.ui.component.BackButton
+import dev.zt64.hyperion.ui.component.LoadingIndicator
 import dev.zt64.hyperion.ui.model.SearchScreenModel
-import dev.zt64.innertube.domain.model.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 object SearchScreen : Screen {
     @Composable
     override fun Content() {
-        val model: SearchScreenModel = getScreenModel()
+        val model: SearchScreenModel = koinScreenModel()
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
         val focusManager = LocalFocusManager.current
         val focusRequester = remember { FocusRequester() }
@@ -74,31 +95,37 @@ object SearchScreen : Screen {
                             onValueChange = model::textFieldValueChange,
                             textStyle = MaterialTheme.typography.bodyLarge,
                             placeholder = { Text(stringResource(MR.strings.search)) },
-                            trailingIcon = model.textFieldValue.text.takeIf(String::isNotBlank)
+                            trailingIcon = model
+                                .textFieldValue
+                                .text
+                                .takeIf(String::isNotBlank)
                                 ?.let {
                                     {
                                         IconButton(onClick = model::clearSearch) {
                                             Icon(
                                                 imageVector = Icons.Default.Clear,
-                                                contentDescription = stringResource(MR.strings.clear)
+                                                contentDescription = stringResource(
+                                                    MR.strings.clear
+                                                )
                                             )
                                         }
                                     }
                                 },
                             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                            keyboardActions = KeyboardActions(
-                                onSearch = {
-                                    if (model.textFieldValue.text.isNotBlank()) {
-                                        model.search()
-                                        focusManager.clearFocus()
+                            keyboardActions =
+                                KeyboardActions(
+                                    onSearch = {
+                                        if (model.textFieldValue.text.isNotBlank()) {
+                                            model.search()
+                                            focusManager.clearFocus()
+                                        }
                                     }
-                                }
-                            ),
+                                ),
                             singleLine = true,
                             shape = CircleShape,
                             colors = TextFieldDefaults.colors(
                                 focusedIndicatorColor = Color.Transparent,
-                                unfocusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
                             )
                         )
                     },
@@ -146,9 +173,8 @@ object SearchScreen : Screen {
                                             delay(50)
                                             focusManager.clearFocus()
                                         }
-                                    }
-                                    .fillMaxWidth()
-                                    .animateItemPlacement(),
+                                    }.fillMaxWidth()
+                                    .animateItem(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
@@ -173,38 +199,38 @@ object SearchScreen : Screen {
                     }
                 } else {
                     val results = model.results.collectAsLazyPagingItems()
+                    val state = rememberLazyListState()
 
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
+                        state = state,
                         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         items(
                             count = results.itemCount,
-                            key = results.itemKey { it.hashCode() },
+                            key = results.itemKey { it.etag },
                             contentType = results.itemContentType()
                         ) { index ->
                             val result = results[index] ?: return@items
 
                             when (result) {
-                                is DomainVideoPartial -> VideoCard(result)
+                                // is SearchResult.Video -> VideoCard(result)
 
-                                is DomainChannelPartial -> {
-                                    ChannelCard(
-                                        channel = result,
-                                        onLongClick = {
-
-                                        },
-                                        onClickSubscribe = {
-
-                                        }
-                                    )
-                                }
-
-                                is DomainPlaylistPartial -> PlaylistCard(result)
-                                is DomainMixPartial -> MixCard(result)
-                                is DomainTagPartial -> TagCard(result)
+                                // is SearchResult.Channel -> {
+                                //     ChannelCard(
+                                //         channel = result,
+                                //         onLongClick = {
+                                //         },
+                                //         onClickSubscribe = {
+                                //         }
+                                //     )
+                                // }
+                                //
+                                // is SearchResult.Playlist -> PlaylistCard(result)
+                                //
+                                // else -> {}
                             }
                         }
 

@@ -9,8 +9,8 @@ import androidx.compose.material.icons.filled.Swipe
 import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.runtime.Composable
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
 import dev.zt64.hyperion.domain.manager.PreferencesManager
+import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.setting.SliderSetting
 import dev.zt64.hyperion.ui.component.setting.SwitchSetting
 import kotlin.math.roundToInt

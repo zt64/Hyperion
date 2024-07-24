@@ -1,29 +1,45 @@
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.BOOLEAN
 import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
-import org.jetbrains.kotlin.config.LanguageFeature
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import dev.zt64.hyperion.gradle.apple
+import dev.zt64.hyperion.gradle.excludeMaterial2
+import org.jetbrains.compose.resources.ResourcesExtension.ResourceClassGeneration
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-    alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.moko.resources)
-    alias(libs.plugins.compose)
+    `kmp-configuration`
+    `android-library`
+    // alias(libs.plugins.kotlin.multiplatform)
+    // alias(libs.plugins.android.library)
+    // alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.compose.jb)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.buildKonfig)
 }
 
 kotlin {
     jvmToolchain(libs.versions.jvm.get().toInt())
 
-    jvm("desktop")
+    jvm()
     androidTarget()
+    apple()
+
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    applyDefaultHierarchyTemplate {
+        common {
+            group("jvmCommon") {
+                withAndroidTarget()
+                withJvm()
+            }
+        }
+    }
 
     sourceSets {
         commonMain {
             dependencies {
                 implementation(compose.material3)
 
-                api(projects.innertube)
+                api(projects.api)
+                api(projects.resources)
 
                 api(compose.ui)
                 api(compose.foundation)
@@ -32,19 +48,18 @@ kotlin {
                 api(compose.animationGraphics)
                 api(compose.materialIconsExtended)
 
-                api(compose.uiTooling)
-                api(compose.preview)
-                api(compose.components.uiToolingPreview)
+                // api(compose.uiTooling)
+                // api(compose.preview)
+                // api(compose.components.uiToolingPreview)
 
                 api(libs.coil.compose.core)
                 api(libs.coil.network.ktor)
-                api(libs.kotlinx.collections.immutable)
+                api(libs.immutableCollections)
 
                 api(libs.settings.noarg)
                 api(libs.settings.coroutines)
 
                 api(libs.paging.compose.common)
-                api(libs.paging.common)
 
                 api(libs.napier)
 
@@ -55,17 +70,22 @@ kotlin {
                 api(libs.voyager.transitions)
                 api(libs.voyager.koin)
 
+                implementation(libs.reorderable)
                 implementation(libs.compose.shimmer)
                 implementation(libs.materialKolor)
                 implementation(libs.bundles.ktor)
-                implementation(libs.ktor.okhttp)
+                implementation(libs.ktor.client.okhttp)
+
+                implementation(libs.dearrow)
+                implementation(libs.ryd)
+
                 implementation(libs.uuid)
                 api(libs.koin.compose)
                 implementation(libs.filePicker.get().toString()) {
-                    exclude(group = "org.jetbrains.compose.material", module = "material")
+                    excludeMaterial2()
                 }
                 implementation(libs.colorPicker.get().toString()) {
-                    exclude(group = "org.jetbrains.compose.material", module = "material")
+                    excludeMaterial2()
                 }
                 implementation(libs.settings.test)
 
@@ -76,7 +96,7 @@ kotlin {
 
         commonTest {
             dependencies {
-                implementation(kotlin("test"))
+                implementation(libs.kotlin.test)
                 implementation(libs.koin.test)
             }
         }
@@ -92,7 +112,7 @@ kotlin {
             }
         }
 
-        named("desktopMain") {
+        jvmMain {
             dependencies {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.coroutines.swing)
@@ -101,7 +121,6 @@ kotlin {
 
         all {
             languageSettings {
-                enableLanguageFeature(LanguageFeature.ContextReceivers.name)
                 optIn("androidx.compose.material3.ExperimentalMaterial3Api")
                 optIn("androidx.compose.foundation.ExperimentalFoundationApi")
             }
@@ -110,7 +129,7 @@ kotlin {
 }
 
 android {
-    namespace = "$group.hyperion.common"
+    namespace = "$group.common"
     compileSdk = 34
 
     defaultConfig {
@@ -118,18 +137,15 @@ android {
     }
 }
 
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        freeCompilerArgs += "-Xexpect-actual-classes"
+compose {
+    resources {
+        generateResClass = ResourceClassGeneration.Never
     }
 }
 
-compose {
-    kotlinCompilerPlugin = "1.5.8.1-beta02"
-    kotlinCompilerPluginArgs.addAll(
-        "stabilityConfigurationPath=$projectDir/compose-stability.conf"
-        // "reportsDestination=${project.layout.buildDirectory.get().asFile.absolutePath}/compose"
-    )
+composeCompiler {
+    stabilityConfigurationFile = project.file("compose-stability.conf")
+    reportsDestination = project.layout.buildDirectory.dir("compose")
 }
 
 dependencies {
@@ -140,12 +156,8 @@ dependencies {
     ktlintRuleset(libs.ktlint.compose.rules)
 }
 
-multiplatformResources {
-    resourcesPackage.set("$group.hyperion")
-}
-
 buildkonfig {
-    packageName = "$group.hyperion"
+    packageName = group.toString()
 
     defaultConfigs {
         buildConfigField(STRING, "VERSION_NAME", version.toString())

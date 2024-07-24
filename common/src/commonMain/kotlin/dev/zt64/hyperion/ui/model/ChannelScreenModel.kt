@@ -1,7 +1,11 @@
 package dev.zt64.hyperion.ui.model
 
 import androidx.compose.runtime.*
-import androidx.paging.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
+import androidx.paging.cachedIn
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import dev.zt64.hyperion.domain.manager.AccountManager
@@ -13,7 +17,7 @@ import dev.zt64.innertube.domain.repository.InnerTubeRepository
 import dev.zt64.innertube.network.dto.browse.ChannelTab
 import kotlinx.coroutines.launch
 
-class ChannelScreenModel(
+internal class ChannelScreenModel(
     private val innerTube: InnerTubeRepository,
     private val shareManager: ShareManager,
     val accountManager: AccountManager,
@@ -23,7 +27,9 @@ class ChannelScreenModel(
     @Immutable
     sealed interface State {
         data object Loading : State
+
         data class Loaded(val channel: DomainChannel) : State
+
         data class Error(val error: Exception) : State
     }
 
@@ -37,21 +43,27 @@ class ChannelScreenModel(
         private set
     var videos = Pager(pagingConfig) {
         object : PagingSource<String, DomainVideoPartial>() {
-            override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainVideoPartial> {
+            override suspend fun load(
+                params: LoadParams<String>
+            ): LoadResult<String, DomainVideoPartial> {
                 TODO("Not yet implemented")
             }
 
-            override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
+            override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? =
+                null
         }
     }.flow.cachedIn(screenModelScope)
 
     var channels = Pager(pagingConfig) {
         object : PagingSource<String, DomainVideoPartial>() {
-            override suspend fun load(params: LoadParams<String>): LoadResult<String, DomainVideoPartial> {
+            override suspend fun load(
+                params: LoadParams<String>
+            ): LoadResult<String, DomainVideoPartial> {
                 TODO("Not yet implemented")
             }
 
-            override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? = null
+            override fun getRefreshKey(state: PagingState<String, DomainVideoPartial>): String? =
+                null
         }
     }.flow.cachedIn(screenModelScope)
 
@@ -78,6 +90,5 @@ class ChannelScreenModel(
     }
 
     fun subscribe() {
-
     }
 }

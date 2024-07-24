@@ -7,12 +7,17 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.resources.MR
 
 @Composable
-actual fun ShareButton(content: String, label: String?) {
+actual fun ShareButton(
+    content: String,
+    modifier: Modifier,
+    label: String?
+) {
     val context = LocalContext.current
 
     IconButton(
@@ -35,7 +40,10 @@ actual fun ShareButton(content: String, label: String?) {
 }
 
 @Composable
-actual fun FilledTonalShareButton(content: String, label: String?) {
+actual fun FilledTonalShareButton(
+    content: String,
+    label: String?
+) {
     val context = LocalContext.current
 
     FilledTonalIconButton(

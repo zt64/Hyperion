@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import dev.zt64.hyperion.ui.LocalWindowSizeClass
 
-
 /**
  * Adaptive top bar with [BackButton] as [navigationIcon]
  *
@@ -32,7 +31,7 @@ fun AdaptiveTopBar(
 ) {
     val windowSizeClass = LocalWindowSizeClass.current
 
-    if (windowSizeClass.heightSizeClass > WindowHeightSizeClass.Compact) {
+    if (windowSizeClass.heightSizeClass > WindowHeightSizeClass.Medium) {
         MediumTopAppBar(
             modifier = modifier,
             title = title,

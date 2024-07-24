@@ -1,17 +1,41 @@
 package dev.zt64.hyperion.ui.sheet
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.AudioFile
+import androidx.compose.material.icons.filled.Extension
+import androidx.compose.material.icons.filled.HighQuality
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Subtitles
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.BasicAlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.tooling.HyperionPreview
 
 @Composable
@@ -19,14 +43,12 @@ fun DownloadSheet(onDismissRequest: () -> Unit) {
     val uiState = rememberSaveable { UiState() }
 
     if (uiState.showQualityDialog) {
-        AlertDialog(onDismissRequest = uiState::dismissQualityDialog) {
-
+        BasicAlertDialog(onDismissRequest = uiState::dismissQualityDialog) {
         }
     }
 
     if (uiState.showFormatDialog) {
-        AlertDialog(onDismissRequest = uiState::dismissFormatDialog) {
-
+        BasicAlertDialog(onDismissRequest = uiState::dismissFormatDialog) {
         }
     }
 

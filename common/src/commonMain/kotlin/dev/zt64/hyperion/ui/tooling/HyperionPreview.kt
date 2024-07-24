@@ -2,7 +2,10 @@ package dev.zt64.hyperion.ui.tooling
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
@@ -15,7 +18,7 @@ import dev.zt64.hyperion.BuildKonfig
 import dev.zt64.hyperion.di.appModule
 import dev.zt64.hyperion.di.httpModule
 import dev.zt64.hyperion.domain.manager.PreferencesManager
-import dev.zt64.hyperion.domain.manager.PreferencesManagerPreviewImpl
+import dev.zt64.hyperion.domain.manager.PreferencesManagerImpl
 import dev.zt64.hyperion.ui.ProvideWindowSizeClass
 import org.koin.compose.KoinApplication
 import org.koin.core.module.dsl.singleOf
@@ -27,7 +30,7 @@ import org.koin.dsl.module
 fun HyperionPreview(
     modifier: Modifier = Modifier,
     isDarkTheme: Boolean = true,
-    content: @Composable BoxScope.() -> Unit,
+    content: @Composable BoxScope.() -> Unit
 ) {
     LaunchedEffect(Unit) {
         require(!BuildKonfig.DEBUG) { "HyperionPreview should not be used in production" }
@@ -35,13 +38,10 @@ fun HyperionPreview(
 
     KoinApplication(
         application = {
-            modules(
-                appModule,
-                httpModule,
-            )
+            modules(appModule, httpModule)
             modules(
                 module {
-                    singleOf(::PreferencesManagerPreviewImpl) bind PreferencesManager::class
+                    singleOf(::PreferencesManagerImpl) bind PreferencesManager::class
                 }
             )
         }

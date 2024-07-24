@@ -1,3 +1,5 @@
+@file:Suppress("INVISIBLE_REFERENCE")
+
 package dev.zt64.hyperion.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
@@ -8,9 +10,24 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderColors
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.SliderState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TrackHeight
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -38,67 +55,73 @@ enum class SkipOption {
     AUTO
 }
 
-enum class SponsorBlockCategory(
-    val description: String,
-    val color: Color
-) {
+enum class SponsorBlockCategory(val description: String, val color: Color) {
     SPONSOR(
-        description = "Paid promotion, paid referrals and direct advertisements. Not for " +
+        description =
+            "Paid promotion, paid referrals and direct advertisements. Not for " +
                 "self-promotion or free shoutouts to causes/creators/websites/products they like.",
         color = Color(0x7800D400)
     ) {
         override fun toString() = "Sponsor"
     },
     SELF_PROMO(
-        description = "Similar to \"sponsor\" except for unpaid or self promotion. This includes " +
-                "sections about merchandise, donations, or information about who they collaborated with.",
+        description =
+            "Similar to \"sponsor\" except for unpaid or self promotion. This includes sections " +
+                "about merchandise, donations, or information about who they collaborated with.",
         color = Color(0x78FFFF00)
     ) {
         override fun toString() = "Unpaid/Self Promotion"
     },
     INTERACTION(
-        description = "Asking for likes, comments, or subscribers. This includes asking for " +
+        description =
+            "Asking for likes, comments, or subscribers. This includes asking for " +
                 "engagement in the video, comments, or social media.",
         color = Color(0x78CC00FF)
     ) {
         override fun toString() = "Interaction Reminder"
     },
     HIGHLIGHT(
-        description = "The part of the video that most people are looking for. Similar to " +
+        description =
+            "The part of the video that most people are looking for. Similar to " +
                 "\"Video starts at x\" comments.",
         color = Color(0x78FF0000)
     ) {
         override fun toString() = "Highlight"
     },
     INTRO(
-        description = "The introduction to the video. This includes the intro animation, intro " +
+        description =
+            "The introduction to the video. This includes the intro animation, intro " +
                 "music, and the creator introducing themselves.",
         color = Color(0x7800FFFF)
     ) {
         override fun toString() = "Intro"
     },
     OUTRO(
-        description = "Credits or when the YouTube endcards appear. Not for conclusions with information.",
+        description = "Credits or when the YouTube endcards appear. Not for conclusions " +
+            "with information.",
         color = Color(0x780202ED)
     ) {
         override fun toString() = "Endcards/Credits"
     },
     FILLER(
-        description = "Tangential scenes added only for filler or humor that are not required to " +
+        description =
+            "Tangential scenes added only for filler or humor that are not required to " +
                 "understand the main content of the video.",
         color = Color(0x787300FF)
     ) {
         override fun toString() = "Filler Tangent/Jokes"
     },
     PREVIEW(
-        description = "Collection of clips that show what is coming up in in this video or other " +
+        description =
+            "Collection of clips that show what is coming up in in this video or other " +
                 "videos in a series where all information is repeated later in the video.",
         color = Color(0x78008FD6)
     ) {
         override fun toString() = "Preview/Recap"
     },
     MUSIC_OFF_TOPIC(
-        description = "Only for use in music videos. This only should be used for sections of music " +
+        description =
+            "Only for use in music videos. This only should be used for sections of music " +
                 "videos that aren't already covered by another category.",
         color = Color(0x78FF9900)
     ) {
@@ -107,10 +130,7 @@ enum class SponsorBlockCategory(
 }
 
 @Stable
-data class Segment(
-    val category: SponsorBlockCategory,
-    val range: ClosedFloatingPointRange<Float>,
-)
+data class Segment(val category: SponsorBlockCategory, val range: ClosedFloatingPointRange<Float>)
 
 @Composable
 @ExperimentalMaterial3Api
@@ -126,21 +146,63 @@ fun SeekBar(
     onSeekFinished: (() -> Unit)? = null,
     colors: SliderColors = SliderDefaults.colors()
 ) {
-    Slider(
+    Seekbar(
+        duration = duration.inWholeMilliseconds.toFloat(),
+        progress = progress.inWholeMilliseconds.toFloat(),
+        buffered = buffered.inWholeMilliseconds.toFloat(),
+        onSeek = { onSeek(it.toDouble().milliseconds) },
         modifier = modifier,
-        value = (progress / duration).toFloat(),
-        onValueChange = { onSeek((duration.inWholeMilliseconds * it).toInt().milliseconds) },
+        segments = segments,
+        chapters = chapters,
+        interactionSource = interactionSource,
+        onSeekFinished = onSeekFinished,
+        colors = colors
+    )
+}
+
+/**
+ * A seekbar that shows the progress of a video and allows the user to seek to a different position.
+ *
+ * @param duration The total duration of the video. (milliseconds)
+ * @param progress The current progress of the video. (milliseconds)
+ * @param buffered The amount of the video that has been buffered. (milliseconds)
+ * @param onSeek A callback that is called when the user seeks to a different position.
+ * @param modifier The modifier to apply to the seekbar.
+ * @param onSeekFinished A callback that is called when the user has finished seeking.
+ * @param segments A list of segments that should be drawn on the seekbar.
+ * @param chapters A list of chapters that should be drawn on the seekbar.
+ * @param interactionSource The interaction source to use for the seekbar.
+ * @param colors The colors to use for the seekbar.
+ */
+@Composable
+fun Seekbar(
+    duration: Float,
+    progress: Float,
+    buffered: Float,
+    onSeek: (Float) -> Unit,
+    modifier: Modifier = Modifier,
+    onSeekFinished: (() -> Unit)? = null,
+    segments: ImmutableList<Segment> = persistentListOf(),
+    chapters: ImmutableList<DomainChapter> = persistentListOf(),
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    colors: SliderColors = SliderDefaults.colors()
+) {
+    Slider(
+        value = progress,
+        onValueChange = { onSeek(progress) },
         onValueChangeFinished = onSeekFinished,
         interactionSource = interactionSource,
-        thumb = { Thumb(colors, interactionSource) },
         track = { state ->
             Track(
                 segments = segments,
                 sliderState = state,
-                buffered = (buffered / duration).toFloat(),
+                buffered = buffered,
                 colors = colors
             )
-        }
+        },
+        modifier = modifier,
+        thumb = { Thumb(colors, interactionSource) },
+        valueRange = 0f..duration
     )
 }
 
@@ -172,7 +234,6 @@ internal fun Thumb(
                     Box(
                         modifier = Modifier.padding(8.dp)
                     ) {
-
                     }
                 }
             }
@@ -193,10 +254,10 @@ internal fun Track(
     sliderState: SliderState,
     modifier: Modifier = Modifier,
     colors: SliderColors = SliderDefaults.colors(),
-    enabled: Boolean = true,
+    enabled: Boolean = true
 ) {
-    val inactiveTrackColor = colors.commonTrackColor(enabled, active = false)
-    val activeTrackColor = colors.commonTrackColor(enabled, active = true)
+    val inactiveTrackColor = colors.trackColor(enabled, active = false)
+    val activeTrackColor = colors.trackColor(enabled, active = true)
 
     Canvas(
         modifier = modifier
@@ -214,6 +275,7 @@ internal fun Track(
             x = sliderStart.x + (sliderEnd.x - sliderStart.x) * buffered,
             y = center.y
         )
+
         drawLine(
             color = inactiveTrackColor,
             start = sliderStart,
@@ -232,7 +294,7 @@ internal fun Track(
 
         drawTrack(
             activeRangeStart = 0f,
-            activeRangeEnd = sliderState.activeRangeEnd,
+            activeRangeEnd = sliderState.valueRange.endInclusive,
             inactiveTrackColor = inactiveTrackColor,
             activeTrackColor = activeTrackColor
         )
@@ -311,11 +373,12 @@ private fun SeekBarPreview() {
             duration = 1.hours,
             progress = progress,
             buffered = 60.minutes,
-            segments = persistentListOf(
-                Segment(SponsorBlockCategory.INTRO, 0.0f..0.1f),
-                Segment(SponsorBlockCategory.SPONSOR, 0.7f..0.75f),
-                Segment(SponsorBlockCategory.OUTRO, 0.8f..1.0f),
-            ),
+            segments =
+                persistentListOf(
+                    Segment(SponsorBlockCategory.INTRO, 0.0f..0.1f),
+                    Segment(SponsorBlockCategory.SPONSOR, 0.7f..0.75f),
+                    Segment(SponsorBlockCategory.OUTRO, 0.8f..1.0f)
+                ),
             onSeek = { progress = it }
         )
     }

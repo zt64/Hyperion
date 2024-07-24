@@ -3,16 +3,33 @@ package dev.zt64.hyperion.ui.screen.settings
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PermIdentity
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -22,9 +39,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.koin.koinScreenModel
 import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.MR
+import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.SponsorBlockCategory
 import dev.zt64.hyperion.ui.component.setting.SliderSetting
 import dev.zt64.hyperion.ui.component.setting.SwitchSetting
@@ -33,12 +50,12 @@ import dev.zt64.hyperion.ui.model.SettingsScreenModel
 object SponsorBlockScreen : Screen {
     @Composable
     override fun Content() {
-        val model: SettingsScreenModel = getScreenModel()
+        val model: SettingsScreenModel = koinScreenModel()
         val preferences = model.preferences
 
         SwitchSetting(
             preference = preferences::sponsorBlockEnabled,
-            text = stringResource(MR.strings.enabled),
+            text = stringResource(MR.strings.enabled)
         )
 
         AnimatedVisibility(visible = preferences.sponsorBlockEnabled) {
@@ -96,7 +113,7 @@ object SponsorBlockScreen : Screen {
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
-                        autoCorrect = false,
+                        autoCorrectEnabled = false,
                         imeAction = ImeAction.Done
                     ),
                     label = {
@@ -104,7 +121,7 @@ object SponsorBlockScreen : Screen {
                     }
                 )
 
-                Divider(
+                HorizontalDivider(
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
 
