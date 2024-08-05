@@ -21,7 +21,7 @@ sbkt = "1.0.0"
 
 # Compose
 compose-multiplatform = "1.7.0-alpha02"
-compose-m3 = "1.3.0-beta04"
+compose-m3 = "1.3.0-beta05"
 compose-m3-adaptive = "1.0.0-beta04"
 compose-shimmer = "1.3.0"
 compose-wear = "1.4.0-beta03"
