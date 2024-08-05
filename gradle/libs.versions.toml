@@ -46,7 +46,7 @@ jvm = "17"
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core = "androidx.core:core-ktx:1.13.1"
 androidx-splashscreen = "androidx.core:core-splashscreen:1.2.0-alpha01"
-androidx-activity = "androidx.activity:activity-compose:1.9.0"
+androidx-activity = "androidx.activity:activity-compose:1.9.1"
 
 # Ktor
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
