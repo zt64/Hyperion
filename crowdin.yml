@@ -3,13 +3,13 @@ api_token_env: CROWDIN_PERSONAL_TOKEN
 
 preserve_hierarchy: true
 files:
-  - source: common/src/commonMain/resources/MR/base/strings.xml
-    translation: common/src/commonMain/resources/MR/%locale%/strings.xml
+  - source: resources/src/commonMain/moko-resources/base/strings.xml
+    translation: resources/src/commonMain/moko-resources/%locale%/strings.xml
     ignore:
-      - common/src/commonMain/resources/MR/images/
-      - common/src/commonMain/resources/MR/files/
-  - source: common/src/commonMain/resources/MR/base/plurals.xml
-    translation: common/src/commonMain/resources/MR/%locale%/plurals.xml
+      - resources/src/commonMain/moko-resources/images/
+      - resources/src/commonMain/moko-resources/files/
+  - source: resources/src/commonMain/moko-resources/base/plurals.xml
+    translation: resources/src/commonMain/moko-resources/%locale%/plurals.xml
     ignore:
-      - common/src/commonMain/resources/MR/images/
-      - common/src/commonMain/resources/MR/files/
+      - resources/src/commonMain/moko-resources/images/
+      - resources/src/commonMain/moko-resources/files/
