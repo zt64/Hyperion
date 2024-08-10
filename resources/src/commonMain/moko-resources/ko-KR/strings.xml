@@ -136,4 +136,7 @@
     <string name="remove">제거</string>
     <string name="reply">답글</string>
     <string name="unsubscribe">구독 취소</string>
+    <string name="views">Views</string>
+    <string name="delete">Delete</string>
+    <string name="delete_comment">Delete comment</string>
 </resources>

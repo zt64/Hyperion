@@ -136,4 +136,7 @@
     <string name="remove">Poista</string>
     <string name="reply">Vastaa</string>
     <string name="unsubscribe">Peru tilaus</string>
+    <string name="views">Views</string>
+    <string name="delete">Delete</string>
+    <string name="delete_comment">Delete comment</string>
 </resources>

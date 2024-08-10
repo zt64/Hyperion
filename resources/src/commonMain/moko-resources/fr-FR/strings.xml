@@ -136,4 +136,7 @@
     <string name="remove">Retirer</string>
     <string name="reply">Répondre</string>
     <string name="unsubscribe">Se désabonner</string>
+    <string name="views">Views</string>
+    <string name="delete">Delete</string>
+    <string name="delete_comment">Delete comment</string>
 </resources>

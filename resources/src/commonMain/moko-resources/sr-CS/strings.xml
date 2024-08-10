@@ -136,4 +136,7 @@
     <string name="remove">Ukloni</string>
     <string name="reply">Odgovori</string>
     <string name="unsubscribe">Prekini praćenje</string>
+    <string name="views">Views</string>
+    <string name="delete">Delete</string>
+    <string name="delete_comment">Delete comment</string>
 </resources>
