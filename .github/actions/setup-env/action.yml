@@ -1,17 +1,21 @@
 name: "Setup environment"
 description: ""
 
+inputs:
+  architecture:
+    description: 'Architecture of the JDK (e.g., x64, x86)'
+    required: false
+    default: 'x64'
+
 runs:
   using: composite
   steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
     - name: Setup JDK
       uses: actions/setup-java@v4
       with:
-        distribution: ${{ vars.JVM_DISTRIBUTION }}
-        java-version: ${{ vars.JVM_VERSION }}
+        distribution: temurin
+        java-version: 17
+        architecture: ${{ inputs.architecture }}
 
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3

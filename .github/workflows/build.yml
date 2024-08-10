@@ -1,4 +1,4 @@
-name: Build Debug
+name: Build debug components
 
 on:
   push:
@@ -7,16 +7,8 @@ on:
       - '**.kt'
       - '**.kts'
       - 'gradle.properties'
-      - 'gradle-wrapper.properties'
       - '.github/workflows/build.yml'
-  pull_request:
-    branches: [ main ]
-    paths:
-      - '**.kt'
-      - '**.kts'
-      - 'gradle.properties'
-      - 'gradle-wrapper.properties'
-      - '.github/workflows/build.yml'
+      - 'gradle/**'
   workflow_dispatch:
 
 concurrency:

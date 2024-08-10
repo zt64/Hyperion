@@ -1,0 +1,25 @@
+name: Check pull request
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify:
+    name: "Verify"
+    strategy:
+      matrix:
+        runner: [ ubuntu-latest, windows-latest, macos-latest ]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup environment
+        uses: ./.github/actions/setup-env
+
+      - name: Gradle Wrapper Validation
+        uses: gradle/actions/wrapper-validation@v3
+
+      - name: Check
+        run: ./gradlew check
