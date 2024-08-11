@@ -1,13 +1,13 @@
 [versions]
 kotlin = "2.0.0"
 kotlin-serialization = "1.7.1"
-agp = "8.5.1"
+agp = "8.5.2"
 appcompat = "1.7.0"
 coil = "3.0.0-alpha08"
 horologist = "0.6.15"
 paging = "3.3.0-alpha02-0.5.1"
 ktor = "2.3.12"
-media3 = "1.3.1"
+media3 = "1.4.0"
 uuid = "0.8.4"
 voyager = "1.1.0-beta02"
 moko-resources = "0.24.1"
@@ -21,7 +21,7 @@ sbkt = "1.0.0"
 
 # Compose
 compose-multiplatform = "1.7.0-alpha02"
-compose-m3 = "1.3.0-beta04"
+compose-m3 = "1.3.0-beta05"
 compose-m3-adaptive = "1.0.0-beta04"
 compose-shimmer = "1.3.0"
 compose-wear = "1.4.0-beta03"
@@ -29,8 +29,8 @@ compose-wear = "1.4.0-beta03"
 glance = "1.1.0"
 
 # TV
-tv-foundation = "1.0.0-alpha10"
-tv-material = "1.0.0-beta01"
+tv-foundation = "1.0.0-alpha11"
+tv-material = "1.0.0-rc02"
 
 koin = "3.6.0-Beta4"
 koin-compose = "1.2.0-Beta4"
@@ -46,7 +46,7 @@ jvm = "17"
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-core = "androidx.core:core-ktx:1.13.1"
 androidx-splashscreen = "androidx.core:core-splashscreen:1.2.0-alpha01"
-androidx-activity = "androidx.activity:activity-compose:1.9.0"
+androidx-activity = "androidx.activity:activity-compose:1.9.1"
 
 # Ktor
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -111,7 +111,7 @@ filePicker = "com.darkrockstudios:mpfilepicker:3.1.0"
 materialKolor = "com.materialkolor:material-kolor:1.7.0"
 colorPicker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
 windowSize = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0"
-reorderable = "sh.calvin.reorderable:reorderable:1.4.0"
+reorderable = "sh.calvin.reorderable:reorderable:2.3.0"
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 
