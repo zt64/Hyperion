@@ -29,7 +29,7 @@ compose-wear = "1.4.0-beta03"
 glance = "1.1.0"
 
 # TV
-tv-foundation = "1.0.0-alpha10"
+tv-foundation = "1.0.0-alpha11"
 tv-material = "1.0.0-beta01"
 
 koin = "3.6.0-Beta4"
