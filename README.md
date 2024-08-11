@@ -1,4 +1,4 @@
-<div style="text-align: center;">
+<div align="center">
   <img src="assets/logo.svg" width=250 alt="logo">
   
   ## Hyperion
