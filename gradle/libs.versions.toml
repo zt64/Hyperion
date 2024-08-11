@@ -30,7 +30,7 @@ glance = "1.1.0"
 
 # TV
 tv-foundation = "1.0.0-alpha10"
-tv-material = "1.0.0-beta01"
+tv-material = "1.0.0-rc02"
 
 koin = "3.6.0-Beta4"
 koin-compose = "1.2.0-Beta4"
