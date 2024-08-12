@@ -142,7 +142,7 @@ coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", 
 
 google-api-services-youtube = "com.google.apis:google-api-services-youtube:v3-rev20240123-2.0.0"
 
-ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.1" }
+ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.10" }
 
 [bundles]
 androidx = ["androidx-appcompat", "androidx-core", "androidx-splashscreen", "androidx-activity"]
