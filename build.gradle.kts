@@ -10,8 +10,8 @@ plugins {
     // alias(libs.plugins.kotlin.parcelize) apply false
 
     // Android
-    // alias(libs.plugins.android.application) apply false
-    // alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
 
     // Other
     alias(libs.plugins.compose.compiler) apply false
@@ -24,10 +24,12 @@ allprojects {
     group = "dev.zt64.hyperion"
     version = "1.0.0"
 
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    if (project.name != "resources") {
+        apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
-    configure<KtlintExtension> {
-        version = rootProject.libs.versions.ktlint
+        configure<KtlintExtension> {
+            version = rootProject.libs.versions.ktlint
+        }
     }
 }
 
