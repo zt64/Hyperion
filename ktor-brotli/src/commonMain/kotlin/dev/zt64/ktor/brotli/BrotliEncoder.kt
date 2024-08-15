@@ -1,22 +1,37 @@
 package dev.zt64.ktor.brotli
 
-import io.ktor.client.plugins.compression.ContentEncoder
-import io.ktor.client.plugins.compression.ContentEncoding
+import io.ktor.client.plugins.compression.ContentEncodingConfig
+import io.ktor.util.ContentEncoder
+import io.ktor.util.Encoder
 import io.ktor.utils.io.ByteReadChannel
-import kotlinx.coroutines.CoroutineScope
+import io.ktor.utils.io.ByteWriteChannel
+import kotlin.coroutines.CoroutineContext
 
-internal object BrotliEncoder : ContentEncoder {
+object BrotliEncoder : ContentEncoder, Encoder by BrotliEncoder {
     override val name = "br"
 
-    override fun CoroutineScope.encode(source: ByteReadChannel) = encodeBrotli(source)
+    override fun decode(
+        source: ByteReadChannel,
+        coroutineContext: CoroutineContext
+    ): ByteReadChannel = source.decodeBrotli()
 
-    override fun CoroutineScope.decode(source: ByteReadChannel) = decodeBrotli(source)
+    override fun encode(
+        source: ByteReadChannel,
+        coroutineContext: CoroutineContext
+    ): ByteReadChannel {
+        error("BrotliOutputStream not available (https://github.com/google/brotli/issues/715)")
+    }
+
+    override fun encode(
+        source: ByteWriteChannel,
+        coroutineContext: CoroutineContext
+    ): ByteWriteChannel {
+        error("BrotliOutputStream not available (https://github.com/google/brotli/issues/715)")
+    }
 }
 
-fun ContentEncoding.Config.brotli(quality: Float? = null) {
+fun ContentEncodingConfig.brotli(quality: Float? = null) {
     customEncoder(BrotliEncoder, quality)
 }
 
-internal expect fun CoroutineScope.encodeBrotli(source: ByteReadChannel): ByteReadChannel
-
-internal expect fun CoroutineScope.decodeBrotli(source: ByteReadChannel): ByteReadChannel
+internal expect fun ByteReadChannel.decodeBrotli(): ByteReadChannel
