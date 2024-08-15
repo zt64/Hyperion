@@ -23,14 +23,10 @@ import dev.zt64.innertube.network.dto.browse.ChannelTab
 import dev.zt64.innertube.network.dto.browse.ContinuationItem
 import dev.zt64.innertube.network.dto.browse.RichItemRenderer
 import dev.zt64.innertube.network.service.InnerTubeService
-import dev.zt64.innertube.network.service.RYDService
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 
-class InnerTubeRepository(
-    private val service: InnerTubeService,
-    private val rydService: RYDService
-) {
+class InnerTubeRepository(private val service: InnerTubeService) {
     suspend fun getTrendingVideos(nextPageToken: String? = null): DomainBrowse<DomainVideoPartial> {
         service.getVideos("trending", nextPageToken)
 
@@ -129,11 +125,7 @@ class InnerTubeRepository(
         )
     }
 
-    suspend fun getChannel(
-        id: String,
-        tab: ChannelTab
-    ) {
-
+    suspend fun getChannel(id: String, tab: ChannelTab) {
     }
 
     suspend fun getNext(videoId: String): DomainNext {
@@ -205,10 +197,7 @@ class InnerTubeRepository(
         )
     }
 
-    suspend fun getRelatedVideos(
-        videoId: String,
-        continuation: String
-    ): RelatedVideos {
+    suspend fun getRelatedVideos(videoId: String, continuation: String): RelatedVideos {
         val response = service.getNext(videoId, continuation)
 
         return RelatedVideos(
@@ -242,7 +231,6 @@ class InnerTubeRepository(
             uploadDate = video.snippet.publishedAt.toString(),
             description = video.snippet.description,
             likesText = video.statistics.likeCount!!.toString(),
-            dislikesText = rydService.getVotes(id).dislikes.toString(),
             formats = player.formats,
             author = DomainChannelPartial(
                 id = video.snippet.channelId,
@@ -255,10 +243,7 @@ class InnerTubeRepository(
         )
     }
 
-    suspend fun getComments(
-        id: String,
-        page: String
-    ) {
+    suspend fun getComments(id: String, page: String) {
         val comments = service.getComments(id, page)
 
         //        comments.continuationContents.sectionListContinuation.contents.map {  }
@@ -288,10 +273,7 @@ class InnerTubeRepository(
         )
     }
 
-    suspend fun getPlaylistItems(
-        id: String,
-        token: String? = null
-    ): ListResponse<PlaylistItem> {
+    suspend fun getPlaylistItems(id: String, token: String? = null): ListResponse<PlaylistItem> {
         val res = service.getPlaylistItems(id, token)
 
         return ListResponse(

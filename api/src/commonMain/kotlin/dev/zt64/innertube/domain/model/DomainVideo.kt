@@ -9,7 +9,6 @@ data class DomainVideo(
     val uploadDate: String,
     val description: String,
     val likesText: String,
-    val dislikesText: String,
     val formats: List<DomainFormat>,
     val author: DomainChannelPartial,
     val badges: List<String>,

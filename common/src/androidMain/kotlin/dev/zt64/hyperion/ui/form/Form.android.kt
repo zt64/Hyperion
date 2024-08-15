@@ -8,8 +8,8 @@ import androidx.compose.ui.Modifier
 actual fun Form(
     onDismissRequest: () -> Unit,
     label: @Composable () -> Unit,
-    content: @Composable () -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    content: @Composable () -> Unit
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
