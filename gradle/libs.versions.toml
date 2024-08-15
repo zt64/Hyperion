@@ -1,12 +1,12 @@
 [versions]
-kotlin = "2.0.0"
+kotlin = "2.0.20-RC2"
 kotlin-serialization = "1.7.1"
 agp = "8.5.2"
 appcompat = "1.7.0"
-coil = "3.0.0-alpha08"
+coil = "3.0.0-alpha10"
 horologist = "0.6.15"
 paging = "3.3.0-alpha02-0.5.1"
-ktor = "2.3.12"
+ktor = "3.0.0-beta-2"
 media3 = "1.4.0"
 uuid = "0.8.4"
 voyager = "1.1.0-beta02"
@@ -16,7 +16,7 @@ coroutines = "1.8.1"
 firebase = "1.11.1"
 
 dearrowKt = "1.0.0"
-rydKt = "1.0.0"
+rydKt = "1.2.0"
 sbkt = "1.0.0"
 
 # Compose
@@ -67,9 +67,9 @@ firebase-messaging = { module = "dev.gitlive:firebase-messaging", version.ref = 
 compose-m3 = { module = "androidx.compose.material3:material3", version.ref = "compose-m3" }
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "compose-shimmer" }
 
-m3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "compose-m3-adaptive" }
-m3-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout", version.ref = "compose-m3-adaptive" }
-m3-adaptive-nav = { module = "androidx.compose.material3.adaptive:adaptive-navigation", version.ref = "compose-m3-adaptive" }
+m3-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "compose-m3-adaptive" }
+m3-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout`", version.ref = "compose-m3-adaptive" }
+m3-adaptive-nav = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "compose-m3-adaptive" }
 
 # Glance
 glance = { module = "androidx.glance:glance", version.ref = "glance" }
@@ -105,9 +105,9 @@ paging-compose-common = { module = "app.cash.paging:paging-compose-common", vers
 
 # Coil
 coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil" }
-coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coil" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 
-filePicker = "com.darkrockstudios:mpfilepicker:3.1.0"
+fileKit = "io.github.vinceglb:filekit-compose:0.7.0"
 materialKolor = "com.materialkolor:material-kolor:1.7.0"
 colorPicker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
 windowSize = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0"
@@ -125,7 +125,7 @@ brotli = "org.brotli:dec:0.1.2"
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 
 dearrow = { module = "dev.zt64:dearrow-kt", version.ref = "dearrowKt" }
-ryd = { module = "dev.zt64.ryd-kt:ryd-kt", version.ref = "rydKt" }
+ryd = { module = "dev.zt64.ryd-kt:client", version.ref = "rydKt" }
 sb = { module = "dev.zt64.sbkt:client", version.ref = "sbkt" }
 
 # Moko
@@ -140,9 +140,9 @@ napier = { module = "io.github.aakira:napier", version = "2.6.1" }
 
 coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 
-google-api-services-youtube = "com.google.apis:google-api-services-youtube:v3-rev20240123-2.0.0"
+google-api-services-youtube = "com.google.apis:google-api-services-youtube:v3-rev20240514-2.0.0"
 
-ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.1" }
+ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.10" }
 
 [bundles]
 androidx = ["androidx-appcompat", "androidx-core", "androidx-splashscreen", "androidx-activity"]

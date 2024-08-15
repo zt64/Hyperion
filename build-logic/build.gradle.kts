@@ -13,17 +13,17 @@ dependencies {
 
 gradlePlugin {
     plugins.register("kmp-configuration") {
-        id = "kmp-configuration"
+        id = "hyperion.kmp-configuration"
         implementationClass = "dev.zt64.hyperion.gradle.KmpConfigurationPlugin"
     }
 
     plugins.register("android-application-configuration") {
-        id = "android-application"
+        id = "hyperion.android-application"
         implementationClass = "dev.zt64.hyperion.gradle.AndroidApplicationConfigurationPlugin"
     }
 
     plugins.register("android-library-configuration") {
-        id = "android-library"
+        id = "hyperion.android-library"
         implementationClass = "dev.zt64.hyperion.gradle.AndroidLibraryConfigurationPlugin"
     }
 }

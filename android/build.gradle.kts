@@ -5,11 +5,14 @@ import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import org.jetbrains.kotlin.config.LanguageFeature
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 
+plugins {
+    id("hyperion.android-application") apply false
+}
 subprojects {
     val libs = rootProject.libs
 
     apply {
-        plugin("android-application")
+        plugin("hyperion.android-application")
         plugin(libs.plugins.kotlin.android.get().pluginId)
         plugin(libs.plugins.android.application.get().pluginId)
         plugin(libs.plugins.compose.compiler.get().pluginId)
@@ -29,11 +32,11 @@ subprojects {
 
     configure<ApplicationExtension> {
         namespace = "dev.zt64.hyperion"
-        compileSdk = 34
+        compileSdk = 35
 
         defaultConfig {
             minSdk = 21
-            targetSdk = 34
+            targetSdk = 35
             versionCode = 1
             versionName = version.toString()
         }
@@ -54,9 +57,15 @@ subprojects {
 
         packaging {
             resources {
-                // okhttp3 is used by some lib (no cookies so publicsuffixes.gz can be dropped)
-                excludes += "/okhttp3/**"
-                excludes += "META-INF/DEPENDENCIES"
+                pickFirsts.add("META-INF/*")
+                // excludes.addAll(
+                //     listOf(
+                //         // okhttp3 is used by some lib (no cookies so publicsuffixes.gz can be dropped)
+                //         "/okhttp3/**",
+                //         "/META-INF/DEPENDENCIES",
+                //         "/META-INF/INDEX.LIST"
+                //     )
+                // )
             }
         }
 

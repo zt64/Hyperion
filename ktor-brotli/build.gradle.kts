@@ -1,7 +1,7 @@
 import dev.zt64.hyperion.gradle.apple
 
 plugins {
-    `kmp-configuration`
+    id("hyperion.kmp-configuration")
 }
 
 group = "dev.zt64.ktor.brotli"

@@ -6,8 +6,8 @@ import org.jetbrains.compose.resources.ResourcesExtension.ResourceClassGeneratio
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-    `kmp-configuration`
-    `android-library`
+    id("hyperion.kmp-configuration")
+    id("hyperion.android-library")
     // alias(libs.plugins.kotlin.multiplatform)
     // alias(libs.plugins.android.library)
     // alias(libs.plugins.kotlin.parcelize)
@@ -81,7 +81,7 @@ kotlin {
 
                 implementation(libs.uuid)
                 api(libs.koin.compose)
-                implementation(libs.filePicker.get().toString()) {
+                implementation(libs.fileKit.get().toString()) {
                     excludeMaterial2()
                 }
                 implementation(libs.colorPicker.get().toString()) {
@@ -114,7 +114,9 @@ kotlin {
 
         jvmMain {
             dependencies {
-                implementation(compose.desktop.currentOs)
+                implementation(compose.desktop.currentOs) {
+                    excludeMaterial2()
+                }
                 implementation(libs.coroutines.swing)
             }
         }

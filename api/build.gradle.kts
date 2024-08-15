@@ -2,7 +2,7 @@
 
 plugins {
     // alias(libs.plugins.kotlin.multiplatform)
-    id("kmp-configuration")
+    id("hyperion.kmp-configuration")
     alias(libs.plugins.kotlin.serialization)
 }
 

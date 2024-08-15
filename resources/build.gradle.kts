@@ -2,8 +2,8 @@ import dev.icerock.gradle.MRVisibility
 import dev.zt64.hyperion.gradle.apple
 
 plugins {
-    `kmp-configuration`
-    `android-library`
+    id("hyperion.kmp-configuration")
+    id("hyperion.android-library")
 
     alias(libs.plugins.moko.resources)
 }

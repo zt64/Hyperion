@@ -4,6 +4,12 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 import java.util.Locale
 
+/**
+ * Only setup Apple targets if the current OS is MacOS
+ *
+ * @param skipCheck
+ * @param configure
+ */
 fun KotlinMultiplatformExtension.apple(
     skipCheck: Boolean = false,
     configure: KotlinNativeTarget.() -> Unit = {}
