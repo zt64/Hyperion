@@ -2,7 +2,13 @@ package dev.zt64.hyperion.ui.component
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.material3.*
+import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
+import androidx.compose.material3.TopAppBarState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -53,3 +59,17 @@ fun AdaptiveTopBar(
         )
     }
 }
+
+object AdaptiveTopAppBarDefaults {
+    @Composable
+    fun adaptiveScrollBehavior(
+        state: TopAppBarState = rememberTopAppBarState(),
+        canScroll: () -> Boolean = { true }
+    ): TopAppBarScrollBehavior = actualAdaptiveScrollBehavior(state, canScroll)
+}
+
+@Composable
+internal expect fun actualAdaptiveScrollBehavior(
+    state: TopAppBarState,
+    canScroll: () -> Boolean
+): TopAppBarScrollBehavior
