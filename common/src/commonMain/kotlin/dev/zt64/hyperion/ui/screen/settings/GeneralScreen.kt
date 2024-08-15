@@ -8,19 +8,22 @@ import androidx.compose.material.icons.filled.PictureInPicture
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
-import com.darkrockstudios.libraries.mpfilepicker.DirectoryPicker
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.SUPPORTS_PIP
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.setting.SwitchSetting
 import dev.zt64.hyperion.ui.model.SettingsScreenModel
+import io.github.vinceglb.filekit.compose.rememberDirectoryPickerLauncher
 
-object GeneralScreen : Screen {
+class GeneralScreen : Screen {
     @Composable
     override fun Content() {
         val model: SettingsScreenModel = koinScreenModel()
@@ -43,13 +46,12 @@ object GeneralScreen : Screen {
 
         var showDirectoryPicker by rememberSaveable { mutableStateOf(false) }
 
-        DirectoryPicker(showDirectoryPicker) {
-            showDirectoryPicker = false
-            model.setDownloadUri(it)
+        val pickerLauncher = rememberDirectoryPickerLauncher {
+            model.setDownloadUri(it?.path)
         }
 
         ListItem(
-            modifier = Modifier.clickable { showDirectoryPicker = true },
+            modifier = Modifier.clickable(onClick = pickerLauncher::launch),
             headlineContent = { Text(stringResource(MR.strings.download_location)) },
             supportingContent = { Text(preferences.downloadDirectory) },
             leadingContent = {
