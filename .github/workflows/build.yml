@@ -77,7 +77,7 @@ jobs:
         shell: ${{ matrix.shell }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: ${{ vars.JVM_DISTRIBUTION }}
           java-version: ${{ vars.JVM_VERSION }}
