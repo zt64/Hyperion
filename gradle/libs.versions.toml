@@ -13,7 +13,7 @@ voyager = "1.1.0-beta02"
 moko-resources = "0.24.1"
 settings = "1.1.1"
 coroutines = "1.8.1"
-firebase = "1.11.1"
+firebase = "1.13.0"
 
 dearrowKt = "1.0.0"
 rydKt = "1.2.0"
