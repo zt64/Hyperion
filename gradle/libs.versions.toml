@@ -136,7 +136,7 @@ settings-noarg = { module = "com.russhwolf:multiplatform-settings-no-arg", versi
 settings-coroutines = { module = "com.russhwolf:multiplatform-settings-coroutines", version.ref = "settings" }
 settings-test = { module = "com.russhwolf:multiplatform-settings-test", version.ref = "settings" }
 
-napier = { module = "io.github.aakira:napier", version = "2.6.1" }
+napier = { module = "io.github.aakira:napier", version = "2.7.1" }
 
 coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 
