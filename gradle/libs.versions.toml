@@ -3,8 +3,6 @@ kotlin = "2.0.20-RC2"
 kotlin-serialization = "1.7.1"
 agp = "8.5.2"
 appcompat = "1.7.0"
-coil = "3.0.0-alpha10"
-horologist = "0.6.15"
 paging = "3.3.0-alpha02-0.5.1"
 ktor = "3.0.0-beta-2"
 media3 = "1.4.0"
@@ -12,8 +10,9 @@ uuid = "0.8.4"
 voyager = "1.1.0-beta02"
 moko-resources = "0.24.1"
 settings = "1.1.1"
-coroutines = "1.8.1"
+coroutines = "1.9.0-RC.2"
 firebase = "1.13.0"
+datetime = "0.6.0"
 
 dearrowKt = "1.1.0"
 rydKt = "1.2.0"
@@ -25,6 +24,8 @@ compose-m3 = "1.3.0-beta05"
 compose-m3-adaptive = "1.0.0-beta04"
 compose-shimmer = "1.3.0"
 compose-wear = "1.4.0-beta03"
+coil = "3.0.0-alpha10"
+horologist = "0.6.15"
 
 glance = "1.1.0"
 
@@ -32,8 +33,7 @@ glance = "1.1.0"
 tv-foundation = "1.0.0-alpha11"
 tv-material = "1.0.0-rc02"
 
-koin = "3.6.0-Beta4"
-koin-compose = "1.2.0-Beta4"
+koin = "4.0.0-RC1"
 
 # Maintenance
 ktlintPlugin = "12.1.1"
@@ -57,7 +57,7 @@ ktor-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = "ktor" 
 
 # Koin
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 
 # Firebase
@@ -119,6 +119,7 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin-serialization" }
 serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlin-serialization" }
 immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7"
+datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
 
 brotli = "org.brotli:dec:0.1.2"
 
@@ -146,9 +147,12 @@ ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0
 
 [bundles]
 androidx = ["androidx-appcompat", "androidx-core", "androidx-splashscreen", "androidx-activity"]
+glance = ["glance", "glance-m3", "glance-appWidget", "glance-wearTiles"]
+wear = ["wear-foundation", "wear-m3", "wear-ui-tooling", "horologist-compose-layout"]
 ktor = ["ktor-client-core", "ktor-contentNegotiation", "ktor-serialization-json", "ktor-encoding"]
+coil = ["coil-compose-core", "coil-network-ktor"]
 media3 = ["media3-exoplayer", "media3-exoplayer-dash", "media3-session"]
-voyager = ["voyager-navigator", "voyager-bottomSheetNavigator", "voyager-tabNavigator", "voyager-transitions", "voyager-koin"]
+voyager = ["voyager-navigator", "voyager-tabNavigator", "voyager-transitions", "voyager-koin"]
 
 [plugins]
 # Kotlin

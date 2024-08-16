@@ -36,61 +36,48 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(compose.material3)
-
                 api(projects.api)
                 api(projects.resources)
 
+                // Compose
+                implementation(compose.material3)
                 api(compose.ui)
                 api(compose.foundation)
                 api(compose.runtime)
                 api(compose.animation)
                 api(compose.animationGraphics)
                 api(compose.materialIconsExtended)
-
-                // api(compose.uiTooling)
-                // api(compose.preview)
-                // api(compose.components.uiToolingPreview)
-
-                api(libs.coil.compose.core)
-                api(libs.coil.network.ktor)
-                api(libs.immutableCollections)
-
-                api(libs.settings.noarg)
-                api(libs.settings.coroutines)
-
+                compileOnly(compose.uiTooling)
+                api(libs.bundles.coil)
+                api(libs.bundles.voyager)
                 api(libs.paging.compose.common)
-
-                api(libs.napier)
-
                 api(libs.windowSize)
-
-                api(libs.voyager.navigator)
-                api(libs.voyager.tabNavigator)
-                api(libs.voyager.transitions)
-                api(libs.voyager.koin)
-
+                api(libs.koin.compose)
                 implementation(libs.reorderable)
                 implementation(libs.compose.shimmer)
                 implementation(libs.materialKolor)
-                implementation(libs.bundles.ktor)
-                implementation(libs.ktor.client.okhttp)
-
-                implementation(libs.dearrow)
-                implementation(libs.ryd)
-
-                implementation(libs.uuid)
-                api(libs.koin.compose)
-                implementation(libs.fileKit.get().toString()) {
-                    excludeMaterial2()
-                }
+                implementation(libs.fileKit)
                 implementation(libs.colorPicker.get().toString()) {
                     excludeMaterial2()
                 }
-                implementation(libs.settings.test)
-
                 // implementation(libs.m3.adaptive)
                 // implementation(libs.m3.adaptive.nav)
+
+                // TODO: Switch to DataStore or other alternative
+                api(libs.settings.noarg)
+                api(libs.settings.coroutines)
+
+                // Networking & API
+                implementation(libs.bundles.ktor)
+                implementation(libs.ktor.client.okhttp)
+                implementation(libs.dearrow)
+                implementation(libs.ryd)
+                api(libs.firebase.messaging)
+
+                // Misc
+                api(libs.immutableCollections)
+                api(libs.napier)
+                implementation(libs.uuid)
             }
         }
 
@@ -98,6 +85,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.koin.test)
+                implementation(libs.settings.test)
             }
         }
 
