@@ -33,7 +33,7 @@ tv-foundation = "1.0.0-alpha11"
 tv-material = "1.0.0-rc02"
 
 koin = "3.6.0-Beta4"
-koin-compose = "1.2.0-Beta4"
+koin-compose = "1.2.0-alpha3"
 
 # Maintenance
 ktlintPlugin = "12.1.1"
