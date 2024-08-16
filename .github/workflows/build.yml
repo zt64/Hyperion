@@ -91,7 +91,7 @@ jobs:
 
       # Upload runner package tar.gz/zip as artifact
       - name: Publish Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: desktop-${{ matrix.runtime }}
           path: |
@@ -102,7 +102,7 @@ jobs:
 
       # Upload runner errors
       - name: Upload error logs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
           name: runner-errors-${{ matrix.runtime }}
