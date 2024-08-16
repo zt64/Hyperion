@@ -15,7 +15,7 @@ settings = "1.1.1"
 coroutines = "1.8.1"
 firebase = "1.11.1"
 
-dearrowKt = "1.0.0"
+dearrowKt = "1.1.0"
 rydKt = "1.2.0"
 sbkt = "1.0.0"
 
