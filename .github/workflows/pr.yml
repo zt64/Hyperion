@@ -19,7 +19,7 @@ jobs:
         uses: ./.github/actions/setup-env
 
       - name: Gradle Wrapper Validation
-        uses: gradle/actions/wrapper-validation@v3
+        uses: gradle/actions/wrapper-validation@v4
 
       - name: Check
         run: ./gradlew check
