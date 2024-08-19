@@ -30,6 +30,12 @@ kotlin {
                 withAndroidTarget()
                 withJvm()
             }
+
+            // Used for functionality that should be shared between Android and iOS such as more touch oriented UI
+            group("mobile") {
+                withAndroidTarget()
+                withIos()
+            }
         }
     }
 
