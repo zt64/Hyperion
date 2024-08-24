@@ -107,7 +107,7 @@ paging-compose-common = { module = "app.cash.paging:paging-compose-common", vers
 coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil" }
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 
-fileKit = "io.github.vinceglb:filekit-compose:0.7.0"
+fileKit = "io.github.vinceglb:filekit-compose:0.8.1"
 materialKolor = "com.materialkolor:material-kolor:1.7.0"
 colorPicker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
 windowSize = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0"
