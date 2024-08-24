@@ -12,7 +12,7 @@ moko-resources = "0.24.1"
 settings = "1.1.1"
 coroutines = "1.9.0-RC.2"
 firebase = "1.13.0"
-datetime = "0.6.0"
+datetime = "0.6.1"
 
 dearrowKt = "1.1.0"
 rydKt = "1.2.0"
