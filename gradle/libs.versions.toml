@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.20-RC2"
+kotlin = "2.0.20"
 kotlin-serialization = "1.7.1"
 agp = "8.5.2"
 appcompat = "1.7.0"
@@ -15,15 +15,16 @@ firebase = "2.0.0"
 datetime = "0.6.1"
 
 dearrowKt = "1.1.0"
-rydKt = "1.2.0"
+rydKt = "1.3.0"
 sbkt = "1.0.0"
 
 # Compose
-compose-multiplatform = "1.7.0-alpha02"
-compose-m3 = "1.3.0-beta05"
-compose-m3-adaptive = "1.0.0-beta04"
+compose-multiplatform = "1.7.0-alpha03"
+compose-m3 = "1.3.0-rc01"
+compose-m3-adaptive = "1.0.0-alpha01"
 compose-shimmer = "1.3.1"
-compose-wear = "1.4.0-beta03"
+compose-wear = "1.4.0-rc01"
+compose-cupertino = "0.1.0-alpha04"
 coil = "3.0.0-alpha10"
 horologist = "0.6.15"
 
@@ -31,7 +32,7 @@ glance = "1.1.0"
 
 # TV
 tv-foundation = "1.0.0-alpha11"
-tv-material = "1.0.0-rc02"
+tv-material = "1.0.0"
 
 koin = "4.0.0-RC1"
 
@@ -62,11 +63,15 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 
 # Firebase
 firebase-messaging = { module = "dev.gitlive:firebase-messaging", version.ref = "firebase" }
+firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebase" }
+firebase-installations = { module = "dev.gitlive:firebase-installations", version.ref = "firebase" }
 
 # Compose
 compose-m3 = { module = "androidx.compose.material3:material3", version.ref = "compose-m3" }
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "compose-shimmer" }
+compose-cupertino = { module = "io.github.alexzhirkevich:cupertino", version.ref = "compose-cupertino" }
 
+m3-windowSizeClass = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0"
 m3-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "compose-m3-adaptive" }
 m3-adaptive-layout = { module = "org.jetbrains.compose.material3.adaptive:adaptive-layout`", version.ref = "compose-m3-adaptive" }
 m3-adaptive-nav = { module = "org.jetbrains.compose.material3.adaptive:adaptive-navigation", version.ref = "compose-m3-adaptive" }
@@ -97,6 +102,7 @@ voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voy
 # Media3
 media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "media3" }
 media3-exoplayer-dash = { module = "androidx.media3:media3-exoplayer-dash", version.ref = "media3" }
+media3-datasource-okhttp = { module = "androidx.media3:media3-datasource-okhttp ", version.ref = "media3" }
 media3-session = { module = "androidx.media3:media3-session", version.ref = "media3" }
 media3-cast = { module = "androidx.media3:media3-cast", version.ref = "media3" }
 
@@ -110,7 +116,6 @@ coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.re
 fileKit = "io.github.vinceglb:filekit-compose:0.8.1"
 materialKolor = "com.materialkolor:material-kolor:1.7.0"
 colorPicker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
-windowSize = "dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0"
 reorderable = "sh.calvin.reorderable:reorderable:2.3.0"
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -140,8 +145,10 @@ settings-test = { module = "com.russhwolf:multiplatform-settings-test", version.
 napier = { module = "io.github.aakira:napier", version = "2.7.1" }
 
 coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 google-api-services-youtube = "com.google.apis:google-api-services-youtube:v3-rev20240814-2.0.0"
+quickjs-kt = { module = "io.github.dokar3:quickjs-kt", version = "1.0.0-alpha13" }
 
 ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.10" }
 
@@ -151,7 +158,7 @@ glance = ["glance", "glance-m3", "glance-appWidget", "glance-wearTiles"]
 wear = ["wear-foundation", "wear-m3", "wear-ui-tooling", "horologist-compose-layout"]
 ktor = ["ktor-client-core", "ktor-contentNegotiation", "ktor-serialization-json", "ktor-encoding"]
 coil = ["coil-compose-core", "coil-network-ktor"]
-media3 = ["media3-exoplayer", "media3-exoplayer-dash", "media3-session"]
+media3 = ["media3-exoplayer", "media3-datasource-okhttp", "media3-exoplayer-dash", "media3-session"]
 voyager = ["voyager-navigator", "voyager-tabNavigator", "voyager-transitions", "voyager-koin"]
 
 [plugins]

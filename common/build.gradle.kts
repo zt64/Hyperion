@@ -53,11 +53,11 @@ kotlin {
                 api(compose.animation)
                 api(compose.animationGraphics)
                 api(compose.materialIconsExtended)
-                compileOnly(compose.uiTooling)
+                implementation(compose.uiTooling)
+                implementation(compose.preview)
                 api(libs.bundles.coil)
                 api(libs.bundles.voyager)
                 api(libs.paging.compose.common)
-                api(libs.windowSize)
                 api(libs.koin.compose)
                 implementation(libs.reorderable)
                 implementation(libs.compose.shimmer)
@@ -66,6 +66,7 @@ kotlin {
                 implementation(libs.colorPicker.get().toString()) {
                     excludeMaterial2()
                 }
+                api(libs.m3.windowSizeClass)
                 // implementation(libs.m3.adaptive)
                 // implementation(libs.m3.adaptive.nav)
 
