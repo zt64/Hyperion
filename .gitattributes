@@ -1,1 +1,5 @@
-*.bat           text eol=crlf"
+* text=auto
+* eol=lf
+*.png binary
+*.jar binary
+gradlew.bat eol=crlf
