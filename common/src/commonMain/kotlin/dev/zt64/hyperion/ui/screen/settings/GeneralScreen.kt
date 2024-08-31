@@ -9,10 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
@@ -43,8 +39,6 @@ class GeneralScreen : Screen {
             text = stringResource(MR.strings.mini_player),
             icon = Icons.Default.Minimize
         )
-
-        var showDirectoryPicker by rememberSaveable { mutableStateOf(false) }
 
         val pickerLauncher = rememberDirectoryPickerLauncher {
             model.setDownloadUri(it?.path)

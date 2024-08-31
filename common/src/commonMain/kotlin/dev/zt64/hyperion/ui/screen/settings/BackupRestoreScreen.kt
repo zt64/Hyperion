@@ -17,7 +17,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.model.SettingsScreenModel
 
-object BackupRestoreScreen : Screen {
+class BackupRestoreScreen : Screen {
     @Composable
     override fun Content() {
         val model: SettingsScreenModel = koinScreenModel()

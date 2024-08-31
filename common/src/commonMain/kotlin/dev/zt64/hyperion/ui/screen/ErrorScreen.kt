@@ -27,16 +27,12 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import dev.icerock.moko.resources.desc.desc
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.AdaptiveTopBar
 import kotlinx.coroutines.launch
 
 @Composable
-fun ErrorScreenContent(
-    exception: Exception,
-    modifier: Modifier = Modifier
-) {
+fun ErrorScreenContent(exception: Exception, modifier: Modifier = Modifier) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -67,14 +63,14 @@ fun ErrorScreenContent(
                 style = MaterialTheme.typography.titleLarge
             )
 
+            val copiedToClipboard = stringResource(MR.strings.copied_to_clipboard)
+
             Button(
                 contentPadding = ButtonDefaults.ButtonWithIconContentPadding,
                 onClick = {
                     clipboardManager.setText(AnnotatedString(exception.stackTraceToString()))
                     coroutineScope.launch {
-                        snackbarHostState.showSnackbar(
-                            message = MR.strings.copied_to_clipboard.desc().toString()
-                        )
+                        snackbarHostState.showSnackbar(copiedToClipboard)
                     }
                 }
             ) {

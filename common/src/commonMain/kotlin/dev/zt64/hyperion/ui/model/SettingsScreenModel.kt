@@ -4,10 +4,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.hyperion.domain.manager.UrlManager
 
-internal class SettingsScreenModel(
-    private val urlManager: UrlManager,
-    val preferences: PreferencesManager
-) : ScreenModel {
+internal class SettingsScreenModel(private val urlManager: UrlManager, val preferences: PreferencesManager) : ScreenModel {
     fun checkForUpdates() {
     }
 

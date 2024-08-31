@@ -19,10 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Stable
-actual class ShareButtonState(
-    private val clipboardManager: ClipboardManager,
-    private val snackbarHostState: SnackbarHostState?
-) {
+actual class ShareButtonState(private val clipboardManager: ClipboardManager, private val snackbarHostState: SnackbarHostState?) {
     private val scope = CoroutineScope(Dispatchers.IO)
 
     actual fun share(content: String, label: String?) {
@@ -53,5 +50,5 @@ internal actual fun ShareButtonIcon() {
 
 @Composable
 internal actual fun ShareButtonText() {
-    Text(stringResource(MR.strings.share))
+    Text(stringResource(MR.strings.copy_url))
 }

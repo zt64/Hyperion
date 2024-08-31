@@ -29,19 +29,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.zt64.hyperion.api.domain.model.DomainPlaylistPartial
+import dev.zt64.hyperion.api.model.Playlist
 import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.component.player.WIDESCREEN_RATIO
 import dev.zt64.hyperion.ui.screen.PlaylistScreen
 import dev.zt64.hyperion.ui.tooling.HyperionPreview
-import dev.zt64.innertube.domain.model.DomainPlaylistPartial
-import dev.zt64.innertube.model.Playlist
 
 @Composable
-fun PlaylistCard(
-    playlist: Playlist,
-    modifier: Modifier = Modifier,
-    onLongClick: () -> Unit = { }
-) {
+fun PlaylistCard(playlist: Playlist, modifier: Modifier = Modifier, onLongClick: () -> Unit = { }) {
     val navController = LocalNavigator.currentOrThrow
 
     PlaylistCard(
@@ -53,11 +49,7 @@ fun PlaylistCard(
 }
 
 @Composable
-fun PlaylistCard(
-    playlist: DomainPlaylistPartial,
-    modifier: Modifier = Modifier,
-    onLongClick: () -> Unit = { }
-) {
+fun PlaylistCard(playlist: DomainPlaylistPartial, modifier: Modifier = Modifier, onLongClick: () -> Unit = { }) {
     val navController = LocalNavigator.currentOrThrow
 
     PlaylistCard(
@@ -69,12 +61,7 @@ fun PlaylistCard(
 }
 
 @Composable
-fun PlaylistCard(
-    playlist: DomainPlaylistPartial,
-    onClick: () -> Unit,
-    onLongClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun PlaylistCard(playlist: DomainPlaylistPartial, onClick: () -> Unit, onLongClick: () -> Unit, modifier: Modifier = Modifier) {
     ElevatedCard(
         modifier = modifier,
         onClick = onClick,
@@ -85,9 +72,9 @@ fun PlaylistCard(
         if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact) {
             Row(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
+                Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
             ) {
 //                Thumbnail(
 //                    modifier = Modifier.width(160.dp),
@@ -150,12 +137,7 @@ fun PlaylistCard(
 }
 
 @Composable
-fun PlaylistCard(
-    playlist: Playlist,
-    onClick: () -> Unit,
-    onLongClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun PlaylistCard(playlist: Playlist, onClick: () -> Unit, onLongClick: () -> Unit, modifier: Modifier = Modifier) {
     ElevatedCard(
         modifier = modifier,
         onClick = onClick,
@@ -166,9 +148,9 @@ fun PlaylistCard(
         if (windowSizeClass.heightSizeClass == WindowHeightSizeClass.Compact) {
             Row(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .height(IntrinsicSize.Min)
+                Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
             ) {
                 Thumbnail(
                     modifier = Modifier.width(160.dp),
@@ -231,16 +213,12 @@ fun PlaylistCard(
 }
 
 @Composable
-private fun Thumbnail(
-    thumbnailUrl: String,
-    videoCountText: Int,
-    modifier: Modifier = Modifier
-) {
+private fun Thumbnail(thumbnailUrl: String, videoCountText: Int, modifier: Modifier = Modifier) {
     Box(
         modifier =
-            Modifier
-                .height(IntrinsicSize.Min)
-                .then(modifier)
+        Modifier
+            .height(IntrinsicSize.Min)
+            .then(modifier)
     ) {
         ShimmerImage(
             modifier = Modifier.aspectRatio(WIDESCREEN_RATIO),
@@ -251,13 +229,13 @@ private fun Thumbnail(
 
         Column(
             modifier =
-                Modifier
-                    .width(72.dp)
-                    .fillMaxHeight()
-                    .align(Alignment.CenterEnd)
-                    .background(
-                        color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.85f)
-                    ),
+            Modifier
+                .width(72.dp)
+                .fillMaxHeight()
+                .align(Alignment.CenterEnd)
+                .background(
+                    color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.85f)
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterVertically)
         ) {
@@ -281,13 +259,13 @@ private fun PlaylistCardPreview() {
     HyperionPreview {
         PlaylistCard(
             playlist =
-                DomainPlaylistPartial(
-                    id = "playlistId",
-                    title = "Playlist Title",
-                    subtitle = "Playlist Subtitle",
-                    thumbnailUrl = "https://i.ytimg.com/vi/0qUW56RQzRw/hqdefault.jpg",
-                    videoCountText = "10 videos"
-                )
+            DomainPlaylistPartial(
+                id = "playlistId",
+                title = "Playlist Title",
+                subtitle = "Playlist Subtitle",
+                thumbnailUrl = "https://i.ytimg.com/vi/0qUW56RQzRw/hqdefault.jpg",
+                videoCountText = "10 videos"
+            )
         )
     }
 }

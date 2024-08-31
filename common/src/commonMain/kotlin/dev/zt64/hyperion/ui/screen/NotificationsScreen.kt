@@ -42,11 +42,11 @@ import app.cash.paging.compose.itemKey
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.api.domain.model.Notification
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.AdaptiveTopBar
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.model.NotificationsScreenModel
-import dev.zt64.innertube.domain.model.Notification
 
 @Stable
 private class SheetState {
@@ -130,11 +130,7 @@ object NotificationsScreen : Screen {
 }
 
 @Composable
-private fun Notification(
-    notification: Notification,
-    onClick: () -> Unit,
-    onLongClick: () -> Unit
-) {
+private fun Notification(notification: Notification, onClick: () -> Unit, onLongClick: () -> Unit) {
     ListItem(
         modifier = Modifier.combinedClickable(
             onClick = onClick,

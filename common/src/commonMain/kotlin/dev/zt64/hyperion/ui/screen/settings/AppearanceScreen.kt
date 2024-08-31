@@ -17,7 +17,7 @@ import dev.zt64.hyperion.ui.component.setting.SliderSetting
 import dev.zt64.hyperion.ui.component.setting.SwitchSetting
 import dev.zt64.hyperion.ui.model.SettingsScreenModel
 
-object AppearanceScreen : Screen {
+class AppearanceScreen : Screen {
     @Composable
     override fun Content() {
         val model: SettingsScreenModel = koinScreenModel()

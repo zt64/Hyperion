@@ -34,12 +34,12 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.api.domain.model.DomainVideoPartial
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.BackButton
-import dev.zt64.hyperion.ui.component.ShareButton
+import dev.zt64.hyperion.ui.component.ShareIconButton
 import dev.zt64.hyperion.ui.model.ShortsScreenModel
 import dev.zt64.hyperion.ui.tooling.HyperionPreview
-import dev.zt64.innertube.domain.model.DomainVideoPartial
 
 object ShortsScreen : Screen {
     @Composable
@@ -96,10 +96,11 @@ object ShortsScreen : Screen {
         onClickAuthor: () -> Unit,
         onClickComment: () -> Unit,
         onClickShare: () -> Unit,
-        onClickSubscribe: () -> Unit
+        onClickSubscribe: () -> Unit,
+        modifier: Modifier = Modifier
     ) {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .combinedClickable(
                     onClick = {},
                     onDoubleClick = {}
@@ -172,7 +173,7 @@ object ShortsScreen : Screen {
                         )
                     }
 
-                    ShareButton(short.shareUrl)
+                    ShareIconButton(short.shareUrl)
                 }
             }
         }

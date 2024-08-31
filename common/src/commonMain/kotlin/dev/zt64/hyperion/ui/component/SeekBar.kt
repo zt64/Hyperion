@@ -8,126 +8,62 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.hoverable
+import androidx.compose.foundation.interaction.DragInteraction
+import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderColors
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.SliderDefaults.colors
 import androidx.compose.material3.SliderState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.TrackHeight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import dev.zt64.hyperion.api.domain.model.DomainChapter
+import dev.zt64.hyperion.domain.model.SponsorBlockCategory
 import dev.zt64.hyperion.ui.tooling.HyperionPreview
-import dev.zt64.innertube.domain.model.DomainChapter
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
-@Stable
-enum class SkipOption {
-    DISABLE,
-    SHOW,
-    MANUAL,
-    AUTO
-}
-
-enum class SponsorBlockCategory(val description: String, val color: Color) {
-    SPONSOR(
-        description =
-            "Paid promotion, paid referrals and direct advertisements. Not for " +
-                "self-promotion or free shoutouts to causes/creators/websites/products they like.",
-        color = Color(0x7800D400)
-    ) {
-        override fun toString() = "Sponsor"
-    },
-    SELF_PROMO(
-        description =
-            "Similar to \"sponsor\" except for unpaid or self promotion. This includes sections " +
-                "about merchandise, donations, or information about who they collaborated with.",
-        color = Color(0x78FFFF00)
-    ) {
-        override fun toString() = "Unpaid/Self Promotion"
-    },
-    INTERACTION(
-        description =
-            "Asking for likes, comments, or subscribers. This includes asking for " +
-                "engagement in the video, comments, or social media.",
-        color = Color(0x78CC00FF)
-    ) {
-        override fun toString() = "Interaction Reminder"
-    },
-    HIGHLIGHT(
-        description =
-            "The part of the video that most people are looking for. Similar to " +
-                "\"Video starts at x\" comments.",
-        color = Color(0x78FF0000)
-    ) {
-        override fun toString() = "Highlight"
-    },
-    INTRO(
-        description =
-            "The introduction to the video. This includes the intro animation, intro " +
-                "music, and the creator introducing themselves.",
-        color = Color(0x7800FFFF)
-    ) {
-        override fun toString() = "Intro"
-    },
-    OUTRO(
-        description = "Credits or when the YouTube endcards appear. Not for conclusions " +
-            "with information.",
-        color = Color(0x780202ED)
-    ) {
-        override fun toString() = "Endcards/Credits"
-    },
-    FILLER(
-        description =
-            "Tangential scenes added only for filler or humor that are not required to " +
-                "understand the main content of the video.",
-        color = Color(0x787300FF)
-    ) {
-        override fun toString() = "Filler Tangent/Jokes"
-    },
-    PREVIEW(
-        description =
-            "Collection of clips that show what is coming up in in this video or other " +
-                "videos in a series where all information is repeated later in the video.",
-        color = Color(0x78008FD6)
-    ) {
-        override fun toString() = "Preview/Recap"
-    },
-    MUSIC_OFF_TOPIC(
-        description =
-            "Only for use in music videos. This only should be used for sections of music " +
-                "videos that aren't already covered by another category.",
-        color = Color(0x78FF9900)
-    ) {
-        override fun toString() = "Music: Non-Music Section"
-    }
-}
+private val TrackHeight = 4.dp
 
 @Stable
 data class Segment(val category: SponsorBlockCategory, val range: ClosedFloatingPointRange<Float>)
@@ -195,21 +131,25 @@ fun Seekbar(
         track = { state ->
             Track(
                 segments = segments,
+                chapters = chapters,
                 sliderState = state,
                 buffered = buffered,
                 colors = colors
             )
         },
-        modifier = modifier,
-        thumb = { Thumb(colors, interactionSource) },
+        modifier = modifier.requiredHeight(4.dp),
+        thumb = { Thumb(interactionSource, colors = colors) },
         valueRange = 0f..duration
     )
 }
 
 @Composable
 internal fun Thumb(
-    colors: SliderColors,
-    interactionSource: MutableInteractionSource
+    interactionSource: MutableInteractionSource,
+    modifier: Modifier = Modifier,
+    colors: SliderColors = colors(),
+    enabled: Boolean = true,
+    thumbSize: DpSize = DpSize(4.dp, 4.dp)
 ) {
     val isDragged by interactionSource.collectIsDraggedAsState()
     val visible = remember { MutableTransitionState(false) }
@@ -240,9 +180,32 @@ internal fun Thumb(
         }
     }
 
-    SliderDefaults.Thumb(
-        interactionSource = interactionSource,
-        colors = colors
+    val interactions = remember { mutableStateListOf<Interaction>() }
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect { interaction ->
+            when (interaction) {
+                is PressInteraction.Press -> interactions += interaction
+                is PressInteraction.Release -> interactions -= interaction.press
+                is PressInteraction.Cancel -> interactions -= interaction.press
+                is DragInteraction.Start -> interactions += interaction
+                is DragInteraction.Stop -> interactions -= interaction.start
+                is DragInteraction.Cancel -> interactions -= interaction.start
+            }
+        }
+    }
+
+    val size = if (interactions.isNotEmpty()) {
+        thumbSize.copy(width = thumbSize.width / 2)
+    } else {
+        thumbSize
+    }
+
+    @Suppress("INVISIBLE_MEMBER")
+    Spacer(
+        modifier = modifier
+            .size(size)
+            .hoverable(interactionSource = interactionSource)
+            .background(colors.thumbColor(enabled), CircleShape)
     )
 }
 
@@ -250,6 +213,7 @@ internal fun Thumb(
 @Composable
 internal fun Track(
     segments: ImmutableList<Segment>,
+    chapters: ImmutableList<DomainChapter>,
     buffered: Float,
     sliderState: SliderState,
     modifier: Modifier = Modifier,
@@ -263,6 +227,7 @@ internal fun Track(
         modifier = modifier
             .fillMaxWidth()
             .height(TrackHeight)
+            .rotate(if (LocalLayoutDirection.current == LayoutDirection.Rtl) 180f else 0f)
     ) {
         val isRtl = layoutDirection == LayoutDirection.Rtl
         val sliderLeft = Offset(0f, center.y)
@@ -276,25 +241,40 @@ internal fun Track(
             y = center.y
         )
 
+        // Draw the bottom track
         drawLine(
             color = inactiveTrackColor,
             start = sliderStart,
-            end = bufferedEnd,
-            strokeWidth = trackStrokeWidth,
-            cap = StrokeCap.Round
-        )
-
-        drawLine(
-            color = inactiveTrackColor.copy(alpha = 0.5f),
-            start = bufferedEnd,
             end = sliderEnd,
             strokeWidth = trackStrokeWidth,
             cap = StrokeCap.Round
         )
 
+        // Draw the buffered track
+        drawLine(
+            color = activeTrackColor.copy(alpha = 0.5f),
+            start = sliderStart,
+            end = Offset(
+                x = calcFraction(0f, sliderState.valueRange.endInclusive, buffered) * size.width,
+                y = center.y
+            ),
+            strokeWidth = trackStrokeWidth,
+            cap = StrokeCap.Round
+        )
+
+        // // Draw the unbuffered track
+        // drawLine(
+        //     color = inactiveTrackColor.copy(alpha = 0.5f),
+        //     start = bufferedEnd,
+        //     end = sliderEnd,
+        //     strokeWidth = trackStrokeWidth,
+        //     cap = StrokeCap.Round
+        // )
+
+        // Draw the track up to the current value
         drawTrack(
             activeRangeStart = 0f,
-            activeRangeEnd = sliderState.valueRange.endInclusive,
+            activeRangeEnd = sliderState.coercedValueAsFraction,
             inactiveTrackColor = inactiveTrackColor,
             activeTrackColor = activeTrackColor
         )
@@ -311,7 +291,7 @@ internal fun Track(
             )
 
             drawLine(
-                color = segment.category.color,
+                color = segment.category.defaultColor,
                 start = segmentStart,
                 end = segmentEnd,
                 strokeWidth = trackStrokeWidth,
@@ -336,13 +316,13 @@ private fun drawTrack(
     val sliderEnd = if (isRtl) sliderLeft else sliderRight
     val trackStrokeWidth = TrackHeight.toPx()
 
-    drawLine(
-        color = inactiveTrackColor,
-        start = sliderStart,
-        end = sliderEnd,
-        strokeWidth = trackStrokeWidth,
-        cap = StrokeCap.Round
-    )
+    // drawLine(
+    //     color = inactiveTrackColor,
+    //     start = sliderStart,
+    //     end = sliderEnd,
+    //     strokeWidth = trackStrokeWidth,
+    //     cap = StrokeCap.Round
+    // )
     val sliderValueEnd = Offset(
         sliderStart.x + (sliderEnd.x - sliderStart.x) * activeRangeEnd,
         center.y
@@ -369,17 +349,31 @@ private fun SeekBarPreview() {
     HyperionPreview {
         var progress by remember { mutableStateOf(30.minutes) }
 
-        SeekBar(
-            duration = 1.hours,
-            progress = progress,
-            buffered = 60.minutes,
-            segments =
-                persistentListOf(
+        Surface(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            SeekBar(
+                duration = 1.hours,
+                progress = progress,
+                buffered = 45.minutes,
+                segments = persistentListOf(
                     Segment(SponsorBlockCategory.INTRO, 0.0f..0.1f),
                     Segment(SponsorBlockCategory.SPONSOR, 0.7f..0.75f),
                     Segment(SponsorBlockCategory.OUTRO, 0.8f..1.0f)
                 ),
-            onSeek = { progress = it }
-        )
+                chapters = persistentListOf(
+                    DomainChapter("Chapter 1", "", 20.seconds)
+                ),
+                onSeek = { progress = it }
+            )
+        }
     }
 }
+
+private fun calcFraction(
+    a: Float,
+    b: Float,
+    pos: Float
+) = (if (b - a == 0f) 0f else (pos - a) / (b - a)).coerceIn(0f, 1f)
+
+object SeekBarDefaults

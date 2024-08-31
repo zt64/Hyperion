@@ -26,18 +26,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import dev.zt64.hyperion.api.domain.model.DomainMixPartial
 import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.component.player.WIDESCREEN_RATIO
 import dev.zt64.hyperion.ui.tooling.HyperionPreview
-import dev.zt64.innertube.domain.model.DomainMixPartial
 
 @Composable
-fun MixCard(
-    mix: DomainMixPartial,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = { },
-    onLongClick: () -> Unit = { }
-) {
+fun MixCard(mix: DomainMixPartial, modifier: Modifier = Modifier, onClick: () -> Unit = { }, onLongClick: () -> Unit = { }) {
     ElevatedCard(
         modifier = modifier,
         onClick = onClick,
@@ -104,15 +99,12 @@ fun MixCard(
 }
 
 @Composable
-private fun Thumbnail(
-    thumbnailUrl: String,
-    modifier: Modifier = Modifier
-) {
+private fun Thumbnail(thumbnailUrl: String, modifier: Modifier = Modifier) {
     Box(
         modifier =
-            Modifier
-                .height(IntrinsicSize.Min)
-                .then(modifier)
+        Modifier
+            .height(IntrinsicSize.Min)
+            .then(modifier)
     ) {
         ShimmerImage(
             modifier = Modifier.aspectRatio(WIDESCREEN_RATIO),

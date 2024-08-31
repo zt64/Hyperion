@@ -21,10 +21,7 @@ internal val httpModule = module {
 
     fun provideClientEngine(): HttpClientEngineFactory<*> = httpClientEngineFactory()
 
-    fun provideHttpClient(
-        engineFactory: HttpClientEngineFactory<*>,
-        json: Json
-    ): HttpClient {
+    fun provideHttpClient(engineFactory: HttpClientEngineFactory<*>, json: Json): HttpClient {
         return HttpClient(engineFactory) {
             BrowserUserAgent()
 

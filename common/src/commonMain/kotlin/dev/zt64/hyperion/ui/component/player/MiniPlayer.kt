@@ -27,6 +27,19 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.resources.MR
 
+/**
+ * A mini player that shows the current playing media and allows the user to control it. When clicked,
+ * it should open the full player. Dragging the mini player should also open the full player.
+ *
+ * @param player
+ * @param title
+ * @param author
+ * @param isPlaying
+ * @param onClick
+ * @param onClickPlayPause
+ * @param onClickClose
+ * @param modifier
+ */
 @Composable
 fun MiniPlayer(
     player: PlayerState,

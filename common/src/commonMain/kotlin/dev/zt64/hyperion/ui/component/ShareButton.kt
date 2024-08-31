@@ -4,11 +4,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
+import dev.zt64.hyperion.ui.menu.ContextMenuScope
 
 @Stable
 expect class ShareButtonState {
@@ -40,11 +42,7 @@ fun ShareIconButton(content: String, modifier: Modifier = Modifier, label: Strin
  * On Desktop, this will copy the content to the clipboard.
  */
 @Composable
-fun FilledTonalShareIconButton(
-    content: String,
-    modifier: Modifier = Modifier,
-    label: String? = null
-) {
+fun FilledTonalShareIconButton(content: String, modifier: Modifier = Modifier, label: String? = null) {
     val state = rememberShareButtonState()
 
     FilledTonalIconButton(
@@ -70,6 +68,21 @@ fun ShareButton(content: String, modifier: Modifier = Modifier, label: String? =
             ShareButtonIcon()
             Spacer(Modifier.width(ButtonDefaults.IconSpacing))
             ShareButtonText()
+        }
+    )
+}
+
+@Composable
+fun ContextMenuScope.ContextMenuShareItem(content: String, modifier: Modifier = Modifier, label: String? = null) {
+    val state = rememberShareButtonState()
+
+    DropdownMenuItem(
+        modifier = modifier,
+        leadingIcon = { ShareButtonIcon() },
+        text = { ShareButtonText() },
+        onClick = {
+            state.share(content, label)
+            close()
         }
     )
 }

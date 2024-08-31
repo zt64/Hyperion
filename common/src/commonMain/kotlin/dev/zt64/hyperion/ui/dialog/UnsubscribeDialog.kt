@@ -10,10 +10,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.resources.MR
 
 @Composable
-fun UnsubscribeDialog(
-    onConfirm: () -> Unit,
-    onDismissRequest: () -> Unit
-) {
+fun UnsubscribeDialog(onConfirm: () -> Unit, onDismissRequest: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {

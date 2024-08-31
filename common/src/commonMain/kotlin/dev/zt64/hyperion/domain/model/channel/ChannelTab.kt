@@ -10,8 +10,8 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.VideoLibrary
 import androidx.compose.ui.graphics.vector.ImageVector
 import dev.icerock.moko.resources.StringResource
+import dev.zt64.hyperion.api.network.dto.browse.ChannelTab
 import dev.zt64.hyperion.resources.MR
-import dev.zt64.innertube.network.dto.browse.ChannelTab
 
 val ChannelTab.title: StringResource
     get() = when (this) {

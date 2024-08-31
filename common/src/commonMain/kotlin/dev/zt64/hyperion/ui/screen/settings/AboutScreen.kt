@@ -21,7 +21,7 @@ import dev.zt64.hyperion.BuildKonfig
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.model.SettingsScreenModel
 
-object AboutScreen : Screen {
+class AboutScreen : Screen {
     @Composable
     override fun Content() {
         val model: SettingsScreenModel = koinScreenModel()

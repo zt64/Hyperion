@@ -8,10 +8,7 @@ import androidx.compose.runtime.Composable
 import dev.zt64.hyperion.ui.LocalWindowSizeClass
 
 @Composable
-internal actual fun actualAdaptiveScrollBehavior(
-    state: TopAppBarState,
-    canScroll: () -> Boolean
-): TopAppBarScrollBehavior {
+internal actual fun actualAdaptiveScrollBehavior(state: TopAppBarState, canScroll: () -> Boolean): TopAppBarScrollBehavior {
     val windowSizeClass = LocalWindowSizeClass.current
 
     return if (windowSizeClass.heightSizeClass > WindowHeightSizeClass.Medium) {

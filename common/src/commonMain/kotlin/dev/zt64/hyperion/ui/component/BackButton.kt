@@ -19,10 +19,7 @@ fun BackButton() {
 }
 
 @Composable
-fun BackButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun BackButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(onClick, modifier) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,

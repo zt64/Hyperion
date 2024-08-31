@@ -4,7 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.paging.PagingData
 import cafe.adriel.voyager.core.model.ScreenModel
-import dev.zt64.innertube.domain.model.DomainVideoPartial
+import dev.zt64.hyperion.api.domain.model.DomainVideoPartial
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 

@@ -8,7 +8,7 @@ import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.setting.SwitchSetting
 import dev.zt64.hyperion.ui.model.SettingsScreenModel
 
-object NotificationsScreen : Screen {
+class NotificationsScreen : Screen {
     @Composable
     override fun Content() {
         val model: SettingsScreenModel = koinScreenModel()

@@ -41,14 +41,8 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun PlayerControls(
-    model: PlayerScreenModel,
-    onClickCollapse: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    // val model: IPlayerScreenModel = getScreenModel()
-    //
-    PlayerControls(
+fun PlayerOverlay(model: PlayerScreenModel, onClickCollapse: () -> Unit, modifier: Modifier = Modifier) {
+    PlayerOverlay(
         position = model.position,
         duration = model.duration,
         isPlaying = model.isPlaying,
@@ -67,7 +61,7 @@ fun PlayerControls(
 }
 
 @Composable
-fun PlayerControls(
+fun PlayerOverlay(
     position: Duration,
     duration: Duration,
     isPlaying: Boolean,

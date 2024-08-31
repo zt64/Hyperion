@@ -2,11 +2,9 @@ package dev.zt64.hyperion.domain.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import dev.zt64.innertube.domain.model.DomainBrowse
+import dev.zt64.hyperion.api.domain.model.DomainBrowse
 
-internal class BrowsePagingSource<T : Any>(
-    private val getter: suspend (key: String?) -> DomainBrowse<T>
-) : PagingSource<String, T>() {
+internal class BrowsePagingSource<T : Any>(private val getter: suspend (key: String?) -> DomainBrowse<T>) : PagingSource<String, T>() {
     override suspend fun load(params: LoadParams<String>) = try {
         val response = getter(params.key)
 

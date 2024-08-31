@@ -7,8 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -29,7 +29,6 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlin.enums.enumEntries
 import kotlin.reflect.KMutableProperty0
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
 internal inline fun <reified E> RadioSetting(
     preference: KMutableProperty0<E>,
@@ -104,7 +103,7 @@ internal fun <E : StringLabel> RadioSetting(
                 }
             },
             confirmButton = {
-                Button(
+                OutlinedButton(
                     onClick = {
                         onConfirm(selectedOption)
                         showDialog = false
@@ -123,22 +122,11 @@ internal fun <E : StringLabel> RadioSetting(
         )
     }
 
-    ListItem(
+    Setting(
         modifier = modifier.clickable { showDialog = true },
-        headlineContent = { Text(label) },
-        supportingContent = description?.let {
-            {
-                Text(description)
-            }
-        },
-        leadingContent = icon?.let {
-            {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null
-                )
-            }
-        },
+        text = label,
+        description = description,
+        icon = icon,
         trailingContent = {
             Button(
                 enabled = enabled,

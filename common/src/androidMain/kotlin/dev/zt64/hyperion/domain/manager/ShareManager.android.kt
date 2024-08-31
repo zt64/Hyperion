@@ -8,10 +8,7 @@ import org.koin.core.component.get
 internal actual class ShareManager : KoinComponent {
     private val application: Application = get()
 
-    actual fun share(
-        content: String,
-        label: String?
-    ) {
+    actual fun share(content: String, label: String?) {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
 

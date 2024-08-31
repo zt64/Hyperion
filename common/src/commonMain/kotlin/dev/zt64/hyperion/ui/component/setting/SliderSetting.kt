@@ -1,8 +1,9 @@
 package dev.zt64.hyperion.ui.component.setting
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.ListItem
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -10,19 +11,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlin.reflect.KMutableProperty0
 
+@Suppress("NOTHING_TO_INLINE")
 @Composable
-internal fun SliderSetting(
+internal inline fun SliderSetting(
     preference: KMutableProperty0<Float>,
     valueRange: ClosedFloatingPointRange<Float>,
     text: String,
     modifier: Modifier = Modifier,
     steps: Int = 10,
-    label: @Composable ((Float) -> Unit) = {
+    noinline label: @Composable ((Float) -> Unit) = {
         Text("%.1f".format(it))
     }
 ) {
@@ -49,27 +50,25 @@ fun SliderSetting(
         Text("%.1f".format(it))
     }
 ) {
-    ListItem(
-        modifier = modifier,
-        headlineContent = { Text(text) },
-        supportingContent = {
-            var sliderValue by rememberSaveable { mutableFloatStateOf(value) }
+    Column {
+        var sliderValue by rememberSaveable { mutableFloatStateOf(value) }
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Slider(
-                    modifier = Modifier.weight(1f),
-                    value = sliderValue,
-                    valueRange = valueRange,
-                    steps = steps,
-                    onValueChange = { sliderValue = it },
-                    onValueChangeFinished = { onValueChangeFinished(sliderValue) }
-                )
-
+        Setting(
+            modifier = modifier,
+            text = text,
+            icon = Icons.Default.Timer,
+            trailingContent = {
                 label(sliderValue)
             }
-        }
-    )
+        )
+
+        Slider(
+            modifier = Modifier.padding(horizontal = 24.dp),
+            value = sliderValue,
+            valueRange = valueRange,
+            steps = steps,
+            onValueChange = { sliderValue = it },
+            onValueChangeFinished = { onValueChangeFinished(sliderValue) }
+        )
+    }
 }

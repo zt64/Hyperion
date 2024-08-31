@@ -27,11 +27,7 @@ import org.koin.dsl.module
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-fun HyperionPreview(
-    modifier: Modifier = Modifier,
-    isDarkTheme: Boolean = true,
-    content: @Composable BoxScope.() -> Unit
-) {
+fun HyperionPreview(modifier: Modifier = Modifier, isDarkTheme: Boolean = true, content: @Composable BoxScope.() -> Unit) {
     LaunchedEffect(Unit) {
         require(!BuildKonfig.DEBUG) { "HyperionPreview should not be used in production" }
     }

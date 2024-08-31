@@ -25,17 +25,14 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.api.domain.model.DomainTagPartial
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.screen.TagScreen
 import dev.zt64.hyperion.ui.tooling.HyperionPreview
-import dev.zt64.innertube.domain.model.DomainTagPartial
 
 @Composable
-fun TagCard(
-    tag: DomainTagPartial,
-    modifier: Modifier = Modifier
-) {
+fun TagCard(tag: DomainTagPartial, modifier: Modifier = Modifier) {
     val navigator = LocalNavigator.currentOrThrow
 
     TagCard(

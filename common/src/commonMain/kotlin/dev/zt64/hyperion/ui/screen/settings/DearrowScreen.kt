@@ -6,7 +6,7 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import dev.zt64.hyperion.ui.component.setting.SwitchSetting
 import dev.zt64.hyperion.ui.model.SettingsScreenModel
 
-object DearrowScreen : Screen {
+class DearrowScreen : Screen {
     @Composable
     override fun Content() {
         val model: SettingsScreenModel = koinScreenModel()

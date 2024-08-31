@@ -26,10 +26,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-actual fun Player(
-    state: PlayerState,
-    modifier: Modifier
-) {
+actual fun Player(state: PlayerState, modifier: Modifier) {
     AndroidExternalSurface(
         modifier = Modifier
             .aspectRatio(WIDESCREEN_RATIO)
@@ -43,8 +40,7 @@ actual fun Player(
 fun rememberPlayerState(player: Player): PlayerState = remember { PlayerState(player) }
 
 @Stable
-actual class PlayerState(internal val player: Player) :
-    CoroutineScope by CoroutineScope(Dispatchers.Main) {
+actual class PlayerState(internal val player: Player) : CoroutineScope by CoroutineScope(Dispatchers.Main) {
     var isPlaying by mutableStateOf(player.isPlaying)
         private set
 
@@ -129,10 +125,7 @@ actual class PlayerState(internal val player: Player) :
         }
 
         @UnstableApi
-        override fun onSurfaceSizeChanged(
-            width: Int,
-            height: Int
-        ) {
+        override fun onSurfaceSizeChanged(width: Int, height: Int) {
             this@PlayerState.surfaceSize = Size(width, height)
         }
     }

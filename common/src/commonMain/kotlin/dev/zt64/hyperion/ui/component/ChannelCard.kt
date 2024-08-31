@@ -21,21 +21,16 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.api.domain.model.DomainChannelPartial
+import dev.zt64.hyperion.api.model.Channel
 import dev.zt64.hyperion.domain.manager.AccountManager
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.screen.ChannelScreen
 import dev.zt64.hyperion.ui.tooling.HyperionPreview
-import dev.zt64.innertube.domain.model.DomainChannelPartial
-import dev.zt64.innertube.model.Channel
 import org.koin.compose.koinInject
 
 @Composable
-fun ChannelCard(
-    channel: Channel,
-    onLongClick: () -> Unit,
-    onClickSubscribe: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun ChannelCard(channel: Channel, onLongClick: () -> Unit, onClickSubscribe: () -> Unit, modifier: Modifier = Modifier) {
     val navController = LocalNavigator.currentOrThrow
     val accountManager: AccountManager = koinInject()
 
@@ -52,12 +47,7 @@ fun ChannelCard(
 }
 
 @Composable
-fun ChannelCard(
-    channel: DomainChannelPartial,
-    onLongClick: () -> Unit,
-    onClickSubscribe: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun ChannelCard(channel: DomainChannelPartial, onLongClick: () -> Unit, onClickSubscribe: () -> Unit, modifier: Modifier = Modifier) {
     val navController = LocalNavigator.currentOrThrow
     val accountManager: AccountManager = koinInject()
 
@@ -159,9 +149,9 @@ fun ChannelCard(
         ) {
             ShimmerImage(
                 modifier =
-                    Modifier
-                        .clip(CircleShape)
-                        .size(60.dp),
+                Modifier
+                    .clip(CircleShape)
+                    .size(60.dp),
                 url = channel.thumbnails.default.url,
                 contentDescription = channel.title
             )

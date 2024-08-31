@@ -169,13 +169,7 @@ object LibraryTab : Tab {
     }
 
     @Composable
-    private fun RecentCard(
-        title: String,
-        subtitle: String,
-        duration: String,
-        onClick: () -> Unit,
-        onLongClick: () -> Unit
-    ) {
+    private fun RecentCard(title: String, subtitle: String, duration: String, onClick: () -> Unit, onLongClick: () -> Unit) {
         OutlinedCard(
             modifier = Modifier
                 .size(

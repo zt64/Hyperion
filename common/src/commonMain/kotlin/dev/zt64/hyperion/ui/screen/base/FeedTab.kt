@@ -42,11 +42,11 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.api.domain.model.DomainChannelPartial
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.model.FeedScreenModel
 import dev.zt64.hyperion.ui.screen.AddAccountScreen
-import dev.zt64.innertube.domain.model.DomainChannelPartial
 
 object FeedTab : Tab {
     override val options: TabOptions
@@ -153,11 +153,7 @@ object FeedTab : Tab {
     }
 
     @Composable
-    private fun ChannelsRow(
-        selectedChannel: DomainChannelPartial?,
-        onClickChannel: () -> Unit,
-        onClickViewAll: () -> Unit
-    ) {
+    private fun ChannelsRow(selectedChannel: DomainChannelPartial?, onClickChannel: () -> Unit, onClickViewAll: () -> Unit) {
         LazyRow(
             contentPadding = PaddingValues(horizontal = 14.dp),
             horizontalArrangement = Arrangement.spacedBy(14.dp),
@@ -176,10 +172,10 @@ object FeedTab : Tab {
                 ) {
                     Box(
                         modifier =
-                            Modifier.toggleable(
-                                value = true,
-                                onValueChange = {}
-                            )
+                        Modifier.toggleable(
+                            value = true,
+                            onValueChange = {}
+                        )
                     ) {
                         ShimmerImage(
                             modifier = Modifier
@@ -224,10 +220,7 @@ object FeedTab : Tab {
             contentPadding = PaddingValues(horizontal = 14.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            fun chip(
-                selected: Boolean,
-                label: String
-            ) {
+            fun chip(selected: Boolean, label: String) {
                 item {
                     FilterChip(
                         selected = selected,

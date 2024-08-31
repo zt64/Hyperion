@@ -11,13 +11,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,18 +28,15 @@ import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TooltipBox
-import androidx.compose.material3.TooltipDefaults
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.rememberTooltipState
 import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -60,6 +60,7 @@ import dev.zt64.hyperion.domain.manager.AccountManager
 import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.LocalWindowSizeClass
+import dev.zt64.hyperion.ui.component.AdaptiveTopAppBarDefaults
 import dev.zt64.hyperion.ui.component.AdaptiveTopBar
 import dev.zt64.hyperion.ui.component.PlainTooltipBox
 import dev.zt64.hyperion.ui.screen.base.FeedTab
@@ -72,7 +73,7 @@ object BaseScreen : Screen {
     // @OptIn(ExperimentalMaterial3AdaptiveNavigationSuiteApi::class)
     @Composable
     override fun Content() {
-        val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+        val scrollBehavior = AdaptiveTopAppBarDefaults.adaptiveScrollBehavior()
         val navigator = LocalNavigator.currentOrThrow
         val drawerState = rememberDrawerState(DrawerValue.Closed)
 
@@ -132,11 +133,7 @@ object BaseScreen : Screen {
                 drawerState = drawerState,
                 scrollBehavior = scrollBehavior,
                 drawerContent = {
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = stringResource(MR.strings.app_name),
-                        style = MaterialTheme.typography.titleLarge
-                    )
+                    Drawer()
                 },
                 topBar = {
                     val coroutineScope = rememberCoroutineScope()
@@ -227,6 +224,15 @@ private fun HyperionScaffold(
     }
 }
 
+/**
+ * TODO: Figure out way to display additional navigation icons on desktop, and Android tv
+ *
+ * @param onClickDrawer
+ * @param onClickNotifications
+ * @param onClickSearch
+ * @param onClickSettings
+ * @param scrollBehavior
+ */
 @Composable
 private fun TopBar(
     onClickDrawer: () -> Unit,
@@ -274,11 +280,22 @@ private fun TopBar(
                             ),
                         contentAlignment = Alignment.Center
                     ) {
+                        // TODO: Fetch notification count from API
+                        val notificationCount = remember { 0 }
+
                         BadgedBox(
                             badge = {
-                                // Badge {
-                                //     Text("57")
-                                // }
+                                if (notificationCount > 0) {
+                                    Badge {
+                                        Text(
+                                            text = if (notificationCount > 99) {
+                                                "99+"
+                                            } else {
+                                                notificationCount.toString()
+                                            }
+                                        )
+                                    }
+                                }
                             }
                         ) {
                             Icon(
@@ -290,14 +307,12 @@ private fun TopBar(
                 }
             }
 
-            TooltipBox(
-                positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+            PlainTooltipBox(
                 tooltip = {
                     PlainTooltip {
                         Text(stringResource(MR.strings.search))
                     }
-                },
-                state = rememberTooltipState()
+                }
             ) {
                 IconButton(onClickSearch) {
                     Icon(
@@ -307,14 +322,12 @@ private fun TopBar(
                 }
             }
 
-            TooltipBox(
-                positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+            PlainTooltipBox(
                 tooltip = {
                     PlainTooltip {
                         Text(stringResource(MR.strings.settings))
                     }
-                },
-                state = rememberTooltipState()
+                }
             ) {
                 IconButton(onClickSettings) {
                     Icon(
@@ -325,6 +338,32 @@ private fun TopBar(
             }
         },
         scrollBehavior = scrollBehavior
+    )
+}
+
+@Composable
+private fun Drawer() {
+    Text(
+        modifier = Modifier.padding(16.dp),
+        text = stringResource(MR.strings.app_name),
+        style = MaterialTheme.typography.titleLarge
+    )
+
+    HorizontalDivider()
+
+    NavigationDrawerItem(
+        selected = false,
+        label = {
+            Text("Explore")
+        },
+        icon = {
+            Icon(
+                imageVector = Icons.Default.Explore,
+                contentDescription = "Explore"
+            )
+        },
+        onClick = {
+        }
     )
 }
 

@@ -25,11 +25,12 @@ import dev.zt64.hyperion.ui.component.LoadingIndicator
 import dev.zt64.hyperion.ui.component.VideoCard
 import dev.zt64.hyperion.ui.model.TagScreenModel
 import dev.zt64.hyperion.ui.model.TagScreenModel.State
+import org.koin.core.parameter.parametersOf
 
 data class TagScreen(private val tag: String) : Screen {
     @Composable
     override fun Content() {
-        val model: TagScreenModel = koinScreenModel()
+        val model: TagScreenModel = koinScreenModel { parametersOf(tag) }
 
         when (val state = model.state) {
             is State.Loading -> Loading()
@@ -72,10 +73,10 @@ data class TagScreen(private val tag: String) : Screen {
 
             LazyColumn(
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .padding(horizontal = 14.dp),
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 item {

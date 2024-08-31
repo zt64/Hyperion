@@ -25,10 +25,7 @@ expect fun HyperionTheme(content: @Composable () -> Unit)
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-internal fun HyperionTheme(
-    colorScheme: ColorScheme,
-    content: @Composable () -> Unit
-) {
+internal fun HyperionTheme(colorScheme: ColorScheme, content: @Composable () -> Unit) {
     MaterialTheme(colorScheme) {
         CompositionLocalProvider(
             // LocalScrollbarStyle provides ScrollbarStyle(

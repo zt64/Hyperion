@@ -2,16 +2,10 @@ package dev.zt64.hyperion.ui.component
 
 import android.content.Context
 import android.content.Intent
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import dev.icerock.moko.resources.compose.stringResource
-import dev.zt64.hyperion.resources.MR
 
 @Stable
 actual class ShareButtonState(private val context: Context) {
@@ -38,17 +32,4 @@ actual fun rememberShareButtonState(): ShareButtonState {
     return remember {
         ShareButtonState(context)
     }
-}
-
-@Composable
-internal actual fun ShareButtonIcon() {
-    Icon(
-        imageVector = Icons.Default.Share,
-        contentDescription = stringResource(MR.strings.share)
-    )
-}
-
-@Composable
-internal actual fun ShareButtonText() {
-    Text(stringResource(MR.strings.share))
 }

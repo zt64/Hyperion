@@ -1,14 +1,22 @@
 package dev.zt64.hyperion.ui.model
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.paging.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
+import androidx.paging.cachedIn
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import dev.zt64.hyperion.api.domain.repository.InnerTubeRepository
+import dev.zt64.hyperion.api.model.SearchResult
 import dev.zt64.hyperion.domain.manager.AccountManager
-import dev.zt64.innertube.domain.repository.InnerTubeRepository
-import dev.zt64.innertube.model.SearchResult
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
@@ -52,11 +60,10 @@ class SearchScreenModel(
     }
 
     fun selectSuggestion(suggestion: String) {
-        textFieldValue =
-            TextFieldValue(
-                text = suggestion,
-                selection = TextRange(suggestion.length)
-            )
+        textFieldValue = TextFieldValue(
+            text = suggestion,
+            selection = TextRange(suggestion.length)
+        )
 
         search()
     }
@@ -66,9 +73,7 @@ class SearchScreenModel(
             Pager(pagingConfig) {
                 // BrowsePagingSource { key -> innerTube.getSearchResults(textFieldValue.text, key) }
                 object : PagingSource<String, SearchResult>() {
-                    override suspend fun load(
-                        params: LoadParams<String>
-                    ): LoadResult<String, SearchResult> {
+                    override suspend fun load(params: LoadParams<String>): LoadResult<String, SearchResult> {
                         val res = innerTube.getSearchResults(textFieldValue.text, params.key)
 
                         return try {

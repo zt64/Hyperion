@@ -9,10 +9,9 @@ import androidx.paging.PagingState
 import androidx.paging.cachedIn
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import dev.zt64.hyperion.api.domain.repository.InnerTubeRepository
+import dev.zt64.hyperion.api.model.Playlist
 import dev.zt64.hyperion.domain.manager.ShareManager
-import dev.zt64.innertube.domain.repository.InnerTubeRepository
-import dev.zt64.innertube.model.Playlist
-import dev.zt64.innertube.model.PlaylistItem
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
@@ -35,7 +34,7 @@ internal class PlaylistScreenModel(
         private set
     var playlist by mutableStateOf<Playlist?>(null)
         private set
-    var videos by mutableStateOf(emptyFlow<PagingData<PlaylistItem>>())
+    var videos by mutableStateOf(emptyFlow<PagingData<dev.zt64.hyperion.api.model.PlaylistItem>>())
         private set
     // val snackbarHostState = SnackbarHostState()
 
@@ -47,7 +46,7 @@ internal class PlaylistScreenModel(
                 playlist = innerTube.getPlaylist(playlistId)
                 videos =
                     Pager(pagingConfig) {
-                        object : PagingSource<String, PlaylistItem>() {
+                        object : PagingSource<String, dev.zt64.hyperion.api.model.PlaylistItem>() {
                             override suspend fun load(params: LoadParams<String>) = try {
                                 val response =
                                     innerTube
@@ -64,9 +63,7 @@ internal class PlaylistScreenModel(
                                 LoadResult.Error(e)
                             }
 
-                            override fun getRefreshKey(
-                                state: PagingState<String, PlaylistItem>
-                            ): String? = null
+                            override fun getRefreshKey(state: PagingState<String, dev.zt64.hyperion.api.model.PlaylistItem>): String? = null
                         }
                     }.flow.cachedIn(screenModelScope)
 

@@ -16,13 +16,16 @@ import com.godaddy.android.colorpicker.harmony.HarmonyColorPicker
 import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.resources.MR
 
+/**
+ * A dialog that allows the user to pick a color.
+ *
+ * @param color
+ * @param title
+ * @param onColorSelected
+ * @param onDismissRequest
+ */
 @Composable
-fun ColorPickerDialog(
-    color: Color,
-    title: String,
-    onColorSelected: (Color) -> Unit,
-    onDismissRequest: () -> Unit
-) {
+fun ColorPickerDialog(color: Color, title: String, onColorSelected: (Color) -> Unit, onDismissRequest: () -> Unit) {
     var selectedColor by remember {
         mutableStateOf(HsvColor.from(color))
     }

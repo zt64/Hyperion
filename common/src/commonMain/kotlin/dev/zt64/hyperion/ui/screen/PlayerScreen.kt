@@ -56,7 +56,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -74,28 +73,31 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.api.domain.model.DomainChapter
+import dev.zt64.hyperion.api.domain.model.DomainVideo
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.LocalWindowSizeClass
 import dev.zt64.hyperion.ui.component.LoadingIndicator
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.component.VideoCard
 import dev.zt64.hyperion.ui.component.player.PlayerActions
-import dev.zt64.hyperion.ui.component.player.PlayerControls
+import dev.zt64.hyperion.ui.component.player.PlayerOverlay
 import dev.zt64.hyperion.ui.component.player.WIDESCREEN_RATIO
+import dev.zt64.hyperion.ui.form.DownloadForm
+import dev.zt64.hyperion.ui.menu.PlayerOptionsMenu
 import dev.zt64.hyperion.ui.model.PlaybackState
 import dev.zt64.hyperion.ui.model.PlayerScreenModel
 import dev.zt64.hyperion.ui.model.PlayerState
-import dev.zt64.innertube.domain.model.DomainChapter
-import dev.zt64.innertube.domain.model.DomainVideo
 import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import kotlin.math.roundToInt
 
-data class PlayerScreen(private val id: String) : Screen {
+class PlayerScreen(private val id: String) : Screen {
     @Composable
     override fun Content() {
-        { parametersOf(id) }
-        val model: PlayerScreenModel = koinScreenModel()
+        val model: PlayerScreenModel = koinScreenModel {
+            parametersOf(id)
+        }
 
         when (val state = model.state) {
             is PlayerState.Loading -> Loading()
@@ -129,14 +131,15 @@ data class PlayerScreen(private val id: String) : Screen {
         val navigator = LocalNavigator.currentOrThrow
         val windowSizeClass = LocalWindowSizeClass.current
 
-        // if (model.showQualityPicker) {
-        //     PlayerSheet(onDismissRequest = viewModel::hideOptions)
-        // }
-        //
-        // if (model.showDownloadDialog) {
-        //     DownloadSheet(onDismissRequest = viewModel::hideDownloadDialog)
-        // }
-        //
+        if (model.showOptions) {
+            PlayerOptionsMenu(onDismissRequest = model::hideOptions)
+        }
+
+        if (model.showDownloadDialog) {
+            DownloadForm(onDismissRequest = model::hideDownloadDialog)
+        }
+
+        // On Desktop show the comments in a list, use a sheet on mobile
         // if (model.showCommentsSheet) {
         //     CommentsSheet(onDismissRequest = viewModel::hideComments)
         // }
@@ -232,7 +235,7 @@ data class PlayerScreen(private val id: String) : Screen {
                                     modifier = Modifier.fillMaxWidth(),
                                     voteEnabled = model.accountManager.loggedIn,
                                     likeLabel = { Text(video.likesText) },
-                                    dislikeLabel = { Text(video.dislikesText) },
+                                    dislikeLabel = { Text(model.dislikes.toString()) },
                                     showDownloadButton = model.preferences.showDownloadButton,
                                     onClickVote = model::updateVote,
                                     onClickShare = model::shareVideo,
@@ -363,13 +366,8 @@ data class PlayerScreen(private val id: String) : Screen {
         }
     }
 
-    @OptIn(ExperimentalTextApi::class)
     @Composable
-    private fun Description(
-        expanded: Boolean,
-        onClick: () -> Unit,
-        video: DomainVideo
-    ) {
+    private fun Description(expanded: Boolean, onClick: () -> Unit, video: DomainVideo) {
         val colorScheme = MaterialTheme.colorScheme
         val description = remember(video.description) {
             buildAnnotatedString {
@@ -422,10 +420,7 @@ data class PlayerScreen(private val id: String) : Screen {
     }
 
     @Composable
-    private fun ChaptersRow(
-        video: DomainVideo,
-        onClickChapter: (DomainChapter) -> Unit
-    ) {
+    private fun ChaptersRow(video: DomainVideo, onClickChapter: (DomainChapter) -> Unit) {
         // Chapters
         BoxWithConstraints {
             if (maxHeight >= 160.dp) {
@@ -447,10 +442,7 @@ data class PlayerScreen(private val id: String) : Screen {
     }
 
     @Composable
-    private fun Chapter(
-        chapter: DomainChapter,
-        onClick: () -> Unit
-    ) {
+    private fun Chapter(chapter: DomainChapter, onClick: () -> Unit) {
         OutlinedCard(
             modifier = Modifier.size(width = 144.dp, height = 160.dp),
             onClick = onClick
@@ -474,10 +466,7 @@ data class PlayerScreen(private val id: String) : Screen {
     }
 
     @Composable
-    private fun PlayerControlsContainer(
-        modifier: Modifier = Modifier,
-        onClickCollapse: () -> Unit
-    ) {
+    private fun PlayerControlsContainer(modifier: Modifier = Modifier, onClickCollapse: () -> Unit) {
         val model: PlayerScreenModel = koinScreenModel()
         val coroutineScope = rememberCoroutineScope()
         val interactionSource = remember { MutableInteractionSource() }
@@ -553,7 +542,7 @@ data class PlayerScreen(private val id: String) : Screen {
                     color = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f),
                     tonalElevation = 8.dp
                 ) {
-                    PlayerControls(
+                    PlayerOverlay(
                         modifier = Modifier.matchParentSize(),
                         model = model,
                         onClickCollapse = onClickCollapse

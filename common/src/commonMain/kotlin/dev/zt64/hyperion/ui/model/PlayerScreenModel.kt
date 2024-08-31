@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,17 +14,18 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import dev.zt64.hyperion.api.domain.model.DomainComment
+import dev.zt64.hyperion.api.domain.model.DomainFormat
+import dev.zt64.hyperion.api.domain.model.DomainVideo
+import dev.zt64.hyperion.api.domain.model.DomainVideoPartial
+import dev.zt64.hyperion.api.domain.repository.InnerTubeRepository
 import dev.zt64.hyperion.domain.manager.AccountManager
 import dev.zt64.hyperion.domain.manager.DownloadManager
 import dev.zt64.hyperion.domain.manager.PreferencesManager
 import dev.zt64.hyperion.domain.manager.ShareManager
 import dev.zt64.hyperion.domain.model.Rating
 import dev.zt64.hyperion.domain.paging.BrowsePagingSource
-import dev.zt64.innertube.domain.model.DomainComment
-import dev.zt64.innertube.domain.model.DomainFormat
-import dev.zt64.innertube.domain.model.DomainVideo
-import dev.zt64.innertube.domain.model.DomainVideoPartial
-import dev.zt64.innertube.domain.repository.InnerTubeRepository
+import dev.zt64.ryd.RydClient
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -76,6 +78,7 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) :
     val accountManager = get<AccountManager>()
     val preferences = get<PreferencesManager>()
 
+    private val rydClient = get<RydClient>()
     private val downloadManager = get<DownloadManager>()
     private val innerTube = get<InnerTubeRepository>()
     private val shareManager = get<ShareManager>()
@@ -90,6 +93,8 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) :
 
     var video by mutableStateOf<DomainVideo?>(null)
         protected set
+    var dislikes by mutableIntStateOf(0)
+        private set
 
     var videoFormats = mutableStateListOf<DomainFormat.Video>()
         private set
@@ -101,7 +106,7 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) :
     var showFullDescription by mutableStateOf(false)
         private set
     var showControls by mutableStateOf(false)
-    var showQualityPicker by mutableStateOf(false)
+    var showOptions by mutableStateOf(false)
         protected set
     var showDownloadDialog by mutableStateOf(false)
         private set
@@ -143,11 +148,14 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) :
                 state = PlayerState.Loading
 
                 video = innerTube.getVideo(id)
+                dislikes = rydClient.get(videoId).dislikes
 
                 state = PlayerState.Loaded
 
                 videoFormats.clear()
-                videoFormats.addAll(video!!.formats.filterIsInstance<DomainFormat.Video>())
+                videoFormats.addAll(
+                    video!!.streamingData.formats.filterIsInstance<DomainFormat.Video>()
+                )
                 videoFormat = videoFormats.first()
 
                 // val audioStream = video!!.formats.filterIsInstance<DomainFormat.Audio>().last()
@@ -177,11 +185,11 @@ abstract class AbstractPlayerScreenModel(private val videoId: String) :
     }
 
     fun showOptions() {
-        showQualityPicker = true
+        showOptions = true
     }
 
     fun hideOptions() {
-        showQualityPicker = false
+        showOptions = false
     }
 
     fun showDownloadDialog() {

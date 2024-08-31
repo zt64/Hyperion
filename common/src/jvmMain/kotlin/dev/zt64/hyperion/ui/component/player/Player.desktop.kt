@@ -17,10 +17,7 @@ import androidx.compose.ui.unit.dp
 import kotlin.time.Duration
 
 @Composable
-actual fun Player(
-    state: PlayerState,
-    modifier: Modifier
-) {
+actual fun Player(state: PlayerState, modifier: Modifier) {
     Box(
         modifier = Modifier
             .widthIn(max = 1280.dp)

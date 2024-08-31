@@ -1,6 +1,5 @@
 package dev.zt64.hyperion.ui.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,37 +16,36 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LeadingIconTab
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
+import dev.icerock.moko.resources.compose.pluralStringResource
 import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.api.domain.model.DomainChannel
+import dev.zt64.hyperion.api.network.dto.browse.ChannelTab
 import dev.zt64.hyperion.domain.model.channel.imageVector
 import dev.zt64.hyperion.domain.model.channel.title
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.AdaptiveTopBar
-import dev.zt64.hyperion.ui.component.ShareButton
+import dev.zt64.hyperion.ui.component.ShareIconButton
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.model.ChannelScreenModel
 import dev.zt64.hyperion.ui.model.ChannelScreenModel.State
-import dev.zt64.innertube.domain.model.DomainChannel
-import dev.zt64.innertube.network.dto.browse.ChannelTab
 import org.koin.core.parameter.parametersOf
 
 data class ChannelScreen(private val id: String) : Screen {
     @Composable
     override fun Content() {
-        { parametersOf(id) }
-        val model: ChannelScreenModel = koinScreenModel()
+        val model: ChannelScreenModel = koinScreenModel { parametersOf(id) }
 
         when (val state = model.state) {
             is State.Loaded -> Loaded(state.channel)
@@ -82,7 +80,7 @@ data class ChannelScreen(private val id: String) : Screen {
             topBar = {
                 AdaptiveTopBar(
                     title = { Text(channel.name) },
-                    actions = { ShareButton(channel.shareUrl, label = channel.name) },
+                    actions = { ShareIconButton(channel.shareUrl, label = channel.name) },
                     scrollBehavior = scrollBehavior
                 )
             }
@@ -100,9 +98,9 @@ data class ChannelScreen(private val id: String) : Screen {
                         channel.banner?.let { banner ->
                             ShimmerImage(
                                 modifier = Modifier.aspectRatio(
-                                    banner.width.toFloat() / banner.height.toFloat()
+                                    banner.defaultBanner.width.toFloat() / banner.defaultBanner.height.toFloat()
                                 ),
-                                url = banner.url,
+                                url = banner.defaultBanner.url,
                                 contentDescription = channel.name
                             )
                         }
@@ -130,7 +128,7 @@ data class ChannelScreen(private val id: String) : Screen {
 
                                 channel.subscriberText?.let { subscriberText ->
                                     Text(
-                                        text = subscriberText,
+                                        text = pluralStringResource(MR.plurals.subscribers, 1000, 1000),
                                         style = MaterialTheme.typography.labelSmall
                                     )
                                 }
@@ -147,10 +145,8 @@ data class ChannelScreen(private val id: String) : Screen {
                 }
 
                 stickyHeader {
-                    ScrollableTabRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.Green),
+                    PrimaryScrollableTabRow(
+                        modifier = Modifier.fillMaxWidth(),
                         selectedTabIndex = model.tab.ordinal,
                         edgePadding = 0.dp
                     ) {

@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -17,6 +16,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -25,6 +26,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Subscriptions
 import androidx.compose.material.icons.filled.VideoLibrary
+import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,14 +36,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import androidx.tv.foundation.lazy.list.TvLazyColumn
-import androidx.tv.foundation.lazy.list.TvLazyRow
-import androidx.tv.material3.CardLayoutDefaults
 import androidx.tv.material3.DrawerValue
 import androidx.tv.material3.Icon
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.NavigationDrawer
-import androidx.tv.material3.StandardCardLayout
+import androidx.tv.material3.StandardCardContainer
 import androidx.tv.material3.Surface
 import androidx.tv.material3.Text
 import androidx.tv.material3.rememberDrawerState
@@ -59,10 +58,10 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Hyperion() {
+fun Hyperion(modifier: Modifier = Modifier) {
     HyperionTheme {
         Surface(
-            modifier = Modifier.fillMaxSize()
+            modifier = modifier.fillMaxSize()
         ) {
             val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
 
@@ -77,11 +76,7 @@ fun Hyperion() {
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         @Composable
-                        fun Item(
-                            label: String,
-                            icon: ImageVector,
-                            selected: Boolean = false
-                        ) {
+                        fun Item(label: String, icon: ImageVector, selected: Boolean = false) {
                             var selected by remember { mutableStateOf(selected) }
                             val elevation by animateDpAsState(
                                 targetValue = if (selected) 8.dp else 0.dp,
@@ -146,23 +141,20 @@ fun Hyperion() {
                     }
                 }
             ) {
-                TvLazyColumn(
+                LazyColumn(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(40.dp)
                 ) {
                     items(5) { content ->
-                        TvLazyRow(
+                        LazyRow(
                             horizontalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             items(10) { cardItem ->
-                                StandardCardLayout(
+                                StandardCardContainer(
                                     modifier = Modifier.width(200.dp),
                                     imageCard = {
-                                        CardLayoutDefaults.ImageCard(
-                                            onClick = {},
-                                            interactionSource = remember {
-                                                MutableInteractionSource()
-                                            }
+                                        Card(
+                                            onClick = {}
                                         ) {
                                             ShimmerImage(
                                                 modifier = Modifier

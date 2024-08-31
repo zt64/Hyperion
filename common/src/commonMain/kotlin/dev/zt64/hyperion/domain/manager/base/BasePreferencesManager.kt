@@ -14,10 +14,7 @@ private typealias Setter<T> = (key: String, newValue: T) -> Unit
 
 @Suppress("SameParameterValue", "MemberVisibilityCanBePrivate")
 abstract class BasePreferenceManager(val settings: Settings) {
-    protected fun preference(
-        key: String,
-        defaultValue: String
-    ) = Preference(
+    protected fun preference(key: String, defaultValue: String) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = settings::get,
@@ -31,50 +28,35 @@ abstract class BasePreferenceManager(val settings: Settings) {
         setter = settings::set
     )
 
-    protected fun preference(
-        key: String,
-        defaultValue: Boolean
-    ) = Preference(
+    protected fun preference(key: String, defaultValue: Boolean) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = settings::get,
         setter = settings::set
     )
 
-    protected fun preference(
-        key: String,
-        defaultValue: Int
-    ) = Preference(
+    protected fun preference(key: String, defaultValue: Int) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = settings::get,
         setter = settings::set
     )
 
-    protected fun preference(
-        key: String,
-        defaultValue: Float
-    ) = Preference(
+    protected fun preference(key: String, defaultValue: Float) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = settings::get,
         setter = settings::set
     )
 
-    protected fun preference(
-        key: String,
-        defaultValue: Long
-    ) = Preference(
+    protected fun preference(key: String, defaultValue: Long) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = settings::get,
         setter = settings::set
     )
 
-    protected inline fun <reified E : Enum<E>> preference(
-        key: String,
-        defaultValue: E
-    ) = Preference(
+    protected inline fun <reified E : Enum<E>> preference(key: String, defaultValue: E) = Preference(
         key = key,
         defaultValue = defaultValue,
         getter = settings::get,
@@ -89,16 +71,9 @@ abstract class BasePreferenceManager(val settings: Settings) {
     ) {
         private var value by mutableStateOf(getter(key, defaultValue))
 
-        operator fun getValue(
-            thisRef: Any,
-            property: KProperty<*>
-        ) = value
+        operator fun getValue(thisRef: Any, property: KProperty<*>) = value
 
-        operator fun setValue(
-            thisRef: Any,
-            property: KProperty<*>,
-            value: T
-        ) {
+        operator fun setValue(thisRef: Any, property: KProperty<*>, value: T) {
             this.value = value
             setter(key, value)
         }
@@ -108,26 +83,14 @@ abstract class BasePreferenceManager(val settings: Settings) {
 }
 
 @OptIn(ExperimentalStdlibApi::class)
-inline fun <reified E : Enum<E>> Settings.getEnum(
-    key: String,
-    defaultValue: E
-): E = enumEntries<E>()[getInt(key, defaultValue.ordinal)]
+inline fun <reified E : Enum<E>> Settings.getEnum(key: String, defaultValue: E): E = enumEntries<E>()[getInt(key, defaultValue.ordinal)]
 
-inline fun <reified E : Enum<E>> Settings.putEnum(
-    key: String,
-    value: E
-) {
+inline fun <reified E : Enum<E>> Settings.putEnum(key: String, value: E) {
     putInt(key, value.ordinal)
 }
 
-inline operator fun <reified E : Enum<E>> Settings.get(
-    key: String,
-    defaultValue: E
-): E = getEnum(key, defaultValue)
+inline operator fun <reified E : Enum<E>> Settings.get(key: String, defaultValue: E): E = getEnum(key, defaultValue)
 
-inline operator fun <reified E : Enum<E>> Settings.set(
-    key: String,
-    value: E
-) {
+inline operator fun <reified E : Enum<E>> Settings.set(key: String, value: E) {
     putEnum(key, value)
 }

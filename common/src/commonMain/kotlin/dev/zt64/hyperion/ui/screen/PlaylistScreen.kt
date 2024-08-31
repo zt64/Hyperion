@@ -44,7 +44,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.AdaptiveTopBar
 import dev.zt64.hyperion.ui.component.LoadingIndicator
-import dev.zt64.hyperion.ui.component.ShareButton
+import dev.zt64.hyperion.ui.component.ShareIconButton
 import dev.zt64.hyperion.ui.model.PlaylistScreenModel
 import dev.zt64.hyperion.ui.model.PlaylistScreenModel.State
 import org.koin.core.parameter.parametersOf
@@ -52,8 +52,7 @@ import org.koin.core.parameter.parametersOf
 data class PlaylistScreen(val id: String) : Screen {
     @Composable
     override fun Content() {
-        { parametersOf(id) }
-        val model: PlaylistScreenModel = koinScreenModel()
+        val model: PlaylistScreenModel = koinScreenModel { parametersOf(id) }
 
         when (val state = model.state) {
             is State.Loading -> Loading()
@@ -103,7 +102,7 @@ data class PlaylistScreen(val id: String) : Screen {
                                 contentDescription = null
                             )
                         }
-                        ShareButton(playlist.shareUrl, label = playlist.title)
+                        ShareIconButton(playlist.shareUrl, label = playlist.title)
                         IconButton(onClick = model::download) {
                             Icon(
                                 imageVector = Icons.Default.Download,

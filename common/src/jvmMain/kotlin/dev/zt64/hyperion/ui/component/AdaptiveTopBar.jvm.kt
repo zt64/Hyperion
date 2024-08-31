@@ -6,10 +6,7 @@ import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.Composable
 
 @Composable
-internal actual fun actualAdaptiveScrollBehavior(
-    state: TopAppBarState,
-    canScroll: () -> Boolean
-): TopAppBarScrollBehavior {
+internal actual fun actualAdaptiveScrollBehavior(state: TopAppBarState, canScroll: () -> Boolean): TopAppBarScrollBehavior {
     return TopAppBarDefaults.pinnedScrollBehavior(
         state = state,
         canScroll = canScroll

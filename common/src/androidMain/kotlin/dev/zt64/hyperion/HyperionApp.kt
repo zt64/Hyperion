@@ -9,6 +9,12 @@ class HyperionApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        // Firebase.initialize(applicationContext, buildFirebaseOptions())
+        //
+        // runBlocking {
+        //     val token = Firebase.installations.getId()
+        // }
+
         startKoin {
             androidContext(this@HyperionApp)
             modules(appModule)

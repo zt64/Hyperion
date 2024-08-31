@@ -69,7 +69,4 @@ object AdaptiveTopAppBarDefaults {
 }
 
 @Composable
-internal expect fun actualAdaptiveScrollBehavior(
-    state: TopAppBarState,
-    canScroll: () -> Boolean
-): TopAppBarScrollBehavior
+internal expect fun actualAdaptiveScrollBehavior(state: TopAppBarState, canScroll: () -> Boolean): TopAppBarScrollBehavior

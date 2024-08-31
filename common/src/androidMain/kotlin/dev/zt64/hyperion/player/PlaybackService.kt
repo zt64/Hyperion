@@ -20,7 +20,7 @@ import androidx.media3.session.MediaSessionService
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
 import dev.zt64.hyperion.BuildKonfig
-import dev.zt64.innertube.domain.repository.InnerTubeRepository
+import dev.zt64.hyperion.api.domain.repository.InnerTubeRepository
 import org.koin.android.ext.android.inject
 
 internal class PlaybackService : MediaSessionService() {

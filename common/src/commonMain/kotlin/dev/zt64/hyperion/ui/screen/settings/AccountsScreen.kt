@@ -32,7 +32,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.model.SettingsScreenModel
 
-object AccountsScreen : Screen {
+class AccountsScreen : Screen {
     @Composable
     override fun Content() {
         val model: SettingsScreenModel = koinScreenModel()

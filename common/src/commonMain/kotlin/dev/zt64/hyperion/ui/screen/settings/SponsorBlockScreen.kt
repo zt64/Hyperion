@@ -1,20 +1,19 @@
 package dev.zt64.hyperion.ui.screen.settings
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.PermIdentity
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -28,8 +27,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -37,17 +38,20 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.domain.model.SkipOption
+import dev.zt64.hyperion.domain.model.SponsorBlockCategory
 import dev.zt64.hyperion.resources.MR
-import dev.zt64.hyperion.ui.component.SponsorBlockCategory
 import dev.zt64.hyperion.ui.component.setting.SliderSetting
 import dev.zt64.hyperion.ui.component.setting.SwitchSetting
+import dev.zt64.hyperion.ui.form.Form
 import dev.zt64.hyperion.ui.model.SettingsScreenModel
 
-object SponsorBlockScreen : Screen {
+class SponsorBlockScreen : Screen {
     @Composable
     override fun Content() {
         val model: SettingsScreenModel = koinScreenModel()
@@ -58,7 +62,11 @@ object SponsorBlockScreen : Screen {
             text = stringResource(MR.strings.enabled)
         )
 
-        AnimatedVisibility(visible = preferences.sponsorBlockEnabled) {
+        AnimatedVisibility(
+            visible = preferences.sponsorBlockEnabled,
+            enter = expandVertically(expandFrom = Alignment.Top),
+            exit = shrinkVertically(shrinkTowards = Alignment.Top)
+        ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
@@ -104,21 +112,48 @@ object SponsorBlockScreen : Screen {
                     }
                 )
 
+                val isErrorUrl by remember { mutableStateOf(false) }
+                var sbUrl by remember(preferences.sponsorBlockApiUrl) {
+                    mutableStateOf(preferences.sponsorBlockApiUrl)
+                }
+
                 OutlinedTextField(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
-                    value = preferences.sponsorBlockApiUrl,
-                    onValueChange = { preferences.sponsorBlockApiUrl = it },
+                    value = sbUrl,
+                    onValueChange = {
+                        sbUrl = it
+
+                        if (it.isNotEmpty()) {
+                            preferences.sponsorBlockApiUrl = it
+                        }
+                    },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.None,
                         autoCorrectEnabled = false,
+                        keyboardType = KeyboardType.Uri,
                         imeAction = ImeAction.Done
                     ),
                     label = {
                         Text("API URL")
-                    }
+                    },
+                    leadingIcon = {
+                        if (preferences.sponsorBlockApiUrl.isNotEmpty()) {
+                            IconButton(
+                                onClick = {
+                                    preferences.sponsorBlockApiUrl = "https://sponsor.ajay.app"
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Refresh,
+                                    contentDescription = null
+                                )
+                            }
+                        }
+                    },
+                    isError = isErrorUrl
                 )
 
                 HorizontalDivider(
@@ -126,17 +161,43 @@ object SponsorBlockScreen : Screen {
                 )
 
                 SponsorBlockCategory.entries.forEach { category ->
-                    ListItem(
-                        modifier = Modifier.clickable { /* onClickCategory(category) */ },
-                        headlineContent = { Text(category.toString()) },
-                        supportingContent = { Text(category.description) },
-                        trailingContent = {
-                            Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .background(category.color, CircleShape)
-                            )
+                    var showDialog by rememberSaveable { mutableStateOf(false) }
+
+                    if (showDialog) {
+                        Form(
+                            onDismissRequest = {
+                                showDialog = false
+                            },
+                            title = {
+                                Text(category.name)
+                            }
+                        ) {
+                            Column {
+                                SkipOption.entries.forEach { skipOption ->
+                                    ListItem(
+                                        modifier = Modifier.clickable { showDialog = false },
+                                        headlineContent = {
+                                            Text(stringResource(skipOption.label))
+                                        }
+                                    )
+                                }
+                            }
                         }
+                    }
+
+                    SwitchSetting(
+                        modifier = Modifier.clickable { showDialog = true },
+                        checked = false,
+                        onCheckedChange = { },
+                        text = stringResource(category.label),
+                        description = category.description
+                        // trailingContent = {
+                        //     Box(
+                        //         modifier = Modifier
+                        //             .size(36.dp)
+                        //             .background(category.defaultColor, CircleShape)
+                        //     )
+                        // }
                     )
                 }
             }
