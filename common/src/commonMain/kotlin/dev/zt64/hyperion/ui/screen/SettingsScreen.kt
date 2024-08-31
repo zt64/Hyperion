@@ -16,9 +16,9 @@ import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.layout.PaneAdaptedValue
+import androidx.compose.material3.adaptive.navigation.ThreePaneScaffoldNavigator
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -29,7 +29,9 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.internal.BackHandler
+import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.SUPPORTS_GESTURES
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.AdaptiveTopAppBarDefaults
 import dev.zt64.hyperion.ui.component.AdaptiveTopBar
@@ -95,30 +97,61 @@ object SettingsScreen : Screen {
                         Column(
                             modifier = Modifier.verticalScroll(rememberScrollState())
                         ) {
-                            SettingsSection.entries.forEach { destination ->
-                                key(destination.label) {
-                                    ListItem(
-                                        modifier = Modifier
-                                            .clickable {
-                                                navigator.navigateTo(
-                                                    ListDetailPaneScaffoldRole.Detail,
-                                                    destination
-                                                )
-                                            }.padding(vertical = 12.dp),
-                                        headlineContent = {
-                                            Text(stringResource(destination.label))
-                                        },
-                                        leadingContent = {
-                                            Icon(
-                                                imageVector = destination.icon,
-                                                contentDescription = stringResource(
-                                                    destination.label
-                                                )
-                                            )
-                                        }
+                            @Composable
+                            fun Section(
+                                section: SettingsSection,
+                                icon: @Composable () -> Unit = {
+                                    Icon(
+                                        imageVector = section.icon,
+                                        contentDescription = stringResource(section.label)
                                     )
                                 }
+                            ) {
+                                ListItem(
+                                    modifier = Modifier
+                                        .clickable {
+                                            navigator.navigateTo(
+                                                ListDetailPaneScaffoldRole.Detail,
+                                                section
+                                            )
+                                        }.padding(vertical = 12.dp),
+                                    headlineContent = {
+                                        Text(stringResource(section.label))
+                                    },
+                                    leadingContent = icon
+                                )
                             }
+
+                            Section(SettingsSection.GENERAL)
+                            Section(SettingsSection.APPEARANCE)
+
+                            if (SUPPORTS_GESTURES) {
+                                Section(SettingsSection.GESTURES)
+                            }
+
+                            Section(SettingsSection.NOTIFICATIONS)
+                            Section(SettingsSection.ACCOUNTS)
+                            Section(
+                                section = SettingsSection.SPONSOR_BLOCK
+                            ) {
+                                Icon(
+                                    painter = painterResource(MR.images.sponsor_block),
+                                    contentDescription = null
+                                )
+                            }
+                            Section(
+                                section = SettingsSection.DEARROW,
+                                icon = {
+                                    Icon(
+                                        painter = painterResource(MR.images.dearrow),
+                                        contentDescription = null
+                                    )
+                                }
+                            )
+
+                            Section(SettingsSection.BACKUP_RESTORE)
+                            Section(SettingsSection.ABOUT)
+                            Section(SettingsSection.DEVELOPER)
                         }
                     }
                 },
@@ -139,29 +172,31 @@ object SettingsScreen : Screen {
             )
         }
     }
-}
 
-object BaseSettingsScreen : Screen {
+    @OptIn(ExperimentalMaterial3AdaptiveApi::class)
     @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.currentOrThrow
-
-        SettingsSection.entries.forEach { destination ->
-            key(destination.label) {
-                ListItem(
-                    modifier = Modifier
-                        .clickable {
-                            navigator.push(destination.screen())
-                        }.padding(vertical = 12.dp),
-                    headlineContent = { Text(stringResource(destination.label)) },
-                    leadingContent = {
-                        Icon(
-                            imageVector = destination.icon,
-                            contentDescription = stringResource(destination.label)
-                        )
-                    }
-                )
-            }
+    private fun Section(
+        nav: ThreePaneScaffoldNavigator<SettingsSection>,
+        section: SettingsSection,
+        icon: @Composable () -> Unit = {
+            Icon(
+                imageVector = section.icon,
+                contentDescription = stringResource(section.label)
+            )
         }
+    ) {
+        ListItem(
+            modifier = Modifier
+                .clickable {
+                    nav.navigateTo(
+                        ListDetailPaneScaffoldRole.Detail,
+                        section
+                    )
+                }.padding(vertical = 12.dp),
+            headlineContent = {
+                Text(stringResource(section.label))
+            },
+            leadingContent = icon
+        )
     }
 }
