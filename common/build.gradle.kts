@@ -46,7 +46,7 @@ kotlin {
                 api(projects.resources)
 
                 // Compose
-                implementation(compose.material3)
+                api(compose.material3)
                 api(compose.ui)
                 api(compose.foundation)
                 api(compose.runtime)
@@ -67,8 +67,9 @@ kotlin {
                     excludeMaterial2()
                 }
                 api(libs.m3.windowSizeClass)
-                // implementation(libs.m3.adaptive)
-                // implementation(libs.m3.adaptive.nav)
+                implementation(libs.m3.adaptive)
+                implementation(libs.m3.adaptive.nav)
+                // implementation(libs.m3.adaptive.navSuite)
 
                 // TODO: Switch to DataStore or other alternative
                 api(libs.settings.noarg)
@@ -79,7 +80,9 @@ kotlin {
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.dearrow)
                 implementation(libs.ryd)
-                api(libs.firebase.messaging)
+                // api(libs.firebase.messaging)
+                // api(libs.firebase.auth)
+                // api(libs.firebase.installations)
 
                 // Misc
                 api(libs.immutableCollections)
@@ -101,7 +104,11 @@ kotlin {
                 api(libs.bundles.androidx)
                 api(libs.bundles.media3)
 
-                implementation(libs.compose.m3)
+                // implementation(libs.compose.m3)
+
+                // TODO: Remove when https://youtrack.jetbrains.com/issue/CMP-5959 is resolved
+                // noinspection UseTomlInstead
+                implementation("androidx.window:window:1.3.0")
 
                 api(libs.koin.androidx.compose)
             }
@@ -127,11 +134,16 @@ kotlin {
 
 android {
     namespace = "$group.common"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21
     }
+}
+
+// TODO: Remove when https://youtrack.jetbrains.com/issue/CMP-5959 is resolved
+configurations.configureEach {
+    exclude("androidx.window.core", "window-core")
 }
 
 compose {
