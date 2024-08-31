@@ -5,10 +5,14 @@ plugins {
 }
 
 group = "dev.zt64.ktor.brotli"
+description = """
+    Brotli encoder/decoder for Ktor. Only JVM is supported, which may cause issues when native targets are added.
+    https://github.com/google/brotli/issues/1123 for multiplatform brotli
+""".trimIndent()
 
 kotlin {
     jvm()
-    apple(skipCheck = true)
+    apple()
 
     sourceSets {
         commonMain {

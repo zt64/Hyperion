@@ -10,22 +10,13 @@ import kotlin.coroutines.CoroutineContext
 object BrotliEncoder : ContentEncoder, Encoder by BrotliEncoder {
     override val name = "br"
 
-    override fun decode(
-        source: ByteReadChannel,
-        coroutineContext: CoroutineContext
-    ): ByteReadChannel = source.decodeBrotli()
+    override fun decode(source: ByteReadChannel, coroutineContext: CoroutineContext): ByteReadChannel = source.decodeBrotli()
 
-    override fun encode(
-        source: ByteReadChannel,
-        coroutineContext: CoroutineContext
-    ): ByteReadChannel {
+    override fun encode(source: ByteReadChannel, coroutineContext: CoroutineContext): ByteReadChannel {
         error("BrotliOutputStream not available (https://github.com/google/brotli/issues/715)")
     }
 
-    override fun encode(
-        source: ByteWriteChannel,
-        coroutineContext: CoroutineContext
-    ): ByteWriteChannel {
+    override fun encode(source: ByteWriteChannel, coroutineContext: CoroutineContext): ByteWriteChannel {
         error("BrotliOutputStream not available (https://github.com/google/brotli/issues/715)")
     }
 }
