@@ -8,6 +8,7 @@ import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 plugins {
     id("hyperion.android-application") apply false
 }
+
 subprojects {
     val libs = rootProject.libs
 
@@ -32,11 +33,8 @@ subprojects {
 
     configure<ApplicationExtension> {
         namespace = "dev.zt64.hyperion"
-        compileSdk = 35
 
         defaultConfig {
-            minSdk = 21
-            targetSdk = 35
             versionCode = 1
             versionName = version.toString()
         }

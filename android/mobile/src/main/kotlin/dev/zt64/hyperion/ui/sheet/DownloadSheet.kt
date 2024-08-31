@@ -63,11 +63,7 @@ fun DownloadSheet(onDismissRequest: () -> Unit) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun SheetContent(
-    uiState: UiState,
-    onDismissRequest: () -> Unit,
-    onClickDownload: () -> Unit
-) {
+private fun SheetContent(uiState: UiState, onDismissRequest: () -> Unit, onClickDownload: () -> Unit) {
     Column(
         modifier = Modifier
             .navigationBarsPadding() // workaround bug

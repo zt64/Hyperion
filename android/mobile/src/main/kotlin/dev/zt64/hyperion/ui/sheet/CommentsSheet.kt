@@ -29,11 +29,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
+import dev.zt64.hyperion.api.domain.model.DomainChannelPartial
+import dev.zt64.hyperion.api.domain.model.DomainComment
 import dev.zt64.hyperion.resources.MR
 import dev.zt64.hyperion.ui.component.ShimmerImage
 import dev.zt64.hyperion.ui.tooling.HyperionPreview
-import dev.zt64.innertube.domain.model.DomainChannelPartial
-import dev.zt64.innertube.domain.model.DomainComment
 
 @Composable
 fun CommentsSheet(onDismissRequest: () -> Unit) {
@@ -49,7 +49,8 @@ private fun SheetContent() {
             Comment(
                 comment = DomainComment(
                     id = "1",
-                    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                    content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do " +
+                        "eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                     datePosted = "1 day ago",
                     author = DomainChannelPartial(
                         id = "1",
@@ -68,12 +69,7 @@ private fun SheetContent() {
 }
 
 @Composable
-private fun Comment(
-    comment: DomainComment,
-    onClickLike: () -> Unit,
-    onClickDislike: () -> Unit,
-    onClickReply: () -> Unit
-) {
+private fun Comment(comment: DomainComment, onClickLike: () -> Unit, onClickDislike: () -> Unit, onClickReply: () -> Unit) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     Surface(
@@ -154,7 +150,8 @@ private fun CommentCardPreview() {
         Comment(
             comment = DomainComment(
                 id = "1",
-                content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+                    "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                 datePosted = "1 day ago",
                 author = DomainChannelPartial(
                     id = "1",

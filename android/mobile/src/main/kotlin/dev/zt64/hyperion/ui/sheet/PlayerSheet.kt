@@ -227,11 +227,7 @@ private fun MappingTrackSelector.MappedTrackInfo.isSupportedFormat(rendererIndex
 }
 
 @UnstableApi
-private fun TrackGroup.generateThing(
-    renderTrack: MappingTrackSelector.MappedTrackInfo,
-    rendererIndex: Int,
-    groupIndex: Int
-) = buildList {
+private fun TrackGroup.generateThing(renderTrack: MappingTrackSelector.MappedTrackInfo, rendererIndex: Int, groupIndex: Int) = buildList {
     repeat(length) { trackIndex ->
         if (
             renderTrack.getTrackSupport(
