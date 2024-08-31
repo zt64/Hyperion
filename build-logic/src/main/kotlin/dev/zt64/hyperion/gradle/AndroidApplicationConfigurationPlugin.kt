@@ -17,11 +17,11 @@ class AndroidApplicationConfigurationPlugin : Plugin<Project> {
 
         target.configure<ApplicationExtension> {
             namespace = "dev.zt64.hyperion"
-            compileSdk = 34
+            compileSdk = 35
 
             defaultConfig {
                 minSdk = 21
-                targetSdk = 34
+                targetSdk = 35
                 versionCode = 1
                 versionName = target.version.toString()
             }
