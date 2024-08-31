@@ -153,4 +153,24 @@
     <string name="views">Views</string>
     <string name="delete">Delete</string>
     <string name="delete_comment">Delete comment</string>
+    <string name="developer">Developer</string>
+    <string name="done">Done</string>
+    <string name="play_next_in_queue">Play next in queue</string>
+    <string name="save_to_watch_later">Save to Watch later</string>
+    <string name="save_to_playlist">Save to playlist</string>
+    <string name="refresh">Refresh</string>
+    <string name="copy_url">Copy URL</string>
+    <string name="sponsor">Sponsor</string>
+    <string name="self_promo">Self Promotion</string>
+    <string name="interaction">Interaction</string>
+    <string name="highlight">Highlight</string>
+    <string name="intro">Intro</string>
+    <string name="outro">Outro</string>
+    <string name="preview">Preview</string>
+    <string name="filler">Filler</string>
+    <string name="non_music">Non-Music</string>
+    <string name="disable">Disable</string>
+    <string name="show">Show</string>
+    <string name="auto_skip">Auto skip</string>
+    <string name="manual_skip">Manual skip</string>
 </resources>
