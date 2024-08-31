@@ -4,4 +4,20 @@
         <item quantity="one">1 преглед</item>
         <item quantity="other">%d прегледа</item>
     </plural>
+    <plural name="subscribers">
+        <item quantity="one">%d subscriber</item>
+        <item quantity="other">%d subscribers</item>
+    </plural>
+    <plural name="comments">
+        <item quantity="one">%d comment</item>
+        <item quantity="other">%d comments</item>
+    </plural>
+    <plural name="replies">
+        <item quantity="one">%d reply</item>
+        <item quantity="other">%d replies</item>
+    </plural>
+    <plural name="videos">
+        <item quantity="one">%d video</item>
+        <item quantity="other">%d videos</item>
+    </plural>
 </resources>
