@@ -7,7 +7,6 @@ import dev.zt64.hyperion.api.network.dto.SimpleText
 import dev.zt64.hyperion.api.util.get
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.KeepGeneratedSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
@@ -19,7 +18,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.JsonTransformingSerializer
-import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -136,8 +134,7 @@ internal data class ApiChannel(
     override val contents: Contents<Content>
 ) : ApiBrowse() {
     @OptIn(InternalSerializationApi::class)
-    @KeepGeneratedSerializer
-    @Serializable(Header.HeaderSerializer::class)
+    @Serializable
     data class Header(
         val title: String,
         val description: String,
@@ -150,23 +147,23 @@ internal data class ApiChannel(
         val subscriberCountText: SimpleText? = null,
         val videosCountText: SimpleText
     ) {
-        internal class HeaderSerializer : JsonTransformingSerializer<Header>(serializer()) {
-            override fun transformDeserialize(element: JsonElement): JsonElement {
-                val vm = element.jsonObject["pageHeaderRenderer"]["content"]["pageHeaderViewModel"]!!
-                return buildJsonObject {
-                    put("title", vm.jsonObject["title"]["dynamicTextViewModel"]["text"]["content"]!!)
-                    put("description", vm.jsonObject["description"]["descriptionPreviewViewModel"]["description"]["content"]!!)
-                    put("avatar", vm.jsonObject["image"]["decoratedAvatarViewModel"]["avatar"]["avatarViewModel"]["image"]!!)
-                    put("channelId", vm.jsonObject["channelId"]!!.jsonObject["value"]!!)
-                    put("badges", vm.jsonObject["badges"]!!.jsonObject["metadataBadgeRenderer"]!!)
-                    put("banner", vm.jsonObject["banner"]!!)
-                    put("channelHandleText", vm.jsonObject["channelHandleText"]!!)
-                    put("headerLinks", vm.jsonObject["headerLinks"]!!)
-                    put("subscriberCountText", vm.jsonObject["subscriberCountText"]!!)
-                    put("videosCountText", vm.jsonObject["videosCountText"]!!)
-                }
-            }
-        }
+        // internal class HeaderSerializer : JsonTransformingSerializer<Header>(serializer()) {
+        //     override fun transformDeserialize(element: JsonElement): JsonElement {
+        //         val vm = element.jsonObject["pageHeaderRenderer"]["content"]["pageHeaderViewModel"]!!
+        //         return buildJsonObject {
+        //             put("title", vm.jsonObject["title"]["dynamicTextViewModel"]["text"]["content"]!!)
+        //             put("description", vm.jsonObject["description"]["descriptionPreviewViewModel"]["description"]["content"]!!)
+        //             put("avatar", vm.jsonObject["image"]["decoratedAvatarViewModel"]["avatar"]["avatarViewModel"]["image"]!!)
+        //             put("channelId", vm.jsonObject["channelId"]!!.jsonObject["value"]!!)
+        //             put("badges", vm.jsonObject["badges"]!!.jsonObject["metadataBadgeRenderer"]!!)
+        //             put("banner", vm.jsonObject["banner"]!!)
+        //             put("channelHandleText", vm.jsonObject["channelHandleText"]!!)
+        //             put("headerLinks", vm.jsonObject["headerLinks"]!!)
+        //             put("subscriberCountText", vm.jsonObject["subscriberCountText"]!!)
+        //             put("videosCountText", vm.jsonObject["videosCountText"]!!)
+        //         }
+        //     }
+        // }
 
         @Serializable
         data class Text(val dynamicTextViewModel: DynamicTextVM) {
