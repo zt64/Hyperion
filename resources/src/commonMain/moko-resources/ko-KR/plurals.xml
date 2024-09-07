@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plural name="views">
-        <item quantity="one">%d view</item>
+        <item quantity="one">%d 보기</item>
         <item quantity="other">조회수 %d 회</item>
     </plural>
     <plural name="subscribers">
-        <item quantity="one">%d subscriber</item>
-        <item quantity="other">%d subscribers</item>
+        <item quantity="one">구독자 %d 명</item>
+        <item quantity="other">구독자 %d 명</item>
     </plural>
     <plural name="comments">
-        <item quantity="one">%d comment</item>
-        <item quantity="other">%d comments</item>
+        <item quantity="one">댓글 %d 개</item>
+        <item quantity="other">댓글 %d 개</item>
     </plural>
     <plural name="replies">
-        <item quantity="one">%d reply</item>
-        <item quantity="other">%d replies</item>
+        <item quantity="one">답변 %d 개</item>
+        <item quantity="other">댓글 %d 개</item>
     </plural>
     <plural name="videos">
-        <item quantity="one">%d video</item>
-        <item quantity="other">%d videos</item>
+        <item quantity="one">동영상 %d 개</item>
+        <item quantity="other">동영상 %d 개</item>
     </plural>
 </resources>

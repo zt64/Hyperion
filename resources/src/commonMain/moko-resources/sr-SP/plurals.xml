@@ -5,19 +5,19 @@
         <item quantity="other">%d прегледа</item>
     </plural>
     <plural name="subscribers">
-        <item quantity="one">%d subscriber</item>
-        <item quantity="other">%d subscribers</item>
+        <item quantity="one">%d пратилац</item>
+        <item quantity="other">%d пратилаца</item>
     </plural>
     <plural name="comments">
-        <item quantity="one">%d comment</item>
-        <item quantity="other">%d comments</item>
+        <item quantity="one">%d коментар</item>
+        <item quantity="other">%d коментара</item>
     </plural>
     <plural name="replies">
-        <item quantity="one">%d reply</item>
-        <item quantity="other">%d replies</item>
+        <item quantity="one">%d одговор</item>
+        <item quantity="other">%d одговора</item>
     </plural>
     <plural name="videos">
-        <item quantity="one">%d video</item>
-        <item quantity="other">%d videos</item>
+        <item quantity="one">%d видео снимак</item>
+        <item quantity="other">%d видео снимака</item>
     </plural>
 </resources>
