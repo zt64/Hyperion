@@ -148,7 +148,7 @@ napier = { module = "io.github.aakira:napier", version = "2.7.1" }
 coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
-google-api-services-youtube = "com.google.apis:google-api-services-youtube:v3-rev20240814-2.0.0"
+google-api-services-youtube = "com.google.apis:google-api-services-youtube:v3-rev20240909-2.0.0"
 quickjs-kt = { module = "io.github.dokar3:quickjs-kt", version = "1.0.0-alpha13" }
 
 ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.11" }
