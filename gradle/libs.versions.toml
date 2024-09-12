@@ -179,5 +179,5 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 compose-jb = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }
-buildKonfig = { id = "com.codingfeline.buildkonfig", version = "0.15.1" }
+buildKonfig = { id = "com.codingfeline.buildkonfig", version = "0.15.2" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintPlugin" }
