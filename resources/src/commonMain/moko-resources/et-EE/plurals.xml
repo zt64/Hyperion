@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plural name="views">
-        <item quantity="one">1 view</item>
-        <item quantity="other">%d views</item>
+        <item quantity="one">%d vaatamine</item>
+        <item quantity="other">%d vaatamist</item>
     </plural>
     <plural name="subscribers">
-        <item quantity="one">%d subscriber</item>
-        <item quantity="other">%d subscribers</item>
+        <item quantity="one">%d tellija</item>
+        <item quantity="other">%d tellijat</item>
     </plural>
     <plural name="comments">
-        <item quantity="one">%d comment</item>
-        <item quantity="other">%d comments</item>
+        <item quantity="one">%d kommentaar</item>
+        <item quantity="other">%d kommentaari</item>
     </plural>
     <plural name="replies">
-        <item quantity="one">%d reply</item>
-        <item quantity="other">%d replies</item>
+        <item quantity="one">%d vastus</item>
+        <item quantity="other">%d vastust</item>
     </plural>
     <plural name="videos">
         <item quantity="one">%d video</item>
-        <item quantity="other">%d videos</item>
+        <item quantity="other">%d videot</item>
     </plural>
 </resources>
