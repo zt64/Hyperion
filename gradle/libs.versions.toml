@@ -124,7 +124,7 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 # Kotlinx
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin-serialization" }
 serialization-protobuf = { module = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf", version.ref = "kotlin-serialization" }
-immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7"
+immutableCollections = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.8"
 datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
 
 brotli = "org.brotli:dec:0.1.2"
