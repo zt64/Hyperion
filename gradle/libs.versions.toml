@@ -114,7 +114,7 @@ paging-compose-common = { module = "app.cash.paging:paging-compose-common", vers
 coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil" }
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 
-fileKit = "io.github.vinceglb:filekit-compose:0.8.2"
+fileKit = "io.github.vinceglb:filekit-compose:0.8.7"
 materialKolor = "com.materialkolor:material-kolor:1.7.1"
 colorPicker = "com.godaddy.android.colorpicker:compose-color-picker:0.7.0"
 reorderable = "sh.calvin.reorderable:reorderable:2.3.2"
