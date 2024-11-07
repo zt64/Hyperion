@@ -14,8 +14,6 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.layout.ContentScale
 import coil3.ImageLoader
 import coil3.compose.AsyncImagePainter
-import coil3.compose.DefaultModelEqualityDelegate
-import coil3.compose.EqualityDelegate
 import coil3.compose.SubcomposeAsyncImage
 import coil3.compose.SubcomposeAsyncImageContent
 import com.valentinilk.shimmer.shimmer
@@ -36,8 +34,7 @@ fun ShimmerImage(
     alpha: Float = DefaultAlpha,
     colorFilter: ColorFilter? = null,
     filterQuality: FilterQuality = DrawScope.DefaultFilterQuality,
-    clipToBounds: Boolean = true,
-    modelEqualityDelegate: EqualityDelegate = DefaultModelEqualityDelegate
+    clipToBounds: Boolean = true
 ) {
     val imageLoader = rememberImageLoader()
 
@@ -66,8 +63,7 @@ fun ShimmerImage(
         alpha = alpha,
         colorFilter = colorFilter,
         filterQuality = filterQuality,
-        clipToBounds = clipToBounds,
-        modelEqualityDelegate = modelEqualityDelegate
+        clipToBounds = clipToBounds
     )
 
     // CompositionLocalProvider(
