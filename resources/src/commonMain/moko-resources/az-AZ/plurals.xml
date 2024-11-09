@@ -2,7 +2,7 @@
 <resources>
     <plural name="views">
         <item quantity="one">1 view</item>
-        <item quantity="other">%d views</item>
+        <item quantity="other">%d baxış</item>
     </plural>
     <plural name="subscribers">
         <item quantity="one">%d subscriber</item>
