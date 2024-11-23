@@ -135,12 +135,12 @@
     <string name="replace">Ersetzen</string>
     <string name="remove">Entfernen</string>
     <string name="reply">Antworten</string>
-    <string name="unsubscribe">Unsubscribe</string>
+    <string name="unsubscribe">Abonnement beenden</string>
     <string name="views">Views</string>
-    <string name="delete">Delete</string>
-    <string name="delete_comment">Delete comment</string>
-    <string name="developer">Developer</string>
-    <string name="done">Done</string>
+    <string name="delete">Löschen</string>
+    <string name="delete_comment">Kommentar löschen</string>
+    <string name="developer">Entwickler</string>
+    <string name="done">Fertig</string>
     <string name="play_next_in_queue">Play next in queue</string>
     <string name="save_to_watch_later">Save to Watch later</string>
     <string name="save_to_playlist">Save to playlist</string>
