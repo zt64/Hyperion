@@ -151,7 +151,7 @@ coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", ve
 google-api-services-youtube = "com.google.apis:google-api-services-youtube:v3-rev20241031-2.0.0"
 quickjs-kt = { module = "io.github.dokar3:quickjs-kt", version = "1.0.0-alpha13" }
 
-ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.17" }
+ktlint-compose-rules = { module = "io.nlopez.compose.rules:ktlint", version = "0.4.19" }
 
 [bundles]
 androidx = ["androidx-appcompat", "androidx-core", "androidx-splashscreen", "androidx-activity"]
