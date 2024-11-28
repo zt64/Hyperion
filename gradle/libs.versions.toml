@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.21"
+kotlin = "2.1.0"
 kotlin-serialization = "1.7.3"
 agp = "8.7.2"
 appcompat = "1.7.0"
