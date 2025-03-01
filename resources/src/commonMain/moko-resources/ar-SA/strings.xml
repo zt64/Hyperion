@@ -122,7 +122,7 @@
     <string name="mentions">Mentions</string>
     <string name="subscriptions">Subscriptions</string>
     <string name="shared_content">Shared content</string>
-    <string name="replies_to_my_comments">Replies to my comments</string>
+    <string name="replies_to_my_comments">الردود على تعليقاتي</string>
     <string name="subscriptions_notification_desc">Notify me about activity from the channels I\'m subscribed too</string>
     <string name="mention_notification_desc">Notify me when others mention my channel</string>
     <string name="shared_content_notification_desc">Notify me when others share my content on their channels</string>
