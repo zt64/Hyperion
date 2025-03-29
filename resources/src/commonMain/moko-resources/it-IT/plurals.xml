@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plural name="views">
-        <item quantity="one">%d view</item>
-        <item quantity="other">%d views</item>
+        <item quantity="one">%d visualizzazione</item>
+        <item quantity="other">%d visualizzazioni</item>
     </plural>
     <plural name="subscribers">
-        <item quantity="one">%d subscriber</item>
-        <item quantity="other">%d subscribers</item>
+        <item quantity="one">%d iscritto</item>
+        <item quantity="other">%d iscritti</item>
     </plural>
     <plural name="comments">
-        <item quantity="one">%d comment</item>
-        <item quantity="other">%d comments</item>
+        <item quantity="one">%d commento</item>
+        <item quantity="other">%d commenti</item>
     </plural>
     <plural name="replies">
-        <item quantity="one">%d reply</item>
-        <item quantity="other">%d replies</item>
+        <item quantity="one">%d risposta</item>
+        <item quantity="other">%d risposte</item>
     </plural>
     <plural name="videos">
         <item quantity="one">%d video</item>
-        <item quantity="other">%d videos</item>
+        <item quantity="other">%d video</item>
     </plural>
 </resources>
