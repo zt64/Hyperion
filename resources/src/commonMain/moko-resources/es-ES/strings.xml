@@ -42,8 +42,8 @@
     <string name="comments">Comentarios</string>
     <string name="show_download_button">Mostrar botón de descarga</string>
     <string name="dismiss">Dismiss</string>
-    <string name="confirm">Confirm</string>
-    <string name="quality">Quality</string>
+    <string name="confirm">Enter</string>
+    <string name="quality"></string>
     <string name="system">System</string>
     <string name="dark">Dark</string>
     <string name="light">Light</string>
