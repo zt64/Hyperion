@@ -89,7 +89,7 @@ tv-material = { module = "androidx.tv:tv-material", version.ref = "tv-material" 
 
 # Wear
 wear-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "compose-wear" }
-wear-m3 = "androidx.wear.compose:compose-material3:1.0.0-alpha29"
+wear-m3 = "androidx.wear.compose:compose-material3:1.0.0-alpha37"
 wear-ui-tooling = { module = "androidx.wear.compose:compose-ui-tooling", version.ref = "compose-wear" }
 horologist-compose-layout = { module = "dev.olshevski.horologist:horologist-compose-layout", version.ref = "horologist" }
 
