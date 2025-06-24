@@ -1,7 +1,7 @@
 [versions]
 kotlin = "2.1.0"
 kotlin-serialization = "1.7.3"
-agp = "8.7.2"
+agp = "8.11.0"
 appcompat = "1.7.0"
 paging = "3.3.0-alpha02-0.5.1"
 ktor = "3.0.1"
