@@ -12,9 +12,8 @@
 </div>
 
 ## Project Status
-Due to personal life, college & work I am not able to focus on Hyperion as hoped. 
-It is not abandoned, only development will take longer than usual. 
-Contributions are always welcome and encouraged.
+Due to personal life and work I am unable to devote enough time to complete Hyperion. YouTube API changes far too often and is extremely difficult for a solo developer
+like me to fix and maintain a project of this scale. I really wish this project could have come to fruition.
 
 ## Features
 - :art: Dynamic color
